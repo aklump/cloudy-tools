@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Bootstrap for all php files.
+ */
+
+use AKlump\Data\Data;
+
+define('ROOT', $argv[1]);
+
+require_once dirname(__FILE__) . '/vendor/autoload.php';
+
+$g = new Data();
+
+/**
+ * Get a nested value using $path.
+ *
+ * @param array $config
+ *   A nested configuration array.
+ * @param string|array $path
+ *   A space-delimited path to the config value.
+ *
+ * @return mixed
+ *   The value of the configuration
+ *
+ * @throws \RuntimeException
+ *   When the configuration is not found.
+ */
+function get_value(array $config, $path, $default_value, $context = []) {
+  $path = is_string($path) ? explode('.', $path) : $path;
+  $key = array_shift($path);
+  $context['parents'][] = $key;
+  if (!isset($config[$key])) {
+    return $default_value;
+  }
+  if ($path && is_array($config[$key])) {
+    return get_value($config[$key], $path, $default_value, $context);
+  }
+  $value = $config[$key];
+  switch (gettype($value)) {
+    case 'NULL':
+      $value = 'null';
+      break;
+
+    case 'boolean':
+      $value = $value ? 'true' : 'false';
+      break;
+
+    case 'object':
+      $value = $value->__toString();
+      break;
+
+    case 'array':
+      $temp = [];
+      $prefix = implode('_', $context['parents']);
+
+      if (is_numeric(key($value))) {
+        $value = 'declare -a config_values=("' . implode('" "', $value) . '")';
+      }
+      elseif ($context['array_keys']) {
+        $value = 'declare -a config_keys=("' . implode('" "', array_keys($value)) . '")';
+      }
+      else {
+        foreach ($value as $k => $v) {
+          $temp[] = strtoupper("{$prefix}_{$k}") . "=\"$v\"";
+        }
+        $value = implode(';', $temp);
+      }
+      break;
+  }
+
+  return $value;
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Configuration</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--configuration">
+<header>
+  <div class="pager">
+  <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="conventions.html" class="next conventions">Conventions&raquo;</a>
+</div>
+</header>
+
+
+  <h1>Configuration</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p>Configuration is provided by YAML files.</p>
+
+<p>In the header of your script you will find <code>CLOUDY_CONFIG</code>, e.g.,</p>
+
+<pre><code>    CLOUDY_CONFIG=$ROOT/script.example.config.yml
+</code></pre>
+
+<ol>
+<li>Set it's value to the path of a YAML file to use as configuration.</li>
+<li><p>You may add additional configuration files by adding something like following:</p>
+
+<pre><code>config:
+  - _install.local.yml
+</code></pre></li>
+<li><p>The files are relative to <code>$(dirname $CLOUDY_CONFIG)</code></p></li>
+<li>You may have any number of configuration files.</li>
+</ol>
+
+<h2>Using Config</h2>
+
+<h3>Scalars</h3>
+
+<p>To get a configuration value you will use the <code>get_config</code> function.  The following example is the contents of an imaginary <em>config.yml</em>:</p>
+
+<pre><code>perms:
+  user: aklump
+  group: apache
+  files: 640
+  directories: 750
+</code></pre>
+
+<p>To access the perms <code>group</code> scalar value do the following:</p>
+
+<pre><code>group=$(get_config "perms.group" "staff") 
+</code></pre>
+
+<ul>
+<li>Notice the dot separation to denote parent/child.</li>
+<li>The second argument is a default value, e.g., <code>staff</code>.</li>
+</ul>
+
+<h3>Non-Scalars</h3>
+
+<p>When the config key points to a non-scaler, associative array <code>get_config</code> echos a string ready for <code>eval</code>, which generates a nice set of BASH vars containing the values of <code>perms</code>, e.g.,</p>
+
+<pre><code>eval $(get_config perms)
+echo $PERMS_USER
+echo $PERMS_GROUP
+echo $PERMS_FILES
+echo $PERMS_DIRECTORIES
+</code></pre>
+
+<ul>
+<li>Notice the keys are converted to uppercase and include the parent path.</li>
+</ul>
+
+<p>If the config key points to an indexed array, e.g., ....</p>
+
+<pre><code>hooks:
+  files:
+    tags:
+    - ignore
+    - normal
+    - emergency
+</code></pre>
+
+<p>... then the eval string is slightly different...</p>
+
+<pre><code>`declare -a HOOKS_FILES_TAGS=("ignore" "normal" "emergency")`
+</code></pre>
+
+<p>... and you use it like this:</p>
+
+<pre><code>eval $(get_config "hooks.files.tags")
+${HOOKS_FILES_TAGS[0]} == "ignore"
+${HOOKS_FILES_TAGS[1]} == "normal"
+${HOOKS_FILES_TAGS[2]} == "emergency"
+</code></pre>
+
+<h3>Non-Scalars Keys</h3>
+
+<p>In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with <code>get_config_keys</code>.  Our example will echo a string like this: <code>declare -a config_keys=("_default" "help" "new")</code></p>
+
+<pre><code>operations:
+  _default: help
+  help:
+    help: Display this help screen
+  new:
+    help: Create new Cloudy script file in the current directory
+    options:
+      config:
+        help: Set the basename of the config file.
+      force:
+        aliases: [f]
+        help: Force the overwrite of an existin file.
+</code></pre>
+
+<p>This is a usage example:</p>
+
+<pre><code>eval $(get_config_keys "operations")
+
+${config_keys[0]} == "_default"
+${config_keys[1]} == "help"
+${config_keys[2]} == "new"
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="conventions.html" class="next conventions">Conventions&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 14:25:23 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

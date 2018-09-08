@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>The script &quot;parameters&quot;</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--parameters">
+<header>
+  <div class="pager">
+  <a href="operation.html" class="prev operation">&laquo;The Script &quot;Operation&quot;</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="strings.html" class="next strings">String Manipulation&raquo;</a>
+</div>
+</header>
+
+
+  <h1>The script &quot;parameters&quot;</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p>Parameters are arguments passed to the script that begin with a double dash, e.g. <code>--</code>.  They can server as verbose flags, or they can contain values.  Here are some examples:</p>
+
+<pre><code>    ./script.example.sh --file=intro.txt --noup
+</code></pre>
+
+<ul>
+<li>In both cases two parameters are passed.</li>
+<li>Order does not matter.</li>
+<li><code>file</code> has a value of <code>intro.txt</code></li>
+<li><code>noup</code> has a value of <code>true</code></li>
+</ul>
+
+<h2>API</h2>
+
+<pre><code>has_params
+has_param {parameter}
+get_param {parameter}
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="operation.html" class="prev operation">&laquo;The Script &quot;Operation&quot;</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="strings.html" class="next strings">String Manipulation&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 14:25:24 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

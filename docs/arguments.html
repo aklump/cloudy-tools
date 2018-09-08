@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>This script &quot;arguments&quot;</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--arguments">
+<header>
+  <div class="pager">
+  <a href="README.html" class="prev README">&laquo;Cloudy</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="configuration.html" class="next configuration">Configuration&raquo;</a>
+</div>
+</header>
+
+
+  <h1>This script &quot;arguments&quot;</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p>Cloudy makes it easy to react to script arguments.  For example:</p>
+
+<pre><code>./install.sh dev install --tree=blue -abc
+</code></pre>
+
+<p>Here we have:</p>
+
+<ul>
+<li>The script file <em>install.sh</em></li>
+<li>The operation <code>operation=$(get_op)</code>, e.g. <code>dev</code></li>
+<li>One argument <code>arg=$(get_arg 0)</code>, e.g., <code>install</code>.</li>
+<li>One parameter, <code>tree</code>, <code>param=$(get_param "tree")</code>, e.g., <code>blue</code></li>
+<li>Three flags: <code>a,b,c</code>, <code>has_flag "a"</code></li>
+</ul>
+
+<h2>Check for a flag</h2>
+
+<pre><code>has_flag b &amp;&amp; echo "has b flag"
+</code></pre>
+
+<h2>Check for a parameter and get it's output</h2>
+
+<pre><code>has_param tree &amp;&amp; echo "tree's value is $(get_param tree)"
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="README.html" class="prev README">&laquo;Cloudy</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="configuration.html" class="next configuration">Configuration&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 14:25:23 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

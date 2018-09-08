@@ -1,0 +1,12 @@
+operations:
+  _default: help
+  new:
+    help: Create a new script using Cloudy.
+    arguments:
+    - basename: The basename of the script to create.
+    parameters:
+      config:
+        help: Set the basename of the config file.
+    flags:
+      f:
+        help: Overwrite an existing script.

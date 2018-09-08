@@ -1,0 +1,16 @@
+default_operation: help
+operations:
+  help:
+    help: Display this help screen
+  new:
+    help: Create new Cloudy script file in the current directory
+    options:
+      config:
+        help: Set the basename of the config file.
+      force:
+        type: boolean
+        aliases: [f]
+        help: Force the overwrite of an existing file.
+      role:
+        type: string
+        enum: [prod, dev]

@@ -1,0 +1,26 @@
+{
+    "name": "aklump\/cloudy",
+    "type": "library",
+    "description": "BASH scripting helper",
+    "keywords": [
+        "BASH",
+        "YAML",
+        "framework"
+    ],
+    "homepage": "https:\/\/github.com\/aklump\/cloudy",
+    "license": "BSD-3-Clause",
+    "autoload": {
+        "psr-4": {
+            "AKlump\\Cloudy\\": "src\/AKlump\/Cloudy\/"
+        }
+    },
+    "require": {
+        "symfony/yaml": "~3.4",
+        "justinrainbow/json-schema": "^5.2",
+        "aklump/data": "^0.0.28"
+    },
+    "version": "0.0.1",
+    "bin": [
+        ".\/cloudy"
+    ]
+}
