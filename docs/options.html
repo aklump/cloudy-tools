@@ -2,12 +2,12 @@
 
 <html>
 <head>
-  <title>The script &quot;parameters&quot;</title>
+  <title>The script &quot;options&quot;</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page--parameters">
+<body class="page--options">
 <header>
   <div class="pager">
   <a href="operation.html" class="prev operation">&laquo;The Script &quot;Operation&quot;</a>
@@ -17,29 +17,24 @@
 </header>
 
 
-  <h1>The script &quot;parameters&quot;</h1>
+  <h1>The script &quot;options&quot;</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
 
-<p>Parameters are arguments passed to the script that begin with a double dash, e.g. <code>--</code>.  They can server as verbose flags, or they can contain values.  Here are some examples:</p>
+<p>Options are arguments passed to the script that begin with a single <code>-</code> or double <code>-</code>.  Here are some examples:</p>
 
-<pre><code>    ./script.example.sh --file=intro.txt --noup
+<pre><code>    ./script.example.sh -f -h -p
+    ./script.example.sh -fhp
+    ./script.example.sh --file=intro.txt --noup
 </code></pre>
 
 <ul>
-<li>In both cases two parameters are passed.</li>
+<li>Single hyphen options may only be one letter</li>
+<li>They may be grouped or separate.</li>
 <li>Order does not matter.</li>
-<li><code>file</code> has a value of <code>intro.txt</code></li>
-<li><code>noup</code> has a value of <code>true</code></li>
+<li>Double hypen options may provide values.</li>
 </ul>
-
-<h2>API</h2>
-
-<pre><code>has_params
-has_param {parameter}
-get_param {parameter}
-</code></pre>
 </section>
 
 <div class="search__results">
@@ -54,7 +49,7 @@ get_param {parameter}
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 15:37:04 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 15:58:50 -0700</p>
   </div>
 </footer>
 

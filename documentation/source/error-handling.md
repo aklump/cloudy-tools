@@ -6,3 +6,5 @@ When you call `failed_exit` the exit status is set to 1 by default.  To change t
 
     CLOUDY_EXIT_STATUS=2
     failed_exit "Missing $ROOT/_perms.local.sh."
+
+You can use `throw_exit` kind of like an exception.
