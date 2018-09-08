@@ -10,21 +10,25 @@ CLOUDY_CONFIG=$ROOT/script.example.config.yml
 source "$ROOT/cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
+# Input validation
+validate_input || failed_exit "Uh, that's not quite right..."
+
+# Handle the various operations.
 op=$(get_op)
-
-validate_input || failed_exit "Failed input validation"
-
 case $op in
 "alpha")
     has_param "pass" || fail_with "Alpha does nothing yet"
     has_param "pass" && succeed_with "You passed the correct parameter \"pass\"."
     ;;
+
 "help")
     echo_help
     ;;
+
 *)
     throw_exit "Unhandled operation \"$op\""
     ;;
+
 esac
 
 has_failed && failed_exit

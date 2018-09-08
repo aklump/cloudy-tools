@@ -10,15 +10,18 @@ CLOUDY_CONFIG=$ROOT/cloudy-app.yml
 source "$ROOT/install/cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
-default_op=$(get_config operations._default)
-op=$(get_arg 0 $default_op)
+# Input validation
+validate_input || failed_exit "Uh, that's not quite right..."
 
-if [[ "$op" == "new" ]]; then
-    basename=$(get_arg 1 "cloudy-script.sh")
+# Handle the various operations.
+op=$(get_op)
+case $op in
+"new")
+    basename=$(get_arg 0 "cloudy-script.sh")
     default_config=$(path_filename $basename).yml
     example_script=$(path_filename $basename).example.sh
-    config_file=$(get_param config $default_config)
-    [ -e "$basename" ] && ! has_flag f && fail_with "$basename already exists."
+    config_file=$(get_option config $default_config)
+    [ -e "$basename" ] && ! has_option "force" && fail_with "$basename already exists. Use --force, -f to proceed."
     if ! has_failed; then
         rsync -a $ROOT/install/ ./ || fail_with "Could not copy Cloudy core to ."
         mv script.sh $basename || fail_with "Could not rename script.sh to $basename"
@@ -35,9 +38,18 @@ if [[ "$op" == "new" ]]; then
             [ -e cloudy ] && rm -r cloudy
         fi
     fi
-else
-    fail_with "\"new\" is the only supported operation"
-fi
+    has_failed && failed_exit "Failed to install $basename"
+    success_elapsed_exit "New script $basename created."
+    ;;
 
-has_failed && failed_exit "Failed to install $basename"
-success_elapsed_exit "New script $basename created."
+"help")
+    echo_help && exit 0
+    ;;
+
+*)
+    throw_exit "Unhandled operation \"$op\""
+    ;;
+
+esac
+
+has_failed && failed_exit

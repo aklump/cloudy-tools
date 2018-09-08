@@ -1,12 +1,19 @@
+default_operation: help
 operations:
-  _default: help
+  help:
+    help: Show this help screen.
   new:
     help: Create a new script using Cloudy.
     arguments:
-    - basename: The basename of the script to create.
-    parameters:
+      basename:
+        help: The basename of the script to create.
+        type: string
+    options:
       config:
+        aliases: [c]
+        type: string
         help: Set the basename of the config file.
-    flags:
-      f:
+      force:
+        type: boolean
+        aliases: [f]
         help: Overwrite an existing script.

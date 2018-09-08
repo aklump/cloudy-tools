@@ -1,0 +1,4 @@
+default_operation: help
+operations:
+  help:
+    help: Show this help screen.
