@@ -49,11 +49,22 @@ function _cloudy_bootstrap() {
     for option in "${CLOUDY_OPTIONS[@]}"; do
         local value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
-        local varname=$(echo "operations_${op}_options_${option}_aliases" | tr [a-z] [A-Z])
         eval $(get_config "operations.${op}.options.${option}.aliases")
 
         for alias in ${OPERATIONS_NEW_OPTIONS_FORCE_ALIASES[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
+        done
+    done
+
+    # Using aliases search for the master option.
+    eval $(get_config_keys "operations.${op}.options")
+    for master_option in "${config_keys[@]}"; do
+        eval $(get_config "operations.${op}.options.${master_option}.aliases")
+        for alias in "${config_values[@]}"; do
+            if has_option $alias && ! has_option $master_option; then
+                value=$(get_option "$alias")
+                CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$master_option=$value")
+            fi
         done
     done
 }
@@ -124,7 +135,7 @@ function _cloudy_echo_list() {
     local color_bullets=$2
     local bullet
     local item
-    for i in "${CLOUDY_LIST[@]}"; do
+    for i in "${CLOUDY_STACK[@]}"; do
         bullet="$LI"
         if [[ "$color_bullets" ]]; then
             bullet=$(_cloudy_echo_color $color_bullets "$LI")
@@ -154,7 +165,7 @@ function _cloudy_success_exit() {
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_SUCCESSES[@]} -gt 0 ]; then
-        CLOUDY_LIST=("${CLOUDY_SUCCESSES[@]}")
+        CLOUDY_STACK=("${CLOUDY_SUCCESSES[@]}")
         echo_green_list
     fi
 

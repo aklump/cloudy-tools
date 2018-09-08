@@ -4,6 +4,9 @@
 # SECTION: Arguments, options, parameters
 #
 
+##
+ # Validate the CLI input arguments and options.
+ #
 function validate_input() {
     local op
 
@@ -22,7 +25,7 @@ function validate_input() {
        value=${BASH_REMATCH[2]}
        stack_has $name || fail_with "Invalid option: $name"
 
-       # Assert the provided value matches schema
+       # Assert the provided value matches schema.
        eval $(_cloudy_validate_against_scheme "operations.$op.options.$name" "$name" "$value")
        if [[ "$schema_errors" ]]; then
             for error in "${schema_errors[@]}"; do
@@ -180,9 +183,9 @@ function echo_headline() {
 ##
  # Echo an array as a bulletted list.
  #
- # You must provide your list array as $CLOUDY_LIST like so:
+ # You must provide your list array as $CLOUDY_STACK like so:
  # @code
- #   CLOUDY_LIST=("${some_array_to_echo[@]}")
+ #   CLOUDY_STACK=("${some_array_to_echo[@]}")
  #   echo_red_list
  # @endcode
  #
@@ -239,7 +242,7 @@ function failed_exit () {
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_FAILURES[@]} -gt 0 ]; then
-        CLOUDY_LIST=("${CLOUDY_FAILURES[@]}")
+        CLOUDY_STACK=("${CLOUDY_FAILURES[@]}")
         echo_red_list
     fi
 
@@ -324,7 +327,6 @@ declare -a CLOUDY_ARGS=()
 declare -a CLOUDY_OPTIONS=()
 declare -a CLOUDY_FAILURES=()
 declare -a CLOUDY_SUCCESSES=()
-declare -a CLOUDY_LIST=()
 declare -a CLOUDY_STACK=()
 source "$CLOUDY_ROOT/_core.sh"
 _cloudy_bootstrap $@
