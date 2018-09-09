@@ -15,6 +15,9 @@ $path_to_cloudy_config = $argv[2];
 
 try {
   $data = [];
+  if (!file_exists($path_to_cloudy_config)) {
+    throw new \RuntimeException("Missing configuration file: $path_to_cloudy_config");
+  }
   if (($yaml = file_get_contents($path_to_cloudy_config)) && ($yaml = Yaml::parse($yaml))) {
     $data += $yaml;
   }
@@ -23,7 +26,11 @@ try {
   ];
 
   foreach ($data['config'] as $basename) {
-    $data = array_merge_recursive($data, Yaml::parse(file_get_contents(ROOT . "/$basename")));
+    $path = ROOT . "/$basename";
+    if (!file_exists($path)) {
+      throw new \RuntimeException("Missing configuration file: $path");
+    }
+    $data = array_merge_recursive($data, Yaml::parse(file_get_contents($path)));
   }
 
   echo json_encode($data);
@@ -33,4 +40,3 @@ catch (\Exception $exception) {
   echo $exception->getMessage();
 }
 exit(1);
-

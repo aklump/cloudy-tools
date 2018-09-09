@@ -11,6 +11,7 @@ function _cloudy_bootstrap() {
     CLOUDY_CONFIG_JSON='{"language":"en"}'
     if [ -f "$CLOUDY_CONFIG" ]; then
         CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_load_config.php "$ROOT" "$CLOUDY_CONFIG")"
+        [ $? -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
     fi
     _cloudy_validate_config
 
