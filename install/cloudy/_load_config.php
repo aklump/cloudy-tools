@@ -25,7 +25,7 @@ try {
     'config' => [],
   ];
 
-  foreach ($data['config'] as $basename) {
+  foreach ($data['additional_config'] as $basename) {
     $path = ROOT . "/$basename";
     if (!file_exists($path)) {
       throw new \RuntimeException("Missing configuration file: $path");
