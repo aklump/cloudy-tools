@@ -31,13 +31,12 @@ function get_value(array $config, $path, $default_value, $context = []) {
   $path = is_string($path) ? explode('.', $path) : $path;
   $key = array_shift($path);
   $context['parents'][] = $key;
-  if (!isset($config[$key])) {
-    return $default_value;
-  }
-  if ($path && is_array($config[$key])) {
+
+  if ($path && isset($config[$key]) && is_array($config[$key])) {
     return get_value($config[$key], $path, $default_value, $context);
   }
-  $value = $config[$key];
+
+  $value = isset($config[$key]) ? $config[$key] : $default_value;
   switch (gettype($value)) {
     case 'NULL':
       $value = 'null';
@@ -55,7 +54,10 @@ function get_value(array $config, $path, $default_value, $context = []) {
       $temp = [];
       $prefix = implode('_', $context['parents']);
 
-      if (is_numeric(key($value))) {
+      if (empty($value)) {
+        $value = 'declare -a config_values=()';
+      }
+      elseif (is_numeric(key($value))) {
         $value = 'declare -a config_values=("' . implode('" "', $value) . '")';
       }
       elseif ($context['array_keys']) {
@@ -71,4 +73,19 @@ function get_value(array $config, $path, $default_value, $context = []) {
   }
 
   return $value;
+}
+
+function stack_sort_length() {
+  $stack = func_get_args();
+  uasort($stack, function ($a, $b) {
+    return strlen($a) - strlen($b);
+  });
+
+  return $stack;
+}
+
+function _cloudy_declare_array($function, array $array) {
+  if (is_numeric(key($array))) {
+    return $function . '_array=("' . implode('" "', $array) . '")';
+  }
 }

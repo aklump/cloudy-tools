@@ -18,5 +18,5 @@ If the configuration file is as above, then these two are identical:
 
 ## API
 
-    get_op
+    get_command
     get_config "operations._default"

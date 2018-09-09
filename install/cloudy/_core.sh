@@ -15,8 +15,11 @@ function _cloudy_bootstrap() {
     _cloudy_validate_config
 
     CLOUDY_LANGUAGE=$(get_config "language" "en")
-    CLOUDY_SUCCESS=$(translate "success_exit" "Completed successfully.")
-    CLOUDY_FAILED=$(translate "failed_exit" "Failed.")
+
+    # todo may not need to do these two?
+    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
+    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
+
     LI="├──"
     LIL="└──"
 
@@ -42,14 +45,14 @@ function _cloudy_bootstrap() {
       fi
     done
 
-    local op=$(get_op)
+    local command=$(get_command)
 
-    # Add in the aliases for the options.
+    # Add in the alias action based on master options.
     local value
     for option in "${CLOUDY_OPTIONS[@]}"; do
         local value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
-        eval $(get_config "operations.${op}.options.${option}.aliases")
+        eval $(get_config "commands.${command}.options.${option}.aliases")
 
         for alias in ${OPERATIONS_NEW_OPTIONS_FORCE_ALIASES[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
@@ -57,9 +60,9 @@ function _cloudy_bootstrap() {
     done
 
     # Using aliases search for the master option.
-    eval $(get_config_keys "operations.${op}.options")
+    eval $(get_config_keys "commands.${command}.options")
     for master_option in "${config_keys[@]}"; do
-        eval $(get_config "operations.${op}.options.${master_option}.aliases")
+        eval $(get_config "commands.${command}.options.${master_option}.aliases")
         for alias in "${config_values[@]}"; do
             if has_option $alias && ! has_option $master_option; then
                 value=$(get_option "$alias")
@@ -72,9 +75,10 @@ function _cloudy_bootstrap() {
 function _cloudy_read_config() {
     local config_key=$1
     local default_value=$2
-    local array_keys=$3
+    local default_type=$3
+    local array_keys=$4
     local return
-    return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$array_keys")
+    return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys")
     if [ $? -eq 0 ]; then
       echo $return && return 0
     fi
@@ -82,7 +86,7 @@ function _cloudy_read_config() {
 }
 
 ##
- # Validate the configuration JSON or do a failed_exit.
+ # Validate the configuration JSON or do a exit_with_failure.
  #
 function _cloudy_validate_config() {
     local error
@@ -90,7 +94,7 @@ function _cloudy_validate_config() {
     if [ $? -eq 0 ]; then
       return 0
     fi
-    failed_exit "$error in cloudy.json"
+    exit_with_failure "$error in cloudy.json"
 }
 
 function _cloudy_exit() {
@@ -135,7 +139,7 @@ function _cloudy_echo_list() {
     local color_bullets=$2
     local bullet
     local item
-    for i in "${CLOUDY_STACK[@]}"; do
+    for i in "${echo_list_array[@]}"; do
         bullet="$LI"
         if [[ "$color_bullets" ]]; then
             bullet=$(_cloudy_echo_color $color_bullets "$LI")
@@ -159,13 +163,13 @@ function _cloudy_echo_list() {
     [[ "$line_item" ]] && echo "$bullet $item"
 }
 
-function _cloudy_success_exit() {
+function _cloudy_exit_with_success() {
     local message=$1
-    echo && echo_blue "👍 $message"
+    echo && echo_blue "👍  $message"
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_SUCCESSES[@]} -gt 0 ]; then
-        CLOUDY_STACK=("${CLOUDY_SUCCESSES[@]}")
+        echo_list_array=("${CLOUDY_SUCCESSES[@]}")
         echo_green_list
     fi
 
@@ -176,14 +180,15 @@ function _cloudy_success_exit() {
 ##
  # Set $CLOUDY_STACK to all defined operations included aliases for a given op.
  #
-function _cloudy_get_valid_operations_by_op() {
+function _cloudy_get_valid_operations_by_command() {
+    local command=$1
     local options
     declare -a options=();
-    eval $(get_config_keys "operations.${op}.options")
+    eval $(get_config_keys "commands.${command}.options")
     options=("${config_keys[@]}")
 
     for option in "${options[@]}"; do
-        eval $(get_config "operations.${op}.options.${option}.aliases")
+        eval $(get_config "commands.${command}.options.${option}.aliases")
         options=("${options[@]}" "${config_values[@]}")
     done
     CLOUDY_STACK=(${options[@]})
@@ -196,4 +201,87 @@ function _cloudy_validate_against_scheme() {
     local errors
     echo $(php $CLOUDY_ROOT/_validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
     return $?
+}
+
+function _cloudy_help_commands() {
+    echo_yellow "Available commands:"
+    eval $(get_config_keys "commands")
+    for help_command in "${config_keys[@]}"; do
+        help=$(get_config "commands.$help_command.help")
+        echo_list_array=("${echo_list_array[@]}" "$(echo_green "${help_command}") $help")
+    done
+}
+
+function _cloudy_help_command_options() {
+    local command=$1
+
+    local option
+    local option_value
+    local option_type
+    local help_option
+    local help_options
+    local help_alias
+    local help_argument
+
+    # The arguments.
+    echo_yellow "Arguments:"
+    echo_list_array=()
+    eval $(get_config_keys "commands.${command}.arguments")
+    for help_argument in "${config_keys[@]}"; do
+        help=$(get_config "commands.${command}.arguments.${help_argument}.help")
+        echo_list_array=("${echo_list_array[@]}" "$(echo_green "$help_argument") $help")
+    done
+    echo_list
+
+    echo
+
+    # The options.
+    echo_yellow "Available options:"
+    echo_list_array=()
+    eval $(get_config_keys "commands.${command}.options")
+
+    for option in "${config_keys[@]}"; do
+
+        option_value=''
+        option_type=$(get_config "commands.${command}.options.${option}.type" "boolean")
+        [[ "$option_type" != "boolean" ]] && option_value="={$option_type}"
+
+        help_options=("$option")
+
+        # Add in the aliases
+        eval $(get_config "commands.${command}.options.${option}.aliases" "" "array")
+        for help_alias in "${config_values[@]}"; do
+           help_options=("${help_options[@]}" "$help_alias")
+        done
+
+        stack_sort_length_array=(${help_options[@]})
+        stack_sort_length
+
+        # Add in hyphens and values
+        help_options=()
+        for help_option in "${stack_sort_length_array[@]}"; do
+           if [ ${#help_option} -eq 1 ]; then
+                help_options=("${help_options[@]}" "-${help_option}${option_value}")
+           else
+                help_options=("${help_options[@]}" "--${help_option}${option_value}")
+           fi
+        done
+
+        stack_join_array=(${help_options[@]})
+        options=$(stack_join ", ")
+
+        help=$(get_config "commands.${command}.options.${option}.help")
+
+        echo_list_array=("${echo_list_array[@]}" "$(echo_green "$options") $help")
+    done
+    echo_list
+}
+
+function _cloudy_validate_command() {
+    local command=$1
+    eval $(get_config_keys "commands")
+    stack_has_array=(${config_keys[@]})
+    stack_has $command && return 0
+    fail_because "Command \"$command\", does not exist."
+    return 1
 }

@@ -7,17 +7,17 @@ Cloudy makes it easy to react to script arguments.  For example:
 Here we have:
 
 * The script file _install.sh_
-* The operation `operation=$(get_op)`, e.g. `dev`
+* The command `command=$(get_command)`, e.g. `dev`
 * One argument `arg=$(get_arg 0)`, e.g., `install`.
-* One parameter, `tree`, `param=$(get_param "tree")`, e.g., `blue`
-* Three flags: `a,b,c`, `has_flag "a"`
+* One value option, `tree`, `param=$(get_param "tree")`, e.g., `blue`
+* Three boolean options: `a,b,c`, `has_flag "a"`
 
-## Check for a flag
+## Test if an option was used
 
-    has_flag b && echo "has b flag"
+    has_option b && echo "has b option"
     
-## Check for a parameter and get it's output
+## Access an option value
 
-    has_param tree && echo "tree's value is $(get_param tree)"
+    echo "tree's value is $(get_option tree "not set")"
 
              
