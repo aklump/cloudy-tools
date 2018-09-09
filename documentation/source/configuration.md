@@ -39,12 +39,10 @@ To access the perms `group` scalar value do the following:
 When the config key points to a non-scaler, associative array `get_config` echos a string ready for `eval`, which generates a nice set of BASH vars containing the values of `perms`, e.g.,
 
     eval $(get_config perms)
-    echo $PERMS_USER
-    echo $PERMS_GROUP
-    echo $PERMS_FILES
-    echo $PERMS_DIRECTORIES
-    
-* Notice the keys are converted to uppercase and include the parent path.
+    echo $perms_user
+    echo $perms_group
+    echo $perms_files
+    echo $perms_directories
 
 If the config key points to an indexed array, e.g., ....
 
@@ -57,14 +55,14 @@ If the config key points to an indexed array, e.g., ....
 
 ... then the eval string is slightly different...
 
-    `declare -a HOOKS_FILES_TAGS=("ignore" "normal" "emergency")`
+    `declare -a config_values=("ignore" "normal" "emergency")`
     
 ... and you use it like this:
 
     eval $(get_config "hooks.files.tags")
-    ${HOOKS_FILES_TAGS[0]} == "ignore"
-    ${HOOKS_FILES_TAGS[1]} == "normal"
-    ${HOOKS_FILES_TAGS[2]} == "emergency"
+    ${config_values[0]} == "ignore"
+    ${config_values[1]} == "normal"
+    ${config_values[2]} == "emergency"
 
 ### Non-Scalars Keys
 
@@ -90,3 +88,36 @@ This is a usage example:
     ${config_keys[0]} == "_default"
     ${config_keys[1]} == "help"
     ${config_keys[2]} == "new"
+
+### Filepaths
+
+Configuration values which are filepaths can be added to the YAML as relative paths (relative to the script file) like this;
+
+    webroot: ../web
+    path_to_binaries: .
+    public_files: ../web/sites/default/files
+    
+Then when you access the configuration use `get_config_path`, e.g.,
+
+    webroot=$(get_config_path "webroot")
+    
+The value of `$webroot` will be an an absolute filepath.    
+
+#### Pro Tip
+
+If you put a stack of paths under a single key, like so:
+
+    files:
+    - webroot: ../web
+    - bin: .
+    - public: ../web/sites/default/files
+    
+You can import all of them with one line like this:
+
+    eval $(get_config_path "files")
+    
+And you will have access to:
+
+    $files_webroot        
+    $files_bin        
+    $files_public

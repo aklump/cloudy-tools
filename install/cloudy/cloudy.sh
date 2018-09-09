@@ -166,6 +166,16 @@ function get_config() {
     _cloudy_read_config "$config_key" "$default_value" "$default_type"
 }
 
+##
+ # Return configuration value or values as full path(s) relative to $ROOT.
+ #
+function get_config_path() {
+    local config_key=$1
+    local default_value=$2
+    local default_type=$3
+    _cloudy_read_config "$config_key" "$default_value" "$default_type" false "_cloudy_realpath"
+}
+
 function translate() {
     local translation_key=$1
     local default_value=$2

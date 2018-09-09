@@ -78,8 +78,9 @@ function _cloudy_read_config() {
     local default_value=$2
     local default_type=$3
     local array_keys=$4
+    local mutator=$5
     local return
-    return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys")
+    return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
     if [ $? -eq 0 ]; then
       echo $return && return 0
     fi

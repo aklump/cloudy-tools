@@ -8,8 +8,7 @@
 
 use Symfony\Component\Yaml\Yaml;
 
-require_once __DIR__ . '/vendor/autoload.php';
-define('ROOT', $argv[1]);
+require_once dirname(__FILE__) . '/_bootstrap.php';
 
 $path_to_cloudy_config = $argv[2];
 
@@ -25,7 +24,7 @@ try {
     'config' => [],
   ];
 
-  foreach ($data['additional_config'] as $basename) {
+  foreach ($g->get($data, 'additional_config', []) as $basename) {
     $path = ROOT . "/$basename";
     if (!file_exists($path)) {
       throw new \RuntimeException("Missing configuration file: $path");

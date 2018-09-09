@@ -12,7 +12,10 @@ $json = $g->get($argv, 2, '[]');
 $config_key = $g->get($argv, 3, '');
 $default_value = $g->get($argv, 4, []);
 $default_type = $g->get($argv, 5, 'string');
-$array_keys = $g->get($argv, 6, FALSE);
+$array_keys = $g->get($argv, 6, FALSE, function ($value, $default) {
+  return $value === 'true' ? TRUE : $default;
+});
+$mutator = $g->get($argv, 7, NULL);
 
 try {
   $data = json_decode($json, TRUE);
@@ -31,6 +34,7 @@ try {
 
   $value = get_value($data, $config_key, $default_value, [
     'array_keys' => $array_keys,
+    'mutator' => $mutator,
   ]);
 
   echo $value;
