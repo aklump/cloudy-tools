@@ -22,15 +22,15 @@
 
 <section>
 
-<p>When you call <code>success_exit</code> and <code>success_elapsed_exit</code> the exit status is set to 0 and the script exits.  With the latter, the elapsed time is also printed.</p>
+<p>When you call <code>exit_with_success</code> and <code>exit_with_success_elapsed</code> the exit status is set to 0 and the script exits.  With the latter, the elapsed time is also printed.</p>
 
-<p>When you call <code>failed_exit</code> the exit status is set to 1 by default.  To change the exit status to something other than 1, then do something like the following, which will return a 2.  Valid exit codes are from 0-255. <a href="https://www.tldp.org/LDP/abs/html/exit-status.html">Learn more</a>.</p>
+<p>When you call <code>exit_with_failure</code> the exit status is set to 1 by default.  To change the exit status to something other than 1, then do something like the following, which will return a 2.  Valid exit codes are from 0-255. <a href="https://www.tldp.org/LDP/abs/html/exit-status.html">Learn more</a>.</p>
 
 <pre><code>CLOUDY_EXIT_STATUS=2
-failed_exit "Missing $ROOT/_perms.local.sh."
+exit_with_failure "Missing $ROOT/_perms.local.sh."
 </code></pre>
 
-<p>You can use <code>throw_exit</code> kind of like an exception.</p>
+<p>You can use <code>throw</code> kind of like an exception.</p>
 </section>
 
 <div class="search__results">
@@ -45,7 +45,7 @@ failed_exit "Missing $ROOT/_perms.local.sh."
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 15:58:49 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sun, 09 Sep 2018 10:15:21 -0700</p>
   </div>
 </footer>
 

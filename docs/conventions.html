@@ -25,7 +25,32 @@
 <ul>
 <li>For getters when echoing a default value, return 2</li>
 <li>Functions that begin with <code>_cloudy</code> should be considered private and never called by your script.</li>
+<li>Function names should be readable and intuitive
+
+<ul>
+<li><code>exit_with_success</code> is better than <code>success_exit</code></li>
+</ul></li>
+<li>Function names should start with a verb if applicable, unless they are grouped by category, e.g. <code>stack_join</code> is fine because <em>stack</em> is the common group.</li>
 </ul>
+
+<h2>Functions that operation on arrays</h2>
+
+<p>When a function needs to manipulate an array, the array should be assigned to a global variable, the name of which is the function with <code>_array</code> added to the end, e.g.,</p>
+
+<pre><code>function stack_join() {
+    local glue=$1
+    local string
+    string=$(printf "%s$glue" "${stack_join_array[@]}") &amp;&amp; string=${string%$glue} || return 1
+    echo $string
+    return 0
+}
+</code></pre>
+
+<p>And here is the usage</p>
+
+<pre><code>stack_join_array=("${config_values[@]}")
+local options="-$(stack_join ", -"), --${option}"    
+</code></pre>
 </section>
 
 <div class="search__results">
@@ -40,7 +65,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sat, 08 Sep 2018 15:58:49 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sun, 09 Sep 2018 10:15:20 -0700</p>
   </div>
 </footer>
 
