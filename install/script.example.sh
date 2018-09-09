@@ -11,14 +11,14 @@ source "$ROOT/cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
 # Input validation
-validate_input || failed_exit "Uh, that's not quite right..."
+validate_input || exit_with_failure "Uh, that's not quite right..."
 
 # Handle the various operations.
-op=$(get_op)
-case $op in
+command=$(get_command)
+case $command in
 "alpha")
-    has_param "pass" || fail_with "Alpha does nothing yet"
-    has_param "pass" && succeed_with "You passed the correct parameter \"pass\"."
+    has_param "pass" || fail_because "Alpha does nothing yet"
+    has_param "pass" && succeed_because "You passed the correct parameter \"pass\"."
     ;;
 
 "help")
@@ -26,10 +26,10 @@ case $op in
     ;;
 
 *)
-    throw_exit "Unhandled operation \"$op\""
+    throw "Unhandled operation \"$command\""
     ;;
 
 esac
 
-has_failed && failed_exit
-success_elapsed_exit "Example completed."
+has_failed && exit_with_failure
+exit_with_success_elapsed "Example completed."

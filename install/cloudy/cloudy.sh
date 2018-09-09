@@ -8,28 +8,29 @@
  # Validate the CLI input arguments and options.
  #
 function validate_input() {
-    local op
+    local command
 
-    op=$(get_op)
+    command=$(get_command)
 
     # Assert only defined operations are valid.
-    eval $(get_config_keys "operations")
-    CLOUDY_STACK=(${config_keys[@]})
-    stack_has $op || fail_with "Invalid operation \"$op\""
+    _cloudy_validate_command $command
 
     # Assert only defined options for a given op.
-    _cloudy_get_valid_operations_by_op $op
+    _cloudy_get_valid_operations_by_command $command
+
     for option in "${CLOUDY_OPTIONS[@]}"; do
        [[ "$option" =~ ^(.*)\=(.*) ]]
        name=${BASH_REMATCH[1]}
        value=${BASH_REMATCH[2]}
-       stack_has $name || fail_with "Invalid option: $name"
+       stack_has_array=(${CLOUDY_STACK[@]})
+
+       stack_has $name || fail_because "Invalid option: $name"
 
        # Assert the provided value matches schema.
-       eval $(_cloudy_validate_against_scheme "operations.$op.options.$name" "$name" "$value")
+       eval $(_cloudy_validate_against_scheme "commands.$command.options.$name" "$name" "$value")
        if [[ "$schema_errors" ]]; then
             for error in "${schema_errors[@]}"; do
-               fail_with "$error"
+               fail_because "$error"
             done
        fi
     done
@@ -38,7 +39,7 @@ function validate_input() {
     return 0
 }
 
-function get_op() {
+function get_command() {
     [ ${#CLOUDY_ARGS[0]} -gt 0 ] && echo ${CLOUDY_ARGS[0]} && return 0
     echo $(get_config default_operation) && return 2
 }
@@ -88,10 +89,37 @@ function get_option() {
 function stack_has() {
     local needle=$1
     local value
-    for value in "${CLOUDY_STACK[@]}"; do
+    for value in "${stack_has_array[@]}"; do
        [[ "$value" == "$needle" ]] && return 0
     done
     return 1
+}
+
+##
+ # Join a stack into an array with delimiter.
+ #
+function stack_join() {
+    local glue=$1
+    local string
+    string=$(printf "%s$glue" "${stack_join_array[@]}") && string=${string%$glue} || return 1
+    echo $string
+    return 0
+}
+
+##
+ # Alphabetically sort a stack.
+ #
+function stack_sort() {
+    local IFS=$'\n'
+    stack_sort_array=($(sort <<<"${stack_sort_array[*]}"))
+}
+
+##
+ # Sort a stack based on length of values.
+ #
+function stack_sort_length() {
+    eval $(php "$CLOUDY_ROOT/_helpers.php" "stack_sort_length" "${stack_sort_length_array[@]}")
+    return $?
 }
 
 ##
@@ -108,7 +136,7 @@ function has_args() {
  # As an example see the following code:
  # @code
  #   ./script.sh action blue apple
- #   get_op --> "action"
+ #   get_command --> "action"
  #   get_arg 0 --> "blue"
  #   get_arg 1 --> "apple"
  # @endcode
@@ -124,23 +152,49 @@ function get_arg() {
 function get_config_keys() {
     local config_key=$1
     local default_value=$2
-    _cloudy_read_config "$config_key" "$default_value" true
+    _cloudy_read_config "$config_key" "$default_value" "array" true
 }
+
+##
+ # @param string $3
+ #   If you need an empty array you will need to pass 'array'
+ #
 function get_config() {
     local config_key=$1
     local default_value=$2
-    _cloudy_read_config "$config_key" "$default_value"
+    local default_type=$3
+    _cloudy_read_config "$config_key" "$default_value" "$default_type"
 }
 
 function translate() {
     local translation_key=$1
     local default_value=$2
-    _cloudy_read_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value"
+    _cloudy_read_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
 }
 
 #
 # SECTION: User feedback and output
 #
+
+##
+ # Accept a y/n confirmation message or end
+ #
+ # @param string $1
+ #   A question to ask ending with a '?' mark.  Leave blank for default.
+ #
+ # @return bool
+ #   Sets the value of confirm_result
+ #
+function confirm() {
+ while true; do
+    read -r -n 1 -p "${1:-Continue?} [y/n]: " REPLY
+    case $REPLY in
+      [yY]) echo ; return 0 ;;
+      [nN]) echo ; return 1 ;;
+      *) printf " \033[31m %s \n\033[0m" "invalid input"
+    esac
+  done
+}
 
 ##
  # Echo a string in red.
@@ -183,34 +237,83 @@ function echo_headline() {
 ##
  # Echo an array as a bulletted list.
  #
- # You must provide your list array as $CLOUDY_STACK like so:
+ # @param $echo_list_array
+ #
+ # You must provide your list array as $echo_list_array like so:
  # @code
- #   CLOUDY_STACK=("${some_array_to_echo[@]}")
- #   echo_red_list
+ #   echo_list_array=("${some_array_to_echo[@]}")
+ #   echo_list
  # @endcode
  #
 function echo_list() {
     _cloudy_echo_list
 }
 
+##
+ # @param $echo_list_array
+ #
 function echo_red_list() {
     _cloudy_echo_list 1 1
 }
 
+##
+ # @param $echo_list_array
+ #
 function echo_green_list() {
     _cloudy_echo_list 2 2
 }
 
+##
+ # @param $echo_list_array
+ #
 function echo_yellow_list() {
     _cloudy_echo_list 3 3
 }
 
+##
+ # @param $echo_list_array
+ #
 function echo_blue_list() {
     _cloudy_echo_list 4 4
 }
 
 function echo_help() {
-    echo_yellow "Help output @todo"
+    local command=$1
+
+    local operations
+    local option_type
+    local help
+    local help_alias
+    local help_options
+    local help_option
+    local option_value
+    local aliases
+    local topic=${command}
+
+    [[ "$command" ]] || topic="command"
+
+    echo_yellow "Usage:"
+    echo "$LIL $topic [options] [arguments]" && echo
+
+    # Focused topic, show info about command.
+    if [[ "$command" ]]; then
+
+        _cloudy_validate_command $command || exit_with_failure
+
+        # Todo: write this to a text file in cache.
+        _cloudy_help_command_options $command
+
+    # Top-level just show all commands.
+    else
+
+        # Todo: write this to a text file in cache.
+        _cloudy_help_commands
+    fi
+
+
+    [[ "$command" ]] &&  exit_with_success "Use just \"help\" for more commands"
+    exit_with_success "Use \"help [command]\" for specific info"
+
 }
 
 #
@@ -219,17 +322,17 @@ function echo_help() {
 # @link https://www.tldp.org/LDP/abs/html/exit-status.html
 #
 
-function success_exit() {
+function exit_with_success() {
     local message=$1
-    _cloudy_success_exit "$(_cloudy_message "$message" "$CLOUDY_SUCCESS")"
+    _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS")"
 }
 
-function success_elapsed_exit() {
+function exit_with_success_elapsed() {
     local message=$1
-    _cloudy_success_exit "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $SECONDS seconds.")"
+    _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $SECONDS seconds.")"
 }
 
-function succeed_with() {
+function succeed_because() {
     local message=$1
     [[ "$message" ]] || return 1
     message=$(_cloudy_message "$message")
@@ -237,12 +340,12 @@ function succeed_with() {
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
-function failed_exit () {
-    echo && echo_red "🔥🔥🔥 $(_cloudy_message "$1" "$CLOUDY_FAILED")"
+function exit_with_failure () {
+    echo && echo_red "🔥  $(_cloudy_message "$1" "$CLOUDY_FAILED")"
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_FAILURES[@]} -gt 0 ]; then
-        CLOUDY_STACK=("${CLOUDY_FAILURES[@]}")
+        echo_list_array=("${CLOUDY_FAILURES[@]}")
         echo_red_list
     fi
 
@@ -254,9 +357,13 @@ function failed_exit () {
     _cloudy_exit
 }
 
-function fail_with() {
+function fail() {
+    CLOUDY_EXIT_STATUS=1 && return 0
+}
+
+function fail_because() {
     local message=$1
-    CLOUDY_EXIT_STATUS=1
+    fail
     if [[ "$message" ]]; then
         message=$(_cloudy_message "$message")
         CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
@@ -269,12 +376,12 @@ function has_failed() {
 }
 
 ##
- # Echo an exception message an perform failed_exit immediately.
+ # Echo an exception message an perform exit_with_failure immediately.
  #
-function throw_exit () {
+function throw () {
     local args=$@
     echo "$(tput setaf 0)$(tput setab 1) Exception! $(tput smso) "${args[*]}" $(tput sgr0)"
-    failed_exit
+    exit 3
 }
 
 #

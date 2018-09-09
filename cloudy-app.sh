@@ -11,25 +11,25 @@ source "$ROOT/install/cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
 # Input validation
-validate_input || failed_exit "Uh, that's not quite right..."
+validate_input || exit_with_failure "Something didn't work..."
 
 # Handle the various operations.
-op=$(get_op)
-case $op in
+command=$(get_command)
+case $command in
 "new")
     basename=$(get_arg 0 "cloudy-script.sh")
     default_config=$(path_filename $basename).yml
     example_script=$(path_filename $basename).example.sh
     config_file=$(get_option config $default_config)
-    [ -e "$basename" ] && ! has_option "force" && fail_with "$basename already exists. Use --force, -f to proceed."
+    [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
     if ! has_failed; then
-        rsync -a $ROOT/install/ ./ || fail_with "Could not copy Cloudy core to ."
-        mv script.sh $basename || fail_with "Could not rename script.sh to $basename"
-        mv script.example.sh $example_script || fail_with "Could not rename script.example.sh to $example_script"
-        sed -i '' "s/__CONFIG/$config_file/g" $basename || fail_with "Could not update config file in $basename"
+        rsync -a $ROOT/install/ ./ || fail_because "Could not copy Cloudy core to ."
+        mv script.sh $basename || fail_because "Could not rename script.sh to $basename"
+        mv script.example.sh $example_script || fail_because "Could not rename script.example.sh to $example_script"
+        sed -i '' "s/__CONFIG/$config_file/g" $basename || fail_because "Could not update config file in $basename"
 
         if [[ "$config_file" != "config.yml" ]]; then
-            mv ./config.yml $config_file || fail_with "Could not copy config.yml to $config_file"
+            mv ./config.yml $config_file || fail_because "Could not copy config.yml to $config_file"
         fi
 
         if has_failed; then
@@ -38,18 +38,18 @@ case $op in
             [ -e cloudy ] && rm -r cloudy
         fi
     fi
-    has_failed && failed_exit "Failed to install $basename"
-    success_elapsed_exit "New script $basename created."
+    has_failed && exit_with_failure "Failed to install $basename"
+    exit_with_success_elapsed "New script $basename created."
     ;;
 
 "help")
-    echo_help && exit 0
+    echo_help $(get_arg 0) && exit 0
     ;;
 
 *)
-    throw_exit "Unhandled operation \"$op\""
+    throw "Unhandled operation \"$command\""
     ;;
 
 esac
 
-has_failed && failed_exit
+has_failed && exit_with_failure

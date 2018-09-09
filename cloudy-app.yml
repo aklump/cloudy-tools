@@ -1,5 +1,5 @@
 default_operation: help
-operations:
+commands:
   help:
     help: Show this help screen.
   new:
@@ -10,7 +10,6 @@ operations:
         type: string
     options:
       config:
-        aliases: [c]
         type: string
         help: Set the basename of the config file.
       force:

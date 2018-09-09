@@ -26,6 +26,7 @@ if ($g->get($schema, 'type') === 'boolean') {
 
 $validator = new Validator();
 $validator->validate($value, (object) $schema);
+$exit_code = 0;
 
 if (!$validator->isValid()) {
   $errors = [];

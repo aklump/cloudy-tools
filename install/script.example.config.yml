@@ -1,5 +1,5 @@
 default_operation: help
-operations:
+commands:
   help:
     help: Display this help screen
   new:
