@@ -164,20 +164,19 @@ function get_arg() {
     echo $default && return 2
 }
 
-function get_config_keys() {
-    local config_key=$1
-    local default_value=$2
-    _cloudy_get_config "$config_key" "$default_value" "array" true
-}
-
 ##
- # @param string $3
- #   If you need an empty array you will need to pass 'array'
+ # Get a config value.
+ #
+ # When requesting an array you must pass -a as the first argument if there's
+ # any chance that the return value will be empty.
  #
 function get_config() {
+    if [[ "$1" == '-a' ]]; then
+        default_type='array'
+        shift
+    fi
     local config_key=$1
     local default_value=$2
-    local default_type=$3
     _cloudy_get_config "$config_key" "$default_value" "$default_type"
 }
 
@@ -192,6 +191,7 @@ function get_config_path() {
 }
 
 function translate() {
+return
     local translation_key=$1
     local default_value=$2
     _cloudy_get_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"

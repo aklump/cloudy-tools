@@ -73,7 +73,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
       elseif (is_numeric(key($value))) {
         $value = 'declare -a ' . $varname . '=("' . implode('" "', $value) . '")';
       }
-      elseif ($context['array_keys']) {
+      elseif (is_array(reset($value)) || $context['array_keys']) {
         $value = 'declare -a ' . $varname . '=("' . implode('" "', array_keys($value)) . '")';
       }
       else {

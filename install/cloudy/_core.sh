@@ -24,11 +24,11 @@ function _cloudy_bootstrap() {
     fi
     _cloudy_validate_config
 
-    CLOUDY_LANGUAGE=$(get_config "language" "en")
+#    CLOUDY_LANGUAGE=$(get_config "language" "en")
 
     # todo may not need to do these two?
-    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
-    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
+#    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
+#    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
 
     # Create some "constants".
     LI="├──"
@@ -65,7 +65,7 @@ function _cloudy_bootstrap() {
     for option in "${CLOUDY_OPTIONS[@]}"; do
         local value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
-        eval $(get_config "commands.${command}.options.${option}.aliases")
+        eval $(get_config -a "commands.${command}.options.${option}.aliases")
         for alias in ${config_values[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
         done
@@ -73,11 +73,11 @@ function _cloudy_bootstrap() {
 
     # Using aliases search for the master option.
     use_config_var "options"
-    eval $(get_config_keys "commands.${command}.options")
+    eval $(get_config -a "commands.${command}.options")
 
     for master_option in "${options[@]}"; do
         use_config_var "aliases"
-        eval $(get_config "commands.${command}.options.${master_option}.aliases")
+        eval $(get_config -a "commands.${command}.options.${master_option}.aliases")
         for alias in "${aliases[@]}"; do
             if has_option $alias && ! has_option $master_option; then
                 value=$(get_option "$alias")
@@ -239,11 +239,11 @@ function _cloudy_get_valid_operations_by_command() {
     declare -a options=();
 
     use_config_var "options"
-    eval $(get_config_keys "commands.${command}.options")
+    eval $(get_config -a "commands.${command}.options")
 
     for option in "${options[@]}"; do
         use_config_var "aliases"
-        eval $(get_config "commands.${command}.options.${option}.aliases")
+        eval $(get_config -a "commands.${command}.options.${option}.aliases")
         options=("${options[@]}" "${aliases[@]}")
     done
     CLOUDY_STACK=(${options[@]})
@@ -265,7 +265,7 @@ function _cloudy_help_commands() {
     echo_headline "$(get_config "title")"
 
     echo_yellow "Available commands:"
-    eval $(get_config_keys "commands")
+    eval $(get_config "commands")
     for help_command in "${commands[@]}"; do
         help=$(get_config "commands.$help_command.help")
         echo_list_array=("${echo_list_array[@]}" "$(echo_green "${help_command}") $help")
@@ -285,10 +285,10 @@ function _cloudy_help_for_single_command() {
     local help_argument
 
     use_config_var "arguments"
-    eval $(get_config_keys "commands.${command_help_topic}.arguments")
+    eval $(get_config -a "commands.${command_help_topic}.arguments")
 
     use_config_var "options"
-    eval $(get_config_keys "commands.${command_help_topic}.options")
+    eval $(get_config -a "commands.${command_help_topic}.options")
 
     usage="$(basename $SCRIPT) $command_help_topic"
 
@@ -328,7 +328,7 @@ function _cloudy_help_for_single_command() {
 
             # Add in the aliases
             use_config_var "aliases"
-            eval $(get_config "commands.${command_help_topic}.options.${option}.aliases" "" "array")
+            eval $(get_config -a "commands.${command_help_topic}.options.${option}.aliases")
             for help_alias in "${aliases[@]}"; do
                help_options=("${help_options[@]}" "$help_alias")
             done
@@ -361,7 +361,7 @@ function _cloudy_help_for_single_command() {
 
 function _cloudy_validate_command() {
     local command=$1
-    eval $(get_config_keys "commands")
+    eval $(get_config "commands")
     stack_has_array=(${commands[@]})
     stack_has $command && return 0
     fail_because "Command \"$command\", does not exist."
