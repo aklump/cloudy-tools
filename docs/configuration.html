@@ -99,7 +99,7 @@ ${config_values[2]} == "emergency"
 
 <h3>Non-Scalars Keys</h3>
 
-<p>In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with <code>get_config_keys</code>.  Our example will echo a string like this: <code>declare -a config_keys=("_default" "help" "new")</code></p>
+<p>In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with <code>get_config</code>.  Our example will echo a string like this: <code>declare -a config_keys=("_default" "help" "new")</code></p>
 
 <pre><code>operations:
   _default: help
@@ -117,7 +117,7 @@ ${config_values[2]} == "emergency"
 
 <p>This is a usage example:</p>
 
-<pre><code>eval $(get_config_keys "commands")
+<pre><code>eval $(get_config "commands")
 
 ${config_keys[0]} == "_default"
 ${config_keys[1]} == "help"
@@ -189,7 +189,7 @@ writeable_directories=($_config_values[@]})
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 10 Sep 2018 09:40:51 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 10 Sep 2018 15:31:03 -0700</p>
   </div>
 </footer>
 

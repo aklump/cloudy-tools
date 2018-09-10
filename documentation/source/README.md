@@ -33,5 +33,6 @@ Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariab
 | `$SCRIPT` | Absolute path to your script.  |
 | `$CONFIG` | Absolute path to the base config file. |
 | `$WDIR` | The working directory when script was initiated. |
+| `$LOGFILE` | Absolute path to a log file, if enabled. |
 
 * Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).

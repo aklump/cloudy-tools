@@ -191,7 +191,6 @@ function get_config_path() {
 }
 
 function translate() {
-return
     local translation_key=$1
     local default_value=$2
     _cloudy_get_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
@@ -477,7 +476,11 @@ declare -a CLOUDY_OPTIONS=()
 declare -a CLOUDY_FAILURES=()
 declare -a CLOUDY_SUCCESSES=()
 declare -a CLOUDY_STACK=()
-source "$CLOUDY_ROOT/_core.sh"
 
+# For scope reasons we have to source these here not in _cloudy_bootstrap.
+CACHED_CONFIG_FILEPATH="$CLOUDY_ROOT/cache/_cached.$(path_filename $SCRIPT).config.sh"
+[ -f $CACHED_CONFIG_FILEPATH ] && source $CACHED_CONFIG_FILEPATH || exit_with_failure "Cannot load cached configuration."
+
+source "$CLOUDY_ROOT/_core.sh" || exit_with_failure "Missing cloudy/_core.sh"
 _cloudy_bootstrap $@
 

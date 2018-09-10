@@ -9,12 +9,13 @@ function _cloudy_bootstrap() {
     SECONDS=0
     CLOUDY_EXIT_STATUS=0
 
-    # Ensure the configuration cache environment.
-    CLOUDY_CACHED_CONFIG="$CLOUDY_ROOT/cache/_cached.$(path_filename $SCRIPT).config.sh"
-    local cache_dir=$(dirname $CLOUDY_CACHED_CONFIG)
-    [ -d "$cache_dir" ] || mkdir -p "$cache_dir" || exit_with_failure "Unable to create cache folder: $cache_dir"
-    [ -f $CLOUDY_CACHED_CONFIG ] && source $CLOUDY_CACHED_CONFIG
-    touch $CLOUDY_CACHED_CONFIG
+    # Ensure the configuration cache environment is built up.
+    local cache_dir=$(dirname $CACHED_CONFIG_FILEPATH)
+    if [ ! -d "$cache_dir" ]; then
+        mkdir -p "$cache_dir" || exit_with_failure "Unable to create cache folder: $cache_dir"
+        touch $CACHED_CONFIG_FILEPATH || exit_with_failure "Unable to write cache file:$CACHED_CONFIG_FILEPATH"
+    fi
+    CACHED_CONFIG=$(cat $CACHED_CONFIG_FILEPATH)
 
     # todo: maybe this should move
     CLOUDY_CONFIG_JSON='{"language":"en"}'
@@ -22,13 +23,14 @@ function _cloudy_bootstrap() {
         CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_load_config.php "$ROOT" "$CONFIG")"
         [ $? -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
     fi
+
     _cloudy_validate_config
 
-#    CLOUDY_LANGUAGE=$(get_config "language" "en")
+    CLOUDY_LANGUAGE=$(get_config "language" "en")
 
     # todo may not need to do these two?
-#    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
-#    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
+    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
+    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
 
     # Create some "constants".
     LI="├──"
@@ -38,7 +40,6 @@ function _cloudy_bootstrap() {
     local arg
     local options
     local option
-
     for arg in "$@"; do
       if [[ "$arg" =~ ^--(.*) ]]; then
         option="${BASH_REMATCH[1]}"
@@ -56,15 +57,15 @@ function _cloudy_bootstrap() {
       fi
     done
 
-    local command=$(get_command)
 
-    use_config_var "config_values"
+    local command=$(get_command)
 
     # Add in the alias action based on master options.
     local value
     for option in "${CLOUDY_OPTIONS[@]}"; do
         local value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
+        use_config_var "aliases"
         eval $(get_config -a "commands.${command}.options.${option}.aliases")
         for alias in ${config_values[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
@@ -102,26 +103,17 @@ function _cloudy_get_config() {
     local var_cached_name="cloudy_config_${var_name}"
     local var_eval
 
-    # Define the desired variable name.
-    [[ "$CLOUDY_CONFIG_VARNAME" ]] && var_name="$CLOUDY_CONFIG_VARNAME"
+#    source $CACHED_CONFIG_FILEPATH
 
-    # Look to memory for the variable.
-    eval value=\"\$$var_cached_name\"
-
-    # The variable has not yet been imported to cache/config.sh, pull it with PHP.
-    if [[ ! "$value" ]]; then
-        write_log "Using filesystem to obtain config: $var_name"
-
-        # This is not perfect but I can't figure out how to check for an unset
-        # variable by using a dynamic variable name
-        # https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash#13864829
-        # This will almost always work, unless the intended cached value is ""
+    # Check if the variable has been imported to cache/config.sh, if not
+    # pull it in with slower with PHP process.
+    if [[ "$CACHED_CONFIG" != *"$var_cached_name"* ]]; then
+        write_log "Using filesystem to obtain config: $var_cached_name"
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$CLOUDY_CONFIG_VARNAME" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
-            echo $var_eval >>  "$CLOUDY_CACHED_CONFIG"
+            echo $var_eval >>  "$CACHED_CONFIG_FILEPATH"
             eval $var_eval
-            eval value=\"\$$var_cached_name\"
         fi
     fi
 
@@ -135,6 +127,7 @@ function _cloudy_get_config() {
     fi
 
     # We have a scalar and we just want a value.
+    eval value=\"\$$var_cached_name\"
     echo $value && return 0
 }
 

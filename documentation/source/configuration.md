@@ -66,7 +66,7 @@ If the config key points to an indexed array, e.g., ....
 
 ### Non-Scalars Keys
 
-In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with `get_config_keys`.  Our example will echo a string like this: `declare -a config_keys=("_default" "help" "new")`
+In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with `get_config`.  Our example will echo a string like this: `declare -a config_keys=("_default" "help" "new")`
 
     operations:
       _default: help
@@ -83,7 +83,7 @@ In a more complex configuration like the following, you might want to get the ar
 
 This is a usage example:
 
-    eval $(get_config_keys "commands")
+    eval $(get_config "commands")
     
     ${config_keys[0]} == "_default"
     ${config_keys[1]} == "help"
