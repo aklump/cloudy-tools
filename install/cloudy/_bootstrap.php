@@ -95,7 +95,6 @@ function get_value(array $config, $path, $default_value, $context = []) {
   }
 
   return implode('|', [
-    $value_type,
     $varname,
     $value,
   ]);

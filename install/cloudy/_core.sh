@@ -86,18 +86,51 @@ function _cloudy_bootstrap() {
     revert_config_var
 }
 
-function _cloudy_read_config() {
+function _cloudy_get_config_helper() {
     local config_key=$1
     local default_value=$2
     local default_type=$3
     local array_keys=$4
     local mutator=$5
+
     local return
-    return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$CLOUDY_CONFIG_VARNAME" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
-    if [ $? -eq 0 ]; then
-      echo $return && return 0
+    local var_type
+    local var_name=${config_key//./_}
+    local var_cached_name="cloudy_config_${var_name}"
+    local var_eval
+
+    # Define the desired variable name.
+    [[ "$CLOUDY_CONFIG_VARNAME" ]] && var_name="$CLOUDY_CONFIG_VARNAME"
+
+    # Look to memory for the variable.
+    eval value=\"\$$var_cached_name\"
+
+    # The variable has not yet been imported to cache/config.sh, pull it with PHP.
+    if [[ ! "$value" ]]; then
+        # This is not perfect but I can't figure out how to check for an unset
+        # variable by using a dynamic variable name
+        # https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash#13864829
+        # This will almost always work, unless the intended cached value is ""
+        return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$CLOUDY_CONFIG_VARNAME" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
+        local IFS="|"; read var_cached_name var_eval <<< "$return"
+        if [ $? -eq 0 ]; then
+            echo $var_eval >>  "$CLOUDY_ROOT/cache/config.sh"
+            eval $var_eval
+            eval value=\"\$$var_cached_name\"
+        fi
     fi
-    echo $default_value && return 2
+
+    # Either way the variable is in memory at this point as $var_cached_name.
+    # We now need to figure out what to echo back to the caller.
+    local code=$(declare -p $var_cached_name)
+
+    # We have an array and we need to use $var_name instead of $var_cached_name.
+    if [[ "$code" =~ "declare -a" ]]; then
+        echo "${code/$var_cached_name/$var_name}" && return 0
+    fi
+
+    # We have a scalar and we just want a value.
+    echo $value && return 0
 }
 
 ##

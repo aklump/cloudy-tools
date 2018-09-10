@@ -167,7 +167,7 @@ function get_arg() {
 function get_config_keys() {
     local config_key=$1
     local default_value=$2
-    _cloudy_read_config "$config_key" "$default_value" "array" true
+    _cloudy_get_config_helper "$config_key" "$default_value" "array" true
 }
 
 ##
@@ -178,7 +178,7 @@ function get_config() {
     local config_key=$1
     local default_value=$2
     local default_type=$3
-    _cloudy_read_config "$config_key" "$default_value" "$default_type"
+    _cloudy_get_config_helper "$config_key" "$default_value" "$default_type"
 }
 
 ##
@@ -188,13 +188,20 @@ function get_config_path() {
     local config_key=$1
     local default_value=$2
     local default_type=$3
-    _cloudy_read_config "$config_key" "$default_value" "$default_type" false "_cloudy_realpath"
+    _cloudy_get_config_helper "$config_key" "$default_value" "$default_type" false "_cloudy_realpath"
 }
 
 function translate() {
     local translation_key=$1
     local default_value=$2
-    _cloudy_read_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
+    _cloudy_get_config_helper "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
+}
+
+##
+ # Determine if $stack_is_array_array is an array or not.
+ #
+function stack_is_array() {
+    [[ "$(declare -p stack_is_array_array)" =~ "declare -a" ]]
 }
 
 #
@@ -442,12 +449,14 @@ while [ -h "$source" ]; do # resolve $source until the file is no longer a symli
   [[ $source != /* ]] && source="$dir/$source" # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 CLOUDY_ROOT="$( cd -P "$( dirname "$source" )" && pwd )"
-# End Cloudy Bootstrap
+
+# Define shared variables
 declare -a CLOUDY_ARGS=()
 declare -a CLOUDY_OPTIONS=()
 declare -a CLOUDY_FAILURES=()
 declare -a CLOUDY_SUCCESSES=()
 declare -a CLOUDY_STACK=()
 source "$CLOUDY_ROOT/_core.sh"
+
 _cloudy_bootstrap $@
 
