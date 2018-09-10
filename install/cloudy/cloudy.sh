@@ -302,6 +302,7 @@ function echo_blue_list() {
 }
 
 function echo_help() {
+
     # Focused topic, show info about command.
     if has_args; then
 

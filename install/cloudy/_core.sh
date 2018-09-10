@@ -9,8 +9,8 @@ function _cloudy_bootstrap() {
     SECONDS=0
     CLOUDY_EXIT_STATUS=0
     CLOUDY_CONFIG_JSON='{"language":"en"}'
-    if [ -f "$CLOUDY_CONFIG" ]; then
-        CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_load_config.php "$ROOT" "$CLOUDY_CONFIG")"
+    if [ -f "$CONFIG" ]; then
+        CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_load_config.php "$ROOT" "$CONFIG")"
         [ $? -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
     fi
     _cloudy_validate_config
@@ -239,16 +239,13 @@ function _cloudy_help_for_single_command() {
     local help_alias
     local help_argument
 
-    local scriptname=$(basename $CLOUDY_SCRIPT)
-
     use_config_var "arguments"
     eval $(get_config_keys "commands.${command_help_topic}.arguments")
 
     use_config_var "options"
     eval $(get_config_keys "commands.${command_help_topic}.options")
 
-
-    usage="$scriptname $command_help_topic"
+    usage="$(basename $SCRIPT) $command_help_topic"
 
     [ ${#options} -gt 0 ] && usage="$usage <options>"
     [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"

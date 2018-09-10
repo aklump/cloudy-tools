@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
-CLOUDY_SCRIPT="${BASH_SOURCE[0]}"
-while [ -h "$CLOUDY_SCRIPT" ]; do # resolve $CLOUDY_SCRIPT until the file is no longer a symlink
-  dir="$(cd -P "$(dirname "$CLOUDY_SCRIPT")" && pwd)"
-  CLOUDY_SCRIPT="$(readlink "$CLOUDY_SCRIPT")"
-  [[ $CLOUDY_SCRIPT != /* ]] && CLOUDY_SCRIPT="$dir/$CLOUDY_SCRIPT" # if $CLOUDY_SCRIPT was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-ROOT="$(cd -P "$( dirname "$CLOUDY_SCRIPT" )" && pwd)"
-CLOUDY_CONFIG=$ROOT/cloudy-app.yml
-source "$ROOT/install/cloudy/cloudy.sh"
+
+# Define the configuration file relative to this script.
+CONFIG="cloudy-app.yml";
+
+# Begin Cloudy Bootstrap
+c="$CONFIG";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";CONFIG="$(cd $(dirname "$r/$c") && pwd)/$(basename $c)";source "$r/install/cloudy/cloudy.sh";SCRIPT="$s";ROOT="$r"
 # End Cloudy Bootstrap
 
 # Input validation
 validate_input || exit_with_failure "Something didn't work..."
-
 # Handle the various operations.
 command=$(get_command)
 case $command in
