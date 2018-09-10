@@ -1,9 +1,10 @@
+title: Example Cloudy Script
 default_operation: help
 commands:
   help:
-    help: Display this help screen
-  new:
-    help: Create new Cloudy script file in the current directory
+    help: Display this help screen.
+  install:
+    help: Install a new instance in the current directory.
     options:
       config:
         help: Set the basename of the config file.
@@ -14,3 +15,4 @@ commands:
       role:
         type: string
         enum: [prod, dev]
+        help: "One of: prod or dev"

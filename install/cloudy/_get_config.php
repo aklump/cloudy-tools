@@ -9,13 +9,14 @@
 require_once dirname(__FILE__) . '/_bootstrap.php';
 
 $json = $g->get($argv, 2, '[]');
-$config_key = $g->get($argv, 3, '');
-$default_value = $g->get($argv, 4, []);
-$default_type = $g->get($argv, 5, 'string');
-$array_keys = $g->get($argv, 6, FALSE, function ($value, $default) {
+$config_varname = $g->get($argv, 3, '');
+$config_key = $g->get($argv, 4, '');
+$default_value = $g->get($argv, 5, []);
+$default_type = $g->get($argv, 6, 'string');
+$array_keys = $g->get($argv, 7, FALSE, function ($value, $default) {
   return $value === 'true' ? TRUE : $default;
 });
-$mutator = $g->get($argv, 7, NULL);
+$mutator = $g->get($argv, 8, NULL);
 
 try {
   $data = json_decode($json, TRUE);
@@ -33,6 +34,7 @@ try {
   }
 
   $value = get_value($data, $config_key, $default_value, [
+    'varname' => $config_varname,
     'array_keys' => $array_keys,
     'mutator' => $mutator,
   ]);

@@ -48,8 +48,8 @@
 
 <p>And here is the usage</p>
 
-<pre><code>stack_join_array=("${config_values[@]}")
-local options="-$(stack_join ", -"), --${option}"    
+<pre><code>stack_join_array=("${_config_values[@]}")
+local options="-$(stack_join ", -"), --${option}"
 </code></pre>
 </section>
 
@@ -63,7 +63,7 @@ local options="-$(stack_join ", -"), --${option}"
   <a href="index.html" class="index">Index</a>
   <a href="error-handling.html" class="next error-handling">Exit Status&raquo;</a>
 </div>
-  
+
   <div id="footer-legaleeze">
     <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sun, 09 Sep 2018 10:15:20 -0700</p>
   </div>

@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+##
+ # Override the variable name returned by get_config*
+ #
+function use_config_var() {
+    local varname=$1
+    CLOUDY_CONFIG_VARNAME="$varname" && return 0
+}
+
+##
+ # Return to using the config varname as defined by the config file.
+ #
+function revert_config_var() {
+    CLOUDY_CONFIG_VARNAME="" && return 0
+}
+
 #
 # SECTION: Arguments, options, parameters
 #
@@ -13,7 +28,7 @@ function validate_input() {
     command=$(get_command)
 
     # Assert only defined operations are valid.
-    _cloudy_validate_command $command
+    [[ "$command" ]] && _cloudy_validate_command $command
 
     # Assert only defined options for a given op.
     _cloudy_get_valid_operations_by_command $command
@@ -41,7 +56,7 @@ function validate_input() {
 
 function get_command() {
     [ ${#CLOUDY_ARGS[0]} -gt 0 ] && echo ${CLOUDY_ARGS[0]} && return 0
-    echo $(get_config default_operation) && return 2
+    echo $(get_config default_command) && return 2
 }
 
 ##
@@ -239,10 +254,9 @@ function echo_blue() {
  #
 function echo_headline() {
     local headline=$1
-    echo "⭐ ⭐ ⭐  $(_cloudy_message "$headline" "Headline")"
-#    echo "$(tput setaf 15)$(tput setab 4)  $(tput smso) $(_cloudy_message "$headline" "Headline") $(tput sgr0)"
+    [[ ! "$headline" ]] && return 1
+    echo && echo "⭐  $(string_uppercase "${headline//.}")" && echo
 }
-
 
 ##
  # Echo an array as a bulletted list.
@@ -288,40 +302,20 @@ function echo_blue_list() {
 }
 
 function echo_help() {
-    local command=$1
-
-    local operations
-    local option_type
-    local help
-    local help_alias
-    local help_options
-    local help_option
-    local option_value
-    local aliases
-    local topic=${command}
-
-    [[ "$command" ]] || topic="command"
-
-    echo_yellow "Usage:"
-    echo "$LIL $topic [options] [arguments]" && echo
-
     # Focused topic, show info about command.
-    if [[ "$command" ]]; then
+    if has_args; then
 
-        _cloudy_validate_command $command || exit_with_failure
-
-        # Todo: write this to a text file in cache.
-        _cloudy_help_command_options $command
-
-    # Top-level just show all commands.
-    else
+        _cloudy_validate_command $(get_arg 0) || exit_with_failure "No help for that!"
 
         # Todo: write this to a text file in cache.
-        _cloudy_help_commands
+        _cloudy_help_for_single_command
+
+        exit_with_success "Use just \"help\" for more commands"
     fi
 
-
-    [[ "$command" ]] &&  exit_with_success "Use just \"help\" for more commands"
+    # Top-level just show all commands.
+    # Todo: write this to a text file in cache.
+    _cloudy_help_commands
     exit_with_success "Use \"help [command]\" for specific info"
 
 }

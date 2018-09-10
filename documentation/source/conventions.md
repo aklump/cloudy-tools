@@ -20,5 +20,5 @@ When a function needs to manipulate an array, the array should be assigned to a 
     
 And here is the usage
 
-    stack_join_array=("${config_values[@]}")
+    stack_join_array=("${_config_values[@]}")
     local options="-$(stack_join ", -"), --${option}"    

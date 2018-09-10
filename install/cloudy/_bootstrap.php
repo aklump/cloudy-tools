@@ -62,20 +62,20 @@ function get_value(array $config, $path, $default_value, $context = []) {
 
     case 'array':
       $temp = [];
-      $prefix = implode('_', $context['parents']);
+      $varname = !empty($context['varname']) ? $context['varname'] : implode('_', $context['parents']);
 
       if (empty($value)) {
-        $value = 'declare -a config_values=()';
+        $value = 'declare -a ' . $varname . '=()';
       }
       elseif (is_numeric(key($value))) {
-        $value = 'declare -a config_values=("' . implode('" "', $value) . '")';
+        $value = 'declare -a ' . $varname . '=("' . implode('" "', $value) . '")';
       }
       elseif ($context['array_keys']) {
-        $value = 'declare -a config_keys=("' . implode('" "', array_keys($value)) . '")';
+        $value = 'declare -a ' . $varname . '=("' . implode('" "', array_keys($value)) . '")';
       }
       else {
         foreach ($value as $k => $v) {
-          $temp[] = "{$prefix}_{$k}=\"$v\"";
+          $temp[] = "{$varname}_{$k}=\"$v\"";
         }
         $value = implode(';', $temp);
       }
@@ -102,6 +102,10 @@ function _cloudy_declare_array($function, array $array) {
 
 function _cloudy_realpath($value) {
   $path = substr($value, 0, 1) === '/' ? $value : ROOT . "/$value";
+  $path = realpath($path);
+  if (!$path) {
+    $path = "invalid://$value";
+  }
 
-  return realpath($path);
+  return $path;
 }

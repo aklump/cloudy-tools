@@ -121,3 +121,15 @@ And you will have access to:
     $files_webroot        
     $files_bin        
     $files_public
+
+If the yaml is an indexed array like so:
+
+    files:
+    - ../web
+    - .
+    - ../web/sites/default/files
+    
+You have one extra step of variable assignment.
+
+    eval $(get_config_path "writeable_directories")
+    writeable_directories=($_config_values[@]})    
