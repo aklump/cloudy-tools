@@ -10,10 +10,11 @@ function _cloudy_bootstrap() {
     CLOUDY_EXIT_STATUS=0
 
     # Ensure the configuration cache environment.
-    local CLOUDY_CACHED_CONFIG="$CLOUDY_ROOT/cache/$(path_filename $SCRIPT).config.sh"
+    CLOUDY_CACHED_CONFIG="$CLOUDY_ROOT/cache/_cached.$(path_filename $SCRIPT).config.sh"
     local cache_dir=$(dirname $CLOUDY_CACHED_CONFIG)
     [ -d "$cache_dir" ] || mkdir -p "$cache_dir" || exit_with_failure "Unable to create cache folder: $cache_dir"
     [ -f $CLOUDY_CACHED_CONFIG ] && source $CLOUDY_CACHED_CONFIG
+    touch $CLOUDY_CACHED_CONFIG
 
     # todo: maybe this should move
     CLOUDY_CONFIG_JSON='{"language":"en"}'
