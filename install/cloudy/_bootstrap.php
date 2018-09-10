@@ -47,23 +47,26 @@ function get_value(array $config, $path, $default_value, $context = []) {
     }
   }
 
-  switch (gettype($value)) {
+  $varname = 'cloudy_config_' . implode('_', $context['parents']);
+
+  $value_type = gettype($value);
+  switch ($value_type) {
     case 'NULL':
-      $value = 'null';
+      $value = "$varname=null";
       break;
 
     case 'boolean':
       $value = $value ? 'true' : 'false';
+      $value = "$varname=$value";
       break;
 
     case 'object':
       $value = $value->__toString();
+      $value = "$varname=\"$value\"";
       break;
 
     case 'array':
       $temp = [];
-      $varname = !empty($context['varname']) ? $context['varname'] : implode('_', $context['parents']);
-
       if (empty($value)) {
         $value = 'declare -a ' . $varname . '=()';
       }
@@ -80,9 +83,22 @@ function get_value(array $config, $path, $default_value, $context = []) {
         $value = implode(';', $temp);
       }
       break;
+
+    case 'integer':
+    case 'double':
+      $value = "$varname=$value";
+      break;
+
+    case 'string':
+      $value = "$varname=\"$value\"";
+      break;
   }
 
-  return $value;
+  return implode('|', [
+    $value_type,
+    $varname,
+    $value,
+  ]);
 }
 
 function stack_sort_length() {

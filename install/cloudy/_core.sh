@@ -8,6 +8,12 @@
 function _cloudy_bootstrap() {
     SECONDS=0
     CLOUDY_EXIT_STATUS=0
+
+    # Warm up configuration.
+    [ -d "$CLOUDY_ROOT/cache/" ] || mkdir -p "$CLOUDY_ROOT/cache/" || exit_with_failure "Unable to create cache folder: $CLOUDY_ROOT/cache/"
+    [ -f "$CLOUDY_ROOT/cache/config.sh" ] && source "$CLOUDY_ROOT/cache/config.sh"
+
+    # todo: maybe this should move
     CLOUDY_CONFIG_JSON='{"language":"en"}'
     if [ -f "$CONFIG" ]; then
         CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_load_config.php "$ROOT" "$CONFIG")"
@@ -21,6 +27,7 @@ function _cloudy_bootstrap() {
     CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
     CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
 
+    # Create some "constants".
     LI="├──"
     LIL="└──"
 
@@ -325,7 +332,7 @@ function _cloudy_validate_command() {
 
 function _cloudy_debug_helper() {
     local sidebar=''
-    local IFS=";"; read default fg bg message basename funcname lineno   <<< "$@"
+    local IFS=";"; read default fg bg message basename funcname lineno  <<< "$@"
     [[ "$basename" ]] && sidebar="$sidebar${basename##./}"
     [[ "$funcname" ]] && sidebar="$funcname in $sidebar"
     [[ "$lineno" ]] && sidebar="$sidebar on line $lineno"
