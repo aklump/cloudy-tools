@@ -417,11 +417,19 @@ function string_uppercase() {
 ##
  # Echo the arguments sent to this is an eye-catching manner.
  #
- # Use this for debugging.
+ # Call as in the example below for better tracing.
+ # @code
+ #   debug "Some message to show|$0|$FUNCNAME|$LINENO"
+ # @endcode
  #
-function breakpoint () {
-    local args=$@
-    echo "$(tput setaf 3)$(tput setab 15) breakpoint $(tput smso) "${args[*]}" $(tput sgr0)"
+function debug () {
+    local sidebar=''
+    local IFS=";"; read message basename funcname lineno   <<< "$@"
+    [[ "$basename" ]] && sidebar="$sidebar${basename##./}"
+    [[ "$funcname" ]] && sidebar="$funcname in $sidebar"
+    [[ "$lineno" ]] && sidebar="$sidebar on line $lineno"
+    [[ "$sidebar" ]] || sidebar="debug"
+    echo "$(tput setaf 3)$(tput setab 0) $sidebar $(tput smso) "$message" $(tput sgr0)"
 }
 
 #
