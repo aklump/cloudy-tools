@@ -6,6 +6,8 @@
  * Load configuration and echo a json string.
  */
 
+use JsonSchema\Constraints\Constraint;
+use JsonSchema\Validator;
 use Symfony\Component\Yaml\Yaml;
 
 require_once dirname(__FILE__) . '/_bootstrap.php';
@@ -30,6 +32,17 @@ try {
       throw new \RuntimeException("Missing configuration file: $path");
     }
     $data = array_merge_recursive($data, Yaml::parse(file_get_contents($path)));
+  }
+
+  // Validate against base-config.schema.json.
+  $validator = new Validator();
+  $validate_data = json_decode(json_encode($data));
+  try {
+    $validator->validate($validate_data, (object) ['$ref' => 'file://' . __DIR__ . '/base-config.schema.json'], Constraint::CHECK_MODE_EXCEPTIONS);
+  }
+  catch (\Exception $exception) {
+    $class = get_class($exception);
+    throw new $class("Configuration Syntax Error in \"" . basename($path_to_cloudy_config) . '": ' . $exception->getMessage());
   }
 
   echo json_encode($data);

@@ -1,5 +1,5 @@
 title: Example Cloudy Script
-default_operation: help
+default_command: help
 commands:
   help:
     help: Display this help screen.
@@ -7,6 +7,7 @@ commands:
     help: Install a new instance in the current directory.
     options:
       config:
+        type: string
         help: Set the basename of the config file.
       force:
         type: boolean

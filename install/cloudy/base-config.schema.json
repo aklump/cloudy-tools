@@ -1,0 +1,94 @@
+{
+    "definitions": {
+        "commandName": {
+            "type": "string",
+            "pattern": "^[a-z_-]*$"
+        },
+        "argument": {
+            "type": "object",
+            "properties": {
+                "help": {
+                    "type": "string"
+                },
+                "aliases": {
+                    "type": "array"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "help",
+                "type"
+            ]
+        },
+        "option": {
+            "type": "object",
+            "properties": {
+                "help": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "enum": {
+                    "type": "array"
+                },
+                "aliases": {
+                    "type": "array"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "help",
+                "type"
+            ]
+        }
+    },
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "additional_config": {
+            "type": "array",
+            "uniqueItems": true
+        },
+        "default_command": {
+            "$ref": "#/definitions/commandName"
+        },
+        "commands": {
+            "type": "object",
+            "propertyNames": {
+                "$ref": "#/definitions/commandName"
+            },
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "help": {
+                        "type": "string"
+                    },
+                    "arguments": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/argument"
+                        }
+                    },
+                    "options": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#/definitions/option"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "help"
+                ]
+            }
+        }
+    },
+    "required": [
+        "title",
+        "default_command",
+        "commands"
+    ]
+}
