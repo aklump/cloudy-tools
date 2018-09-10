@@ -8,6 +8,9 @@
 # Define the configuration file relative to this script.
 CONFIG="__CONFIG";
 
+# Uncomment this line to enable file logging.
+#LOGFILE="__FILENAME.log"
+
 # Begin Cloudy Bootstrap
-c="$CONFIG";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";CONFIG="$(cd $(dirname "$r/$c") && pwd)/$(basename $c)";source "$r/cloudy/cloudy.sh";SCRIPT="$s";ROOT="$r";WDIR="$PWD"
+s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/cloudy/cloudy.sh"
 # End Cloudy Bootstrap

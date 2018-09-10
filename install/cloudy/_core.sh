@@ -9,9 +9,11 @@ function _cloudy_bootstrap() {
     SECONDS=0
     CLOUDY_EXIT_STATUS=0
 
-    # Warm up configuration.
-    [ -d "$CLOUDY_ROOT/cache/" ] || mkdir -p "$CLOUDY_ROOT/cache/" || exit_with_failure "Unable to create cache folder: $CLOUDY_ROOT/cache/"
-    [ -f "$CLOUDY_ROOT/cache/config.sh" ] && source "$CLOUDY_ROOT/cache/config.sh"
+    # Ensure the configuration cache environment.
+    local CLOUDY_CACHED_CONFIG="$CLOUDY_ROOT/cache/$(path_filename $SCRIPT).config.sh"
+    local cache_dir=$(dirname $CLOUDY_CACHED_CONFIG)
+    [ -d "$cache_dir" ] || mkdir -p "$cache_dir" || exit_with_failure "Unable to create cache folder: $cache_dir"
+    [ -f $CLOUDY_CACHED_CONFIG ] && source $CLOUDY_CACHED_CONFIG
 
     # todo: maybe this should move
     CLOUDY_CONFIG_JSON='{"language":"en"}'
@@ -86,7 +88,7 @@ function _cloudy_bootstrap() {
     revert_config_var
 }
 
-function _cloudy_get_config_helper() {
+function _cloudy_get_config() {
     local config_key=$1
     local default_value=$2
     local default_type=$3
@@ -107,6 +109,8 @@ function _cloudy_get_config_helper() {
 
     # The variable has not yet been imported to cache/config.sh, pull it with PHP.
     if [[ ! "$value" ]]; then
+        write_log "Using filesystem to obtain config: $var_name"
+
         # This is not perfect but I can't figure out how to check for an unset
         # variable by using a dynamic variable name
         # https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash#13864829
@@ -114,7 +118,7 @@ function _cloudy_get_config_helper() {
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$CLOUDY_CONFIG_VARNAME" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
-            echo $var_eval >>  "$CLOUDY_ROOT/cache/config.sh"
+            echo $var_eval >>  "$CLOUDY_CACHED_CONFIG"
             eval $var_eval
             eval value=\"\$$var_cached_name\"
         fi

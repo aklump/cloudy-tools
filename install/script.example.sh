@@ -8,12 +8,17 @@
 # Define the configuration file relative to this script.
 CONFIG="script.example.config.yml";
 
+# Uncomment this line to enable file logging.
+LOGFILE="script.example.log"
+
 # Begin Cloudy Bootstrap
-c="$CONFIG";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";CONFIG="$(cd $(dirname "$r/$c") && pwd)/$(basename $c)";source "$r/cloudy/cloudy.sh";SCRIPT="$s";ROOT="$r";WDIR="$PWD"
+s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
 # Input validation
 validate_input || exit_with_failure "Uh, that's not quite right..."
+
+hi=$(succeed_because "bla")
 
 # Handle the various operations.
 command=$(get_command)

@@ -38,7 +38,10 @@ try {
   $validator = new Validator();
   $validate_data = json_decode(json_encode($data));
   try {
-    $validator->validate($validate_data, (object) ['$ref' => 'file://' . __DIR__ . '/base-config.schema.json'], Constraint::CHECK_MODE_EXCEPTIONS);
+    if (!($schema = json_decode(file_get_contents(__DIR__ . '/base-config.schema.json')))) {
+      throw new \RuntimeException("Invalid JSON in base-config.schema.json");
+    }
+    $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);
   }
   catch (\Exception $exception) {
     $class = get_class($exception);

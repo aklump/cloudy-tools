@@ -4,6 +4,30 @@
             "type": "string",
             "pattern": "^[a-z_-]*$"
         },
+        "command": {
+            "type": "object",
+            "properties": {
+                "help": {
+                    "type": "string"
+                },
+                "arguments": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/argument"
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/option"
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "help"
+            ]
+        },
         "argument": {
             "type": "object",
             "properties": {
@@ -16,8 +40,7 @@
             },
             "additionalProperties": false,
             "required": [
-                "help",
-                "type"
+                "help"
             ]
         },
         "option": {
@@ -55,34 +78,29 @@
         "default_command": {
             "$ref": "#/definitions/commandName"
         },
+        "logging": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "file",
+                "enabled"
+            ]
+        },
         "commands": {
             "type": "object",
             "propertyNames": {
                 "$ref": "#/definitions/commandName"
             },
             "additionalProperties": {
-                "type": "object",
-                "properties": {
-                    "help": {
-                        "type": "string"
-                    },
-                    "arguments": {
-                        "type": "object",
-                        "additionalProperties": {
-                            "$ref": "#/definitions/argument"
-                        }
-                    },
-                    "options": {
-                        "type": "object",
-                        "additionalProperties": {
-                            "$ref": "#/definitions/option"
-                        }
-                    }
-                },
-                "additionalProperties": false,
-                "required": [
-                    "help"
-                ]
+                "$ref": "#/definitions/command"
             }
         }
     },

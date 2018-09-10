@@ -119,7 +119,7 @@ function _cloudy_realpath($value) {
   $path = substr($value, 0, 1) === '/' ? $value : ROOT . "/$value";
   $path = realpath($path);
   if (!$path) {
-    $path = "invalid://$value";
+    $path = ROOT . "/$value";
   }
 
   return $path;

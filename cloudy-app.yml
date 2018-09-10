@@ -8,7 +8,6 @@ commands:
     arguments:
       basename:
         help: The basename of the script to create.
-        type: string
     options:
       config:
         type: string

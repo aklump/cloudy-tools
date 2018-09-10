@@ -167,7 +167,7 @@ function get_arg() {
 function get_config_keys() {
     local config_key=$1
     local default_value=$2
-    _cloudy_get_config_helper "$config_key" "$default_value" "array" true
+    _cloudy_get_config "$config_key" "$default_value" "array" true
 }
 
 ##
@@ -178,7 +178,7 @@ function get_config() {
     local config_key=$1
     local default_value=$2
     local default_type=$3
-    _cloudy_get_config_helper "$config_key" "$default_value" "$default_type"
+    _cloudy_get_config "$config_key" "$default_value" "$default_type"
 }
 
 ##
@@ -188,13 +188,13 @@ function get_config_path() {
     local config_key=$1
     local default_value=$2
     local default_type=$3
-    _cloudy_get_config_helper "$config_key" "$default_value" "$default_type" false "_cloudy_realpath"
+    _cloudy_get_config "$config_key" "$default_value" "$default_type" false "_cloudy_realpath"
 }
 
 function translate() {
     local translation_key=$1
     local default_value=$2
-    _cloudy_get_config_helper "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
+    _cloudy_get_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
 }
 
 ##
@@ -439,6 +439,20 @@ function throw () {
     exit 3
 }
 
+##
+ # Write to the log file, if logging is enabled.
+ #
+ # @param ... any number of args
+ #
+function write_log() {
+    if [[ "$LOGFILE" ]]; then
+        local directory=$(dirname $LOGFILE)
+        test -d "$directory" || mkdir -p "$directory"
+        touch "$LOGFILE"
+        echo "[$(date)] [$(whoami)] $@" >> "$LOGFILE"
+    fi
+}
+
 #
 # End Public API
 #
@@ -449,6 +463,13 @@ while [ -h "$source" ]; do # resolve $source until the file is no longer a symli
   [[ $source != /* ]] && source="$dir/$source" # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 CLOUDY_ROOT="$( cd -P "$( dirname "$source" )" && pwd )"
+
+# Expand some vars from our controlling script.
+CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
+[[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
+SCRIPT="$s";
+ROOT="$r";
+WDIR="$PWD";
 
 # Define shared variables
 declare -a CLOUDY_ARGS=()

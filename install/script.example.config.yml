@@ -1,5 +1,8 @@
 title: Example Cloudy Script
 default_command: help
+logging:
+  file: script.example.log
+  enabled: true
 commands:
   help:
     help: Display this help screen.
