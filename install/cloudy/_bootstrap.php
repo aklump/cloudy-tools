@@ -32,8 +32,9 @@ function get_value(array $config, $path, $default_value, $context = []) {
   $key = array_shift($path);
   $context['parents'][] = $key;
 
-  if ($path && isset($config[$key]) && is_array($config[$key])) {
-    return get_value($config[$key], $path, $default_value, $context);
+  if ($path) {
+    $value = isset($config[$key]) ? $config[$key] : [];
+    return get_value($value, $path, $default_value, $context);
   }
 
   $value = isset($config[$key]) ? $config[$key] : $default_value;
