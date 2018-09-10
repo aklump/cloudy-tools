@@ -387,15 +387,6 @@ function has_failed() {
     return 1
 }
 
-##
- # Echo an exception message an perform exit_with_failure immediately.
- #
-function throw () {
-    local args=$@
-    echo "$(tput setaf 0)$(tput setab 1) Exception! $(tput smso) "${args[*]}" $(tput sgr0)"
-    exit 3
-}
-
 #
 # Filepaths
 #
@@ -430,13 +421,15 @@ function string_uppercase() {
  # @endcode
  #
 function debug () {
-    local sidebar=''
-    local IFS=";"; read message basename funcname lineno   <<< "$@"
-    [[ "$basename" ]] && sidebar="$sidebar${basename##./}"
-    [[ "$funcname" ]] && sidebar="$funcname in $sidebar"
-    [[ "$lineno" ]] && sidebar="$sidebar on line $lineno"
-    [[ "$sidebar" ]] || sidebar="debug"
-    echo "$(tput setaf 3)$(tput setab 0) $sidebar $(tput smso) "$message" $(tput sgr0)"
+    _cloudy_debug_helper "debug;3;0;$@"
+}
+
+##
+ # Echo an exception message and exit.
+ #
+function throw () {
+    _cloudy_debug_helper "exception;1;7;$@"
+    exit 3
 }
 
 #

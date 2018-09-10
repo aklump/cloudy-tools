@@ -322,3 +322,13 @@ function _cloudy_validate_command() {
     fail_because "Command \"$command\", does not exist."
     return 1
 }
+
+function _cloudy_debug_helper() {
+    local sidebar=''
+    local IFS=";"; read default fg bg message basename funcname lineno   <<< "$@"
+    [[ "$basename" ]] && sidebar="$sidebar${basename##./}"
+    [[ "$funcname" ]] && sidebar="$funcname in $sidebar"
+    [[ "$lineno" ]] && sidebar="$sidebar on line $lineno"
+    [[ "$sidebar" ]] || sidebar="$default"
+    echo && echo "$(tput setaf $fg)$(tput setab $bg) $sidebar $(tput smso) "$message" $(tput sgr0)" && echo
+}
