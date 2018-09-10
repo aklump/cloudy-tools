@@ -25,12 +25,13 @@ To use Cloudy in your script...
 
 ## Usage
 
-The following variables are made available:
+Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariables.html#BASHSUBSHELLREF) the following variables are made available by Cloudy.
 
 | varname | description |
 |----------|----------|
 | `$ROOT` | The directory containing your script. |
 | `$SCRIPT` | Absolute path to your script.  |
-| `$CONFIG` | Absolute path to the config file. |
+| `$CONFIG` | Absolute path to the base config file. |
+| `$WDIR` | The working directory when script was initiated. |
 
 * Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).
