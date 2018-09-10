@@ -301,6 +301,13 @@ function echo_blue_list() {
     _cloudy_echo_list 4 4
 }
 
+##
+ # Return the elapsed time in seconds since the beginning of the script.
+ #
+function echo_elapsed() {
+    echo $SECONDS
+}
+
 function echo_help() {
 
     # Focused topic, show info about command.
