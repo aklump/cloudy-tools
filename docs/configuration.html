@@ -68,15 +68,11 @@
 <p>When the config key points to a non-scaler, associative array <code>get_config</code> echos a string ready for <code>eval</code>, which generates a nice set of BASH vars containing the values of <code>perms</code>, e.g.,</p>
 
 <pre><code>eval $(get_config perms)
-echo $PERMS_USER
-echo $PERMS_GROUP
-echo $PERMS_FILES
-echo $PERMS_DIRECTORIES
+echo $perms_user
+echo $perms_group
+echo $perms_files
+echo $perms_directories
 </code></pre>
-
-<ul>
-<li>Notice the keys are converted to uppercase and include the parent path.</li>
-</ul>
 
 <p>If the config key points to an indexed array, e.g., ....</p>
 
@@ -90,15 +86,15 @@ echo $PERMS_DIRECTORIES
 
 <p>... then the eval string is slightly different...</p>
 
-<pre><code>`declare -a HOOKS_FILES_TAGS=("ignore" "normal" "emergency")`
+<pre><code>`declare -a config_values=("ignore" "normal" "emergency")`
 </code></pre>
 
 <p>... and you use it like this:</p>
 
 <pre><code>eval $(get_config "hooks.files.tags")
-${HOOKS_FILES_TAGS[0]} == "ignore"
-${HOOKS_FILES_TAGS[1]} == "normal"
-${HOOKS_FILES_TAGS[2]} == "emergency"
+${config_values[0]} == "ignore"
+${config_values[1]} == "normal"
+${config_values[2]} == "emergency"
 </code></pre>
 
 <h3>Non-Scalars Keys</h3>
@@ -127,6 +123,58 @@ ${config_keys[0]} == "_default"
 ${config_keys[1]} == "help"
 ${config_keys[2]} == "new"
 </code></pre>
+
+<h3>Filepaths</h3>
+
+<p>Configuration values which are filepaths can be added to the YAML as relative paths (relative to the script file) like this;</p>
+
+<pre><code>webroot: ../web
+path_to_binaries: .
+public_files: ../web/sites/default/files
+</code></pre>
+
+<p>Then when you access the configuration use <code>get_config_path</code>, e.g.,</p>
+
+<pre><code>webroot=$(get_config_path "webroot")
+</code></pre>
+
+<p>The value of <code>$webroot</code> will be an an absolute filepath.</p>
+
+<h4>Pro Tip</h4>
+
+<p>If you put a stack of paths under a single key, like so:</p>
+
+<pre><code>files:
+- webroot: ../web
+- bin: .
+- public: ../web/sites/default/files
+</code></pre>
+
+<p>You can import all of them with one line like this:</p>
+
+<pre><code>eval $(get_config_path "files")
+</code></pre>
+
+<p>And you will have access to:</p>
+
+<pre><code>$files_webroot        
+$files_bin        
+$files_public
+</code></pre>
+
+<p>If the yaml is an indexed array like so:</p>
+
+<pre><code>files:
+- ../web
+- .
+- ../web/sites/default/files
+</code></pre>
+
+<p>You have one extra step of variable assignment.</p>
+
+<pre><code>eval $(get_config_path "writeable_directories")
+writeable_directories=($_config_values[@]})    
+</code></pre>
 </section>
 
 <div class="search__results">
@@ -141,7 +189,7 @@ ${config_keys[2]} == "new"
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sun, 09 Sep 2018 10:15:20 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Sun, 09 Sep 2018 19:48:40 -0700</p>
   </div>
 </footer>
 

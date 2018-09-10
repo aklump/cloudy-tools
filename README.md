@@ -25,4 +25,12 @@ To use Cloudy in your script...
 
 ## Usage
 
+The following variables are made available:
+
+| varname | description |
+|----------|----------|
+| `$ROOT` | The directory containing your script. |
+| `$SCRIPT` | Absolute path to your script.  |
+| `$CONFIG` | Absolute path to the config file. |
+
 * Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).

@@ -9,6 +9,7 @@ c="$CONFIG";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "
 
 # Input validation
 validate_input || exit_with_failure "Something didn't work..."
+
 # Handle the various operations.
 command=$(get_command)
 case $command in
