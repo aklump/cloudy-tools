@@ -1,5 +1,5 @@
 title: Cloudy Installer
-default_operation: help
+default_command: help
 commands:
   help:
     help: Show this help screen.
