@@ -164,7 +164,7 @@ function has_args() {
  #
 function get_arg() {
     local index=$1
-    local default=$2
+    local default="$2"
     let index=(index + 1)
     [ ${#CLOUDY_ARGS[@]} -gt $index ] && echo  ${CLOUDY_ARGS[$index]} && return 0
     echo $default && return 2
@@ -177,13 +177,20 @@ function get_arg() {
  # any chance that the return value will be empty.
  #
 function get_config() {
+    local default_type
     if [[ "$1" == '-a' ]]; then
         default_type='array'
         shift
     fi
     local config_key=$1
-    local default_value=$2
+    local default_value="$2"
     _cloudy_get_config "$config_key" "$default_value" "$default_type"
+}
+
+function get_config_keys() {
+    local default_type='array'
+    local config_key=$1
+    _cloudy_get_config "$config_key" "" "$default_type" true
 }
 
 ##
@@ -531,12 +538,19 @@ function exit_with_test_results() {
     exit_with_failure "Some failures occurred"
 }
 
+function assert_empty() {
+    local actual="$1"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [ ${#actual} -eq 0 ] && return 0
+    _cloudy_assert_failed "variable" "should be empty."
+}
+
 function assert_not_empty() {
     local actual="$1"
 
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
     [ ${#actual} -gt 0 ] && return 0
-
     _cloudy_assert_failed "variable" "should not be empty."
 }
 
@@ -550,6 +564,15 @@ function assert_not_equals() {
     _cloudy_assert_failed "$actual" "should not equal" "$expected"
 }
 
+function assert_same() {
+    local expected="$1"
+    local actual="$2"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [[ "$expected" == "$actual" ]] && return 0
+     _cloudy_assert_failed "$actual" "is not the same as" "$expected"
+}
+
 function assert_equals() {
     local expected="$1"
     local actual="$2"
@@ -559,9 +582,43 @@ function assert_equals() {
      _cloudy_assert_failed "$actual" "does not equal" "$expected"
 }
 
+function assert_true() {
+    local actual="$1"
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [[ true == "$actual" ]] || [[ TRUE == "$actual" ]] && return 0
+     _cloudy_assert_failed "$actual" "should be true."
+}
+
+function assert_false() {
+    local actual="$1"
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [[ false == "$actual" ]] || [[ FALSE == "$actual" ]] && return 0
+     _cloudy_assert_failed "$actual" "should be false."
+}
+
+function assert_file_exists() {
+    local filepath="$1"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [ -e "$filepath" ] && return 0
+     _cloudy_assert_failed "$filepath" "does not exist, but it should."
+}
+
+function assert_file_not_exists() {
+    local filepath="$1"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [ ! -e "$filepath" ] && return 0
+     _cloudy_assert_failed "$filepath" "exists, but should not."
+}
+
 #
 # End Public API
 #
+
+# Set this to true and config will be read from YAML every time.  This
+# should normally be set to false to speed things up.
+cloudy_development_do_not_cache_config=false
 
 # Begin Cloudy Core Bootstrap
 SCRIPT="$s";ROOT="$r";WDIR="$PWD";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;CLOUDY_ROOT="$(cd -P "$(dirname "$s")" && pwd)";source "$CLOUDY_ROOT/_core.sh"|| exit_with_failure "Missing cloudy/_core.sh"

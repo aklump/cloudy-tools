@@ -18,7 +18,7 @@ function _cloudy_bootstrap() {
     # todo: maybe this should move
     CLOUDY_CONFIG_JSON='{"language":"en"}'
     if [ -f "$CONFIG" ]; then
-        CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_load_config.php "$ROOT" "$CONFIG")"
+        CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG")"
         [ $? -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
     fi
 
@@ -63,7 +63,7 @@ function _cloudy_bootstrap() {
         local value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
         use_config_var "aliases"
-        eval $(get_config -a "commands.${command}.options.${option}.aliases")
+        eval $(get_config_keys "commands.${command}.options.${option}.aliases")
         for alias in ${aliases[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
         done
@@ -71,7 +71,7 @@ function _cloudy_bootstrap() {
 
     # Using aliases search for the master option.
     use_config_var "options"
-    eval $(get_config -a "commands.${command}.options")
+    eval $(get_config_keys "commands.${command}.options")
 
     for master_option in "${options[@]}"; do
         use_config_var "aliases"
@@ -128,7 +128,7 @@ function _cloudy_get_config() {
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
-            echo $var_eval >>  "$CACHED_CONFIG_FILEPATH"
+            [[ "$cloudy_development_do_not_cache_config" != "true" ]] && echo $var_eval >>  "$CACHED_CONFIG_FILEPATH"
             eval $var_eval
         fi
     fi
@@ -278,7 +278,7 @@ function _cloudy_help_commands() {
     echo_headline "$(get_config "title") VER $(get_version)"
 
     echo_yellow "Available commands:"
-    eval $(get_config "commands")
+    eval $(get_config_keys "commands")
     for help_command in "${commands[@]}"; do
         help=$(get_config "commands.$help_command.help")
         echo_list_array=("${echo_list_array[@]}" "$(echo_green "${help_command}") $help")
@@ -376,7 +376,7 @@ function _cloudy_help_for_single_command() {
 
 function _cloudy_validate_command() {
     local command=$1
-    eval $(get_config "commands")
+    eval $(get_config_keys "commands")
     stack_has_array=(${commands[@]})
     stack_has $command && return 0
     fail_because "Command \"$command\", does not exist."

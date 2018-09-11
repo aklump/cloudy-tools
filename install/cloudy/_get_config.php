@@ -23,21 +23,25 @@ try {
     throw new \RuntimeException("Invalid JSON");
   }
 
-  // Typecast the default value.
-  switch ($default_type) {
-    case 'array':
-      if (empty($default_value)) {
-        $default_value = array();
-      }
-      break;
+  // We can call this script to simply validate configuration JSON, in which
+  // case we bypass all this.
+  if (!empty($config_key)) {
+    // Typecast the default value.
+    switch ($default_type) {
+      case 'array':
+        if (empty($default_value)) {
+          $default_value = array();
+        }
+        break;
+    }
+
+    $value = get_value($data, $config_key, $default_value, [
+      'array_keys' => $array_keys,
+      'mutator' => $mutator,
+    ]);
+
+    echo $value;
   }
-
-  $value = get_value($data, $config_key, $default_value, [
-    'array_keys' => $array_keys,
-    'mutator' => $mutator,
-  ]);
-
-  echo $value;
   exit(0);
 }
 catch (\Exception $exception) {

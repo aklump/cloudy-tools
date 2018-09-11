@@ -1,5 +1,9 @@
 {
     "definitions": {
+        "help": {
+            "type": "string",
+            "minLength": 10
+        },
         "commandName": {
             "type": "string",
             "pattern": "^[a-z_-]*$"
@@ -8,7 +12,7 @@
             "type": "object",
             "properties": {
                 "help": {
-                    "type": "string"
+                    "$ref": "#/definitions/help"
                 },
                 "arguments": {
                     "type": "object",
@@ -32,7 +36,7 @@
             "type": "object",
             "properties": {
                 "help": {
-                    "type": "string"
+                    "$ref": "#/definitions/help"
                 },
                 "aliases": {
                     "type": "array"
@@ -47,7 +51,7 @@
             "type": "object",
             "properties": {
                 "help": {
-                    "type": "string"
+                    "$ref": "#/definitions/help"
                 },
                 "type": {
                     "type": "string"

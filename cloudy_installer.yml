@@ -1,0 +1,37 @@
+title: Cloudy Installer
+version: "1.0"
+default_command: help
+commands:
+  help:
+    help: Show this help screen.
+  new:
+    help: Create a new script using Cloudy.
+    arguments:
+      basename:
+        help: The basename of the script to create.
+    options:
+      help:
+        type: boolean
+        help: Show help for command "new"
+        aliases: [h]
+      config:
+        type: string
+        help: Set the basename of the config file.
+      force:
+        type: boolean
+        aliases: [f]
+        help: Overwrite an existing script.
+  coretest:
+    help: Run Cloudy's core unit tests.
+
+# These are values used by core get_config tests.
+coretest:
+  string: Adam ate apples at Andrew's abode.
+  indexed_array:
+  - alpha
+  - bravo
+  - charlie
+  associative_array:
+    do: alpha
+    re: bravo
+    mi: charlie
