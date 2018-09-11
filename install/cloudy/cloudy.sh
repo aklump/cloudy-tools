@@ -664,9 +664,5 @@ function assert_file_not_exists() {
 # End Public API
 #
 
-# Set this to true and config will be read from YAML every time.  This
-# should normally be set to false to speed things up.
-cloudy_development_do_not_cache_config=true
-
 # Begin Cloudy Core Bootstrap
 SCRIPT="$s";ROOT="$r";WDIR="$PWD";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;CLOUDY_ROOT="$(cd -P "$(dirname "$s")" && pwd)";source "$CLOUDY_ROOT/_core.sh"|| exit_with_failure "Missing cloudy/_core.sh"

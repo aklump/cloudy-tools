@@ -7,13 +7,6 @@
 
 function _cloudy_bootstrap() {
     SECONDS=0
-    # Ensure the configuration cache environment is built up.
-    local cache_dir=$(dirname $CACHED_CONFIG_FILEPATH)
-    if [ ! -d "$cache_dir" ]; then
-        mkdir -p "$cache_dir" || exit_with_failure "Unable to create cache folder: $cache_dir"
-    fi
-    touch $CACHED_CONFIG_FILEPATH || exit_with_failure "Unable to write cache file:$CACHED_CONFIG_FILEPATH"
-    CACHED_CONFIG=$(cat $CACHED_CONFIG_FILEPATH)
 
     # todo: maybe this should move
     CLOUDY_CONFIG_JSON='{"language":"en"}'
@@ -123,14 +116,24 @@ function _cloudy_get_config() {
 
     # Check if the variable has been imported to cache/config.sh, if not
     # pull it in with slower with PHP process.
-    if [[ "$CACHED_CONFIG" != *"$var_cached_name"* ]]; then
+    if [[ "$CACHED_CONFIG" != *"$var_cached_name="* ]]; then
         write_log_debug "Using filesystem to obtain config: $var_cached_name"
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
-            [[ "$cloudy_development_do_not_cache_config" == "true" ]] && write_log_warning "$var_eval not written due to \$cloudy_development_do_not_cache_config"
-            [[ "$cloudy_development_do_not_cache_config" != "true" ]] && echo "$var_eval" >> "$CACHED_CONFIG_FILEPATH"
-            eval "$var_eval"
+            if [[ "$cloudy_development_do_not_cache_config" != "true" ]]; then
+                echo "$var_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
+                write_log_debug "$var_eval was written to $CACHED_CONFIG_FILEPATH"
+
+                # Beware this only has the scope of this function if a new
+                # variable.  It won't be until the next run of the script that
+                # the scope will be at the top level, because that's when the
+                # cache file is sourced by cloudy.sh.  We need to evaluate it
+                # here though, because it's used below.
+                eval "$var_eval"
+            else
+                write_log_warning "$var_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
+            fi
         fi
     fi
 
@@ -414,14 +417,13 @@ function _cloudy_assert_failed() {
 
 function _cloudy_write_log() {
     [[ "$LOGFILE" ]] || return
-    local level=$(string_uppercase "$1")
+    local level="$1"
     shift
-    args=("[$level]" "$@" )
-
     local directory=$(dirname $LOGFILE)
     test -d "$directory" || mkdir -p "$directory"
     touch "$LOGFILE"
-    echo "[$(date)] [$(whoami)] ${args[@]}" >> "$LOGFILE"
+    echo "[$(date)] [$level] $@" >> "$LOGFILE"
+#    echo "[$(date)] [$level] [$(whoami)] $@" >> "$LOGFILE"
 }
 
 #
@@ -440,13 +442,26 @@ declare -a CLOUDY_SUCCESSES=()
 declare -a CLOUDY_STACK=()
 CLOUDY_EXIT_STATUS=0
 
-# For scope reasons we have to source these here not in _cloudy_bootstrap.
+#
+# Setup caching
+#
+
+# For scope reasons we have to source these here and not inside _cloudy_bootstrap.
 CACHE_DIR="$CLOUDY_ROOT/cache"
 CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
+CACHED_CONFIG=''
+
+# Ensure the configuration cache environment is built up.
+if [ ! -d "$CACHE_DIR" ]; then
+    mkdir -p "$CACHE_DIR" || exit_with_failure "Unable to create cache folder: $CACHE_DIR"
+fi
+touch $CACHED_CONFIG_FILEPATH || exit_with_failure "Unable to write cache file:$CACHED_CONFIG_FILEPATH"
 
 _cloudy_auto_purge_config
 
-if [ -f $CACHED_CONFIG_FILEPATH ]; then
-    source $CACHED_CONFIG_FILEPATH || exit_with_failure "Cannot load cached configuration."
+if [ -f "$CACHED_CONFIG_FILEPATH" ]; then
+    source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
+    CACHED_CONFIG=$(cat "$CACHED_CONFIG_FILEPATH")
 fi
+
 _cloudy_bootstrap $@
