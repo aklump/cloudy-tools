@@ -101,7 +101,7 @@ function _cloudy_auto_purge_config() {
   if [[ "$cache_mtime" -lt "$config_mtime" ]]; then
     rm -f "$CACHED_CONFIG_FILEPATH" || fail
     echo "$config_mtime" > "$cache_mtime_filepath"
-    write_log "Configuration changes detected; auto-purged $CACHED_CONFIG_FILEPATH"
+    write_log_notice "Configuration changes detected; auto-purged $CACHED_CONFIG_FILEPATH"
   fi
   has_failed && exit_with_failure "Cannot auto purge config."
 
@@ -124,12 +124,13 @@ function _cloudy_get_config() {
     # Check if the variable has been imported to cache/config.sh, if not
     # pull it in with slower with PHP process.
     if [[ "$CACHED_CONFIG" != *"$var_cached_name"* ]]; then
-        write_log "Using filesystem to obtain config: $var_cached_name"
+        write_log_debug "Using filesystem to obtain config: $var_cached_name"
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
-            [[ "$cloudy_development_do_not_cache_config" != "true" ]] && echo $var_eval >>  "$CACHED_CONFIG_FILEPATH"
-            eval $var_eval
+            [[ "$cloudy_development_do_not_cache_config" == "true" ]] && write_log_warning "$var_eval not written due to \$cloudy_development_do_not_cache_config"
+            [[ "$cloudy_development_do_not_cache_config" != "true" ]] && echo "$var_eval" >> "$CACHED_CONFIG_FILEPATH"
+            eval "$var_eval"
         fi
     fi
 
@@ -236,7 +237,7 @@ function _cloudy_exit_with_success() {
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_SUCCESSES[@]} -gt 0 ]; then
         echo_list_array=("${CLOUDY_SUCCESSES[@]}")
-        echo_green_list
+        echo_blue_list
     fi
 
     echo
@@ -409,6 +410,18 @@ function _cloudy_assert_failed() {
     fail_because "$because"
 
     return 1
+}
+
+function _cloudy_write_log() {
+    [[ "$LOGFILE" ]] || return
+    local level=$(string_uppercase "$1")
+    shift
+    args=("[$level]" "$@" )
+
+    local directory=$(dirname $LOGFILE)
+    test -d "$directory" || mkdir -p "$directory"
+    touch "$LOGFILE"
+    echo "[$(date)] [$(whoami)] ${args[@]}" >> "$LOGFILE"
 }
 
 #

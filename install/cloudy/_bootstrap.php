@@ -34,6 +34,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
 
   if ($path) {
     $value = isset($config[$key]) ? $config[$key] : [];
+
     return get_value($value, $path, $default_value, $context);
   }
 
@@ -74,12 +75,14 @@ function get_value(array $config, $path, $default_value, $context = []) {
       elseif (is_numeric(key($value))) {
         $value = 'declare -a ' . $varname . '=("' . implode('" "', $value) . '")';
       }
-      elseif (is_array(reset($value)) || $context['array_keys']) {
+      elseif ($context['array_keys']) {
         $value = 'declare -a ' . $varname . '=("' . implode('" "', array_keys($value)) . '")';
       }
       else {
         foreach ($value as $k => $v) {
-          $temp[] = "{$varname}_{$k}=\"$v\"";
+          if (is_scalar($v)) {
+            $temp[] = "{$varname}_{$k}=\"$v\"";
+          }
         }
         $value = implode(';', $temp);
       }

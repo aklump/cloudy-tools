@@ -358,6 +358,13 @@ function exit_with_success_elapsed() {
     _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $SECONDS seconds.")"
 }
 
+function warn_because() {
+    local message=$1
+    [[ "$message" ]] || return 1
+    message=$(echo_yellow "$(_cloudy_message "$message")")
+    [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
+}
+
 function succeed_because() {
     local message=$1
     [[ "$message" ]] || return 1
@@ -463,19 +470,47 @@ function throw() {
 }
 
 ##
- # Write to the log file, if logging is enabled.
+ # @link https://www.php-fig.org/psr/psr-3/
  #
- # @param ... any number of args
- #
-function write_log() {
-    if [[ "$LOGFILE" ]]; then
-        local directory=$(dirname $LOGFILE)
-        test -d "$directory" || mkdir -p "$directory"
-        touch "$LOGFILE"
-        echo "[$(date)] [$(whoami)] $@" >> "$LOGFILE"
-    fi
+function write_log_emergency() {
+    local args=("emergency" "$@")
+    _cloudy_write_log ${args[@]}
 }
 
+function write_log_alert() {
+    local args=("alert" "$@")
+    _cloudy_write_log ${args[@]}
+}
+
+function write_log_critical() {
+    local args=("critical" "$@")
+    _cloudy_write_log ${args[@]}
+}
+
+function write_log_error() {
+    local args=("error" "$@")
+    _cloudy_write_log ${args[@]}
+}
+
+function write_log_warning() {
+    local args=("warning" "$@")
+    _cloudy_write_log ${args[@]}
+}
+
+function write_log_notice() {
+    local args=("notice" "$@")
+    _cloudy_write_log ${args[@]}
+}
+
+function write_log_info() {
+    local args=("info" "$@")
+    _cloudy_write_log ${args[@]}
+}
+
+function write_log_debug() {
+    local args=("debug" "$@")
+    _cloudy_write_log ${args[@]}
+}
 
 #
 # Testing
@@ -490,6 +525,7 @@ function do_tests_in() {
     CLOUDY_ASSERTION_COUNT=0
     CLOUDY_TEST_COUNT=0
     CLOUDY_FAILED_ASSERTION_COUNT=0
+    CLOUDY_SKIPPED_TESTS_COUNT=0
 
     [ ! -f "$CLOUDY_ACTIVE_TESTFILE" ] && fail_because "Test file: \"$CLOUDY_ACTIVE_TESTFILE\" not found." && return 1
 
@@ -518,6 +554,11 @@ function do_tests_in() {
     return 0
 }
 
+function mark_test_skipped() {
+    warn_because "Skipped test: $CLOUDY_ACTIVE_TEST"
+    let CLOUDY_SKIPPED_TESTS_COUNT=(CLOUDY_SKIPPED_TESTS_COUNT + 1)
+}
+
 function exit_with_test_results() {
     echo_headline "Test Results"
 
@@ -533,7 +574,10 @@ function exit_with_test_results() {
         exit_with_success "All tests passed."
     fi
 
-    echo "Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}, Failures: ${CLOUDY_FAILED_ASSERTION_COUNT}."
+    local stats="Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}, Failures: ${CLOUDY_FAILED_ASSERTION_COUNT}"
+    [ $CLOUDY_SKIPPED_TESTS_COUNT -gt 0 ] && stats="$stats, Skipped: $CLOUDY_SKIPPED_TESTS_COUNT"
+
+    echo "$stats."
 
     exit_with_failure "Some failures occurred"
 }
@@ -548,10 +592,14 @@ function assert_empty() {
 
 function assert_not_empty() {
     local actual="$1"
+    local variable_name="$2"
+    local custom_message="$3"
 
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
     [ ${#actual} -gt 0 ] && return 0
-    _cloudy_assert_failed "variable" "should not be empty."
+    [[ "$variable_name" ]] || variable_name="variable"
+    [[ "$custom_message" ]] || custom_message="should not be empty"
+    _cloudy_assert_failed "$variable_name" "$custom_message"
 }
 
 function assert_not_equals() {
@@ -618,7 +666,7 @@ function assert_file_not_exists() {
 
 # Set this to true and config will be read from YAML every time.  This
 # should normally be set to false to speed things up.
-cloudy_development_do_not_cache_config=false
+cloudy_development_do_not_cache_config=true
 
 # Begin Cloudy Core Bootstrap
 SCRIPT="$s";ROOT="$r";WDIR="$PWD";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;CLOUDY_ROOT="$(cd -P "$(dirname "$s")" && pwd)";source "$CLOUDY_ROOT/_core.sh"|| exit_with_failure "Missing cloudy/_core.sh"

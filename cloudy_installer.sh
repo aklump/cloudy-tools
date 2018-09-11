@@ -52,7 +52,7 @@ case $command in
         fi
     fi
     has_failed && exit_with_failure "Failed to install $basename"
-    write_log "Installed new script at $WDIR/$basename"
+    write_log_notice "Installed new script at $WDIR/$basename"
     exit_with_success_elapsed "New script $basename created."
     ;;
 
