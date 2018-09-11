@@ -531,6 +531,15 @@ function exit_with_test_results() {
     exit_with_failure "Some failures occurred"
 }
 
+function assert_not_empty() {
+    local actual="$1"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [ ${#actual} -gt 0 ] && return 0
+
+    _cloudy_assert_failed "variable" "should not be empty."
+}
+
 function assert_not_equals() {
     local expected="$1"
     local actual="$2"
@@ -538,7 +547,7 @@ function assert_not_equals() {
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
     [[ "$expected" != "$actual" ]] && return 0
 
-    _cloudy_assert_failed "$expected" "$actual" "should not equal"
+    _cloudy_assert_failed "$actual" "should not equal" "$expected"
 }
 
 function assert_equals() {
@@ -547,7 +556,7 @@ function assert_equals() {
 
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
     [[ "$expected" == "$actual" ]] && return 0
-     _cloudy_assert_failed "$expected" "$actual" "does not equal"
+     _cloudy_assert_failed "$actual" "does not equal" "$expected"
 }
 
 #

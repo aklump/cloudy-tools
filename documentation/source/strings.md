@@ -10,3 +10,6 @@ Taken from [Advanced Bash-Scripting Guide: Chapter 10. Manipulating Variables](h
 
     ${string#.}
     
+## Get string length
+
+    ${#string}

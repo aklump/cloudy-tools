@@ -394,13 +394,20 @@ function _cloudy_debug_helper() {
 }
 
 function _cloudy_assert_failed() {
-    expected="$(echo_green "$1")"
-    actual="$(echo_yellow "$2")"
-    reason="$(echo "$3")"
+    local actual=$1
+    local reason="$(echo "$2")"
+
+    [ ${#actual} -eq 0 ] && actual='""'
+    actual="$(echo_yellow "$actual")"
+    [[ $# -gt 2 ]] && expected="$(echo_green "$3")"
 
     let CLOUDY_FAILED_ASSERTION_COUNT=(CLOUDY_FAILED_ASSERTION_COUNT + 1)
     [[ "$CLOUDY_ACTIVE_TEST" ]] && fail_because "Failed test: $CLOUDY_ACTIVE_TEST in $(basename $CLOUDY_ACTIVE_TESTFILE)" && CLOUDY_ACTIVE_TEST=''
-    fail_because "$actual $reason expected $expected"
+
+    local because="$actual $reason"
+    [[ $# -gt 2 ]] && because="$because expected $expected"
+    fail_because "$because"
+
     return 1
 }
 
