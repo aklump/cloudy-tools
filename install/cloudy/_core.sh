@@ -122,13 +122,11 @@ function _cloudy_get_config() {
     local var_cached_name="cloudy_config_${var_name}"
     local var_eval
 
-#    source $CACHED_CONFIG_FILEPATH
-
     # Check if the variable has been imported to cache/config.sh, if not
     # pull it in with slower with PHP process.
     if [[ "$CACHED_CONFIG" != *"$var_cached_name"* ]]; then
         write_log "Using filesystem to obtain config: $var_cached_name"
-        return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$CLOUDY_CONFIG_VARNAME" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
+        return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
             echo $var_eval >>  "$CACHED_CONFIG_FILEPATH"
@@ -140,8 +138,10 @@ function _cloudy_get_config() {
     # We now need to figure out what to echo back to the caller.
     local code=$(declare -p $var_cached_name)
 
-    # We have an array and we need to use $var_name instead of $var_cached_name.
+    # We have an array, so we have to echo an eval statement.
     if [[ "$code" =~ "declare -a" ]]; then
+
+        # Try to use $var_name instead of $var_cached_name.
         echo "${code/$var_cached_name/$var_name}" && return 0
     fi
 

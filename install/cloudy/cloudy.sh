@@ -315,23 +315,16 @@ function echo_elapsed() {
 }
 
 function echo_help() {
-
-    # Focused topic, show info about command.
+    # Focused topic, show info about single command.
     if has_args; then
-
         _cloudy_validate_command $(get_arg 0) || exit_with_failure "No help for that!"
-
-        # Todo: write this to a text file in cache.
         _cloudy_help_for_single_command
-
         exit_with_success "Use just \"help\" for more commands"
     fi
 
     # Top-level just show all commands.
-    # Todo: write this to a text file in cache.
     _cloudy_help_commands
     exit_with_success "Use \"help [command]\" for specific info"
-
 }
 
 #
