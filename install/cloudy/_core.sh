@@ -55,17 +55,16 @@ function _cloudy_bootstrap() {
       fi
     done
 
-
     local command=$(get_command)
 
-    # Add in the alias action based on master options.
+    # Add in the alias options based on master options.
     local value
     for option in "${CLOUDY_OPTIONS[@]}"; do
         local value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
         use_config_var "aliases"
         eval $(get_config -a "commands.${command}.options.${option}.aliases")
-        for alias in ${config_values[@]}; do
+        for alias in ${aliases[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
         done
     done
@@ -276,7 +275,7 @@ function _cloudy_validate_against_scheme() {
 
 function _cloudy_help_commands() {
 
-    echo_headline "$(get_config "title")"
+    echo_headline "$(get_config "title") VER $(get_version)"
 
     echo_yellow "Available commands:"
     eval $(get_config "commands")
@@ -309,7 +308,9 @@ function _cloudy_help_for_single_command() {
     [ ${#options} -gt 0 ] && usage="$usage <options>"
     [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"
 
-    echo_headline "$(get_config "commands.${command_help_topic}.help")"
+    echo_headline "Help Topic: $command_help_topic"
+    echo_green "$(get_config "commands.${command_help_topic}.help")"
+    echo
 
     echo_yellow "Usage:"
     echo $LIL $(echo_green "$usage") && echo

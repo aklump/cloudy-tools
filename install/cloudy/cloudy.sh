@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+
+function get_version() {
+    echo $(get_config "version" "1.0")
+}
+
 ##
  # Override the variable name returned by get_config*
  #
@@ -66,7 +71,8 @@ function has_option() {
     local option=$1
     local value
     value=$(get_option "$option")
-    return $?
+    [[ "$value" ]] && [[ "$value" != false ]] && return 0
+    return 1
 }
 
 ##
@@ -261,7 +267,7 @@ function echo_blue() {
 function echo_headline() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
-    echo && echo "⭐  $(string_uppercase "${headline//.}")" && echo
+    echo && echo "⭐  $(string_uppercase "${headline}")" && echo
 }
 
 ##
@@ -314,8 +320,15 @@ function echo_elapsed() {
     echo $SECONDS
 }
 
+#
+# SECTION: Ending the script.
+#
+# @link https://www.tldp.org/LDP/abs/html/exit-status.html
+#
+
 function exit_with_help() {
     local help_command=$1
+
     # Focused help_command, show info about single command.
     if [[ "$help_command" ]]; then
         _cloudy_validate_command $help_command || exit_with_failure "No help for that!"
@@ -327,12 +340,6 @@ function exit_with_help() {
     _cloudy_help_commands
     exit_with_success "Use \"help [command]\" for specific info"
 }
-
-#
-# SECTION: Ending the script.
-#
-# @link https://www.tldp.org/LDP/abs/html/exit-status.html
-#
 
 function exit_with_success() {
     local message=$1

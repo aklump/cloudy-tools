@@ -2,17 +2,16 @@
 
 Configuration is provided by YAML files.
 
-In the header of your script you will find `CLOUDY_CONFIG`, e.g.,
+In the header of your script you will find `CONFIG`, this is for the base configuration file, e.g.,
 
-        CLOUDY_CONFIG=$ROOT/script.example.config.yml
+        CONFIG=script.example.config.yml
         
-1. Set it's value to the path of a YAML file to use as configuration.
-1. You may add additional configuration files by adding something like following:
+1. Set it's value to the path of a YAML file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname $CONFIG)`
+1. You may add additional configuration files by adding something like following in the YAML of the base configuration file.
 
-        config:
+        additional_config:
           - _install.local.yml
 
-1. The files are relative to `$(dirname $CLOUDY_CONFIG)`
 1. You may have any number of configuration files.
 
 ## Using Config
@@ -34,9 +33,26 @@ To access the perms `group` scalar value do the following:
 * Notice the dot separation to denote parent/child.
 * The second argument is a default value, e.g., `staff`.
 
-### Non-Scalars
+### Arrays
 
-When the config key points to a non-scaler, associative array `get_config` echos a string ready for `eval`, which generates a nice set of BASH vars containing the values of `perms`, e.g.,
+Arrays are handled differntly depending upon a few things: if the config key points to a multi-dimensional array, an single-level associative array, or an single-level indexed array.  For examples turn to the following configuration YAML:
+
+    user:
+      images:
+        tags:
+        - nature
+        - space
+        - religion
+        types:
+        - jpg
+        - png
+
+Let's see what $(get_config -a 'user.images.tags') returns us:
+
+
+
+
+When the config key points to an array `get_config` echos a string ready for `eval`, which generates a nice set of BASH vars containing the values of `perms`, e.g.,
 
     eval $(get_config perms)
     echo $perms_user
@@ -46,23 +62,6 @@ When the config key points to a non-scaler, associative array `get_config` echos
 
 If the config key points to an indexed array, e.g., ....
 
-    hooks:
-      files:
-        tags:
-        - ignore
-        - normal
-        - emergency
-
-... then the eval string is slightly different...
-
-    `declare -a config_values=("ignore" "normal" "emergency")`
-    
-... and you use it like this:
-
-    eval $(get_config "hooks.files.tags")
-    ${config_values[0]} == "ignore"
-    ${config_values[1]} == "normal"
-    ${config_values[2]} == "emergency"
 
 ### Non-Scalars Keys
 
