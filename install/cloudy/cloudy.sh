@@ -461,32 +461,6 @@ function write_log() {
 #
 # End Public API
 #
-source="${BASH_SOURCE[0]}"
-while [ -h "$source" ]; do # resolve $source until the file is no longer a symlink
-  dir="$( cd -P "$( dirname "$source" )" && pwd )"
-  source="$(readlink "$source")"
-  [[ $source != /* ]] && source="$dir/$source" # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-CLOUDY_ROOT="$( cd -P "$( dirname "$source" )" && pwd )"
 
-# Expand some vars from our controlling script.
-CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
-[[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
-SCRIPT="$s";
-ROOT="$r";
-WDIR="$PWD";
-
-# Define shared variables
-declare -a CLOUDY_ARGS=()
-declare -a CLOUDY_OPTIONS=()
-declare -a CLOUDY_FAILURES=()
-declare -a CLOUDY_SUCCESSES=()
-declare -a CLOUDY_STACK=()
-
-# For scope reasons we have to source these here not in _cloudy_bootstrap.
-CACHED_CONFIG_FILEPATH="$CLOUDY_ROOT/cache/_cached.$(path_filename $SCRIPT).config.sh"
-[ -f $CACHED_CONFIG_FILEPATH ] && source $CACHED_CONFIG_FILEPATH || exit_with_failure "Cannot load cached configuration."
-
-source "$CLOUDY_ROOT/_core.sh" || exit_with_failure "Missing cloudy/_core.sh"
-_cloudy_bootstrap $@
-
+# Begin Cloudy Core Bootstrap
+SCRIPT="$s";ROOT="$r";WDIR="$PWD";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;CLOUDY_ROOT="$(cd -P "$(dirname "$s")" && pwd)";source "$CLOUDY_ROOT/_core.sh"|| exit_with_failure "Missing cloudy/_core.sh"

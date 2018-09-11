@@ -370,3 +370,26 @@ function _cloudy_debug_helper() {
     [[ "$sidebar" ]] || sidebar="$default"
     echo && echo "$(tput setaf $fg)$(tput setab $bg) $sidebar $(tput smso) "$message" $(tput sgr0)" && echo
 }
+
+#
+# Begin controller section.
+#
+
+# Expand some vars from our controlling script.
+CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
+[[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
+
+
+# Define shared variables
+declare -a CLOUDY_ARGS=()
+declare -a CLOUDY_OPTIONS=()
+declare -a CLOUDY_FAILURES=()
+declare -a CLOUDY_SUCCESSES=()
+declare -a CLOUDY_STACK=()
+
+# For scope reasons we have to source these here not in _cloudy_bootstrap.
+CACHE_DIR="$CLOUDY_ROOT/cache"
+CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
+
+[ -f $CACHED_CONFIG_FILEPATH ] && source $CACHED_CONFIG_FILEPATH || exit_with_failure "Cannot load cached configuration."
+_cloudy_bootstrap $@
