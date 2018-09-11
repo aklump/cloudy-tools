@@ -7,14 +7,12 @@
 
 function _cloudy_bootstrap() {
     SECONDS=0
-    CLOUDY_EXIT_STATUS=0
-
     # Ensure the configuration cache environment is built up.
     local cache_dir=$(dirname $CACHED_CONFIG_FILEPATH)
     if [ ! -d "$cache_dir" ]; then
         mkdir -p "$cache_dir" || exit_with_failure "Unable to create cache folder: $cache_dir"
-        touch $CACHED_CONFIG_FILEPATH || exit_with_failure "Unable to write cache file:$CACHED_CONFIG_FILEPATH"
     fi
+    touch $CACHED_CONFIG_FILEPATH || exit_with_failure "Unable to write cache file:$CACHED_CONFIG_FILEPATH"
     CACHED_CONFIG=$(cat $CACHED_CONFIG_FILEPATH)
 
     # todo: maybe this should move
@@ -88,6 +86,27 @@ function _cloudy_bootstrap() {
     done
 
     revert_config_var
+}
+
+##
+ # Detect if cached config is stale.
+ #
+function _cloudy_auto_purge_config() {
+  local cache_mtime_filepath="$CACHED_CONFIG_FILEPATH.modified.txt"
+  [ -f "$cache_mtime_filepath" ] || touch "$cache_mtime_filepath" || fail
+
+  local cache_mtime=$(cat "$CACHED_CONFIG_FILEPATH.modified.txt")
+  local config_mtime=$(php -r "echo filemtime('$CONFIG');")
+
+  # Test if the yaml file was modified and automatically rebuild config.yml.sh
+  if [[ "$cache_mtime" -lt "$config_mtime" ]]; then
+    rm -f "$CACHED_CONFIG_FILEPATH" || fail
+    echo "$config_mtime" > "$cache_mtime_filepath"
+    write_log "Configuration changes detected; auto-purged $CACHED_CONFIG_FILEPATH"
+  fi
+  has_failed && exit_with_failure "Cannot auto purge config."
+
+  return 0
 }
 
 function _cloudy_get_config() {
@@ -372,13 +391,12 @@ function _cloudy_debug_helper() {
 }
 
 #
-# Begin controller section.
+# Begin Core Controller Section.
 #
 
 # Expand some vars from our controlling script.
 CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
-
 
 # Define shared variables
 declare -a CLOUDY_ARGS=()
@@ -386,10 +404,15 @@ declare -a CLOUDY_OPTIONS=()
 declare -a CLOUDY_FAILURES=()
 declare -a CLOUDY_SUCCESSES=()
 declare -a CLOUDY_STACK=()
+CLOUDY_EXIT_STATUS=0
 
 # For scope reasons we have to source these here not in _cloudy_bootstrap.
 CACHE_DIR="$CLOUDY_ROOT/cache"
 CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
 
-[ -f $CACHED_CONFIG_FILEPATH ] && source $CACHED_CONFIG_FILEPATH || exit_with_failure "Cannot load cached configuration."
+_cloudy_auto_purge_config
+
+if [ -f $CACHED_CONFIG_FILEPATH ]; then
+    source $CACHED_CONFIG_FILEPATH || exit_with_failure "Cannot load cached configuration."
+fi
 _cloudy_bootstrap $@

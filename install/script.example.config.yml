@@ -25,6 +25,7 @@ commands:
 user:
   images:
     tags:
+    - literature
     - nature
     - space
     - religion
