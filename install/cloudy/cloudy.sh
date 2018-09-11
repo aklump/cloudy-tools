@@ -397,6 +397,17 @@ function has_failed() {
 # Filepaths
 #
 
+##
+ # Expand a relative path using $ROOT as base.
+ #
+ # If the path begins with / it is unchanged.
+ #
+function path_relative_to_root() {
+    local path=$1
+    [[ "${path:0:1}" != '/' ]] && path="$ROOT/$path"
+    echo $path
+}
+
 function path_filename() {
     local path=$1
     filename=$(basename "$path")
@@ -458,28 +469,43 @@ function write_log() {
     fi
 }
 
+
 #
 # Testing
 #
+
+##
+ # Perform all tests in a given file.
+ #
 function do_tests_in() {
-    local CLOUDY_ACTIVE_TESTFILE="$1"
-    [ ! -f "$CLOUDY_ACTIVE_TESTFILE" ] && fail_with "Test file: \"$CLOUDY_ACTIVE_TESTFILE\" not found." && return 1
+    local CLOUDY_ACTIVE_TESTFILE=$(path_relative_to_root "$1")
 
     CLOUDY_ASSERTION_COUNT=0
     CLOUDY_TEST_COUNT=0
     CLOUDY_FAILED_ASSERTION_COUNT=0
 
+    [ ! -f "$CLOUDY_ACTIVE_TESTFILE" ] && fail_because "Test file: \"$CLOUDY_ACTIVE_TESTFILE\" not found." && return 1
+
     source $CLOUDY_ACTIVE_TESTFILE
 
-    # Todo: generate an index of all functions defined in $testfile
-    CLOUDY_ACTIVE_TEST="testGetStringReturnsAsExpected"
+    declare -a local tests=();
 
-    if [[ "$(type -t $CLOUDY_ACTIVE_TEST)" != "function" ]]; then
-      fail_because "Test not found: $CLOUDY_ACTIVE_TEST"
-    else
-        let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
-        $CLOUDY_ACTIVE_TEST
-    fi
+    # Find all functions in a given test file.
+    local data=($(grep "function test*" $CLOUDY_ACTIVE_TESTFILE))
+    for i in "${data[@]}"; do
+        if [[ "${i:0:4}" == "test" ]]; then
+        tests=("${tests[@]}" "${i/%()/}")
+        fi
+    done
+
+    for CLOUDY_ACTIVE_TEST in "${tests[@]}"; do
+        if [[ "$(type -t $CLOUDY_ACTIVE_TEST)" != "function" ]]; then
+          fail_because "Test not found: $CLOUDY_ACTIVE_TEST"
+        else
+            let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
+            $CLOUDY_ACTIVE_TEST
+        fi
+    done
 
     has_failed && return 1
     return 0
@@ -493,7 +519,7 @@ function exit_with_test_results() {
 
     [ $CLOUDY_TEST_COUNT -eq 0 ] || [ $CLOUDY_ASSERTION_COUNT -eq 0 ] && echo
 
-    echo "Time: $SECONDS seconds"
+    echo "Time: $SECONDS seconds" && echo
 
     if ! has_failed; then
         echo "Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}"
@@ -502,7 +528,7 @@ function exit_with_test_results() {
 
     echo "Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}, Failures: ${CLOUDY_FAILED_ASSERTION_COUNT}."
 
-    exit_with_failure "Some tests failed"
+    exit_with_failure "Some failures occurred"
 }
 
 function assert_not_equals() {

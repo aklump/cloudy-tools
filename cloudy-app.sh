@@ -55,7 +55,7 @@ case $command in
     exit_with_success_elapsed "New script $basename created."
     ;;
 "coretest")
-    do_tests_in "$ROOT/cloudy-app.tests.sh"
+    do_tests_in "cloudy-app.tests.sh"
     exit_with_test_results
     ;;
 
