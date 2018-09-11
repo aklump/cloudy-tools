@@ -314,11 +314,12 @@ function echo_elapsed() {
     echo $SECONDS
 }
 
-function echo_help() {
-    # Focused topic, show info about single command.
-    if has_args; then
-        _cloudy_validate_command $(get_arg 0) || exit_with_failure "No help for that!"
-        _cloudy_help_for_single_command
+function exit_with_help() {
+    local help_command=$1
+    # Focused help_command, show info about single command.
+    if [[ "$help_command" ]]; then
+        _cloudy_validate_command $help_command || exit_with_failure "No help for that!"
+        _cloudy_help_for_single_command $help_command
         exit_with_success "Use just \"help\" for more commands"
     fi
 

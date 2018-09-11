@@ -288,7 +288,7 @@ function _cloudy_help_commands() {
 }
 
 function _cloudy_help_for_single_command() {
-    local command_help_topic=$(get_arg 0)
+    local command_help_topic=$1
 
     local option
     local option_value
@@ -303,46 +303,6 @@ function _cloudy_help_for_single_command() {
 
     use_config_var "options"
     eval $(get_config -a "commands.${command_help_topic}.options")
-    debug "$(get_config -a "commands.${command_help_topic}.options")"
-    echo Function: $FUNCNAME
-    echo '  "'$commands_new_options'"'
-    echo '    [#] => '${#commands_new_options[@]}
-    echo '    [@] => '${commands_new_options[@]}
-    echo '    [*] => '${commands_new_options[*]}
-    echo 'Array'
-    echo '('
-    echo '    [0] => '${commands_new_options[0]}
-    echo '    [1] => '${commands_new_options[1]}
-    echo '    [2] => '${commands_new_options[2]}
-    echo '    [3] => '${commands_new_options[3]}
-    echo '    [4] => '${commands_new_options[4]}
-    echo '    [5] => '${commands_new_options[5]}
-    echo '    [6] => '${commands_new_options[6]}
-    echo '    [7] => '${commands_new_options[7]}
-    echo '    [8] => '${commands_new_options[8]}
-    echo '    [9] => '${commands_new_options[9]}
-    echo ')'
-
-    echo Function: $FUNCNAME
-    echo '  "'$options'"'
-    echo '    [#] => '${#options[@]}
-    echo '    [@] => '${options[@]}
-    echo '    [*] => '${options[*]}
-    echo 'Array'
-    echo '('
-    echo '    [0] => '${options[0]}
-    echo '    [1] => '${options[1]}
-    echo '    [2] => '${options[2]}
-    echo '    [3] => '${options[3]}
-    echo '    [4] => '${options[4]}
-    echo '    [5] => '${options[5]}
-    echo '    [6] => '${options[6]}
-    echo '    [7] => '${options[7]}
-    echo '    [8] => '${options[8]}
-    echo '    [9] => '${options[9]}
-    echo ')'
-    exit
-
 
     usage="$(basename $SCRIPT) $command_help_topic"
 

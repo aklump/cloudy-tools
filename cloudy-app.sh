@@ -18,8 +18,13 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # Input validation
 validate_input || exit_with_failure "Something didn't work..."
 
-# Handle the various operations.
 command=$(get_command)
+
+# Handle help.
+has_option "h" && exit_with_help $command
+[[ "$command" == "help" ]] && exit_with_help $(get_arg 0)
+
+# Handle other commands.
 case $command in
 "new")
     basename=$(get_arg 0 "cloudy-script.sh")
@@ -48,10 +53,6 @@ case $command in
     has_failed && exit_with_failure "Failed to install $basename"
     write_log "Installed new script at $WDIR/$basename"
     exit_with_success_elapsed "New script $basename created."
-    ;;
-
-"help")
-    echo_help
     ;;
 
 *)

@@ -9,6 +9,10 @@ commands:
       basename:
         help: The basename of the script to create.
     options:
+      help:
+        type: boolean
+        help: Show help for command "new"
+        aliases: [h]
       config:
         type: string
         help: Set the basename of the config file.
