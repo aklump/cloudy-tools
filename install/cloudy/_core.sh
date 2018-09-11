@@ -393,6 +393,17 @@ function _cloudy_debug_helper() {
     echo && echo "$(tput setaf $fg)$(tput setab $bg) $sidebar $(tput smso) "$message" $(tput sgr0)" && echo
 }
 
+function _cloudy_assert_failed() {
+    expected="$(echo_green "$1")"
+    actual="$(echo_yellow "$2")"
+    reason="$(echo "$3")"
+
+    let CLOUDY_FAILED_ASSERTION_COUNT=(CLOUDY_FAILED_ASSERTION_COUNT + 1)
+    [[ "$CLOUDY_ACTIVE_TEST" ]] && fail_because "Failed test: $CLOUDY_ACTIVE_TEST in $(basename $CLOUDY_ACTIVE_TESTFILE)" && CLOUDY_ACTIVE_TEST=''
+    fail_because "$actual $reason expected $expected"
+    return 1
+}
+
 #
 # Begin Core Controller Section.
 #

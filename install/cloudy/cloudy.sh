@@ -384,7 +384,6 @@ function fail_because() {
     local message=$1
     fail
     if [[ "$message" ]]; then
-        message=$(_cloudy_message "$message")
         CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
     fi
 }
@@ -457,6 +456,72 @@ function write_log() {
         touch "$LOGFILE"
         echo "[$(date)] [$(whoami)] $@" >> "$LOGFILE"
     fi
+}
+
+#
+# Testing
+#
+function do_tests_in() {
+    local CLOUDY_ACTIVE_TESTFILE="$1"
+    [ ! -f "$CLOUDY_ACTIVE_TESTFILE" ] && fail_with "Test file: \"$CLOUDY_ACTIVE_TESTFILE\" not found." && return 1
+
+    CLOUDY_ASSERTION_COUNT=0
+    CLOUDY_TEST_COUNT=0
+    CLOUDY_FAILED_ASSERTION_COUNT=0
+
+    source $CLOUDY_ACTIVE_TESTFILE
+
+    # Todo: generate an index of all functions defined in $testfile
+    CLOUDY_ACTIVE_TEST="testGetStringReturnsAsExpected"
+
+    if [[ "$(type -t $CLOUDY_ACTIVE_TEST)" != "function" ]]; then
+      fail_because "Test not found: $CLOUDY_ACTIVE_TEST"
+    else
+        let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
+        $CLOUDY_ACTIVE_TEST
+    fi
+
+    has_failed && return 1
+    return 0
+}
+
+function exit_with_test_results() {
+    echo_headline "Test Results"
+
+    [ $CLOUDY_TEST_COUNT -eq 0 ] && echo_key_value "?" "No tests found."
+    [ $CLOUDY_ASSERTION_COUNT -eq 0 ] && echo_key_value "?" "No assertions found."
+
+    [ $CLOUDY_TEST_COUNT -eq 0 ] || [ $CLOUDY_ASSERTION_COUNT -eq 0 ] && echo
+
+    echo "Time: $SECONDS seconds"
+
+    if ! has_failed; then
+        echo "Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}"
+        exit_with_success "All tests passed."
+    fi
+
+    echo "Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}, Failures: ${CLOUDY_FAILED_ASSERTION_COUNT}."
+
+    exit_with_failure "Some tests failed"
+}
+
+function assert_not_equals() {
+    local expected="$1"
+    local actual="$2"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [[ "$expected" != "$actual" ]] && return 0
+
+    _cloudy_assert_failed "$expected" "$actual" "should not equal"
+}
+
+function assert_equals() {
+    local expected="$1"
+    local actual="$2"
+
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    [[ "$expected" == "$actual" ]] && return 0
+     _cloudy_assert_failed "$expected" "$actual" "does not equal"
 }
 
 #

@@ -21,3 +21,7 @@ commands:
         type: boolean
         aliases: [f]
         help: Overwrite an existing script.
+  coretest:
+    help: ""
+unittests:
+    string: "Adam ate apples at Andrew's abode."

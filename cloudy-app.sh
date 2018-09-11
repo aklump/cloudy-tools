@@ -54,6 +54,10 @@ case $command in
     write_log "Installed new script at $WDIR/$basename"
     exit_with_success_elapsed "New script $basename created."
     ;;
+"coretest")
+    do_tests_in "$ROOT/cloudy-app.tests.sh"
+    exit_with_test_results
+    ;;
 
 *)
     throw "Unhandled operation \"$command\""
