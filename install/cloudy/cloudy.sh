@@ -498,7 +498,7 @@ function do_tests_in() {
     declare -a local tests=();
 
     # Find all functions in a given test file.
-    local data=($(grep "function test*" $CLOUDY_ACTIVE_TESTFILE))
+    local data=($(grep "^\s*function test*" $CLOUDY_ACTIVE_TESTFILE))
     for i in "${data[@]}"; do
         if [[ "${i:0:4}" == "test" ]]; then
         tests=("${tests[@]}" "${i/%()/}")
