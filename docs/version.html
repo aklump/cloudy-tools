@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Script Version</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--version">
+<header>
+  <div class="pager">
+  <a href="strings.html" class="prev strings">&laquo;String Manipulation</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
+</div>
+</header>
+
+
+  <h1>Script Version</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p>To provide a version for your script other than the default <code>1.0</code>, you have two options.</p>
+
+<h2>Version Indicated in YAML</h2>
+
+<p>You may hard-code the version in a YAML config file like this:</p>
+
+<pre><code>title: Cloudy Installer
+version: 1.5
+...
+</code></pre>
+
+<h2>Version Indicated Dynamically</h2>
+
+<p>If you would rather provide your version dynamically with BASH, you can override the default <code>get_version</code> by adding it to your script file anytime after the bootstrap; this allows you to provide it via PHP, <code>cat</code> or whatever, e.g.,</p>
+
+<pre><code>...
+done;r="$(cd -P "$(dirname "$s")" &amp;&amp; pwd)";source "$r/install/cloudy/cloudy.sh"
+# End Cloudy Bootstrap
+
+function get_version() {
+    echo "3.2.4"
+}
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="strings.html" class="prev strings">&laquo;String Manipulation</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 10 Sep 2018 19:23:37 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+
