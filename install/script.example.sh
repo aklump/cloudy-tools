@@ -28,6 +28,29 @@ case $command in
     has_param "pass" && succeed_because "You passed the correct parameter \"pass\"."
     ;;
 
+"examples")
+
+    echo_headline "scalar"
+    echo_key_value 'Usage' 'tag=$(get_config "user.images.tags.0")' && echo
+    echo $LIL $(echo_green " $(get_config -a 'user.images.tags.0')")
+    echo; echo
+
+    echo_headline "array keys"
+    echo_key_value 'Usage' 'eval $(get_config -a "user.images");Usage' && echo
+    echo $LIL $(echo_green " $(get_config -a 'user.images')")
+    echo; echo
+
+    echo_headline "indexed array values"
+    echo_key_value 'Usage' 'eval $(get_config -a "user.images.tags");Usage' && echo
+    echo $LIL $(echo_green " $(get_config -a 'user.images.tags')")
+    echo; echo
+
+    echo_headline "associative array values"
+    echo_key_value 'Usage' 'eval $(get_config -a "user.images.types");Usage' && echo
+    echo $LIL $(echo_green " $(get_config -a 'user.images.types')")
+    echo; echo
+    ;;
+
 "help")
     echo_help
     ;;

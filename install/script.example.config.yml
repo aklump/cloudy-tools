@@ -6,6 +6,8 @@ logging:
 commands:
   help:
     help: Display this help screen.
+  examples:
+    help: Display code examples from the documentation.
   install:
     help: Install a new instance in the current directory.
     options:
@@ -20,3 +22,13 @@ commands:
         type: string
         enum: [prod, dev]
         help: "One of: prod or dev"
+user:
+  images:
+    tags:
+    - nature
+    - space
+    - religion
+    types:
+      vector: [svg]
+      bitmap: [jpg, png, gif]
+      animated: [gif]

@@ -358,7 +358,7 @@ function succeed_because() {
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
-function exit_with_failure () {
+function exit_with_failure() {
     echo && echo_red "🔥  $(_cloudy_message "$1" "$CLOUDY_FAILED")"
 
     ## Write out the failure messages if any.
@@ -426,14 +426,20 @@ function string_uppercase() {
  #   debug "Some message to show|$0|$FUNCNAME|$LINENO"
  # @endcode
  #
-function debug () {
+function debug() {
     _cloudy_debug_helper "debug;3;0;$@"
+}
+
+function echo_key_value() {
+    local key=$1
+    local value=$2
+    echo "$(tput setaf 0)$(tput setab 7) $key $(tput smso) "$value" $(tput sgr0)"
 }
 
 ##
  # Echo an exception message and exit.
  #
-function throw () {
+function throw() {
     _cloudy_debug_helper "exception;1;7;$@"
     exit 3
 }
