@@ -84,21 +84,23 @@ function _cloudy_bootstrap() {
  # Detect if cached config is stale.
  #
 function _cloudy_auto_purge_config() {
-  local cache_mtime_filepath="$CACHED_CONFIG_FILEPATH.modified.txt"
-  [ -f "$cache_mtime_filepath" ] || touch "$cache_mtime_filepath" || fail
+    local cache_mtime_filepath="$CACHED_CONFIG_FILEPATH.modified.txt"
+    [ -f "$cache_mtime_filepath" ] || touch "$cache_mtime_filepath" || fail
 
-  local cache_mtime=$(cat "$CACHED_CONFIG_FILEPATH.modified.txt")
-  local config_mtime=$(php -r "echo filemtime('$CONFIG');")
+    local cache_mtime=$(cat "$CACHED_CONFIG_FILEPATH.modified.txt")
+    local config_mtime=$(php -r "echo filemtime('$CONFIG');")
 
-  # Test if the yaml file was modified and automatically rebuild config.yml.sh
-  if [[ "$cache_mtime" -lt "$config_mtime" ]]; then
-    rm -f "$CACHED_CONFIG_FILEPATH" || fail
-    echo "$config_mtime" > "$cache_mtime_filepath"
-    write_log_notice "Configuration changes detected; auto-purged $CACHED_CONFIG_FILEPATH"
-  fi
-  has_failed && exit_with_failure "Cannot auto purge config."
+    # Test if the yaml file was modified and automatically rebuild config.yml.sh
+    if [[ "$cache_mtime" -lt "$config_mtime" ]]; then
+        rm -f "$CACHED_CONFIG_FILEPATH" || fail
+        echo "$config_mtime" > "$cache_mtime_filepath"
+        write_log_notice "Configuration changes detected; auto-purged $CACHED_CONFIG_FILEPATH"
+    fi
 
-  return 0
+    touch $CACHED_CONFIG_FILEPATH || fail_because  "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
+
+    has_failed && exit_with_failure "Cannot auto purge config."
+    return 0
 }
 
 function _cloudy_get_config() {
@@ -451,17 +453,21 @@ CACHE_DIR="$CLOUDY_ROOT/cache"
 CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
 CACHED_CONFIG=''
 
-# Ensure the configuration cache environment is built up.
-if [ ! -d "$CACHE_DIR" ]; then
+# Ensure the configuration cache environment is present and writeable.
+if [ -d "$CACHE_DIR" ]; then
     mkdir -p "$CACHE_DIR" || exit_with_failure "Unable to create cache folder: $CACHE_DIR"
 fi
-touch $CACHED_CONFIG_FILEPATH || exit_with_failure "Unable to write cache file:$CACHED_CONFIG_FILEPATH"
+touch $CACHED_CONFIG_FILEPATH || exit_with_failure  "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
 
+# Detect changes in YAML and purge config cache if necessary.
 _cloudy_auto_purge_config
 
-if [ -f "$CACHED_CONFIG_FILEPATH" ]; then
-    source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
-    CACHED_CONFIG=$(cat "$CACHED_CONFIG_FILEPATH")
-fi
+# Import the cached config variables at this top scope.
+source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
+CACHED_CONFIG=$(cat "$CACHED_CONFIG_FILEPATH")
+
+#
+# End caching setup
+#
 
 _cloudy_bootstrap $@
