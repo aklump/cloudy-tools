@@ -82,7 +82,7 @@ In a more complex configuration like the following, you might want to get the ar
 
 This is a usage example:
 
-    eval $(get_config "commands")
+    eval $(get_config_keys "commands")
     
     ${config_keys[0]} == "_default"
     ${config_keys[1]} == "help"
