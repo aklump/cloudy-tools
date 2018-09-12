@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+
+function _testGetConfigWorksAsExpectedOnAssociativeArray() {
+    local result="$(get_config -a "coretest.associative_array")"
+    assert_same "declare -- coretest_associative_array=\"true\";coretest_associative_array_do=\"alpha\";coretest_associative_array_re=\"bravo\";coretest_associative_array_mi=\"charlie\"" "$result"
+
+    eval "$result"
+    assert_true $coretest_associative_array
+    assert_same "alpha" "$coretest_associative_array_do"
+    assert_same "bravo" "$coretest_associative_array_re"
+    assert_same "charlie" "$coretest_associative_array_mi"
+}
+
 function testGetConfigPathAsWorksAsItShould() {
 
     # This one handles the realpath portion as the subject involves traversal.
@@ -73,17 +85,6 @@ function testArraySortWorksAsExpected() {
 function testArrayJoinWorks() {
     declare -a array_join__array=("uno" "dos" "tres")
     assert_same "uno, dos, tres" "$(array_join ', ')"
-}
-
-function _testGetConfigWorksAsExpectedOnAssociativeArray() {
-    local expected="cloudy_config_coretest_associative_array_do=\"alpha\";cloudy_config_coretest_associative_array_re=\"bravo\";cloudy_config_coretest_associative_array_mi=\"charlie\""
-
-    eval $(get_config -a "coretest.associative_array")
-    assert_same "alpha" "$cloudy_config_coretest_associative_array_do"
-    assert_same "bravo" "$cloudy_config_coretest_associative_array_re"
-    assert_same "charlie" "$cloudy_config_coretest_associative_array_mi"
-
-#    assert_same "$expected" "$(get_config -a "coretest.associative_array")"
 }
 
 function testStringUpper() {

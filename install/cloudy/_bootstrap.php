@@ -51,6 +51,10 @@ function get_value(array $config, $path, $default_value, $context = []) {
 
   $var_name = $context['cached_var_name'];
 
+  // This is extra code that will be added to the cached file and returned
+  // in the eval code from get_config.
+  $suffix = '';
+
   $value_type = gettype($value);
   switch ($value_type) {
     case 'NULL':
@@ -68,7 +72,6 @@ function get_value(array $config, $path, $default_value, $context = []) {
       break;
 
     case 'array':
-      $temp = [];
       if (empty($value)) {
         $value = 'declare -a ' . $var_name . '=()';
       }
@@ -79,13 +82,14 @@ function get_value(array $config, $path, $default_value, $context = []) {
         $value = 'declare -a ' . $var_name . '=("' . implode('" "', array_keys($value)) . '")';
       }
       else {
+        $suffix = [];
         foreach ($value as $k => $v) {
           if (is_scalar($v)) {
-            $temp[] = "{$var_name}_{$k}=\"$v\"";
+            $suffix[] = "{$var_name}_{$k}=\"$v\"";
           }
         }
-        $value = implode(';', $temp);
-        $value = "$var_name=\"$value\"";
+        $suffix = implode(';', $suffix);
+        $value = "${var_name}=true";
       }
       break;
 
@@ -103,6 +107,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
     $value_type,
     $var_name,
     $value,
+    $suffix ? ';' . trim($suffix, ';') : '',
   ]);
 }
 

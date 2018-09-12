@@ -99,14 +99,14 @@ write_log "cache_name" $var_cached_name
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator" "$var_cached_name")
 
         if [ $? -eq 0 ]; then
-            local IFS="|"; read var_type var_cached_name var_eval <<< "$return"
+            local IFS="|"; read var_type var_cached_name var_eval suffix <<< "$return"
             if [[ "$cloudy_development_do_not_cache_config" != true ]]; then
-                echo "$var_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
+                echo "${var_eval}${suffix}" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
                 echo "unset $var_cached_name" >> "${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                write_log_debug "$var_eval was written to $(basename $CACHED_CONFIG_FILEPATH)"
-                write_log "config_write" "$var_eval"
+                write_log_debug "${var_eval}${suffix} was written to $(basename $CACHED_CONFIG_FILEPATH)"
+                write_log "config_write" "${var_eval}${suffix}"
             else
-                write_log_warning "$var_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
+                write_log_warning "${var_eval}${suffix} not written since \$cloudy_development_do_not_cache_config is TRUE."
             fi
         else
            local IFS="|"; read file message <<< "$return"
@@ -132,21 +132,11 @@ write_log "cache_name" $var_cached_name
 
     # Either way the variable is in memory at this point as $var_cached_name.
     # We now need to figure out what to echo back to the caller.
+    # Todo not sure this is necessary
     local code=$(declare -p $var_cached_name)
 
-    echo "${code/$var_cached_name/$var_name}" && return 0
+    echo "${code//$var_cached_name/$var_name}${suffix//$var_cached_name/$var_name}" && return 0
     return 1
-
-    # We have an array, so we have to echo an eval statement.
-    if [[ "$code" =~ "declare -a" ]]; then
-
-        # Try to use $var_name instead of $var_cached_name.
-        echo "${code/$var_cached_name/$var_name}" && return 0
-    fi
-
-    # We have a scalar and we just want a value.
-    eval value=\"\$$var_cached_name\"
-    echo $value && return 0
 }
 
 ##
