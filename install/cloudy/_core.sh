@@ -31,7 +31,10 @@ function _cloudy_bootstrap() {
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
         eval $(get_config_keys_as 'aliases' "commands.${command}.options.${option}.aliases")
         for alias in ${aliases[@]}; do
-           ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
+           if ! has_option $alias; then
+               CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias")
+               eval "CLOUDY_OPTION__$(string_upper $alias)=\"$value\""
+           fi
         done
     done
 
@@ -43,12 +46,12 @@ function _cloudy_bootstrap() {
         for alias in "${aliases[@]}"; do
             if has_option $alias && ! has_option $master_option; then
                 value=$(get_option "$alias")
-                CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$master_option=$value")
+                CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$master_option")
+                eval "CLOUDY_OPTION__$(string_upper $master_option)=\"$value\""
             fi
         done
     done
 }
-
 
 ##
  # Parses arguments into options, args and option values.
@@ -298,16 +301,18 @@ function _cloudy_exit_with_success() {
 function _cloudy_get_valid_operations_by_command() {
     local command=$1
 
-    local options
     local option
+    local options
     local aliases
 
-    eval $(get_config_as 'options' -a "commands.${command}.options")
+    eval $(get_config_keys_as 'options' -a "commands.${command}.options")
 
     for option in "${options[@]}"; do
         eval $(get_config_as 'aliases' -a "commands.${command}.options.${option}.aliases")
+
         options=("${options[@]}" "${aliases[@]}")
     done
+
     _cloudy_get_valid_operations_by_command__array=("${options[@]}")
 }
 
@@ -479,7 +484,7 @@ function _cloudy_write_log() {
 #
 
 # Set this to true and config will be read from YAML every time.
-cloudy_development_do_not_cache_config=false
+cloudy_development_do_not_cache_config=true
 
 
 # Expand some vars from our controlling script.

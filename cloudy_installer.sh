@@ -29,20 +29,20 @@ case $command in
 
 "new")
     basename=$(get_command_arg 0 "cloudy-script.sh")
-    script_filename=$(path_filename $basename)
-    default_config=$script_filename.yml
-    example_script=$script_filename.example.sh
-    config_file=$(get_option config $default_config)
+    script_filename=$(path_filename "$basename")
+    default_config="$script_filename.yml"
+    example_script="$script_filename.example.sh"
+    config_file=$(get_option 'config' "$default_config")
     [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
     if ! has_failed; then
-        rsync -a $ROOT/install/ ./ || fail_because "Could not copy Cloudy core to ."
-        mv script.sh $basename || fail_because "Could not rename script.sh to $basename"
+        rsync -a $ROOT/install/ ./ || fail_because "Could not copy Cloudy core to $WDIR."
+        mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
         mv script.example.sh $example_script || fail_because "Could not rename script.example.sh to $example_script"
         sed -i '' "s/__CONFIG/$config_file/g" $basename || fail_because "Could not update config file in $basename"
         sed -i '' "s/__FILENAME/$script_filename/g" $basename || fail_because "Could not replace __FILENAME in $basename"
 
-        if [[ "$config_file" != "config.yml" ]]; then
-            mv ./config.yml $config_file || fail_because "Could not copy config.yml to $config_file"
+        if [[ "$config_file" != "script.yml" ]]; then
+            mv ./script.yml $config_file || fail_because "Could not copy script.yml to $config_file"
         fi
 
         if has_failed; then
