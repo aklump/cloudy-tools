@@ -483,7 +483,7 @@ cloudy_development_do_not_cache_config=false
 
 
 # Expand some vars from our controlling script.
-CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)".te
+CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
 
 # Store the script options for later use.

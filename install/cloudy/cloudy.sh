@@ -430,6 +430,9 @@ function exit_with_success_elapsed() {
     _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $SECONDS seconds.")"
 }
 
+##
+ # Add a warning message to be shown on exit.
+ #
 function warn_because() {
     local message=$1
     [[ "$message" ]] || return 1
@@ -437,6 +440,9 @@ function warn_because() {
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
+##
+ # Add a success message to be shown on exit.
+ #
 function succeed_because() {
     local message=$1
     [[ "$message" ]] || return 1
@@ -462,10 +468,20 @@ function exit_with_failure() {
     _cloudy_exit
 }
 
+##
+ # Set the exit status to fail with no message.  Does not stop execution.
+ #
+ # Try not to use this because it gives no indication as to why
+ #
+ # @see exit_with_failure
+ #
 function fail() {
     CLOUDY_EXIT_STATUS=1 && return 0
 }
 
+##
+ # Add a failure message to be shown on exit.
+ #
 function fail_because() {
     local message=$1
     fail
