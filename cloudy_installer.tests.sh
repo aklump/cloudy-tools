@@ -1,9 +1,68 @@
 #!/usr/bin/env bash
 
 
+function testArraySplitWorksForMultipleChars() {
+    array_split__string="do<br />re<br />mi"
+    array_split '<br />'; assert_exit_status 0
 
-function testStringUppercase() {
-    assert_same 'JSON' $(string_uppercase 'json')
+    assert_count 3 'array_split__array'
+    assert_same "do" ${array_split__array[0]}
+    assert_same "re" ${array_split__array[1]}
+    assert_same "mi" ${array_split__array[2]}
+}
+
+function testArraySplitWorksForCSV() {
+    array_split__string="do,re,mi"
+    array_split ','; assert_exit_status 0
+
+    assert_count 3 'array_split__array'
+    assert_same "do" ${array_split__array[0]}
+    assert_same "re" ${array_split__array[1]}
+    assert_same "mi" ${array_split__array[2]}
+}
+
+function _testArraySortLengthWorksAsExpected() {
+    declare -a array_sort_by_item_length__array=("september" "five" "on")
+
+    array_sort_by_item_length; assert_exit_status 0
+    assert_same "on" ${array_sort_by_item_length__array[0]}
+    assert_same "five" ${array_sort_by_item_length__array[1]}
+    assert_same "september" ${array_sort_by_item_length__array[2]}
+}
+
+function testArraySortWorksAsExpected() {
+    declare -a array_sort__array=("uno" "dos" "tres")
+
+    array_sort; assert_exit_status 0
+    assert_same "dos" ${array_sort__array[0]}
+    assert_same "tres" ${array_sort__array[1]}
+    assert_same "uno" ${array_sort__array[2]}
+}
+
+function testArrayJoinWorks() {
+    declare -a array_join__array=("uno" "dos" "tres")
+    assert_same "uno, dos, tres" "$(array_join ', ')"
+}
+
+function _testGetConfigWorksAsExpectedOnAssociativeArray() {
+    local expected="cloudy_config_coretest_associative_array_do=\"alpha\";cloudy_config_coretest_associative_array_re=\"bravo\";cloudy_config_coretest_associative_array_mi=\"charlie\""
+
+    eval $(get_config -a "coretest.associative_array")
+    assert_same "alpha" "$cloudy_config_coretest_associative_array_do"
+    assert_same "bravo" "$cloudy_config_coretest_associative_array_re"
+    assert_same "charlie" "$cloudy_config_coretest_associative_array_mi"
+
+#    assert_same "$expected" "$(get_config -a "coretest.associative_array")"
+}
+
+function testStringUpper() {
+    assert_same 'JSON' $(string_upper 'json')
+    assert_same 'JSON' $(string_upper 'JSON')
+}
+
+function testStringLower() {
+    assert_same 'json' $(string_lower 'JSON')
+    assert_same 'json' $(string_lower 'json')
 }
 
 function testPathExtension() {
@@ -12,6 +71,7 @@ function testPathExtension() {
 
 function testPathFilename() {
     assert_same 'config' $(path_filename 'config.json')
+    assert_same 'config' $(path_filename 'do/re/mi/config.json')
 }
 
 function testPathRelatiaveToRoot() {
@@ -23,14 +83,36 @@ function testPathRelatiaveToRoot() {
     assert_same "$path" $(path_relative_to_root $path)
 }
 
-function testGetArgWorksAsExpected() {
+function testHasCommandWorks() {
     declare -a CLOUDY_ARGS=();
-    assert_empty $(get_arg 0)
-    assert_same 'default_value' $(get_arg 0 'default_value')
+    has_command; assert_exit_status 1
+
+    declare -a CLOUDY_ARGS=("command");
+    has_command; assert_exit_status 0
+
+    declare -a CLOUDY_ARGS=("command" "target");
+    has_command; assert_exit_status 0
+}
+
+function testHasCommandArgsWorks() {
+    declare -a CLOUDY_ARGS=();
+    has_command_args; assert_exit_status 1
+
+    declare -a CLOUDY_ARGS=("command");
+    has_command_args; assert_exit_status 1
+
+    declare -a CLOUDY_ARGS=("command" "target");
+    has_command_args; assert_exit_status 0
+}
+
+function testGetCommandArgWorksAsExpected() {
+    declare -a CLOUDY_ARGS=();
+    assert_empty $(get_command_arg 0)
+    assert_same 'default_value' $(get_command_arg 0 'default_value')
 
     declare -a CLOUDY_ARGS=('COMMAND' 'name' 'force');
-    assert_same 'name' $(get_arg 0)
-    assert_same 'force' $(get_arg 1)
+    assert_same 'name' $(get_command_arg 0)
+    assert_same 'force' $(get_command_arg 1)
 }
 
 function testHasOptionGetOptionWorkAsExpected() {
@@ -38,9 +120,9 @@ function testHasOptionGetOptionWorkAsExpected() {
     CLOUDY_OPTION__NAME="alpha.md"
     CLOUDY_OPTION__FORCE=true
 
-    assert_exit_code 0 $(has_option 'name')
-    assert_exit_code 0 $(has_option 'force')
-    assert_exit_code 1 $(has_option 'bogus')
+    assert_exit_status 0 $(has_option 'name')
+    assert_exit_status 0 $(has_option 'force')
+    assert_exit_status 1 $(has_option 'bogus')
 
     assert_same 'alpha.md' $(get_option 'name')
     assert_true $(get_option 'force')
@@ -49,9 +131,9 @@ function testHasOptionGetOptionWorkAsExpected() {
 
 function testHasOptionsWorksAsExpected() {
     CLOUDY_OPTIONS=("do" "re");
-    assert_exit_code 0 $(has_options)
+    assert_exit_status 0 $(has_options)
     CLOUDY_OPTIONS=();
-    assert_exit_code 1 $(has_options)
+    assert_exit_status 1 $(has_options)
 }
 
 function testGetCommandReturnsFirstArgument() {
@@ -104,17 +186,6 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     assert_array_has_key 'help' '_cloudy_parse_options_args__args'
     assert_array_not_has_key 'init' '_cloudy_parse_options_args__args'
     assert_array_not_has_key 'dev' '_cloudy_parse_options_args__args'
-}
-
-function _testGetConfigWorksAsExpectedOnAssociativeArray() {
-    local expected="cloudy_config_coretest_associative_array_do=\"alpha\";cloudy_config_coretest_associative_array_re=\"bravo\";cloudy_config_coretest_associative_array_mi=\"charlie\""
-
-    eval $(get_config -a "coretest.associative_array")
-    assert_same "alpha" "$cloudy_config_coretest_associative_array_do"
-    assert_same "bravo" "$cloudy_config_coretest_associative_array_re"
-    assert_same "charlie" "$cloudy_config_coretest_associative_array_mi"
-
-#    assert_same "$expected" "$(get_config -a "coretest.associative_array")"
 }
 
 function testGetConfigKeysWorksAsExpected() {

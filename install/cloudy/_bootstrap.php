@@ -106,7 +106,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
   ]);
 }
 
-function stack_sort_length() {
+function array_sort_length() {
   $stack = func_get_args();
   uasort($stack, function ($a, $b) {
     return strlen($a) - strlen($b);

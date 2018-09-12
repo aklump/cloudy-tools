@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Logging to File</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--logging">
+<header>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="operation.html" class="next operation">The Script &quot;Operation&quot;&raquo;</a>
+</div>
+</header>
+
+
+  <h1>Logging to File</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p>There is a file logging API built in to <em>Cloudy</em>.</p>
+
+<pre><code>[Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_language
+[Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_translate_en_exit_with_success
+[Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_translate_en_exit_with_failure
+[Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_commands_coretest_options__keys
+[Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_commands__keys
+</code></pre>
+
+<p>First you must declare the filename of the log file; this enables logging.  This is relative to your script's directory and should be placed at the top of your script before the bootstrap.</p>
+
+<pre><code>LOGFILE="script.example.log"
+
+# Begin Cloudy Bootstrap
+s="${BASH_SOURCE[0]}";while ...
+</code></pre>
+
+<p>These functions should be self-explanatory; each one takes a single argument, which is the message.</p>
+
+<pre><code>write_log_*
+</code></pre>
+
+<p>To log an error, e.g.,</p>
+
+<pre><code>write_log_error "Cannot load file $filepath"    
+</code></pre>
+
+<p>The one that may require explanation is <code>write_log</code>, which takes one or two arguments.</p>
+
+<p>When using two arguments the first is an arbitrary log label, which appears in place of the standard log levels from above.  You can set this to anything and that will allow you to filter your log items by that key using whatever log reader you're using.  Using <em>Console</em> in OSX is my preference.</p>
+
+<pre><code>write_log "alpha" "Recording a value $value"    
+</code></pre>
+
+<p>You may also call it like this:</p>
+
+<pre><code>write_log "No custom label"
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="operation.html" class="next operation">The Script &quot;Operation&quot;&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 12 Sep 2018 12:37:18 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

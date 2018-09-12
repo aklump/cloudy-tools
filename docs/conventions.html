@@ -35,7 +35,7 @@
 
 <ul>
 <li>Function names should be readable and intuitive, e.g., <code>exit_with_success</code> is better than <code>success_exit</code></li>
-<li>Function names should start with a verb if applicable, unless they are grouped by category, e.g. <code>stack_join</code> is fine because <em>stack</em> is the common group; <code>join</code> is the verb.</li>
+<li>Function names should start with a verb if applicable, unless they are grouped by category, e.g. <code>array_join</code> is fine because <em>stack</em> is the common group; <code>join</code> is the verb.</li>
 </ul>
 
 <h2>Boolean</h2>
@@ -67,10 +67,10 @@ my_var="false"
 
 <p>When a function needs to manipulate an array, the array should be assigned to a global variable, the name of which is the function with <code>__array</code> added to the end, e.g.,</p>
 
-<pre><code>function stack_join() {
+<pre><code>function array_join() {
     local glue=$1
     local string
-    string=$(printf "%s$glue" "${stack_join__array[@]}") &amp;&amp; string=${string%$glue} || return 1
+    string=$(printf "%s$glue" "${array_join__array[@]}") &amp;&amp; string=${string%$glue} || return 1
     echo $string
     return 0
 }
@@ -78,8 +78,8 @@ my_var="false"
 
 <p>And here is the usage</p>
 
-<pre><code>stack_join__array=("${_config_values[@]}")
-local options="-$(stack_join ", -"), --${option}"    
+<pre><code>array_join__array=("${_config_values[@]}")
+local options="-$(array_join ", -"), --${option}"    
 </code></pre>
 
 <ul>
@@ -125,7 +125,7 @@ local options="-$(stack_join ", -"), --${option}"
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 12 Sep 2018 11:25:15 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 12 Sep 2018 12:37:17 -0700</p>
   </div>
 </footer>
 

@@ -22,13 +22,13 @@ command=$(get_command)
 
 # Handle help.
 has_option "h" && exit_with_help $command
-[[ "$command" == "help" ]] && exit_with_help $(get_arg 0)
+[[ "$command" == "help" ]] && exit_with_help $(get_command_arg 0)
 
 # Handle other commands.
 case $command in
 
 "new")
-    basename=$(get_arg 0 "cloudy-script.sh")
+    basename=$(get_command_arg 0 "cloudy-script.sh")
     script_filename=$(path_filename $basename)
     default_config=$script_filename.yml
     example_script=$script_filename.example.sh

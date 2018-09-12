@@ -399,12 +399,12 @@ function _cloudy_help_for_single_command() {
                help_options=("${help_options[@]}" "$help_alias")
             done
 
-            stack_sort_length_array=(${help_options[@]})
-            stack_sort_length
+            array_sort_by_item_length_array=(${help_options[@]})
+            array_sort_by_item_length
 
             # Add in hyphens and values
             help_options=()
-            for help_option in "${stack_sort_length_array[@]}"; do
+            for help_option in "${array_sort_by_item_length_array[@]}"; do
                if [ ${#help_option} -eq 1 ]; then
                     help_options=("${help_options[@]}" "-${help_option}${option_value}")
                else
@@ -412,8 +412,8 @@ function _cloudy_help_for_single_command() {
                fi
             done
 
-            stack_join_array=(${help_options[@]})
-            options=$(stack_join ", ")
+            array_join_array=(${help_options[@]})
+            options=$(array_join ", ")
 
             eval $(get_config_as 'help' "commands.${command_help_topic}.options.${option}.help")
 
@@ -429,8 +429,8 @@ function _cloudy_validate_command() {
     local commands
 
     eval $(get_config_keys "commands")
-    stack_has__array=(${commands[@]})
-    stack_has "$command" && return 0
+    array_has_value__array=(${commands[@]})
+    array_has_value "$command" && return 0
     fail_because "Command \"$command\", does not exist."
     return 1
 }
@@ -492,7 +492,7 @@ _cloudy_parse_options_args $@
 declare -a CLOUDY_ARGS=("${_cloudy_parse_options_args__args[@]}")
 declare -a CLOUDY_OPTIONS=("${_cloudy_parse_options_args__options[@]}")
 for option in "${CLOUDY_OPTIONS[@]}"; do
-    eval "CLOUDY_OPTION__$(string_uppercase $option)=\"\$_cloudy_parse_options_args__option__${option}\""
+    eval "CLOUDY_OPTION__$(string_upper $option)=\"\$_cloudy_parse_options_args__option__${option}\""
 done
 
 # Define shared variables

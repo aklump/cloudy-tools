@@ -33,9 +33,9 @@ function validate_input() {
     _cloudy_get_valid_operations_by_command $command
 
     for name in "${CLOUDY_OPTIONS[@]}"; do
-       stack_has__array=(${_cloudy_get_valid_operations_by_command__array[@]})
-       stack_has $name || fail_because "Invalid option: $name"
-       eval "value=\"\$CLOUDY_OPTION__$(string_uppercase $name)\""
+       array_has_value__array=(${_cloudy_get_valid_operations_by_command__array[@]})
+       array_has_value $name || fail_because "Invalid option: $name"
+       eval "value=\"\$CLOUDY_OPTION__$(string_upper $name)\""
 
        # Assert the provided value matches schema.
        eval $(_cloudy_validate_against_scheme "commands.$command.options.$name" "$name" "$value")
@@ -48,6 +48,13 @@ function validate_input() {
 
     has_failed && return 1
     return 0
+}
+
+##
+ # Determine if the script was called with a command.
+ #
+function has_command() {
+  [ ${#CLOUDY_ARGS[0]} -gt 0 ]
 }
 
 function get_command() {
@@ -63,8 +70,8 @@ function get_command() {
 function has_option() {
     local option=$1
 
-    stack_has__array=(${CLOUDY_OPTIONS[@]})
-    stack_has "$1" && return 0
+    array_has_value__array=(${CLOUDY_OPTIONS[@]})
+    array_has_value "$1" && return 0
     return 1
 }
 
@@ -83,25 +90,25 @@ function get_option() {
     local param=$1
     local default=$2
 
-    local var_name="\$CLOUDY_OPTION__$(string_uppercase $1)"
+    local var_name="\$CLOUDY_OPTION__$(string_upper $1)"
     local value=$(eval "echo $var_name")
     [[ "$value" ]] && echo "$value" && return 0
     echo "$default" && return 2
 }
 
 ##
- # Search $stack_has__array for a value.
+ # Search $array_has_value__array for a value.
  #
- # You must provide your array as $CLOUDY_STACK like so:
+ # You must provide your array as $array_has_value__array like so:
  # @code
- #   stack_has__array=("${some_array_to_search[@]}")
- #   stack_has "tree" && echo "found tree"
+ #   array_has_value__array=("${some_array_to_search[@]}")
+ #   array_has "tree" && echo "found tree"
  # @endcode
  #
-function stack_has() {
+function array_has_value() {
     local needle=$1
     local value
-    for value in "${stack_has__array[@]}"; do
+    for value in "${array_has_value__array[@]}"; do
        [[ "$value" == "$needle" ]] && return 0
     done
     return 1
@@ -110,10 +117,26 @@ function stack_has() {
 ##
  # Join a stack into an array with delimiter.
  #
-function stack_join() {
+ # @code
+ #  array_split__string="do<br />re<br />mi"
+ #  array_split '<br />' && local words=("${array_split__array}")
+ # @endcode
+ #
+ #
+function array_split() {
+    local delimiter="$1"
+
+    #http://www.linuxquestions.org/questions/programming-9/bash-shell-script-split-array-383848/#post3270796
+    array_split__array=(${array_split__string//$delimiter/ })
+}
+
+##
+ # Join a stack into an array with delimiter.
+ #
+function array_join() {
     local glue=$1
     local string
-    string=$(printf "%s$glue" "${stack_join_array[@]}") && string=${string%$glue} || return 1
+    string=$(printf "%s$glue" "${array_join__array[@]}") && string=${string%$glue} || return 1
     echo $string
     return 0
 }
@@ -121,23 +144,23 @@ function stack_join() {
 ##
  # Alphabetically sort a stack.
  #
-function stack_sort() {
+function array_sort() {
     local IFS=$'\n'
-    stack_sort_array=($(sort <<<"${stack_sort_array[*]}"))
+    array_sort__array=($(sort <<< "${array_sort__array[*]}"))
 }
 
 ##
  # Sort a stack based on length of values.
  #
-function stack_sort_length() {
-    eval $(php "$CLOUDY_ROOT/_helpers.php" "stack_sort_length" "${stack_sort_length_array[@]}")
+function array_sort_by_item_length() {
+    eval $(php "$CLOUDY_ROOT/_helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
     return $?
 }
 
 ##
- # Determine if there are any arguments for the script "operation".
+ # Determine if there are any arguments for the script "command".
  #
-function has_args() {
+function has_command_args() {
     [ ${#CLOUDY_ARGS[@]} -gt 1 ] && return 0
     return 1
 }
@@ -149,11 +172,11 @@ function has_args() {
  # @code
  #   ./script.sh action blue apple
  #   get_command --> "action"
- #   get_arg 0 --> "blue"
- #   get_arg 1 --> "apple"
+ #   get_command_arg 0 --> "blue"
+ #   get_command_arg 1 --> "apple"
  # @endcode
  #
-function get_arg() {
+function get_command_arg() {
     local index=$1
     local default="$2"
     let index=(index + 1)
@@ -163,6 +186,8 @@ function get_arg() {
 
 ##
  # Purges all cached configuration from disk and memory.
+ #
+ # @todo This may not be needed.
  #
 function purge_config() {
     local purge="${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}"
@@ -261,13 +286,6 @@ function translate() {
     _cloudy_get_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
 }
 
-##
- # Determine if $stack_is_array_array is an array or not.
- #
-function stack_is_array() {
-    [[ "$(declare -p stack_is_array_array)" =~ "declare -a" ]]
-}
-
 #
 # SECTION: User feedback and output
 #
@@ -282,14 +300,14 @@ function stack_is_array() {
  #   Sets the value of confirm_result
  #
 function confirm() {
- while true; do
-    read -r -n 1 -p "${1:-Continue?} [y/n]: " REPLY
-    case $REPLY in
-      [yY]) echo ; return 0 ;;
-      [nN]) echo ; return 1 ;;
-      *) printf " \033[31m %s \n\033[0m" "invalid input"
-    esac
-  done
+    while true; do
+        read -r -n 1 -p "${1:-Continue?} [y/n]: " REPLY
+        case $REPLY in
+            [yY]) echo ; return 0 ;;
+            [nN]) echo ; return 1 ;;
+            *) printf " \033[31m %s \n\033[0m" "invalid input"
+        esac
+    done
 }
 
 ##
@@ -326,7 +344,7 @@ function echo_blue() {
 function echo_headline() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
-    echo && echo "⭐  $(string_uppercase "${headline}")" && echo
+    echo && echo "⭐  $(string_upper "${headline}")" && echo
 }
 
 ##
@@ -474,21 +492,35 @@ function path_relative_to_root() {
     echo $path
 }
 
+##
+ # Return the basename less the extension.
+ #
 function path_filename() {
     local path=$1
+
     filename=$(basename "$path")
     echo "${filename%.*}"
 }
 
+##
+ # Return the extension of a file.
+ #
 function path_extension() {
     local path=$1
-    filename=$(basename "$path")
-    echo "${filename##*.}"
+
+    echo "${path##*.}"
 }
 
-function string_uppercase() {
+function string_upper() {
     local string=$1
+
     echo $string | tr [a-z] [A-Z]
+}
+
+function string_lower() {
+    local string=$1
+
+    echo $string | tr [A-Z] [a-z]
 }
 
 #
@@ -731,30 +763,41 @@ function assert_array_not_has_key() {
     local key=$1
     local array_var_name=$2
 
-    eval stack_has__array=(\${"$array_var_name"[@]})
+    eval array_has_value__array=(\${"$array_var_name"[@]})
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
-    ! stack_has "$1" && return 0
+    ! array_has_value "$1" && return 0
     _cloudy_assert_failed "$key" "should not exist in array \$$array_var_name, but it does."
+}
+
+function assert_count() {
+    local expected=$1
+    local array_var_name=$2
+
+    eval value=(\${"$array_var_name"[@]})
+    assert_same $expected ${#value[@]}
 }
 
 function assert_array_has_key() {
     local key=$1
     local array_var_name=$2
 
-    eval stack_has__array=(\${"$array_var_name"[@]})
+    eval array_has_value__array=(\${"$array_var_name"[@]})
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
-    stack_has "$1" && return 0
+    array_has_value "$1" && return 0
     _cloudy_assert_failed "$key" "should exist in array \$$array_var_name"
 }
 
 ##
  # Assert a function returns a given exit code.
  #
+ # Here are three examples of how to call...
  # @code
- #   assert_exit_code 0 $(has_option 'name')
+ #   array_sort; assert_exit_status 0
+ #   $(has_option 'name'); assert_exit_status 0
+ #   has_option 'name' > /dev/null; assert_exit_status 0
  # @endcode
  #
-function assert_exit_code() {
+function assert_exit_status() {
     local actual=$?
     local expected=$1
     assert_same $expected $actual
