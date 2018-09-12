@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
 
+function testArraySortLengthWorksAsExpected() {
+    declare -a array_sort_by_item_length__array=("september" "five" "on")
+
+    array_sort_by_item_length; assert_exit_status 0
+    assert_same "on" ${array_sort_by_item_length__array[0]}
+    assert_same "five" ${array_sort_by_item_length__array[1]}
+    assert_same "september" ${array_sort_by_item_length__array[2]}
+}
+
 function testArraySplitWorksForMultipleChars() {
     array_split__string="do<br />re<br />mi"
     array_split '<br />'; assert_exit_status 0
@@ -19,15 +28,6 @@ function testArraySplitWorksForCSV() {
     assert_same "do" ${array_split__array[0]}
     assert_same "re" ${array_split__array[1]}
     assert_same "mi" ${array_split__array[2]}
-}
-
-function _testArraySortLengthWorksAsExpected() {
-    declare -a array_sort_by_item_length__array=("september" "five" "on")
-
-    array_sort_by_item_length; assert_exit_status 0
-    assert_same "on" ${array_sort_by_item_length__array[0]}
-    assert_same "five" ${array_sort_by_item_length__array[1]}
-    assert_same "september" ${array_sort_by_item_length__array[2]}
 }
 
 function testArraySortWorksAsExpected() {

@@ -106,18 +106,18 @@ function get_value(array $config, $path, $default_value, $context = []) {
   ]);
 }
 
-function array_sort_length() {
+function array_sort_by_item_length() {
   $stack = func_get_args();
   uasort($stack, function ($a, $b) {
     return strlen($a) - strlen($b);
   });
 
-  return $stack;
+  return array_values($stack);
 }
 
 function _cloudy_declare_array($function, array $array) {
   if (is_numeric(key($array))) {
-    return $function . '_array=("' . implode('" "', $array) . '")';
+    return $function . '__array=("' . implode('" "', $array) . '")';
   }
 }
 
