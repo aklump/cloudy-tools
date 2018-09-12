@@ -73,15 +73,12 @@ function get_value(array $config, $path, $default_value, $context = []) {
         $value = 'declare -a ' . $var_name . '=()';
       }
       elseif (is_numeric(key($value))) {
-        $value_type="indexed_array";
         $value = 'declare -a ' . $var_name . '=("' . implode('" "', $value) . '")';
       }
       elseif ($context['array_keys']) {
-        $value_type="array_keys";
         $value = 'declare -a ' . $var_name . '=("' . implode('" "', array_keys($value)) . '")';
       }
       else {
-        $value_type="associative_array";
         foreach ($value as $k => $v) {
           if (is_scalar($v)) {
             $temp[] = "{$var_name}_{$k}=\"$v\"";
@@ -102,7 +99,6 @@ function get_value(array $config, $path, $default_value, $context = []) {
   }
 
   return implode('|', [
-    $value_type,
     $var_name,
     $value,
   ]);
