@@ -113,7 +113,8 @@ function _cloudy_get_config() {
     local return
     local var_type
     local var_name=${config_key//./_}
-    local var_cached_name="cloudy_config_${var_name}__keys"
+    local var_cached_name="cloudy_config_${var_name}"
+    [[ "$array_keys" ]] && var_cached_name="${var_cached_name}__keys"
     local var_eval
     local lines
     local line_eval
@@ -121,7 +122,7 @@ function _cloudy_get_config() {
     # Check if the variable has been imported to cache/config.sh, if not
     # pull it in with slower with PHP process.
     if [[ "$CACHED_CONFIG" != *"$var_cached_name="* ]]; then
-        write_log_debug "Using filesystem to obtain config: $var_cached_name"
+        write_log "yaml_read" "Using filesystem to obtain config: $var_cached_name"
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
