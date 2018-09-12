@@ -40,7 +40,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
 
   $value = isset($config[$key]) ? $config[$key] : $default_value;
 
-  if (isset($context['mutator']) && function_exists($context['mutator'])) {
+  if (!empty($context['mutator']) && function_exists($context['mutator'])) {
     if (is_array($value)) {
       $value = array_map($context['mutator'], $value);
     }
@@ -122,10 +122,15 @@ function _cloudy_declare_array($function, array $array) {
 }
 
 function _cloudy_realpath($value) {
-  $path = substr($value, 0, 1) === '/' ? $value : ROOT . "/$value";
-  $path = realpath($path);
-  if (!$path) {
-    $path = ROOT . "/$value";
+  if (substr($value, 0, 1) === '/') {
+    if (!($path = realpath($value))) {
+      $path = $value;
+    }
+  }
+  else {
+    if (!($path = realpath(ROOT . "/$value"))) {
+      $path = ROOT . "/$value";
+    }
   }
 
   return $path;

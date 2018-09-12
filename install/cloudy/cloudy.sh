@@ -244,8 +244,8 @@ function get_config() {
 function get_config_as() {
     _cloudy_parse_options_args $@
     CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
-    local default_type
     local default_value="${_cloudy_parse_options_args__args[2]}"
+    local default_type
     [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
     _cloudy_get_config "${_cloudy_parse_options_args__args[1]}" "$default_value" "$default_type"
     local result=$?
@@ -256,30 +256,35 @@ function get_config_as() {
 function get_config_keys() {
     local config_key_path="$1"
 
-    local default_type='array'
-    _cloudy_get_config "$config_key_path" "" "$default_type" true
+    _cloudy_get_config "$config_key_path" "" "array" true
 }
 
 function get_config_keys_as() {
     local custom_var_name=$1
     local config_key_path=$2
 
-    local default_type='array'
-    CLOUDY_CONFIG_VARNAME="$custom_var_name"
-    shift
-    local config=$(_cloudy_get_config "$config_key" "" "$default_type" true)
+    _cloudy_parse_options_args $@
+    config_key_path="${_cloudy_parse_options_args__args[1]}"
+    CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
+    _cloudy_get_config "$config_key_path" "" "array" true
+    local result=$?
     CLOUDY_CONFIG_VARNAME=""
-    return $?
+    return $result
 }
 
 ##
  # Return configuration value or values as full path(s) relative to $ROOT.
  #
 function get_config_path() {
-    local config_key=$1
+    local config_key_path=$1
     local default_value=$2
-    local default_type=$3
-    _cloudy_get_config "$config_key" "$default_value" "$default_type" false "_cloudy_realpath"
+
+    _cloudy_parse_options_args $@
+    config_key_path="${_cloudy_parse_options_args__args[0]}"
+    local default_value="${_cloudy_parse_options_args__args[1]}"
+    local default_type
+    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "$config_key_path" "$default_value" "$default_type" false "_cloudy_realpath"
 }
 
 function translate() {

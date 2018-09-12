@@ -35,3 +35,9 @@ coretest:
     do: alpha
     re: bravo
     mi: charlie
+  filepaths:
+    install: install
+    cache: install/cloudy/cache
+    cloudy: install/cloudy/..
+    absolute: "/dev/null"
+

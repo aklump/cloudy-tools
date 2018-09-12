@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+function testGetConfigPathWorksAsItShould() {
+
+    # This one handles the realpath portion as the subject involves traversal.
+    eval $(get_config_path 'coretest.filepaths.cloudy')
+    assert_same "$ROOT/install" $coretest_filepaths_cloudy
+
+    eval $(get_config_path 'coretest.filepaths.absolute')
+    assert_same "/dev/null" $coretest_filepaths_absolute
+
+    eval $(get_config_path 'coretest.filepaths.install')
+    assert_same "$ROOT/install" $coretest_filepaths_install
+
+    eval $(get_config_path 'coretest.filepaths.cache')
+    assert_same "$ROOT/install/cloudy/cache" $coretest_filepaths_cache
+}
 
 function testArraySortLengthWorksAsExpected() {
     declare -a array_sort_by_item_length__array=("september" "five" "on")
@@ -186,6 +201,10 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     assert_array_has_key 'help' '_cloudy_parse_options_args__args'
     assert_array_not_has_key 'init' '_cloudy_parse_options_args__args'
     assert_array_not_has_key 'dev' '_cloudy_parse_options_args__args'
+}
+
+function testGetConfigKeysAsWorksAsExpected() {
+    assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
 }
 
 function testGetConfigKeysWorksAsExpected() {

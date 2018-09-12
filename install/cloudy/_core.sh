@@ -308,7 +308,7 @@ function _cloudy_get_valid_operations_by_command() {
         eval $(get_config_as 'aliases' -a "commands.${command}.options.${option}.aliases")
         options=("${options[@]}" "${aliases[@]}")
     done
-    _cloudy_get_valid_operations_by_command__array=(${options[@]})
+    _cloudy_get_valid_operations_by_command__array=("${options[@]}")
 }
 
 function _cloudy_validate_against_scheme() {
