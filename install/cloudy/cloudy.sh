@@ -171,6 +171,25 @@ function get_arg() {
 }
 
 ##
+ # Purges all cached configuration from disk and memory.
+ #
+function purge_config() {
+    local purge="${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}"
+
+    # remove all variables from memory.
+    [ -f "$purge" ] && source "$purge"
+
+    # empty the purge script.
+    echo "" > "$purge"
+
+    # empty the set var script.
+    echo "" > "${CACHED_CONFIG_FILEPATH}"
+
+    # empty the variables in memory index.
+    CACHED_CONFIG=""
+}
+
+##
  # Get a config value.
  #
  # When requesting an array you must pass -a as the first argument if there's
@@ -559,7 +578,9 @@ function do_tests_in() {
           fail_because "Test not found: $CLOUDY_ACTIVE_TEST"
         else
             let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
+            [ "$(type -t 'setup_before_test')" = "function" ] && setup_before_test
             $CLOUDY_ACTIVE_TEST
+            [ "$(type -t 'teardown_after_test')" = "function" ] && teardown_after_test
         fi
     done
 

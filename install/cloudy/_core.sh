@@ -84,10 +84,10 @@ function _cloudy_bootstrap() {
  # Detect if cached config is stale.
  #
 function _cloudy_auto_purge_config() {
-    local cache_mtime_filepath="$CACHED_CONFIG_FILEPATH.modified.txt"
+    local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
     [ -f "$cache_mtime_filepath" ] || touch "$cache_mtime_filepath" || fail
 
-    local cache_mtime=$(cat "$CACHED_CONFIG_FILEPATH.modified.txt")
+    local cache_mtime=$(cat "$cache_mtime_filepath")
     local config_mtime=$(php -r "echo filemtime('$CONFIG');")
 
     # Test if the yaml file was modified and automatically rebuild config.yml.sh
@@ -113,7 +113,7 @@ function _cloudy_get_config() {
     local return
     local var_type
     local var_name=${config_key//./_}
-    local var_cached_name="cloudy_config_${var_name}"
+    local var_cached_name="cloudy_config_${var_name}__keys"
     local var_eval
     local lines
     local line_eval
@@ -130,6 +130,7 @@ function _cloudy_get_config() {
             for line_eval in "${lines[@]}"; do
                 if [[ "$cloudy_development_do_not_cache_config" != "true" ]]; then
                     echo "$line_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
+                    echo "unset $var_cached_name" >> "${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
                     write_log_debug "$line_eval was written to $CACHED_CONFIG_FILEPATH"
                 else
                     write_log_warning "$line_eval not written since \$cloudy_development_do_not_cache_config is TRUE."

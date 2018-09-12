@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 
+
+function _testGetConfigWorksAsExpectedOnAssociativeArray() {
+    get_config "coretest.associative_array"
+mark_test_skipped && return
+    assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config "coretest.associative_array")"
+}
+
 function testGetConfigWritesIndexedArrayToCacheFile() {
     [[ "$cloudy_development_do_not_cache_config" == true ]] && mark_test_skipped && return
 
@@ -19,23 +26,6 @@ function testGetConfigWritesIndexedArrayToCacheFile() {
     assert_not_empty "$(grep "$actual" "$CACHED_CONFIG_FILEPATH")" "$actual" "not found in $CACHED_CONFIG_FILEPATH"
 }
 
-function testGetConfigKeysWorksAsExpected() {
-    assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "coretest.associative_array")"
-}
-
-function testGetConfigAOptionsWorksAsExpected() {
-    assert_empty "$(get_config "bogus.path.to.null")"
-    assert_same "declare -a bogus_path_to_null='()'" "$(get_config -a "bogus.path.to.null")"
-}
-
-function testGetConfigReturnsIndexedArray() {
-    assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
-
-    # Assert use_config_var works.
-    use_config_var "september"
-    assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
-}
-
 function testGetConfigWritesScalarToCacheFile() {
 
     [[ "$cloudy_development_do_not_cache_config" == true ]] && mark_test_skipped && return
@@ -52,7 +42,23 @@ function testGetConfigWritesScalarToCacheFile() {
 
     # See if the variable has been added to the cache file.
     assert_not_empty "$(grep "cloudy_config_coretest_string=\"$actual\"" "$CACHED_CONFIG_FILEPATH")" "cloudy_config_coretest_string=$actual" "not found in $CACHED_CONFIG_FILEPATH"
+}
 
+function testGetConfigAOptionsWorksAsExpected() {
+    assert_empty "$(get_config "bogus.path.to.null")"
+    assert_same "declare -a bogus_path_to_null='()'" "$(get_config -a "bogus.path.to.null")"
+}
+
+function testGetConfigKeysWorksAsExpected() {
+    assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "coretest.associative_array")"
+}
+
+function testGetConfigReturnsIndexedArray() {
+    assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
+
+    # Assert use_config_var works.
+    use_config_var "september"
+    assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
 }
 
 function testGetVersionIsNotEmpty() {
@@ -63,5 +69,9 @@ function testGetConfigForScalarReturnsAsExpected() {
     assert_equals "alpha" "$(get_config "coretest.associative_array.do")"
     assert_equals "Adam ate apples at Andrew's abode." "$(get_config "coretest.string")"
     assert_equals "Default value." "$(get_config "my.bogus.config.key" "Default value.")"
+}
+
+function setup_before_test() {
+    purge_config
 }
 
