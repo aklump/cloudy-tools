@@ -477,6 +477,19 @@ function write_log_emergency() {
     _cloudy_write_log ${args[@]}
 }
 
+##
+ # You may include 1 or two arguments; when 2, the first is a log label
+ #
+function write_log() {
+    local arbitrary_log_label=$1
+
+    local args=("$@")
+    if [ $# -eq 1 ]; then
+        args=("log" "${args[@]}")
+    fi
+    _cloudy_write_log ${args[@]}
+}
+
 function write_log_alert() {
     local args=("alert" "$@")
     _cloudy_write_log ${args[@]}
