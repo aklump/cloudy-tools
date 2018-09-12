@@ -16,6 +16,7 @@ $array_keys = $g->get($argv, 6, FALSE, function ($value, $default) {
   return $value === 'true' ? TRUE : $default;
 });
 $mutator = $g->get($argv, 7, NULL);
+$cached_var_name = $g->get($argv, 8, NULL);
 
 try {
   $data = json_decode($json, TRUE);
@@ -36,6 +37,7 @@ try {
     }
 
     $value = get_value($data, $config_key, $default_value, [
+      'cached_var_name' => $cached_var_name,
       'array_keys' => $array_keys,
       'mutator' => $mutator,
     ]);

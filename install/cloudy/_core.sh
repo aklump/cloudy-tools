@@ -114,7 +114,9 @@ function _cloudy_get_config() {
     local var_type
     local var_name=${config_key//./_}
     local var_cached_name="cloudy_config_${var_name}"
+    [[ "$default_type" ]] && var_cached_name="${var_cached_name}__${default_type}"
     [[ "$array_keys" ]] && var_cached_name="${var_cached_name}__keys"
+
     local var_eval
     local lines
     local line_eval
@@ -122,8 +124,8 @@ function _cloudy_get_config() {
     # Check if the variable has been imported to cache/config.sh, if not
     # pull it in with slower with PHP process.
     if [[ "$CACHED_CONFIG" != *"$var_cached_name="* ]]; then
-        write_log "yaml_read" "Using filesystem to obtain config: $var_cached_name"
-        return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
+        write_log "config_read" "$var_cached_name"
+        return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator" "$var_cached_name")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
             declare -a lines=("$var_eval")
@@ -132,7 +134,8 @@ function _cloudy_get_config() {
                 if [[ "$cloudy_development_do_not_cache_config" != "true" ]]; then
                     echo "$line_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
                     echo "unset $var_cached_name" >> "${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                    write_log_debug "$line_eval was written to $CACHED_CONFIG_FILEPATH"
+                    write_log_debug "$line_eval was written to $(basename $CACHED_CONFIG_FILEPATH)"
+                    write_log "config_write" "$line_eval"
                 else
                     write_log_warning "$line_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
                 fi

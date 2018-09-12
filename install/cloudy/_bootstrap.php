@@ -49,39 +49,39 @@ function get_value(array $config, $path, $default_value, $context = []) {
     }
   }
 
-  $varname = 'cloudy_config_' . implode('_', $context['parents']);
+  $var_name = $context['cached_var_name'];
 
   $value_type = gettype($value);
   switch ($value_type) {
     case 'NULL':
-      $value = "$varname=null";
+      $value = "$var_name=null";
       break;
 
     case 'boolean':
       $value = $value ? 'true' : 'false';
-      $value = "$varname=$value";
+      $value = "$var_name=$value";
       break;
 
     case 'object':
       $value = $value->__toString();
-      $value = "$varname=\"$value\"";
+      $value = "$var_name=\"$value\"";
       break;
 
     case 'array':
       $temp = [];
       if (empty($value)) {
-        $value = 'declare -a ' . $varname . '=()';
+        $value = 'declare -a ' . $var_name . '=()';
       }
       elseif (is_numeric(key($value))) {
-        $value = 'declare -a ' . $varname . '=("' . implode('" "', $value) . '")';
+        $value = 'declare -a ' . $var_name . '=("' . implode('" "', $value) . '")';
       }
       elseif ($context['array_keys']) {
-        $value = 'declare -a ' . $varname . '=("' . implode('" "', array_keys($value)) . '")';
+        $value = 'declare -a ' . $var_name . '=("' . implode('" "', array_keys($value)) . '")';
       }
       else {
         foreach ($value as $k => $v) {
           if (is_scalar($v)) {
-            $temp[] = "{$varname}_{$k}=\"$v\"";
+            $temp[] = "{$var_name}_{$k}=\"$v\"";
           }
         }
         $value = implode(';', $temp);
@@ -90,16 +90,16 @@ function get_value(array $config, $path, $default_value, $context = []) {
 
     case 'integer':
     case 'double':
-      $value = "$varname=$value";
+      $value = "$var_name=$value";
       break;
 
     case 'string':
-      $value = "$varname=\"$value\"";
+      $value = "$var_name=\"$value\"";
       break;
   }
 
   return implode('|', [
-    $varname,
+    $var_name,
     $value,
   ]);
 }
