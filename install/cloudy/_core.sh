@@ -115,6 +115,8 @@ function _cloudy_get_config() {
     local var_name=${config_key//./_}
     local var_cached_name="cloudy_config_${var_name}"
     local var_eval
+    local lines
+    local line_eval
 
     # Check if the variable has been imported to cache/config.sh, if not
     # pull it in with slower with PHP process.
@@ -123,19 +125,23 @@ function _cloudy_get_config() {
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator")
         local IFS="|"; read var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
-            if [[ "$cloudy_development_do_not_cache_config" != "true" ]]; then
-                echo "$var_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                write_log_debug "$var_eval was written to $CACHED_CONFIG_FILEPATH"
+            declare -a lines=("$var_eval")
+
+            for line_eval in "${lines[@]}"; do
+                if [[ "$cloudy_development_do_not_cache_config" != "true" ]]; then
+                    echo "$line_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
+                    write_log_debug "$line_eval was written to $CACHED_CONFIG_FILEPATH"
+                else
+                    write_log_warning "$line_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
+                fi
 
                 # Beware this only has the scope of this function if a new
                 # variable.  It won't be until the next run of the script that
                 # the scope will be at the top level, because that's when the
                 # cache file is sourced by cloudy.sh.  We need to evaluate it
                 # here though, because it's used below.
-                eval "$var_eval"
-            else
-                write_log_warning "$var_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
-            fi
+                eval "$line_eval"
+            done
         fi
     fi
 
