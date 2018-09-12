@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function testGetConfigWorksAsExpectedOnAssociativeArray() {
+function _testGetConfigWorksAsExpectedOnAssociativeArray() {
     local expected="cloudy_config_coretest_associative_array_do=\"alpha\";cloudy_config_coretest_associative_array_re=\"bravo\";cloudy_config_coretest_associative_array_mi=\"charlie\""
 
     eval $(get_config -a "coretest.associative_array")
@@ -28,14 +28,26 @@ function testGetVersionIsNotEmpty() {
 }
 
 function testGetConfigForScalarReturnsAsExpected() {
-    assert_equals "alpha" "$(get_config "coretest.associative_array.do")"
-    assert_equals "Adam ate apples at Andrew's abode." "$(get_config "coretest.string")"
-    assert_equals "Default value." "$(get_config "my.bogus.config.key" "Default value.")"
+    assert_equals "declare -- coretest_associative_array_do=\"alpha\"" "$(get_config "coretest.associative_array.do")"
+    assert_equals "declare -- coretest_string=\"Adam ate apples at Andrew's abode.\"" "$(get_config "coretest.string")"
+    assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
 }
 
-function testGetConfigAOptionsWorksAsExpected() {
-    assert_empty "$(get_config "bogus.path.to.null")"
+function testGetConfigAsScalarReturnsAsExpected() {
+    assert_equals "declare -- hero=\"alpha\"" "$(get_config_as 'hero' "coretest.associative_array.do")"
+    assert_equals "declare -- hero=\"Batman\"" "$(get_config_as 'hero' "my.bogus.superhero" "Batman")"
+}
+
+function testGetConfigWithAOptionWorksAsExpected() {
+    assert_same "declare -- bogus_path_to_null=\"\"" "$(get_config "bogus.path.to.null")"
     assert_same "declare -a bogus_path_to_null='()'" "$(get_config -a "bogus.path.to.null")"
+    assert_same "declare -a bogus_path_to_null='()'" "$(get_config "bogus.path.to.null" -a)"
+}
+
+function testGetConfigAsWithAOptionWorksAsExpected() {
+    assert_same "declare -a var_name='()'" "$(get_config_as -a "var_name" "bogus.path.to.null")"
+    assert_same "declare -a var_name='()'" "$(get_config_as "var_name" -a "bogus.path.to.null")"
+    assert_same "declare -a var_name='()'" "$(get_config_as "var_name" "bogus.path.to.null" -a)"
 }
 
 function testGetConfigWritesIndexedArrayToCacheFile() {
