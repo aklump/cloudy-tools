@@ -287,6 +287,22 @@ function get_config_path() {
     _cloudy_get_config "$config_key_path" "$default_value" "$default_type" false "_cloudy_realpath"
 }
 
+function get_config_path_as() {
+    local custom_var_name=$1
+    local config_key_path=$2
+    local default_value=$3
+
+    _cloudy_parse_options_args $@
+    CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
+    local default_value="${_cloudy_parse_options_args__args[2]}"
+    local default_type
+    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "${_cloudy_parse_options_args__args[1]}" "$default_value" "$default_type" false "_cloudy_realpath"
+    local result=$?
+    CLOUDY_CONFIG_VARNAME=""
+    return $result
+}
+
 function translate() {
     local translation_key=$1
     local default_value=$2

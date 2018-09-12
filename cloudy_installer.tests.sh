@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+function testGetConfigPathAsWorksAsItShould() {
+
+    # This one handles the realpath portion as the subject involves traversal.
+    eval $(get_config_path_as 'testpath' 'coretest.filepaths.cloudy')
+    assert_same "$ROOT/install" $testpath
+
+    eval $(get_config_path_as 'testpath' 'coretest.filepaths.absolute')
+    assert_same "/dev/null" $testpath
+
+    eval $(get_config_path_as 'testpath' 'coretest.filepaths.install')
+    assert_same "$ROOT/install" $testpath
+
+    eval $(get_config_path_as 'testpath' 'coretest.filepaths.cache')
+    assert_same "$ROOT/install/cloudy/cache" $testpath
+}
+
 function testGetConfigPathWorksAsItShould() {
 
     # This one handles the realpath portion as the subject involves traversal.
