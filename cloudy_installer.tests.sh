@@ -1,5 +1,111 @@
 #!/usr/bin/env bash
 
+
+
+function testStringUppercase() {
+    assert_same 'JSON' $(string_uppercase 'json')
+}
+
+function testPathExtension() {
+    assert_same 'json' $(path_extension 'config.json')
+}
+
+function testPathFilename() {
+    assert_same 'config' $(path_filename 'config.json')
+}
+
+function testPathRelatiaveToRoot() {
+
+    local path="some/tree.md"
+    assert_same "$ROOT/$path" $(path_relative_to_root $path)
+
+    path="/$path"
+    assert_same "$path" $(path_relative_to_root $path)
+}
+
+function testGetArgWorksAsExpected() {
+    declare -a CLOUDY_ARGS=();
+    assert_empty $(get_arg 0)
+    assert_same 'default_value' $(get_arg 0 'default_value')
+
+    declare -a CLOUDY_ARGS=('COMMAND' 'name' 'force');
+    assert_same 'name' $(get_arg 0)
+    assert_same 'force' $(get_arg 1)
+}
+
+function testHasOptionGetOptionWorkAsExpected() {
+    declare -a CLOUDY_OPTIONS=('name' 'force');
+    CLOUDY_OPTION__NAME="alpha.md"
+    CLOUDY_OPTION__FORCE=true
+
+    assert_exit_code 0 $(has_option 'name')
+    assert_exit_code 0 $(has_option 'force')
+    assert_exit_code 1 $(has_option 'bogus')
+
+    assert_same 'alpha.md' $(get_option 'name')
+    assert_true $(get_option 'force')
+    assert_empty $(get_option 'bogus')
+}
+
+function testHasOptionsWorksAsExpected() {
+    CLOUDY_OPTIONS=("do" "re");
+    assert_exit_code 0 $(has_options)
+    CLOUDY_OPTIONS=();
+    assert_exit_code 1 $(has_options)
+}
+
+function testGetCommandReturnsFirstArgument() {
+    CLOUDY_ARGS=("order-take-out" "sushi")
+    assert_same "order-take-out" $(get_command)
+
+    # Now test that default passes through
+    CLOUDY_ARGS=()
+    eval $(get_config_as 'expected' 'default_command')
+    assert_same $expected $(get_command)
+}
+
+function testGetTitleIsNotEmpty() {
+    assert_not_empty 'Cloudy Installer' $(get_title)
+}
+
+function testGetVersionIsNotEmpty() {
+    assert_not_empty $(get_version)
+}
+
+function testCloudyParseOptionsArgsWorksAsExpected() {
+    _cloudy_parse_options_args init --file=index.php -y dev -abc
+
+    assert_array_has_key 'file' '_cloudy_parse_options_args__options'
+    assert_array_has_key 'y' '_cloudy_parse_options_args__options'
+    assert_array_has_key 'a' '_cloudy_parse_options_args__options'
+    assert_array_has_key 'b' '_cloudy_parse_options_args__options'
+    assert_array_has_key 'c' '_cloudy_parse_options_args__options'
+    assert_array_not_has_key 'init' '_cloudy_parse_options_args__options'
+
+    assert_array_has_key 'init' '_cloudy_parse_options_args__args'
+    assert_array_has_key 'dev' '_cloudy_parse_options_args__args'
+    assert_array_not_has_key 'a' '_cloudy_parse_options_args__args'
+
+    assert_same 'index.php' $_cloudy_parse_options_args__option__file
+    assert_same true $_cloudy_parse_options_args__option__y
+    assert_same true $_cloudy_parse_options_args__option__a
+    assert_same true $_cloudy_parse_options_args__option__b
+    assert_same true $_cloudy_parse_options_args__option__c
+
+    # Now call again and make sure the old values are cleared out
+    _cloudy_parse_options_args help
+
+    assert_array_not_has_key 'files' '_cloudy_parse_options_args__options'
+    assert_array_not_has_key 'y' '_cloudy_parse_options_args__options'
+    assert_array_not_has_key 'a' '_cloudy_parse_options_args__options'
+    assert_array_not_has_key 'b' '_cloudy_parse_options_args__options'
+    assert_array_not_has_key 'c' '_cloudy_parse_options_args__options'
+
+    assert_array_has_key 'help' '_cloudy_parse_options_args__args'
+    assert_array_not_has_key 'init' '_cloudy_parse_options_args__args'
+    assert_array_not_has_key 'dev' '_cloudy_parse_options_args__args'
+}
+
 function _testGetConfigWorksAsExpectedOnAssociativeArray() {
     local expected="cloudy_config_coretest_associative_array_do=\"alpha\";cloudy_config_coretest_associative_array_re=\"bravo\";cloudy_config_coretest_associative_array_mi=\"charlie\""
 
@@ -21,10 +127,6 @@ function testGetConfigReturnsIndexedArray() {
 
 function testGetConfigAsReturnsIndexedArray() {
     assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "coretest.indexed_array")"
-}
-
-function testGetVersionIsNotEmpty() {
-    assert_not_empty $(get_version)
 }
 
 function testGetConfigForScalarReturnsAsExpected() {

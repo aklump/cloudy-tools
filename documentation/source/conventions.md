@@ -4,6 +4,7 @@ _Cloudy_ has some opinions about how to write code, this page reveals them.
 
 ## General 
 
+
 * Functions that begin with `_cloudy` should be considered private and never called by your script.  They may change in future versions.
 * All functions listed in _cloudy.sh_ comprise the public API and will not change across minor version changes.
 
@@ -12,6 +13,22 @@ _Cloudy_ has some opinions about how to write code, this page reveals them.
 * Function names should be readable and intuitive, e.g., `exit_with_success` is better than `success_exit`
 * Function names should start with a verb if applicable, unless they are grouped by category, e.g. `stack_join` is fine because _stack_ is the common group; `join` is the verb.
 
+## Boolean
+
+Even though BASH doesn't distinguish between (bool) "true" and (string) "true", you should indicate your intention by not using quotes for boolean value.
+
+    my_var=true
+    my_var=false
+    
+Do not do the following when your intention is boolean:
+
+    my_var="true"
+    my_var="false"
+
+Likewise to test for `true` do like this, which again, omits any quotes around `true`.
+
+    [[ "$my_var" = true ]]
+    
 ## Functions
 
 * For getters when echoing a _default value_, return 2

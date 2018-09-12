@@ -293,7 +293,7 @@ function _cloudy_exit_with_success() {
 }
 
 ##
- # Set $CLOUDY_STACK to all defined operations included aliases for a given op.
+ # Set $_cloudy_get_valid_operations_by_command__array to all defined operations included aliases for a given op.
  #
 function _cloudy_get_valid_operations_by_command() {
     local command=$1
@@ -308,7 +308,7 @@ function _cloudy_get_valid_operations_by_command() {
         eval $(get_config_as 'aliases' -a "commands.${command}.options.${option}.aliases")
         options=("${options[@]}" "${aliases[@]}")
     done
-    CLOUDY_STACK=(${options[@]})
+    _cloudy_get_valid_operations_by_command__array=(${options[@]})
 }
 
 function _cloudy_validate_against_scheme() {
@@ -479,11 +479,11 @@ function _cloudy_write_log() {
 #
 
 # Set this to true and config will be read from YAML every time.
-cloudy_development_do_not_cache_config=true
+cloudy_development_do_not_cache_config=false
 
 
 # Expand some vars from our controlling script.
-CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
+CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)".te
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
 
 # Store the script options for later use.

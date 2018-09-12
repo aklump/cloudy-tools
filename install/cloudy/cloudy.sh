@@ -33,7 +33,7 @@ function validate_input() {
     _cloudy_get_valid_operations_by_command $command
 
     for name in "${CLOUDY_OPTIONS[@]}"; do
-       stack_has__array=(${CLOUDY_STACK[@]})
+       stack_has__array=(${_cloudy_get_valid_operations_by_command__array[@]})
        stack_has $name || fail_because "Invalid option: $name"
        eval "value=\"\$CLOUDY_OPTION__$(string_uppercase $name)\""
 
@@ -724,7 +724,40 @@ function assert_file_not_exists() {
 
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
     [ ! -e "$filepath" ] && return 0
-     _cloudy_assert_failed "$filepath" "exists, but should not."
+    _cloudy_assert_failed "$filepath" "exists, but should not."
+}
+
+function assert_array_not_has_key() {
+    local key=$1
+    local array_var_name=$2
+
+    eval stack_has__array=(\${"$array_var_name"[@]})
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    ! stack_has "$1" && return 0
+    _cloudy_assert_failed "$key" "should not exist in array \$$array_var_name, but it does."
+}
+
+function assert_array_has_key() {
+    local key=$1
+    local array_var_name=$2
+
+    eval stack_has__array=(\${"$array_var_name"[@]})
+    let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
+    stack_has "$1" && return 0
+    _cloudy_assert_failed "$key" "should exist in array \$$array_var_name"
+}
+
+##
+ # Assert a function returns a given exit code.
+ #
+ # @code
+ #   assert_exit_code 0 $(has_option 'name')
+ # @endcode
+ #
+function assert_exit_code() {
+    local actual=$?
+    local expected=$1
+    assert_same $expected $actual
 }
 
 #

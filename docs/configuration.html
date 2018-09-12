@@ -12,7 +12,7 @@
   <div class="pager">
   <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
   <a href="index.html" class="index">Index</a>
-  <a href="conventions.html" class="next conventions">Conventions&raquo;</a>
+  <a href="conventions.html" class="next conventions">Cloudy Conventions&raquo;</a>
 </div>
 </header>
 
@@ -52,15 +52,22 @@
   directories: 750
 </code></pre>
 
-<p>To access the perms <code>group</code> scalar value do the following:</p>
+<p>To access the perms <code>group</code> scalar value do one of the following:</p>
 
-<pre><code>group=$(get_config "perms.group" "staff") 
+<pre><code>eval $(get_config "perms.group" "staff")
+# [ perms_group = 'apache' ]
 </code></pre>
 
 <ul>
 <li>Notice the dot separation to denote parent/child.</li>
 <li>The second argument is a default value, e.g., <code>staff</code>.</li>
 </ul>
+
+<p>You can also assign to a different variable like this:</p>
+
+<pre><code>eval $(get_config_as "group" "perms.group" "staff") 
+# [ group = 'apache' ]
+</code></pre>
 
 <h3>Arrays</h3>
 
@@ -110,7 +117,7 @@ echo $perms_directories
 
 <p>This is a usage example:</p>
 
-<pre><code>eval $(get_config "commands")
+<pre><code>eval $(get_config_keys "commands")
 
 ${config_keys[0]} == "_default"
 ${config_keys[1]} == "help"
@@ -128,7 +135,7 @@ public_files: ../web/sites/default/files
 
 <p>Then when you access the configuration use <code>get_config_path</code>, e.g.,</p>
 
-<pre><code>webroot=$(get_config_path "webroot")
+<pre><code>eval $(get_config_path "webroot")
 </code></pre>
 
 <p>The value of <code>$webroot</code> will be an an absolute filepath.</p>
@@ -178,11 +185,11 @@ writeable_directories=($_config_values[@]})
   <div class="pager">
   <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
   <a href="index.html" class="index">Index</a>
-  <a href="conventions.html" class="next conventions">Conventions&raquo;</a>
+  <a href="conventions.html" class="next conventions">Cloudy Conventions&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 11 Sep 2018 10:48:19 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 12 Sep 2018 11:25:15 -0700</p>
   </div>
 </footer>
 

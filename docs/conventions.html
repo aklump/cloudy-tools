@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Conventions</title>
+  <title>Cloudy Conventions</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -17,30 +17,60 @@
 </header>
 
 
-  <h1>Conventions</h1>
+  <h1>Cloudy Conventions</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
-<section><h2>Cloudy Conventions</h2>
+<section>
+
+<p><em>Cloudy</em> has some opinions about how to write code, this page reveals them.</p>
+
+<h2>General</h2>
 
 <ul>
-<li>For getters when echoing a default value, return 2</li>
-<li>Functions that begin with <code>_cloudy</code> should be considered private and never called by your script.</li>
-<li>Function names should be readable and intuitive
-
-<ul>
-<li><code>exit_with_success</code> is better than <code>success_exit</code></li>
-</ul></li>
-<li>Function names should start with a verb if applicable, unless they are grouped by category, e.g. <code>stack_join</code> is fine because <em>stack</em> is the common group.</li>
+<li>Functions that begin with <code>_cloudy</code> should be considered private and never called by your script.  They may change in future versions.</li>
+<li>All functions listed in <em>cloudy.sh</em> comprise the public API and will not change across minor version changes.</li>
 </ul>
 
-<h2>Functions that operation on arrays</h2>
+<h2>Naming</h2>
 
-<p>When a function needs to manipulate an array, the array should be assigned to a global variable, the name of which is the function with <code>_array</code> added to the end, e.g.,</p>
+<ul>
+<li>Function names should be readable and intuitive, e.g., <code>exit_with_success</code> is better than <code>success_exit</code></li>
+<li>Function names should start with a verb if applicable, unless they are grouped by category, e.g. <code>stack_join</code> is fine because <em>stack</em> is the common group; <code>join</code> is the verb.</li>
+</ul>
+
+<h2>Boolean</h2>
+
+<p>Even though BASH doesn't distinguish between (bool) "true" and (string) "true", you should indicate your intention by not using quotes for boolean value.</p>
+
+<pre><code>my_var=true
+my_var=false
+</code></pre>
+
+<p>Do not do the following when your intention is boolean:</p>
+
+<pre><code>my_var="true"
+my_var="false"
+</code></pre>
+
+<p>Likewise to test for <code>true</code> do like this, which again, omits any quotes around <code>true</code>.</p>
+
+<pre><code>[[ "$my_var" = true ]]
+</code></pre>
+
+<h2>Functions</h2>
+
+<ul>
+<li>For getters when echoing a <em>default value</em>, return 2</li>
+</ul>
+
+<h3>Functions that operate on arrays</h3>
+
+<p>When a function needs to manipulate an array, the array should be assigned to a global variable, the name of which is the function with <code>__array</code> added to the end, e.g.,</p>
 
 <pre><code>function stack_join() {
     local glue=$1
     local string
-    string=$(printf "%s$glue" "${stack_join_array[@]}") &amp;&amp; string=${string%$glue} || return 1
+    string=$(printf "%s$glue" "${stack_join__array[@]}") &amp;&amp; string=${string%$glue} || return 1
     echo $string
     return 0
 }
@@ -48,8 +78,38 @@
 
 <p>And here is the usage</p>
 
-<pre><code>stack_join_array=("${_config_values[@]}")
+<pre><code>stack_join__array=("${_config_values[@]}")
 local options="-$(stack_join ", -"), --${option}"    
+</code></pre>
+
+<ul>
+<li>The same is true if the function has to <strong>return an array</strong>.</li>
+<li>If a single function operates on more than one array, then the suffix should be modified as necessary.  <code>_cloudy_parse_option_arguments</code> is a good example.  You still want the suffix to begin with two underscores.</li>
+</ul>
+
+<h3>Name your function arguments</h3>
+
+<p>To make your code more readible, the first line(s) of a function should name the function arguments.  Declare them as <code>local</code>.  Then follow with a blank space, after which you begin the process of the function.</p>
+
+<pre><code>function get_config() {
+    local config_key_path=$1
+    local default_value="$2"
+
+    # Now do the function stuff...
+</code></pre>
+
+<h3>Declare local variables near the top</h3>
+
+<p>Group all local variable names below arguments and declare them there rather than deeper in the function where they are used.  Even if no default values, declare them here anyway.</p>
+
+<pre><code>function get_config() {
+    local config_key_path=$1
+    local default_value="$2"
+
+    local name
+    local type="string"
+
+    ...    
 </code></pre>
 </section>
 
@@ -65,7 +125,7 @@ local options="-$(stack_join ", -"), --${option}"
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 11 Sep 2018 10:48:19 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 12 Sep 2018 11:25:15 -0700</p>
   </div>
 </footer>
 
