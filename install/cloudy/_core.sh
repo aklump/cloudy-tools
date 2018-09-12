@@ -7,68 +7,39 @@
 
 function _cloudy_bootstrap() {
     SECONDS=0
-
-    # todo: maybe this should move
-    CLOUDY_CONFIG_JSON='{"language":"en"}'
-    if [ -f "$CONFIG" ]; then
-        CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG")"
-        [ $? -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
-    fi
+    local aliases
+    local value
+    local options
+    local command
 
     _cloudy_validate_config
 
-    CLOUDY_LANGUAGE=$(get_config "language" "en")
+    eval $(get_config_as "CLOUDY_LANGUAGE" "language" "en")
 
     # todo may not need to do these two?
-    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
-    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
+#    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
+#    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
 
     # Create some "constants".
     LI="├──"
     LIL="└──"
 
-    # Parse script arguments into arrays.
-    local arg
-    local options
-    local option
-    for arg in "$@"; do
-      if [[ "$arg" =~ ^--(.*) ]]; then
-        option="${BASH_REMATCH[1]}"
-        if [[ ! "$option" = *"="* ]]; then
-            option="$option=true"
-        fi
-        CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$option")
-      elif [[ "$arg" =~ ^-(.*) ]]; then
-        options=($(echo "${BASH_REMATCH[1]}" | grep -o .))
-        for option in "${options[@]}"; do
-            CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$option=true")
-        done
-      else
-        CLOUDY_ARGS=("${CLOUDY_ARGS[@]}" "$arg")
-      fi
-    done
-
-    local command=$(get_command)
-
+    command=$(get_command)
     # Add in the alias options based on master options.
-    local value
     for option in "${CLOUDY_OPTIONS[@]}"; do
-        local value="true"
+        value="true"
         [[ "$option" =~ ^(.*)\=(.*) ]] && option=${BASH_REMATCH[1]} && value=${BASH_REMATCH[2]}
-        use_config_var "aliases"
-        eval $(get_config_keys "commands.${command}.options.${option}.aliases")
+        eval $(get_config_keys_as 'aliases' "commands.${command}.options.${option}.aliases")
         for alias in ${aliases[@]}; do
            ! has_option $alias && CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias=$value")
         done
     done
 
     # Using aliases search for the master option.
-    use_config_var "options"
-    eval $(get_config_keys "commands.${command}.options")
+    eval $(get_config_keys_as 'options' "commands.${command}.options")
 
     for master_option in "${options[@]}"; do
-        use_config_var "aliases"
-        eval $(get_config -a "commands.${command}.options.${master_option}.aliases")
+        eval $(get_config_as -a 'aliases' "commands.${command}.options.${master_option}.aliases")
         for alias in "${aliases[@]}"; do
             if has_option $alias && ! has_option $master_option; then
                 value=$(get_option "$alias")
@@ -76,8 +47,61 @@ function _cloudy_bootstrap() {
             fi
         done
     done
+}
 
-    revert_config_var
+
+##
+ # Parses arguments into options, args and option values.
+ #
+ # @code
+ #   function my_func{) {
+ #     _cloudy_parse_options_args @$
+ #     ...
+ # @endcode
+ #
+ # The following variables are generated for:
+ # @code
+ #   my_func -ab --tree=life do re
+ # @endcode
+ #
+ # - _cloudy_parse_options_args__args = (do re)
+ # - _cloudy_parse_options_args__options = (a b tree)
+ # - _cloudy_parse_options_args__option__a = true
+ # - _cloudy_parse_options_args__option__b = true
+ # - _cloudy_parse_options_args__option__tree = life
+ #
+function _cloudy_parse_options_args() {
+    local name
+    local value
+
+    # Purge any previous values.
+    for name in "${_cloudy_parse_options_args__options[@]}"; do
+        eval "unset _cloudy_parse_options_args__option__${name}"
+    done
+    _cloudy_parse_options_args__options=()
+    _cloudy_parse_options_args__args=()
+
+    # Set the new values.
+    for arg in "$@"; do
+      if [[ "$arg" =~ ^--(.*) ]]; then
+        name="${BASH_REMATCH[1]}"
+        value=true
+        if [[ "$name" =~ ^(.*)=(.*)$ ]]; then
+            name="${BASH_REMATCH[1]}"
+            value="${BASH_REMATCH[2]}"
+        fi
+        _cloudy_parse_options_args__options=("${_cloudy_parse_options_args__options[@]}" "$name")
+        eval "_cloudy_parse_options_args__option__${name}=${value}"
+      elif [[ "$arg" =~ ^-(.*) ]]; then
+        options=($(echo "${BASH_REMATCH[1]}" | grep -o .))
+        for name in "${options[@]}"; do
+            _cloudy_parse_options_args__options=("${_cloudy_parse_options_args__options[@]}" "$name")
+            eval "_cloudy_parse_options_args__option__${name}=true"
+        done
+      else
+        _cloudy_parse_options_args__args=("${_cloudy_parse_options_args__args[@]}" "$arg")
+      fi
+    done
 }
 
 ##
@@ -116,37 +140,42 @@ function _cloudy_get_config() {
     local var_cached_name="cloudy_config_${var_name}"
     [[ "$default_type" ]] && var_cached_name="${var_cached_name}__${default_type}"
     [[ "$array_keys" ]] && var_cached_name="${var_cached_name}__keys"
-
+write_log "cache_name" $var_cached_name
     local var_eval
-    local lines
-    local line_eval
 
-    # Check if the variable has been imported to cache/config.sh, if not
-    # pull it in with slower with PHP process.
+    # Check if the variable is in memory because it was previously written to
+    # $CACHED_CONFIG_FILEPATH, if not pull it in with the slower PHP process.
     if [[ "$CACHED_CONFIG" != *"$var_cached_name="* ]]; then
         write_log "config_read" "$var_cached_name"
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator" "$var_cached_name")
-        local IFS="|"; read var_cached_name var_eval <<< "$return"
+
         if [ $? -eq 0 ]; then
-            declare -a lines=("$var_eval")
+            local IFS="|"; read var_type var_cached_name var_eval <<< "$return"
+            if [[ "$cloudy_development_do_not_cache_config" != true ]]; then
+                echo "$var_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
+                echo "unset $var_cached_name" >> "${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
+                write_log_debug "$var_eval was written to $(basename $CACHED_CONFIG_FILEPATH)"
+                write_log "config_write" "$var_eval"
+            else
+                write_log_warning "$var_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
+            fi
+        else
+           local IFS="|"; read file message <<< "$return"
+           write_log_error "$message In file $file"
+           return 1
+        fi
 
-            for line_eval in "${lines[@]}"; do
-                if [[ "$cloudy_development_do_not_cache_config" != "true" ]]; then
-                    echo "$line_eval" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                    echo "unset $var_cached_name" >> "${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                    write_log_debug "$line_eval was written to $(basename $CACHED_CONFIG_FILEPATH)"
-                    write_log "config_write" "$line_eval"
-                else
-                    write_log_warning "$line_eval not written since \$cloudy_development_do_not_cache_config is TRUE."
-                fi
 
-                # Beware this only has the scope of this function if a new
-                # variable.  It won't be until the next run of the script that
-                # the scope will be at the top level, because that's when the
-                # cache file is sourced by cloudy.sh.  We need to evaluate it
-                # here though, because it's used below.
-                eval "$line_eval"
-            done
+        # Beware this only has the scope of this function if a new
+        # variable.  It won't be until the next run of the script that
+        # the scope will be at the top level, because that's when the
+        # cache file is sourced by cloudy.sh.  We need to evaluate it
+        # here though, because it's used below.
+        if [[ "$var_eval" ]]; then
+            eval "$var_eval"
+        else
+            write_log_critical "\$var_eval was empty"
+            return 1
         fi
     fi
 
@@ -155,6 +184,9 @@ function _cloudy_get_config() {
     # Either way the variable is in memory at this point as $var_cached_name.
     # We now need to figure out what to echo back to the caller.
     local code=$(declare -p $var_cached_name)
+
+    echo "${code/$var_cached_name/$var_name}" && return 0
+    return 1
 
     # We have an array, so we have to echo an eval statement.
     if [[ "$code" =~ "declare -a" ]]; then
@@ -265,20 +297,18 @@ function _cloudy_exit_with_success() {
  #
 function _cloudy_get_valid_operations_by_command() {
     local command=$1
-    local options
-    declare -a options=();
 
-    use_config_var "options"
-    eval $(get_config -a "commands.${command}.options")
+    local options
+    local option
+    local aliases
+
+    eval $(get_config_as 'options' -a "commands.${command}.options")
 
     for option in "${options[@]}"; do
-        use_config_var "aliases"
-        eval $(get_config -a "commands.${command}.options.${option}.aliases")
+        eval $(get_config_as 'aliases' -a "commands.${command}.options.${option}.aliases")
         options=("${options[@]}" "${aliases[@]}")
     done
     CLOUDY_STACK=(${options[@]})
-
-    revert_config_var
 }
 
 function _cloudy_validate_against_scheme() {
@@ -291,21 +321,27 @@ function _cloudy_validate_against_scheme() {
 }
 
 function _cloudy_help_commands() {
+    local commands
+    local help_command
+    local help
 
-    echo_headline "$(get_config "title") VER $(get_version)"
+    echo_headline "$(get_title) VER $(get_version)"
 
     echo_yellow "Available commands:"
     eval $(get_config_keys "commands")
     for help_command in "${commands[@]}"; do
-        help=$(get_config "commands.$help_command.help")
+        eval $(get_config_as 'help' "commands.$help_command.help")
         echo_list_array=("${echo_list_array[@]}" "$(echo_green "${help_command}") $help")
     done
     echo_list
 }
 
 function _cloudy_help_for_single_command() {
-    local command_help_topic=$1
+    local command_help_topic="$1"
 
+    local arguments
+    local options
+    local usage
     local option
     local option_value
     local option_type
@@ -314,11 +350,8 @@ function _cloudy_help_for_single_command() {
     local help_alias
     local help_argument
 
-    use_config_var "arguments"
-    eval $(get_config -a "commands.${command_help_topic}.arguments")
-
-    use_config_var "options"
-    eval $(get_config -a "commands.${command_help_topic}.options")
+    eval $(get_config_as 'arguments' -a "commands.${command_help_topic}.arguments")
+    eval $(get_config_as -a 'options' "commands.${command_help_topic}.options")
 
     usage="$(basename $SCRIPT) $command_help_topic"
 
@@ -326,7 +359,9 @@ function _cloudy_help_for_single_command() {
     [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"
 
     echo_headline "Help Topic: $command_help_topic"
-    echo_green "$(get_config "commands.${command_help_topic}.help")"
+
+    eval $(get_config_as 'help' "commands.${command_help_topic}.help")
+    echo_green "$help"
     echo
 
     echo_yellow "Usage:"
@@ -338,7 +373,7 @@ function _cloudy_help_for_single_command() {
         echo_list_array=()
 
         for help_argument in "${arguments[@]}"; do
-            help=$(get_config "commands.${command_help_topic}.arguments.${help_argument}.help")
+            eval $(get_config_as 'help' "commands.${command_help_topic}.arguments.${help_argument}.help")
             echo_list_array=("${echo_list_array[@]}" "$(echo_green "$help_argument") $help")
         done
         echo_list
@@ -353,14 +388,13 @@ function _cloudy_help_for_single_command() {
         for option in "${options[@]}"; do
 
             option_value=''
-            option_type=$(get_config "commands.${command_help_topic}.options.${option}.type" "boolean")
+            eval $(get_config_as 'option_type' "commands.${command_help_topic}.options.${option}.type" "boolean")
             [[ "$option_type" != "boolean" ]] && option_value="=<$option_type>"
 
             help_options=("$option")
 
             # Add in the aliases
-            use_config_var "aliases"
-            eval $(get_config -a "commands.${command_help_topic}.options.${option}.aliases")
+            eval $(get_config_as -a 'options' "commands.${command_help_topic}.options.${option}.aliases")
             for help_alias in "${aliases[@]}"; do
                help_options=("${help_options[@]}" "$help_alias")
             done
@@ -381,21 +415,22 @@ function _cloudy_help_for_single_command() {
             stack_join_array=(${help_options[@]})
             options=$(stack_join ", ")
 
-            help=$(get_config "commands.${command_help_topic}.options.${option}.help")
+            eval $(get_config_as 'help' "commands.${command_help_topic}.options.${option}.help")
 
             echo_list_array=("${echo_list_array[@]}" "$(echo_green "$options") $help")
         done
         echo_list
     fi
-
-    revert_config_var
 }
 
 function _cloudy_validate_command() {
     local command=$1
+
+    local commands
+
     eval $(get_config_keys "commands")
-    stack_has_array=(${commands[@]})
-    stack_has $command && return 0
+    stack_has__array=(${commands[@]})
+    stack_has "$command" && return 0
     fail_because "Command \"$command\", does not exist."
     return 1
 }
@@ -443,13 +478,24 @@ function _cloudy_write_log() {
 # Begin Core Controller Section.
 #
 
+# Set this to true and config will be read from YAML every time.
+cloudy_development_do_not_cache_config=true
+
+
 # Expand some vars from our controlling script.
 CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
 
+# Store the script options for later use.
+_cloudy_parse_options_args $@
+
+declare -a CLOUDY_ARGS=("${_cloudy_parse_options_args__args[@]}")
+declare -a CLOUDY_OPTIONS=("${_cloudy_parse_options_args__options[@]}")
+for option in "${CLOUDY_OPTIONS[@]}"; do
+    eval "CLOUDY_OPTION__$(string_uppercase $option)=\"\$_cloudy_parse_options_args__option__${option}\""
+done
+
 # Define shared variables
-declare -a CLOUDY_ARGS=()
-declare -a CLOUDY_OPTIONS=()
 declare -a CLOUDY_FAILURES=()
 declare -a CLOUDY_SUCCESSES=()
 declare -a CLOUDY_STACK=()
@@ -476,6 +522,16 @@ _cloudy_auto_purge_config
 # Import the cached config variables at this top scope.
 source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
 CACHED_CONFIG=$(cat "$CACHED_CONFIG_FILEPATH")
+
+# Load the configuration JSON into memory which is used by get_config*.
+if [ -f "$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json" ]; then
+    CLOUDY_CONFIG_JSON=$(cat "$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json")
+else
+    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG")"
+    if [[ "$cloudy_development_do_not_cache_config" != true ]]; then
+        echo $CLOUDY_CONFIG_JSON > "$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json"
+    fi
+fi
 
 #
 # End caching setup

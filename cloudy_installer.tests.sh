@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-function _testGetConfigWorksAsExpectedOnAssociativeArray() {
-    get_config "coretest.associative_array"
-mark_test_skipped && return
-    assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config "coretest.associative_array")"
+function testGetConfigWorksAsExpectedOnAssociativeArray() {
+    local expected="cloudy_config_coretest_associative_array_do=\"alpha\";cloudy_config_coretest_associative_array_re=\"bravo\";cloudy_config_coretest_associative_array_mi=\"charlie\""
+
+    eval $(get_config -a "coretest.associative_array")
+    assert_same "alpha" "$cloudy_config_coretest_associative_array_do"
+    assert_same "bravo" "$cloudy_config_coretest_associative_array_re"
+    assert_same "charlie" "$cloudy_config_coretest_associative_array_mi"
+
+#    assert_same "$expected" "$(get_config -a "coretest.associative_array")"
 }
 
 function testGetConfigKeysWorksAsExpected() {
@@ -12,11 +17,10 @@ function testGetConfigKeysWorksAsExpected() {
 
 function testGetConfigReturnsIndexedArray() {
     assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
+}
 
-    # Assert use_config_var works.
-    use_config_var "september"
-    assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
-    revert_config_var
+function testGetConfigAsReturnsIndexedArray() {
+    assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "coretest.indexed_array")"
 }
 
 function testGetVersionIsNotEmpty() {
@@ -45,7 +49,9 @@ function testGetConfigWritesIndexedArrayToCacheFile() {
     CACHED_CONFIG=''
 
     # Getting config should create the cache file.
-    local actual=$(get_config "coretest.indexed_array")
+
+    local actual
+    eval $(get_config_as 'actual' "coretest.indexed_array")
     assert_file_exists "$CACHED_CONFIG_FILEPATH" || return
 
     # See if the variable has been added to the cache file.
@@ -66,7 +72,8 @@ function testGetConfigWritesScalarToCacheFile() {
     CACHED_CONFIG=''
 
     # Getting config should create the cache file.
-    local actual=$(get_config "coretest.string")
+    local actual
+    eval $(get_config_as 'actual' "coretest.string")
     assert_file_exists "$CACHED_CONFIG_FILEPATH" || return
 
     # See if the variable has been added to the cache file.

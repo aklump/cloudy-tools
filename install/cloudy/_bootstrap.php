@@ -85,6 +85,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
           }
         }
         $value = implode(';', $temp);
+        $value = "$var_name=\"$value\"";
       }
       break;
 
@@ -99,6 +100,7 @@ function get_value(array $config, $path, $default_value, $context = []) {
   }
 
   return implode('|', [
+    $value_type,
     $var_name,
     $value,
   ]);

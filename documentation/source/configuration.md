@@ -26,12 +26,18 @@ To get a configuration value you will use the `get_config` function.  The follow
       files: 640
       directories: 750
       
-To access the perms `group` scalar value do the following:
+To access the perms `group` scalar value do one of the following:
     
-    group=$(get_config "perms.group" "staff") 
+    eval $(get_config "perms.group" "staff")
+    # [ perms_group = 'apache' ]
 
 * Notice the dot separation to denote parent/child.
 * The second argument is a default value, e.g., `staff`.
+
+You can also assign to a different variable like this:
+
+    eval $(get_config_as "group" "perms.group" "staff") 
+    # [ group = 'apache' ]
 
 ### Arrays
 
@@ -98,7 +104,7 @@ Configuration values which are filepaths can be added to the YAML as relative pa
     
 Then when you access the configuration use `get_config_path`, e.g.,
 
-    webroot=$(get_config_path "webroot")
+    eval $(get_config_path "webroot")
     
 The value of `$webroot` will be an an absolute filepath.    
 

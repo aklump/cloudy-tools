@@ -1,23 +1,17 @@
 #!/usr/bin/env bash
 
+function get_title() {
+    local default="$1"
+
+    local title
+    eval $(get_config "title" "$default")
+    echo $title
+}
 
 function get_version() {
-    echo $(get_config "version" "1.0")
-}
-
-##
- # Override the variable name returned by get_config*
- #
-function use_config_var() {
-    local varname=$1
-    CLOUDY_CONFIG_VARNAME="$varname" && return 0
-}
-
-##
- # Return to using the config varname as defined by the config file.
- #
-function revert_config_var() {
-    CLOUDY_CONFIG_VARNAME="" && return 0
+    local version
+    eval $(get_config "version" "1.0")
+    echo $version
 }
 
 #
@@ -38,13 +32,10 @@ function validate_input() {
     # Assert only defined options for a given op.
     _cloudy_get_valid_operations_by_command $command
 
-    for option in "${CLOUDY_OPTIONS[@]}"; do
-       [[ "$option" =~ ^(.*)\=(.*) ]]
-       name=${BASH_REMATCH[1]}
-       value=${BASH_REMATCH[2]}
-       stack_has_array=(${CLOUDY_STACK[@]})
-
+    for name in "${CLOUDY_OPTIONS[@]}"; do
+       stack_has__array=(${CLOUDY_STACK[@]})
        stack_has $name || fail_because "Invalid option: $name"
+       eval "value=\"\$CLOUDY_OPTION__$(string_uppercase $name)\""
 
        # Assert the provided value matches schema.
        eval $(_cloudy_validate_against_scheme "commands.$command.options.$name" "$name" "$value")
@@ -61,7 +52,9 @@ function validate_input() {
 
 function get_command() {
     [ ${#CLOUDY_ARGS[0]} -gt 0 ] && echo ${CLOUDY_ARGS[0]} && return 0
-    echo $(get_config default_command) && return 2
+    local default_command
+    eval $(get_config default_command)
+    echo $default_command && return 2
 }
 
 ##
@@ -69,9 +62,9 @@ function get_command() {
  #
 function has_option() {
     local option=$1
-    local value
-    value=$(get_option "$option")
-    [[ "$value" ]] && [[ "$value" != false ]] && return 0
+
+    stack_has__array=(${CLOUDY_OPTIONS[@]})
+    stack_has "$1" && return 0
     return 1
 }
 
@@ -89,28 +82,26 @@ function has_options() {
 function get_option() {
     local param=$1
     local default=$2
-    local var
-    for var in "${CLOUDY_OPTIONS[@]}"; do
-        if [[ "$var" =~ ^(.*)\=(.*) ]] && [ ${BASH_REMATCH[1]} == $param ]; then
-            echo ${BASH_REMATCH[2]} && return 0
-        fi
-    done
-    echo $default && return 2
+
+    local var_name="\$CLOUDY_OPTION__$(string_uppercase $1)"
+    local value=$(eval "echo $var_name")
+    [[ "$value" ]] && echo "$value" && return 0
+    echo "$default" && return 2
 }
 
 ##
- # Search $CLOUDY_STACK for a value.
+ # Search $stack_has__array for a value.
  #
  # You must provide your array as $CLOUDY_STACK like so:
  # @code
- #   CLOUDY_STACK=("${some_array_to_search[@]}")
+ #   stack_has__array=("${some_array_to_search[@]}")
  #   stack_has "tree" && echo "found tree"
  # @endcode
  #
 function stack_has() {
     local needle=$1
     local value
-    for value in "${stack_has_array[@]}"; do
+    for value in "${stack_has__array[@]}"; do
        [[ "$value" == "$needle" ]] && return 0
     done
     return 1
@@ -190,26 +181,68 @@ function purge_config() {
 }
 
 ##
- # Get a config value.
+ # Get a config path assignment.
+ #
+ # @code
+ #   eval $(get_config 'path.to.config')
+ # @code
  #
  # When requesting an array you must pass -a as the first argument if there's
  # any chance that the return value will be empty.
  #
+ # @code
+ #   eval $(get_config 'path.to.string' 'default_value')
+ #   eval $(get_config -a 'path.to.array' 'default_value')
+ # @code
+ #
 function get_config() {
+    _cloudy_parse_options_args $@
     local default_type
-    if [[ "$1" == '-a' ]]; then
-        default_type='array'
-        shift
-    fi
-    local config_key=$1
-    local default_value="$2"
-    _cloudy_get_config "$config_key" "$default_value" "$default_type"
+    local default_value="${_cloudy_parse_options_args__args[1]}"
+    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "${_cloudy_parse_options_args__args[0]}" "$default_value" "$default_type"
+    local result=$?
+    CLOUDY_CONFIG_VARNAME=""
+    return $result
+}
+
+##
+ # Get config path but assign it's value to a custom variable.
+ #
+ # @code
+ #   eval $(get_config_as 'title' 'path.to.some.title' 'default')
+ #   eval $(get_config_as 'title' -a 'path.to.some.array' )
+ # @code
+ #
+function get_config_as() {
+    _cloudy_parse_options_args $@
+    CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
+    local default_type
+    local default_value="${_cloudy_parse_options_args__args[2]}"
+    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "${_cloudy_parse_options_args__args[1]}" "$default_value" "$default_type"
+    local result=$?
+    CLOUDY_CONFIG_VARNAME=""
+    return $result
 }
 
 function get_config_keys() {
+    local config_key_path="$1"
+
     local default_type='array'
-    local config_key=$1
-    _cloudy_get_config "$config_key" "" "$default_type" true
+    _cloudy_get_config "$config_key_path" "" "$default_type" true
+}
+
+function get_config_keys_as() {
+    local custom_var_name=$1
+    local config_key_path=$2
+
+    local default_type='array'
+    CLOUDY_CONFIG_VARNAME="$custom_var_name"
+    shift
+    local config=$(_cloudy_get_config "$config_key" "" "$default_type" true)
+    CLOUDY_CONFIG_VARNAME=""
+    return $?
 }
 
 ##
