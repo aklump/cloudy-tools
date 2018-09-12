@@ -126,7 +126,7 @@ function _cloudy_get_config() {
     if [[ "$CACHED_CONFIG" != *"$var_cached_name="* ]]; then
         write_log "config_read" "$var_cached_name"
         return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator" "$var_cached_name")
-        local IFS="|"; read var_cached_name var_eval <<< "$return"
+        local IFS="|"; read var_type var_cached_name var_eval <<< "$return"
         if [ $? -eq 0 ]; then
             declare -a lines=("$var_eval")
 
