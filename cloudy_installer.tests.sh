@@ -186,37 +186,37 @@ function testGetVersionIsNotEmpty() {
 }
 
 function testCloudyParseOptionsArgsWorksAsExpected() {
-    _cloudy_parse_options_args init --file=index.php -y dev -abc
+    parse_arguments init --file=index.php -y dev -abc
 
-    assert_array_has_key 'file' '_cloudy_parse_options_args__options'
-    assert_array_has_key 'y' '_cloudy_parse_options_args__options'
-    assert_array_has_key 'a' '_cloudy_parse_options_args__options'
-    assert_array_has_key 'b' '_cloudy_parse_options_args__options'
-    assert_array_has_key 'c' '_cloudy_parse_options_args__options'
-    assert_array_not_has_key 'init' '_cloudy_parse_options_args__options'
+    assert_array_has_key 'file' 'parse_arguments__options'
+    assert_array_has_key 'y' 'parse_arguments__options'
+    assert_array_has_key 'a' 'parse_arguments__options'
+    assert_array_has_key 'b' 'parse_arguments__options'
+    assert_array_has_key 'c' 'parse_arguments__options'
+    assert_array_not_has_key 'init' 'parse_arguments__options'
 
-    assert_array_has_key 'init' '_cloudy_parse_options_args__args'
-    assert_array_has_key 'dev' '_cloudy_parse_options_args__args'
-    assert_array_not_has_key 'a' '_cloudy_parse_options_args__args'
+    assert_array_has_key 'init' 'parse_arguments__args'
+    assert_array_has_key 'dev' 'parse_arguments__args'
+    assert_array_not_has_key 'a' 'parse_arguments__args'
 
-    assert_same 'index.php' $_cloudy_parse_options_args__option__file
-    assert_same true $_cloudy_parse_options_args__option__y
-    assert_same true $_cloudy_parse_options_args__option__a
-    assert_same true $_cloudy_parse_options_args__option__b
-    assert_same true $_cloudy_parse_options_args__option__c
+    assert_same 'index.php' $parse_arguments__option__file
+    assert_same true $parse_arguments__option__y
+    assert_same true $parse_arguments__option__a
+    assert_same true $parse_arguments__option__b
+    assert_same true $parse_arguments__option__c
 
     # Now call again and make sure the old values are cleared out
-    _cloudy_parse_options_args help
+    parse_arguments help
 
-    assert_array_not_has_key 'files' '_cloudy_parse_options_args__options'
-    assert_array_not_has_key 'y' '_cloudy_parse_options_args__options'
-    assert_array_not_has_key 'a' '_cloudy_parse_options_args__options'
-    assert_array_not_has_key 'b' '_cloudy_parse_options_args__options'
-    assert_array_not_has_key 'c' '_cloudy_parse_options_args__options'
+    assert_array_not_has_key 'files' 'parse_arguments__options'
+    assert_array_not_has_key 'y' 'parse_arguments__options'
+    assert_array_not_has_key 'a' 'parse_arguments__options'
+    assert_array_not_has_key 'b' 'parse_arguments__options'
+    assert_array_not_has_key 'c' 'parse_arguments__options'
 
-    assert_array_has_key 'help' '_cloudy_parse_options_args__args'
-    assert_array_not_has_key 'init' '_cloudy_parse_options_args__args'
-    assert_array_not_has_key 'dev' '_cloudy_parse_options_args__args'
+    assert_array_has_key 'help' 'parse_arguments__args'
+    assert_array_not_has_key 'init' 'parse_arguments__args'
+    assert_array_not_has_key 'dev' 'parse_arguments__args'
 }
 
 function testGetConfigKeysAsWorksAsExpected() {

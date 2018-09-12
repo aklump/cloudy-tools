@@ -54,60 +54,6 @@ function _cloudy_bootstrap() {
 }
 
 ##
- # Parses arguments into options, args and option values.
- #
- # @code
- #   function my_func{) {
- #     _cloudy_parse_options_args @$
- #     ...
- # @endcode
- #
- # The following variables are generated for:
- # @code
- #   my_func -ab --tree=life do re
- # @endcode
- #
- # - _cloudy_parse_options_args__args = (do re)
- # - _cloudy_parse_options_args__options = (a b tree)
- # - _cloudy_parse_options_args__option__a = true
- # - _cloudy_parse_options_args__option__b = true
- # - _cloudy_parse_options_args__option__tree = life
- #
-function _cloudy_parse_options_args() {
-    local name
-    local value
-
-    # Purge any previous values.
-    for name in "${_cloudy_parse_options_args__options[@]}"; do
-        eval "unset _cloudy_parse_options_args__option__${name}"
-    done
-    _cloudy_parse_options_args__options=()
-    _cloudy_parse_options_args__args=()
-
-    # Set the new values.
-    for arg in "$@"; do
-      if [[ "$arg" =~ ^--(.*) ]]; then
-        name="${BASH_REMATCH[1]}"
-        value=true
-        if [[ "$name" =~ ^(.*)=(.*)$ ]]; then
-            name="${BASH_REMATCH[1]}"
-            value="${BASH_REMATCH[2]}"
-        fi
-        _cloudy_parse_options_args__options=("${_cloudy_parse_options_args__options[@]}" "$name")
-        eval "_cloudy_parse_options_args__option__${name}=${value}"
-      elif [[ "$arg" =~ ^-(.*) ]]; then
-        options=($(echo "${BASH_REMATCH[1]}" | grep -o .))
-        for name in "${options[@]}"; do
-            _cloudy_parse_options_args__options=("${_cloudy_parse_options_args__options[@]}" "$name")
-            eval "_cloudy_parse_options_args__option__${name}=true"
-        done
-      else
-        _cloudy_parse_options_args__args=("${_cloudy_parse_options_args__args[@]}" "$arg")
-      fi
-    done
-}
-
-##
  # Detect if cached config is stale.
  #
 function _cloudy_auto_purge_config() {
@@ -484,7 +430,7 @@ function _cloudy_write_log() {
 #
 
 # Set this to true and config will be read from YAML every time.
-cloudy_development_do_not_cache_config=true
+cloudy_development_do_not_cache_config=false
 
 
 # Expand some vars from our controlling script.
@@ -492,12 +438,12 @@ CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
 
 # Store the script options for later use.
-_cloudy_parse_options_args $@
+parse_arguments $@
 
-declare -a CLOUDY_ARGS=("${_cloudy_parse_options_args__args[@]}")
-declare -a CLOUDY_OPTIONS=("${_cloudy_parse_options_args__options[@]}")
+declare -a CLOUDY_ARGS=("${parse_arguments__args[@]}")
+declare -a CLOUDY_OPTIONS=("${parse_arguments__options[@]}")
 for option in "${CLOUDY_OPTIONS[@]}"; do
-    eval "CLOUDY_OPTION__$(string_upper $option)=\"\$_cloudy_parse_options_args__option__${option}\""
+    eval "CLOUDY_OPTION__$(string_upper $option)=\"\$parse_arguments__option__${option}\""
 done
 
 # Define shared variables

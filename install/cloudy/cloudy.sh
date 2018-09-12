@@ -51,6 +51,60 @@ function validate_input() {
 }
 
 ##
+ # Parses arguments into options, args and option values.
+ #
+ # @code
+ #   function my_func{) {
+ #     parse_arguments @$
+ #     ...
+ # @endcode
+ #
+ # The following variables are generated for:
+ # @code
+ #   my_func -ab --tree=life do re
+ # @endcode
+ #
+ # - parse_arguments__args = (do re)
+ # - parse_arguments__options = (a b tree)
+ # - parse_arguments__option__a = true
+ # - parse_arguments__option__b = true
+ # - parse_arguments__option__tree = life
+ #
+function parse_arguments() {
+    local name
+    local value
+
+    # Purge any previous values.
+    for name in "${parse_arguments__options[@]}"; do
+        eval "unset parse_arguments__option__${name}"
+    done
+    parse_arguments__options=()
+    parse_arguments__args=()
+
+    # Set the new values.
+    for arg in "$@"; do
+      if [[ "$arg" =~ ^--(.*) ]]; then
+        name="${BASH_REMATCH[1]}"
+        value=true
+        if [[ "$name" =~ ^(.*)=(.*)$ ]]; then
+            name="${BASH_REMATCH[1]}"
+            value="${BASH_REMATCH[2]}"
+        fi
+        parse_arguments__options=("${parse_arguments__options[@]}" "$name")
+        eval "parse_arguments__option__${name}=${value}"
+      elif [[ "$arg" =~ ^-(.*) ]]; then
+        options=($(echo "${BASH_REMATCH[1]}" | grep -o .))
+        for name in "${options[@]}"; do
+            parse_arguments__options=("${parse_arguments__options[@]}" "$name")
+            eval "parse_arguments__option__${name}=true"
+        done
+      else
+        parse_arguments__args=("${parse_arguments__args[@]}" "$arg")
+      fi
+    done
+}
+
+##
  # Determine if the script was called with a command.
  #
 function has_command() {
@@ -223,11 +277,11 @@ function purge_config() {
  # @code
  #
 function get_config() {
-    _cloudy_parse_options_args $@
+    parse_arguments $@
     local default_type
-    local default_value="${_cloudy_parse_options_args__args[1]}"
-    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "${_cloudy_parse_options_args__args[0]}" "$default_value" "$default_type"
+    local default_value="${parse_arguments__args[1]}"
+    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "${parse_arguments__args[0]}" "$default_value" "$default_type"
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result
@@ -242,12 +296,12 @@ function get_config() {
  # @code
  #
 function get_config_as() {
-    _cloudy_parse_options_args $@
-    CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
-    local default_value="${_cloudy_parse_options_args__args[2]}"
+    parse_arguments $@
+    CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
+    local default_value="${parse_arguments__args[2]}"
     local default_type
-    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "${_cloudy_parse_options_args__args[1]}" "$default_value" "$default_type"
+    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "${parse_arguments__args[1]}" "$default_value" "$default_type"
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result
@@ -263,9 +317,9 @@ function get_config_keys_as() {
     local custom_var_name=$1
     local config_key_path=$2
 
-    _cloudy_parse_options_args $@
-    config_key_path="${_cloudy_parse_options_args__args[1]}"
-    CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
+    parse_arguments $@
+    config_key_path="${parse_arguments__args[1]}"
+    CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
     _cloudy_get_config "$config_key_path" "" "array" true
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
@@ -279,11 +333,11 @@ function get_config_path() {
     local config_key_path=$1
     local default_value=$2
 
-    _cloudy_parse_options_args $@
-    config_key_path="${_cloudy_parse_options_args__args[0]}"
-    local default_value="${_cloudy_parse_options_args__args[1]}"
+    parse_arguments $@
+    config_key_path="${parse_arguments__args[0]}"
+    local default_value="${parse_arguments__args[1]}"
     local default_type
-    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
+    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
     _cloudy_get_config "$config_key_path" "$default_value" "$default_type" false "_cloudy_realpath"
 }
 
@@ -292,12 +346,12 @@ function get_config_path_as() {
     local config_key_path=$2
     local default_value=$3
 
-    _cloudy_parse_options_args $@
-    CLOUDY_CONFIG_VARNAME="${_cloudy_parse_options_args__args[0]}"
-    local default_value="${_cloudy_parse_options_args__args[2]}"
+    parse_arguments $@
+    CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
+    local default_value="${parse_arguments__args[2]}"
     local default_type
-    [[ "$_cloudy_parse_options_args__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "${_cloudy_parse_options_args__args[1]}" "$default_value" "$default_type" false "_cloudy_realpath"
+    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
+    _cloudy_get_config "${parse_arguments__args[1]}" "$default_value" "$default_type" false "_cloudy_realpath"
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result
