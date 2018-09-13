@@ -12,7 +12,7 @@ CONFIG="cloudy_installer.yml";
 LOGFILE="install/cloudy/cache/cloudy_installer.log"
 
 function on_boot() {
-    [[ "$(get_command)" == "coretest" ]] || return 0
+    [[ "$(get_command)" == "tests" ]] || return 0
     do_tests_in "cloudy_installer.tests.sh"
     exit_with_test_results
 }

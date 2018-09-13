@@ -21,11 +21,11 @@ commands:
         type: boolean
         aliases: [f]
         help: Overwrite an existing script.
-  coretest:
+  tests:
     help: Run Cloudy's core unit tests.
 
 # These are values used by core get_config tests.
-coretest:
+tests:
   string: Adam ate apples at Andrew's abode.
   indexed_array:
   - alpha

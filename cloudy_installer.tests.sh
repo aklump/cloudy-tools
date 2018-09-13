@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 function testGetConfigWorksAsExpectedOnAssociativeArray() {
-    local result="$(get_config -a "coretest.associative_array")"
-    assert_same "coretest_associative_array_do=\"alpha\";coretest_associative_array_re=\"bravo\";coretest_associative_array_mi=\"charlie\";" "$result"
+    local result="$(get_config -a "tests.associative_array")"
+    assert_same "tests_associative_array_do=\"alpha\";tests_associative_array_re=\"bravo\";tests_associative_array_mi=\"charlie\";" "$result"
 
     eval "$result"
-    assert_same "alpha" "$coretest_associative_array_do"
-    assert_same "bravo" "$coretest_associative_array_re"
-    assert_same "charlie" "$coretest_associative_array_mi"
+    assert_same "alpha" "$tests_associative_array_do"
+    assert_same "bravo" "$tests_associative_array_re"
+    assert_same "charlie" "$tests_associative_array_mi"
 }
 
 function testGetConfigAndTheAOptionWorksAsExpected() {
@@ -30,10 +30,10 @@ function testGetConfigAsWithAOptionWorksAsExpected() {
 
 
 function testGetConfigKeysAsWorksAsExpected() {
-    assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
+    assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "tests.associative_array")"
 
     # Three levels deep.
-    assert_same "declare -a db_keys='([0]=\"name\" [1]=\"pass\")'" "$(get_config_keys_as "db_keys" "coretest.prod.db")"
+    assert_same "declare -a db_keys='([0]=\"name\" [1]=\"pass\")'" "$(get_config_keys_as "db_keys" "tests.prod.db")"
 }
 
 function testGetCommandReturnsFirstArgument() {
@@ -48,41 +48,41 @@ function testGetCommandReturnsFirstArgument() {
 }
 
 function testGetConfigReturnsIndexedArray() {
-    assert_same "declare -a coretest_user_images_tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config -a "coretest.user.images.tags")"
+    assert_same "declare -a tests_user_images_tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config -a "tests.user.images.tags")"
 
-    assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
+    assert_same "declare -a tests_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "tests.indexed_array")"
 }
 
 function _testGetConfigPathAsWorksAsItShould() {
 
     # This one handles the realpath portion as the subject involves traversal.
-    eval $(get_config_path_as 'testpath' 'coretest.filepaths.cloudy')
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
     assert_same "$ROOT/install" $testpath
 
-    eval $(get_config_path_as 'testpath' 'coretest.filepaths.absolute')
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
     assert_same "/dev/null" $testpath
 
-    eval $(get_config_path_as 'testpath' 'coretest.filepaths.install')
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
     assert_same "$ROOT/install" $testpath
 
-    eval $(get_config_path_as 'testpath' 'coretest.filepaths.cache')
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
     assert_same "$ROOT/install/cloudy/cache" $testpath
 }
 
 function _testGetConfigPathWorksAsItShould() {
 
     # This one handles the realpath portion as the subject involves traversal.
-    eval $(get_config_path 'coretest.filepaths.cloudy')
-    assert_same "$ROOT/install" $coretest_filepaths_cloudy
+    eval $(get_config_path 'tests.filepaths.cloudy')
+    assert_same "$ROOT/install" $tests_filepaths_cloudy
 
-    eval $(get_config_path 'coretest.filepaths.absolute')
-    assert_same "/dev/null" $coretest_filepaths_absolute
+    eval $(get_config_path 'tests.filepaths.absolute')
+    assert_same "/dev/null" $tests_filepaths_absolute
 
-    eval $(get_config_path 'coretest.filepaths.install')
-    assert_same "$ROOT/install" $coretest_filepaths_install
+    eval $(get_config_path 'tests.filepaths.install')
+    assert_same "$ROOT/install" $tests_filepaths_install
 
-    eval $(get_config_path 'coretest.filepaths.cache')
-    assert_same "$ROOT/install/cloudy/cache" $coretest_filepaths_cache
+    eval $(get_config_path 'tests.filepaths.cache')
+    assert_same "$ROOT/install/cloudy/cache" $tests_filepaths_cache
 }
 
 function _testArraySortLengthWorksAsExpected() {
@@ -254,34 +254,34 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
 
 function testGetConfigKeysWorksAsExpected() {
     # Two levels deep
-    assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "coretest.associative_array")"
+    assert_same "declare -a tests_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "tests.associative_array")"
 
     # Three levels deep.
-    assert_same "declare -a coretest_prod_db='([0]=\"name\" [1]=\"pass\")'" "$(get_config_keys "coretest.prod.db")"
+    assert_same "declare -a tests_prod_db='([0]=\"name\" [1]=\"pass\")'" "$(get_config_keys "tests.prod.db")"
 }
 
 function testGetConfigAsReturnsIndexedArray() {
-    assert_same "declare -a tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config_as -a "tags" "coretest.user.images.tags")"
+    assert_same "declare -a tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config_as -a "tags" "tests.user.images.tags")"
 
-    assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "coretest.indexed_array")"
+    assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "tests.indexed_array")"
 }
 
 function testGetConfigForScalarReturnsAsExpected() {
-    assert_equals "declare -- coretest_associative_array_do=\"alpha\"" "$(get_config "coretest.associative_array.do")"
-    assert_equals "declare -- coretest_string=\"Adam ate apples at Andrew's abode.\"" "$(get_config "coretest.string")"
+    assert_equals "declare -- tests_associative_array_do=\"alpha\"" "$(get_config "tests.associative_array.do")"
+    assert_equals "declare -- tests_string=\"Adam ate apples at Andrew's abode.\"" "$(get_config "tests.string")"
 
     # Assert default is returned for non-existent.
     assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
 
     # With an indexed array key as last
-    assert_equals "declare -- coretest_user_images_tags_0=\"literature\"" "$(get_config "coretest.user.images.tags.0")"
-    assert_equals "declare -- coretest_user_images_tags_1=\"nature\"" "$(get_config "coretest.user.images.tags.1")"
-    assert_equals "declare -- coretest_user_images_tags_2=\"space\"" "$(get_config "coretest.user.images.tags.2")"
-    assert_equals "declare -- coretest_user_images_tags_3=\"religion\"" "$(get_config "coretest.user.images.tags.3")"
+    assert_equals "declare -- tests_user_images_tags_0=\"literature\"" "$(get_config "tests.user.images.tags.0")"
+    assert_equals "declare -- tests_user_images_tags_1=\"nature\"" "$(get_config "tests.user.images.tags.1")"
+    assert_equals "declare -- tests_user_images_tags_2=\"space\"" "$(get_config "tests.user.images.tags.2")"
+    assert_equals "declare -- tests_user_images_tags_3=\"religion\"" "$(get_config "tests.user.images.tags.3")"
 }
 
 function testGetConfigAsForScalarReturnsAsExpected() {
-    assert_equals "declare -- hero=\"alpha\"" "$(get_config_as 'hero' "coretest.associative_array.do")"
+    assert_equals "declare -- hero=\"alpha\"" "$(get_config_as 'hero' "tests.associative_array.do")"
 
     # Assert default is returned for non-existent.
     assert_equals "declare -- hero=\"Batman\"" "$(get_config_as 'hero' "my.bogus.superhero" "Batman")"
