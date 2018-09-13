@@ -513,9 +513,9 @@ function _cloudy_write_log() {
 #
 
 # Set this to true and config will be read from YAML every time.
-cloudy_development_do_not_cache_config=true
+cloudy_development_do_not_cache_config=false
 
-cloudy_development_skip_config_validation=true
+cloudy_development_skip_config_validation=false
 
 # Expand some vars from our controlling script.
 CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
@@ -582,60 +582,6 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 #
 # End caching setup
 #
-
-
-##_cloudy_get_config "title"
-##_cloudy_get_config "fifo" "gigo"
-##_cloudy_get_config "prod.db" --keys
-##_cloudy_get_config "prod.db" --keys --as=db_keys
-##_cloudy_get_config "prod.db" -a --as=database
-##_cloudy_get_config "prod.db" -a
-##_cloudy_get_config "prod.db"
-##_cloudy_get_config -a "user.images.tags"
-##_cloudy_get_config -a "user.images.tags" --keys
-##_cloudy_get_config "user.images.tags.0"
-##_cloudy_get_config "user.images.tags.1"
-##_cloudy_get_config "user.images.tags.2"
-##_cloudy_get_config "user.images.tags.3"
-#assert_same "declare -a user_images_types_vector='([0]=\"svg\")'" "${_cloudy_get_config "user.images.types.vector" -a}"
-#_cloudy_get_config "user.images.types.vectorize" -a
-#_cloudy_get_config "user.images.types.bitmap.1"
-#throw ";$0;$FUNCNAME;$LINENO"
-#
-##eval $(_cloudy_get_config -a "db")
-##debug "$db_user;\$db_user"
-##debug "$db_name;\$db_name"
-##debug "$db_pass;\$db_pass"
-##echo
-##echo
-
-#eval $(_cloudy_get_config -a "coretest.user.images.types.bitmap" --as=cmds)
-#
-#echo $0 at line $LINENO
-#echo Function: $FUNCNAME
-#echo '  "'$cmds'"'
-#echo '    [#] => '${#cmds[@]}
-#echo '    [@] => '${cmds[@]}
-#echo '    [*] => '${cmds[*]}
-#echo 'Array'
-#echo '('
-#echo '    [0] => '${cmds[0]}
-#echo '    [1] => '${cmds[1]}
-#echo '    [2] => '${cmds[2]}
-#echo '    [3] => '${cmds[3]}
-#echo '    [4] => '${cmds[4]}
-#echo '    [5] => '${cmds[5]}
-#echo '    [6] => '${cmds[6]}
-#echo '    [7] => '${cmds[7]}
-#echo '    [8] => '${cmds[8]}
-#echo '    [9] => '${cmds[9]}
-#echo ')'
-#exit
-#
-#
-##_cloudy_get_config -a 'commands' --keys
-#get_config_keys 'commands'
-#throw ";$0;$FUNCNAME;$LINENO"
 
 if [[ $(type -t on_boot) == "function" ]]; then
     on_boot

@@ -9,6 +9,9 @@ function _testGetConfigWithAOptionWorksAsExpected() {
 
 function testGetConfigKeysAsWorksAsExpected() {
     assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
+
+    # Three levels deep.
+    assert_same "declare -a db_keys='([0]=\"name\" [1]=\"pass\")'" "$(get_config_keys_as "db_keys" "coretest.prod.db")"
 }
 
 function testGetCommandReturnsFirstArgument() {
@@ -23,6 +26,8 @@ function testGetCommandReturnsFirstArgument() {
 }
 
 function testGetConfigReturnsIndexedArray() {
+    assert_same "declare -a coretest_user_images_tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config -a "coretest.user.images.tags")"
+
     assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
 }
 
@@ -238,22 +243,37 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
 }
 
 function testGetConfigKeysWorksAsExpected() {
+    # Two levels deep
     assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "coretest.associative_array")"
+
+    # Three levels deep.
+    assert_same "declare -a coretest_prod_db='([0]=\"name\" [1]=\"pass\")'" "$(get_config_keys "coretest.prod.db")"
 }
 
-
 function testGetConfigAsReturnsIndexedArray() {
+    assert_same "declare -a tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config_as -a "tags" "coretest.user.images.tags")"
+
     assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "coretest.indexed_array")"
 }
 
 function testGetConfigForScalarReturnsAsExpected() {
     assert_equals "declare -- coretest_associative_array_do=\"alpha\"" "$(get_config "coretest.associative_array.do")"
     assert_equals "declare -- coretest_string=\"Adam ate apples at Andrew's abode.\"" "$(get_config "coretest.string")"
+
+    # Assert default is returned for non-existent.
     assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
+
+    # With an indexed array key as last
+    assert_equals "declare -- coretest_user_images_tags_0=\"literature\"" "$(get_config "coretest.user.images.tags.0")"
+    assert_equals "declare -- coretest_user_images_tags_1=\"nature\"" "$(get_config "coretest.user.images.tags.1")"
+    assert_equals "declare -- coretest_user_images_tags_2=\"space\"" "$(get_config "coretest.user.images.tags.2")"
+    assert_equals "declare -- coretest_user_images_tags_3=\"religion\"" "$(get_config "coretest.user.images.tags.3")"
 }
 
-function testGetConfigAsScalarReturnsAsExpected() {
+function testGetConfigAsForScalarReturnsAsExpected() {
     assert_equals "declare -- hero=\"alpha\"" "$(get_config_as 'hero' "coretest.associative_array.do")"
+
+    # Assert default is returned for non-existent.
     assert_equals "declare -- hero=\"Batman\"" "$(get_config_as 'hero' "my.bogus.superhero" "Batman")"
 }
 
