@@ -196,56 +196,6 @@ function _cloudy_get_config() {
     echo $code && return 0
 }
 
-
-function _old_cloudy_get_config() {
-    local config_path="$1"
-    local default_value="$2"
-
-    local default_type
-    local var_name
-    local array_keys
-    local mutator
-    local eval_code
-    local dev_null
-
-    parse_arguments $@
-    config_path=${parse_arguments__args[0]}
-    default_value=${parse_arguments__args[2]}
-    var_name=${config_path//./_}
-    [[ "${parse_arguments__option__a}" == true ]] && default_type='array'
-    array_keys=${parse_arguments__option__keys}
-    mutator=${parse_arguments__option__mutator}
-
-    debug "$config_path;\$config_path"
-    debug "$default_value;\$default_value"
-    debug "$default_type;\$default_type"
-    debug "$array_keys;\$array_keys"
-    debug "$mutator;\$mutator"
-
-    # Load from memory
-    config_data=("$(echo "$CACHED_CONFIG" | grep "$config_path|")")
-    if ! [[ "$config_data" ]]; then
-
-        # Load using PHP
-        config_data=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_path" "$default_value" "$var_name" "$default_type" "$array_keys" "$mutator")
-    fi
-
-    local IFS="|";
-    if [ $? -eq 0 ]; then
-       read dev_null eval_code <<< "$config_data"
-    else
-       read file message <<< "$config_data"
-       write_log_error "$message In file $file"
-       return 1
-    fi
-
-    if [[ "${parse_arguments__option__as}" ]]; then
-        eval_code="${eval_code/$var_name=/$parse_arguments__option__as=}"
-    fi
-
-    echo $eval_code && return 0
-}
-
 ##
  # Validate the configuration JSON or do a exit_with_failure.
  #
@@ -559,9 +509,7 @@ CLOUDY_EXIT_STATUS=0
 # For scope reasons we have to source these here and not inside _cloudy_bootstrap.
 CACHE_DIR="$CLOUDY_ROOT/cache"
 CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
-CACHED_CONFIG_INDEX_FILEPATH="${CACHED_CONFIG_FILEPATH/.sh/.index.txt}"
 CACHED_CONFIG_MTIME_FILEPATH="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
-CACHED_CONFIG=''
 
 # Ensure the configuration cache environment is present and writeable.
 if [ -d "$CACHE_DIR" ]; then

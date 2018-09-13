@@ -260,9 +260,6 @@ function purge_config() {
 
     # empty the set var script.
     echo "" > "${CACHED_CONFIG_FILEPATH}"
-
-    # empty the variables in memory index.
-    CACHED_CONFIG=""
 }
 
 ##
