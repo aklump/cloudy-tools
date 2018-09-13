@@ -41,7 +41,7 @@ case $command in
     ;;
 
 *)
-    throw "Unhandled operation \"$command\""
+    throw "Unhandled command \"$command\""
     ;;
 
 esac

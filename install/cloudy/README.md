@@ -33,5 +33,5 @@ Add the following to the top of any shell script in which you wish to use _Cloud
     source "$ROOT/cloudy/cloudy.sh"
 
 ## Usage
-
+* This is a [nice tutorial](https://ryanstutorials.net/bash-scripting-tutorial/)
 * Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).
