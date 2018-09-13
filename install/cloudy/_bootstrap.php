@@ -173,13 +173,13 @@ function _cloudy_declare_bash_variable($var_name, $value) {
     });
 
     if (empty($value)) {
-      return "declare -a $var_name='()'";
+      return "declare -a $var_name=()";
     }
 
     $open = substr($value[0], 0, 1) === '"' ? '' : '"';
     $close = substr($value[count($value) - 1], -1) === '"' ? '' : '"';
 
-    return "declare -a $var_name='($open" . implode(' ', $value) . $close . ")'";
+    return "declare -a $var_name=($open" . implode(' ', $value) . $close . ")";
   }
 
   $value = _cloudy_bash_typecast_value($value);
