@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
 
+function testGetCommandReturnsFirstArgument() {
+    CLOUDY_ARGS=("order-take-out" "sushi")
+    assert_same "order-take-out" $(get_command)
+
+    # Now test that default_command from config is returned when no arguments
+    # provided to the script.
+    CLOUDY_ARGS=()
+    eval $(get_config_as 'config_default' 'default_command')
+    assert_same "$config_default" "$(get_command)"
+}
+
 function testGetConfigReturnsIndexedArray() {
-get_config -a "coretest.indexed_array"
-throw ";$0;$FUNCNAME;$LINENO"
     assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
 }
 
@@ -173,16 +182,6 @@ function testHasOptionsWorksAsExpected() {
     assert_exit_status 0 $(has_options)
     CLOUDY_OPTIONS=();
     assert_exit_status 1 $(has_options)
-}
-
-function _testGetCommandReturnsFirstArgument() {
-    CLOUDY_ARGS=("order-take-out" "sushi")
-    assert_same "order-take-out" $(get_command)
-
-    # Now test that default passes through
-    CLOUDY_ARGS=()
-    eval $(get_config_as 'expected' 'default_command')
-    assert_same $expected $(get_command)
 }
 
 function testGetTitleIsNotEmpty() {

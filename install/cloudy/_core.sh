@@ -134,7 +134,6 @@ function _cloudy_get_config() {
     get_array_keys=${parse_arguments__option__keys}
     [[ "$get_array_keys" ]] && cached_var_name="cloudy_config_keys___${config_path//./___}"
     default_value=${parse_arguments__args[1]}
-
     # Use the synonym if --as is passed
     var_name=${parse_arguments__option__as:-${config_path//./_}}
 
@@ -160,10 +159,10 @@ function _cloudy_get_config() {
     # todo discern the type.
 
     if [[ "$var_type" == "array" ]]; then
-        eval "local get_array_keys=("\${$cached_var_name_keys[@]}")"
-        [[ "${get_array_keys[0]}" == 0 ]] && var_type="indexed_array" || var_type="associative_array"
+        eval "local var_keys=("\${$cached_var_name_keys[@]}")"
+        [[ "${var_keys[0]}" == 0 ]] && var_type="indexed_array" || var_type="associative_array"
     fi
-debug "$var_type;\$var_type"
+
     # It's an array and the keys are being asked for.
     if [[ "$get_array_keys" ]] && [[ "$var_type" =~ _array$ ]]; then
         code=$(declare -p $cached_var_name_keys)

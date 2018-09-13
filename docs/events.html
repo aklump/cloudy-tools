@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Events</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--events">
+<header>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="logging.html" class="next logging">Logging to File&raquo;</a>
+</div>
+</header>
+
+
+  <h1>Events</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<h2>on_boot</h2>
+
+<p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>coretest</code> path in <em>cloudy_installer.sh</em>.</p>
+
+<pre><code>#!/usr/bin/env bash
+
+...
+
+function on_boot() {
+    [[ "$1" == "coretest" ]] || return 0
+    do_tests_in "cloudy_installer.tests.sh"
+    exit_with_test_results
+}
+
+# Begin Cloudy Bootstrap
+s="${BASH_SOURCE[0]}";while ...
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="logging.html" class="next logging">Logging to File&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 13 Sep 2018 12:14:03 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+
