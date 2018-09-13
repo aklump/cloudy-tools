@@ -19,8 +19,11 @@ function testGetConfigWithBogusPathForScaler() {
     assert_same "declare -- bogus_path_to_null=\"\"" "$(get_config "bogus.path.to.null")"
 }
 
-function testGetConfigAsWithAOptionWorksAsExpected() {
+function testGetConfigAsWithBogusPathForScaler() {
     assert_same "declare -a var_name='()'" "$(get_config_as -a "var_name" "bogus.path.to.null")"
+}
+
+function testGetConfigAsWithAOptionWorksAsExpected() {
     assert_same "declare -a var_name='()'" "$(get_config_as "var_name" -a "bogus.path.to.null")"
     assert_same "declare -a var_name='()'" "$(get_config_as "var_name" "bogus.path.to.null" -a)"
 }

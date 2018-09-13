@@ -54,4 +54,4 @@ coretest:
   prod:
     db:
       name: db
-      pass: 239487
+      pass: 2394873910

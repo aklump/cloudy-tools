@@ -68,13 +68,12 @@ function _cloudy_auto_purge_config() {
         if [[ "$cloudy_development_do_not_cache_config" == true ]]; then
             write_log_dev_warning "Configuration purge detected due to \$cloudy_development_do_not_cache_config = true."
         else
-            write_log_notice "Configuration changes detected."
+            write_log_notice "Config changes detected.  $CACHED_CONFIG_FILEPATH is out of date."
         fi
         if ! rm -f "$CACHED_CONFIG_FILEPATH"; then
             fail_because "Could not rm $CACHED_CONFIG_FILEPATH during purge."
             write_log_critical "Cannot delete $CACHED_CONFIG_FILEPATH.  Cached configuration may be stale."
         fi
-        ! has_failed && echo "$config_mtime" > "$cache_mtime_filepath"
     fi
 
     has_failed && exit_with_failure "Cannot auto purge config."
@@ -86,14 +85,19 @@ function _cloudy_auto_purge_config() {
  #
 function _cloudy_has_config_changed() {
     local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
-    [ -f "$cache_mtime_filepath" ] || touch "$cache_mtime_filepath" || fail
+    [ -f "$CACHED_CONFIG_MTIME_FILEPATH" ] || touch "$CACHED_CONFIG_MTIME_FILEPATH" || fail
 
-    local cache_mtime=$(cat "$cache_mtime_filepath")
-    local config_mtime=$(php -r "echo filemtime('$CONFIG');")
+    local cache_mtime=$(cat "$CACHED_CONFIG_MTIME_FILEPATH")
+    [[ "$cache_mtime" ]] || write_log_error "Missing timestamp in $CACHED_CONFIG_MTIME_FILEPATH"
 
     # Test if the yaml file was modified and automatically rebuild config.yml.sh
-    [[ "$cache_mtime" -lt "$config_mtime" ]]
+    [[ $(_cloudy_get_file_mtime $CONFIG) -gt "$cache_mtime" ]]
     return $?
+}
+
+function _cloudy_get_file_mtime() {
+    local filepath=$1
+    echo $(php -r "echo filemtime('$filepath');")
 }
 
 ##
@@ -146,8 +150,9 @@ function _cloudy_get_config() {
 #    fi
 
     var_value=$(eval "echo "\$$cached_var_name"")
+
+    # Todo should we try and autodetect?
     var_type="$default_type"
-#    local var_type=$(declare -p $(eval $cached_variable_name 2> /dev/null | grep -q '^declare \-a')
 
     # Determine the default value
     # @todo How to handle array defaults, syntax?
@@ -555,6 +560,7 @@ CLOUDY_EXIT_STATUS=0
 CACHE_DIR="$CLOUDY_ROOT/cache"
 CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
 CACHED_CONFIG_INDEX_FILEPATH="${CACHED_CONFIG_FILEPATH/.sh/.index.txt}"
+CACHED_CONFIG_MTIME_FILEPATH="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
 CACHED_CONFIG=''
 
 # Ensure the configuration cache environment is present and writeable.
@@ -581,7 +587,8 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
         fail_because "$(IFS="|"; read file reason <<< "$compiled"; echo "$reason")"
         exit_with_failure "Cannot create cached config filepath."
     else
-        write_log_debug "$(basename $CONFIG) configuration compiled to $CACHED_CONFIG_FILEPATH."
+        echo "$(_cloudy_get_file_mtime $CONFIG)" > "$CACHED_CONFIG_MTIME_FILEPATH"
+        write_log_notice "$(basename $CONFIG) configuration compiled to $CACHED_CONFIG_FILEPATH."
     fi
 fi
 
