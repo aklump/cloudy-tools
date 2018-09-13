@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+function testGetConfigKeysAsWorksAsExpected() {
+    assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
+}
 
 function testGetCommandReturnsFirstArgument() {
     CLOUDY_ARGS=("order-take-out" "sushi")
@@ -226,16 +229,12 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     assert_array_not_has_key 'dev' 'parse_arguments__args'
 }
 
-function _testGetConfigKeysAsWorksAsExpected() {
-    assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
-}
-
 function testGetConfigKeysWorksAsExpected() {
     assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "coretest.associative_array")"
 }
 
 
-function _testGetConfigAsReturnsIndexedArray() {
+function testGetConfigAsReturnsIndexedArray() {
     assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "coretest.indexed_array")"
 }
 

@@ -281,6 +281,9 @@ function purge_config() {
  # @code
  #
 function get_config() {
+    local config_path=$1
+    local default_value=$2
+
     parse_arguments $@
     local config_path="${parse_arguments__args[0]}"
     local default_value="${parse_arguments__args[1]}"
@@ -296,18 +299,22 @@ function get_config() {
  # @code
  #
 function get_config_as() {
+    local custom_var_name=$1
+    local config_path=$2
+    local default_value=$3
+
     parse_arguments $@
-    local var_name="${parse_arguments__args[0]}"
+    local custom_var_name="${parse_arguments__args[0]}"
     local config_path="${parse_arguments__args[1]}"
     local default_value="${parse_arguments__args[2]}"
-    _cloudy_get_config "$config_path" "$default_value" --as="$var_name" $parse_arguments__options_passthru
-#    _cloudy_get_config "$config_path" "$default_value" --as="$var_name" ${parse_arguments__options_passthru[@]}
+    _cloudy_get_config "$config_path" "$default_value" --as="$custom_var_name" $parse_arguments__options_passthru
+#    _cloudy_get_config "$config_path" "$default_value" --as="$custom_var_name" ${parse_arguments__options_passthru[@]}
 }
 
 function get_config_keys() {
     local config_key_path="$1"
 
-    _cloudy_get_config -a --keys "$config_key_path" ""
+    _cloudy_get_config -a --keys "$config_key_path"
 }
 
 function get_config_keys_as() {
@@ -315,12 +322,9 @@ function get_config_keys_as() {
     local config_key_path=$2
 
     parse_arguments $@
+    local custom_var_name="${parse_arguments__args[0]}"
     config_key_path="${parse_arguments__args[1]}"
-    CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
-    _cloudy_get_config -a --keys "$config_key_path" ""
-    local result=$?
-    CLOUDY_CONFIG_VARNAME=""
-    return $result
+    _cloudy_get_config -a --keys "$config_key_path" "" --as="$custom_var_name"
 }
 
 ##
