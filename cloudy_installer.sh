@@ -41,7 +41,7 @@ case $command in
     config_file=$(get_option 'config' "$default_config")
     [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
     if ! has_failed; then
-        rsync -a $ROOT/install/ ./  --exclude=*.log || fail_because "Could not copy Cloudy core to $WDIR."
+        rsync -a $ROOT/install/ ./  --exclude=*.log --exclude=cache/ || fail_because "Could not copy Cloudy core to $WDIR."
         mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
         mv script.example.sh $example_script || fail_because "Could not rename script.example.sh to $example_script"
         sed -i '' "s/__CONFIG/$config_file/g" $basename || fail_because "Could not update config file in $basename"

@@ -25,8 +25,6 @@ function _cloudy_bootstrap() {
     local options
     local command
 
-    _cloudy_validate_config
-
     _cloudy_bootstrap_translations
 
     command=$(get_command)
@@ -129,21 +127,21 @@ function _cloudy_get_config() {
     local cached_var_name
     local cached_var_name_keys
 
-    parse_arguments $@
-    config_path=${parse_arguments__args[0]}
+    parse_args $@
+    config_path=${parse_args__args[0]}
     cached_var_name="cloudy_config___${config_path//./___}"
 
     # This is the name of the variable containing the keys for $cached_var_name
     cached_var_name_keys=${cached_var_name/cloudy_config___/cloudy_config_keys___}
 
-    get_array_keys=${parse_arguments__option__keys}
+    get_array_keys=${parse_args__option__keys}
     [[ "$get_array_keys" ]] && cached_var_name="cloudy_config_keys___${config_path//./___}"
-    default_value=${parse_arguments__args[1]}
+    default_value=${parse_args__args[1]}
     # Use the synonym if --as is passed
-    var_name=${parse_arguments__option__as:-${config_path//./_}}
+    var_name=${parse_args__option__as:-${config_path//./_}}
 
-    [[ "${parse_arguments__option__a}" == true ]] && default_type='array'
-    mutator=${parse_arguments__option__mutator}
+    [[ "${parse_args__option__a}" == true ]] && default_type='array'
+    mutator=${parse_args__option__mutator}
 
 #    if [[ "$mutator" == "_cloudy_realpath" ]]; then
 #        #todo apply mutator
@@ -205,6 +203,7 @@ function _cloudy_validate_config() {
     if [ $? -eq 0 ]; then
       return 0
     fi
+    write_log_critical "$error"
     exit_with_failure "Configuration syntax error in $(basename $CLOUDY_CONFIG_JSON)."
 }
 
@@ -476,11 +475,6 @@ function _cloudy_write_log() {
 # Begin Core Controller Section.
 #
 
-# Set this to true and config will be read from YAML every time.
-cloudy_development_do_not_cache_config=false
-
-cloudy_development_skip_config_validation=false
-
 # Expand some vars from our controlling script.
 CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
@@ -488,12 +482,12 @@ CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 _cloudy_define_cloudy_vars
 
 # Store the script options for later use.
-parse_arguments $@
+parse_args $@
 
-declare -a CLOUDY_ARGS=("${parse_arguments__args[@]}")
-declare -a CLOUDY_OPTIONS=("${parse_arguments__options[@]}")
+declare -a CLOUDY_ARGS=("${parse_args__args[@]}")
+declare -a CLOUDY_OPTIONS=("${parse_args__options[@]}")
 for option in "${CLOUDY_OPTIONS[@]}"; do
-    eval "CLOUDY_OPTION__$(string_upper $option)=\"\$parse_arguments__option__${option}\""
+    eval "CLOUDY_OPTION__$(string_upper $option)=\"\$parse_args__option__${option}\""
 done
 
 # Define shared variables
@@ -525,6 +519,7 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
 
     # Normalize the config file to JSON.
     CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG" "$cloudy_development_skip_config_validation")"
+    _cloudy_validate_config
 
     [[ "$cloudy_development_skip_config_validation" == true ]] && write_log_dev_warning "Configuration validation is disabled due to \$cloudy_development_skip_config_validation == true."
 

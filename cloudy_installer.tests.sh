@@ -219,37 +219,37 @@ function testGetVersionIsNotEmpty() {
 }
 
 function testCloudyParseOptionsArgsWorksAsExpected() {
-    parse_arguments init --file=index.php -y dev -abc
+    parse_args init --file=index.php -y dev -abc
 
-    assert_array_has_key 'file' 'parse_arguments__options'
-    assert_array_has_key 'y' 'parse_arguments__options'
-    assert_array_has_key 'a' 'parse_arguments__options'
-    assert_array_has_key 'b' 'parse_arguments__options'
-    assert_array_has_key 'c' 'parse_arguments__options'
-    assert_array_not_has_key 'init' 'parse_arguments__options'
+    assert_array_has_key 'file' 'parse_args__options'
+    assert_array_has_key 'y' 'parse_args__options'
+    assert_array_has_key 'a' 'parse_args__options'
+    assert_array_has_key 'b' 'parse_args__options'
+    assert_array_has_key 'c' 'parse_args__options'
+    assert_array_not_has_key 'init' 'parse_args__options'
 
-    assert_array_has_key 'init' 'parse_arguments__args'
-    assert_array_has_key 'dev' 'parse_arguments__args'
-    assert_array_not_has_key 'a' 'parse_arguments__args'
+    assert_array_has_key 'init' 'parse_args__args'
+    assert_array_has_key 'dev' 'parse_args__args'
+    assert_array_not_has_key 'a' 'parse_args__args'
 
-    assert_same 'index.php' $parse_arguments__option__file
-    assert_same true $parse_arguments__option__y
-    assert_same true $parse_arguments__option__a
-    assert_same true $parse_arguments__option__b
-    assert_same true $parse_arguments__option__c
+    assert_same 'index.php' $parse_args__option__file
+    assert_same true $parse_args__option__y
+    assert_same true $parse_args__option__a
+    assert_same true $parse_args__option__b
+    assert_same true $parse_args__option__c
 
     # Now call again and make sure the old values are cleared out
-    parse_arguments help
+    parse_args help
 
-    assert_array_not_has_key 'files' 'parse_arguments__options'
-    assert_array_not_has_key 'y' 'parse_arguments__options'
-    assert_array_not_has_key 'a' 'parse_arguments__options'
-    assert_array_not_has_key 'b' 'parse_arguments__options'
-    assert_array_not_has_key 'c' 'parse_arguments__options'
+    assert_array_not_has_key 'files' 'parse_args__options'
+    assert_array_not_has_key 'y' 'parse_args__options'
+    assert_array_not_has_key 'a' 'parse_args__options'
+    assert_array_not_has_key 'b' 'parse_args__options'
+    assert_array_not_has_key 'c' 'parse_args__options'
 
-    assert_array_has_key 'help' 'parse_arguments__args'
-    assert_array_not_has_key 'init' 'parse_arguments__args'
-    assert_array_not_has_key 'dev' 'parse_arguments__args'
+    assert_array_has_key 'help' 'parse_args__args'
+    assert_array_not_has_key 'init' 'parse_args__args'
+    assert_array_not_has_key 'dev' 'parse_args__args'
 }
 
 function testGetConfigKeysWorksAsExpected() {
