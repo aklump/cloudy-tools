@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+
+function _testGetConfigWithAOptionWorksAsExpected() {
+    assert_same "declare -- bogus_path_to_null=\"\"" "$(get_config "bogus.path.to.null")"
+    assert_same "declare -a bogus_path_to_null='()'" "$(get_config -a "bogus.path.to.null")"
+    assert_same "declare -a bogus_path_to_null='()'" "$(get_config "bogus.path.to.null" -a)"
+}
+
 function testGetConfigKeysAsWorksAsExpected() {
     assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
 }
@@ -64,12 +71,13 @@ function _testGetConfigPathWorksAsItShould() {
 }
 
 function _testArraySortLengthWorksAsExpected() {
-    declare -a array_sort_by_item_length__array=("september" "five" "on")
+    declare -a array_sort_by_item_length__array=("september" "five" "three" "on")
 
     array_sort_by_item_length; assert_exit_status 0
     assert_same "on" ${array_sort_by_item_length__array[0]}
     assert_same "five" ${array_sort_by_item_length__array[1]}
-    assert_same "september" ${array_sort_by_item_length__array[2]}
+    assert_same "three" ${array_sort_by_item_length__array[2]}
+    assert_same "september" ${array_sort_by_item_length__array[3]}
 }
 
 function testArraySplitWorksForMultipleChars() {
@@ -244,15 +252,9 @@ function testGetConfigForScalarReturnsAsExpected() {
     assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
 }
 
-function _testGetConfigAsScalarReturnsAsExpected() {
+function testGetConfigAsScalarReturnsAsExpected() {
     assert_equals "declare -- hero=\"alpha\"" "$(get_config_as 'hero' "coretest.associative_array.do")"
     assert_equals "declare -- hero=\"Batman\"" "$(get_config_as 'hero' "my.bogus.superhero" "Batman")"
-}
-
-function _testGetConfigWithAOptionWorksAsExpected() {
-    assert_same "declare -- bogus_path_to_null=\"\"" "$(get_config "bogus.path.to.null")"
-    assert_same "declare -a bogus_path_to_null='()'" "$(get_config -a "bogus.path.to.null")"
-    assert_same "declare -a bogus_path_to_null='()'" "$(get_config "bogus.path.to.null" -a)"
 }
 
 function _testGetConfigAsWithAOptionWorksAsExpected() {
