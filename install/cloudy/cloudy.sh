@@ -280,8 +280,9 @@ function get_config() {
     parse_arguments $@
     local default_type
     local default_value="${parse_arguments__args[1]}"
-    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "${parse_arguments__args[0]}" "$default_value" "$default_type"
+    local array_keys
+    [[ "$parse_arguments__option__a" ]] && array_keys="-a "
+    _cloudy_get_config $array_keys"${parse_arguments__args[0]}" "$default_value"
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result
@@ -300,8 +301,9 @@ function get_config_as() {
     CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
     local default_value="${parse_arguments__args[2]}"
     local default_type
-    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "${parse_arguments__args[1]}" "$default_value" "$default_type"
+    local array_keys
+    [[ "$parse_arguments__option__a" ]] && array_keys="-a "
+    _cloudy_get_config $array_keys"${parse_arguments__args[1]}" "$default_value"
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result
@@ -310,7 +312,7 @@ function get_config_as() {
 function get_config_keys() {
     local config_key_path="$1"
 
-    _cloudy_get_config "$config_key_path" "" "array" true
+    _cloudy_get_config -a --keys "$config_key_path" ""
 }
 
 function get_config_keys_as() {
@@ -320,7 +322,7 @@ function get_config_keys_as() {
     parse_arguments $@
     config_key_path="${parse_arguments__args[1]}"
     CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
-    _cloudy_get_config "$config_key_path" "" "array" true
+    _cloudy_get_config -a --keys "$config_key_path" ""
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result
@@ -336,9 +338,9 @@ function get_config_path() {
     parse_arguments $@
     config_key_path="${parse_arguments__args[0]}"
     local default_value="${parse_arguments__args[1]}"
-    local default_type
-    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "$config_key_path" "$default_value" "$default_type" false "_cloudy_realpath"
+    local array_keys
+    [[ "$parse_arguments__option__a" ]] && array_keys="-a "
+    _cloudy_get_config $array_keys"$config_key_path" "$default_value" --mutator=_cloudy_realpath
 }
 
 function get_config_path_as() {
@@ -349,9 +351,9 @@ function get_config_path_as() {
     parse_arguments $@
     CLOUDY_CONFIG_VARNAME="${parse_arguments__args[0]}"
     local default_value="${parse_arguments__args[2]}"
-    local default_type
-    [[ "$parse_arguments__option__a" ]] && default_type='array' && default_value=''
-    _cloudy_get_config "${parse_arguments__args[1]}" "$default_value" "$default_type" false "_cloudy_realpath"
+    local array_keys
+    [[ "$parse_arguments__option__a" ]] && array_keys="-a "
+    _cloudy_get_config $array_keys"$config_key_path" "$default_value" --mutator=_cloudy_realpath
     local result=$?
     CLOUDY_CONFIG_VARNAME=""
     return $result

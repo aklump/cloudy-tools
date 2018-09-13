@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 
+function testGetConfigReturnsIndexedArray() {
+get_config -a "coretest.indexed_array"
+throw ";$0;$FUNCNAME;$LINENO"
+    assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
+}
+
+
 function _testGetConfigWorksAsExpectedOnAssociativeArray() {
     local result="$(get_config -a "coretest.associative_array")"
     assert_same "declare -- coretest_associative_array=\"true\";coretest_associative_array_do=\"alpha\";coretest_associative_array_re=\"bravo\";coretest_associative_array_mi=\"charlie\"" "$result"
@@ -12,7 +19,7 @@ function _testGetConfigWorksAsExpectedOnAssociativeArray() {
     assert_same "charlie" "$coretest_associative_array_mi"
 }
 
-function testGetConfigPathAsWorksAsItShould() {
+function _testGetConfigPathAsWorksAsItShould() {
 
     # This one handles the realpath portion as the subject involves traversal.
     eval $(get_config_path_as 'testpath' 'coretest.filepaths.cloudy')
@@ -28,7 +35,7 @@ function testGetConfigPathAsWorksAsItShould() {
     assert_same "$ROOT/install/cloudy/cache" $testpath
 }
 
-function testGetConfigPathWorksAsItShould() {
+function _testGetConfigPathWorksAsItShould() {
 
     # This one handles the realpath portion as the subject involves traversal.
     eval $(get_config_path 'coretest.filepaths.cloudy')
@@ -44,7 +51,7 @@ function testGetConfigPathWorksAsItShould() {
     assert_same "$ROOT/install/cloudy/cache" $coretest_filepaths_cache
 }
 
-function testArraySortLengthWorksAsExpected() {
+function _testArraySortLengthWorksAsExpected() {
     declare -a array_sort_by_item_length__array=("september" "five" "on")
 
     array_sort_by_item_length; assert_exit_status 0
@@ -168,7 +175,7 @@ function testHasOptionsWorksAsExpected() {
     assert_exit_status 1 $(has_options)
 }
 
-function testGetCommandReturnsFirstArgument() {
+function _testGetCommandReturnsFirstArgument() {
     CLOUDY_ARGS=("order-take-out" "sushi")
     assert_same "order-take-out" $(get_command)
 
@@ -220,7 +227,7 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     assert_array_not_has_key 'dev' 'parse_arguments__args'
 }
 
-function testGetConfigKeysAsWorksAsExpected() {
+function _testGetConfigKeysAsWorksAsExpected() {
     assert_same "declare -a list='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys_as "list" "coretest.associative_array")"
 }
 
@@ -228,11 +235,8 @@ function testGetConfigKeysWorksAsExpected() {
     assert_same "declare -a coretest_associative_array='([0]=\"do\" [1]=\"re\" [2]=\"mi\")'" "$(get_config_keys "coretest.associative_array")"
 }
 
-function testGetConfigReturnsIndexedArray() {
-    assert_same "declare -a coretest_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "coretest.indexed_array")"
-}
 
-function testGetConfigAsReturnsIndexedArray() {
+function _testGetConfigAsReturnsIndexedArray() {
     assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "coretest.indexed_array")"
 }
 
@@ -242,24 +246,24 @@ function testGetConfigForScalarReturnsAsExpected() {
     assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
 }
 
-function testGetConfigAsScalarReturnsAsExpected() {
+function _testGetConfigAsScalarReturnsAsExpected() {
     assert_equals "declare -- hero=\"alpha\"" "$(get_config_as 'hero' "coretest.associative_array.do")"
     assert_equals "declare -- hero=\"Batman\"" "$(get_config_as 'hero' "my.bogus.superhero" "Batman")"
 }
 
-function testGetConfigWithAOptionWorksAsExpected() {
+function _testGetConfigWithAOptionWorksAsExpected() {
     assert_same "declare -- bogus_path_to_null=\"\"" "$(get_config "bogus.path.to.null")"
     assert_same "declare -a bogus_path_to_null='()'" "$(get_config -a "bogus.path.to.null")"
     assert_same "declare -a bogus_path_to_null='()'" "$(get_config "bogus.path.to.null" -a)"
 }
 
-function testGetConfigAsWithAOptionWorksAsExpected() {
+function _testGetConfigAsWithAOptionWorksAsExpected() {
     assert_same "declare -a var_name='()'" "$(get_config_as -a "var_name" "bogus.path.to.null")"
     assert_same "declare -a var_name='()'" "$(get_config_as "var_name" -a "bogus.path.to.null")"
     assert_same "declare -a var_name='()'" "$(get_config_as "var_name" "bogus.path.to.null" -a)"
 }
 
-function testGetConfigWritesIndexedArrayToCacheFile() {
+function _testGetConfigWritesIndexedArrayToCacheFile() {
 
     [[ "$cloudy_development_do_not_cache_config" == true ]] && mark_test_skipped && return
 
@@ -282,7 +286,7 @@ function testGetConfigWritesIndexedArrayToCacheFile() {
     rm "$CACHED_CONFIG_FILEPATH" && mv "$CACHED_CONFIG_FILEPATH.bak" "$CACHED_CONFIG_FILEPATH"
 }
 
-function testGetConfigWritesScalarToCacheFile() {
+function _testGetConfigWritesScalarToCacheFile() {
 
     [[ "$cloudy_development_do_not_cache_config" == true ]] && mark_test_skipped && return
 

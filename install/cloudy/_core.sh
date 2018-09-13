@@ -10,6 +10,14 @@ function _cloudy_define_cloudy_vars() {
     LIL="└──"
 }
 
+function _cloudy_bootstrap_translations() {
+    eval $(get_config_as "CLOUDY_LANGUAGE" "language" "en")
+
+    # todo may not need to do these two?
+    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
+    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
+}
+
 function _cloudy_bootstrap() {
     SECONDS=0
     local aliases
@@ -19,13 +27,7 @@ function _cloudy_bootstrap() {
 
     _cloudy_validate_config
 
-    eval $(get_config_as "CLOUDY_LANGUAGE" "language" "en")
-
-    # todo may not need to do these two?
-#    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
-#    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
-
-
+    _cloudy_bootstrap_translations
 
     command=$(get_command)
     # Add in the alias options based on master options.
@@ -161,8 +163,13 @@ function _cloudy_get_config() {
         eval "local get_array_keys=("\${$cached_var_name_keys[@]}")"
         [[ "${get_array_keys[0]}" == 0 ]] && var_type="indexed_array" || var_type="associative_array"
     fi
+debug "$var_type;\$var_type"
+    # It's an array and the keys are being asked for.
+    if [[ "$get_array_keys" ]] && [[ "$var_type" =~ _array$ ]]; then
+        code=$(declare -p $cached_var_name_keys)
+        code="${code//$cached_var_name=/$var_name=}"
 
-    if [[ "$var_type" == "associative_array" ]]; then
+    elif [[ "$var_type" == "associative_array" ]]; then
         code=''
         for key in "${get_array_keys[@]}"; do
             eval "var_value=\"\$${cached_var_name}___${key}\""
@@ -578,54 +585,62 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 #
 
 
-#_cloudy_get_config "title"
-#_cloudy_get_config "fifo" "gigo"
-#_cloudy_get_config "prod.db" --keys
-#_cloudy_get_config "prod.db" --keys --as=db_keys
-#_cloudy_get_config "prod.db" -a --as=database
-#_cloudy_get_config "prod.db" -a
-#_cloudy_get_config "prod.db"
-#_cloudy_get_config -a "user.images.tags"
-#_cloudy_get_config -a "user.images.tags" --keys
-#_cloudy_get_config "user.images.tags.0"
-#_cloudy_get_config "user.images.tags.1"
-#_cloudy_get_config "user.images.tags.2"
-#_cloudy_get_config "user.images.tags.3"
-#_cloudy_get_config "user.images.tags.3"
-throw ";$0;$FUNCNAME;$LINENO"
+##_cloudy_get_config "title"
+##_cloudy_get_config "fifo" "gigo"
+##_cloudy_get_config "prod.db" --keys
+##_cloudy_get_config "prod.db" --keys --as=db_keys
+##_cloudy_get_config "prod.db" -a --as=database
+##_cloudy_get_config "prod.db" -a
+##_cloudy_get_config "prod.db"
+##_cloudy_get_config -a "user.images.tags"
+##_cloudy_get_config -a "user.images.tags" --keys
+##_cloudy_get_config "user.images.tags.0"
+##_cloudy_get_config "user.images.tags.1"
+##_cloudy_get_config "user.images.tags.2"
+##_cloudy_get_config "user.images.tags.3"
+#assert_same "declare -a user_images_types_vector='([0]=\"svg\")'" "${_cloudy_get_config "user.images.types.vector" -a}"
+#_cloudy_get_config "user.images.types.vectorize" -a
+#_cloudy_get_config "user.images.types.bitmap.1"
+#throw ";$0;$FUNCNAME;$LINENO"
+#
+##eval $(_cloudy_get_config -a "db")
+##debug "$db_user;\$db_user"
+##debug "$db_name;\$db_name"
+##debug "$db_pass;\$db_pass"
+##echo
+##echo
 
-#eval $(_cloudy_get_config -a "db")
-#debug "$db_user;\$db_user"
-#debug "$db_name;\$db_name"
-#debug "$db_pass;\$db_pass"
-#echo
-#echo
+#eval $(_cloudy_get_config -a "coretest.user.images.types.bitmap" --as=cmds)
+#
+#echo $0 at line $LINENO
+#echo Function: $FUNCNAME
+#echo '  "'$cmds'"'
+#echo '    [#] => '${#cmds[@]}
+#echo '    [@] => '${cmds[@]}
+#echo '    [*] => '${cmds[*]}
+#echo 'Array'
+#echo '('
+#echo '    [0] => '${cmds[0]}
+#echo '    [1] => '${cmds[1]}
+#echo '    [2] => '${cmds[2]}
+#echo '    [3] => '${cmds[3]}
+#echo '    [4] => '${cmds[4]}
+#echo '    [5] => '${cmds[5]}
+#echo '    [6] => '${cmds[6]}
+#echo '    [7] => '${cmds[7]}
+#echo '    [8] => '${cmds[8]}
+#echo '    [9] => '${cmds[9]}
+#echo ')'
+#exit
+#
+#
+##_cloudy_get_config -a 'commands' --keys
+#get_config_keys 'commands'
+#throw ";$0;$FUNCNAME;$LINENO"
 
-eval $(_cloudy_get_config -a "user.images.types.bitmap" --as=cmds --keys)
-
-echo $0 at line $LINENO
-echo Function: $FUNCNAME
-echo '  "'$cmds'"'
-echo '    [#] => '${#cmds[@]}
-echo '    [@] => '${cmds[@]}
-echo '    [*] => '${cmds[*]}
-echo 'Array'
-echo '('
-echo '    [0] => '${cmds[0]}
-echo '    [1] => '${cmds[1]}
-echo '    [2] => '${cmds[2]}
-echo '    [3] => '${cmds[3]}
-echo '    [4] => '${cmds[4]}
-echo '    [5] => '${cmds[5]}
-echo '    [6] => '${cmds[6]}
-echo '    [7] => '${cmds[7]}
-echo '    [8] => '${cmds[8]}
-echo '    [9] => '${cmds[9]}
-echo ')'
-exit
-
-
-_cloudy_get_config 'commands'
+if [[ $(type -t on_boot) == "function" ]]; then
+    on_boot
+fi
 
 _cloudy_bootstrap $@
 

@@ -40,18 +40,18 @@ coretest:
     cache: install/cloudy/cache
     cloudy: install/cloudy/..
     absolute: "/dev/null"
-user:
-  images:
-    tags:
-    - literature
-    - nature
-    - space
-    - religion
-    types:
-      vector: [svg]
-      bitmap: [jpg, png, gif]
-      animated: [gif]
-prod:
-  db:
-    name: db
-    pass: 239487
+  user:
+    images:
+      tags:
+      - literature
+      - nature
+      - space
+      - religion
+      types:
+        vector: [svg]
+        bitmap: [jpg, png, gif]
+        animated: [gif]
+  prod:
+    db:
+      name: db
+      pass: 239487
