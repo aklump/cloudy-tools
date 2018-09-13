@@ -19,7 +19,7 @@ if (!function_exists($function)) {
 $result = call_user_func_array($function, $args);
 
 if (is_array($result)) {
-  echo _cloudy_declare_array($function, $result);
+  echo _cloudy_declare_bash_variable($function, $result);
   exit(0);
 }
 

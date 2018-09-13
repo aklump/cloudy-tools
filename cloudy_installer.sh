@@ -9,7 +9,7 @@
 CONFIG="cloudy_installer.yml";
 
 # Uncomment this line to enable file logging.
-LOGFILE="cloudy_installer.log"
+LOGFILE="install/cloudy/cache/cloudy_installer.log"
 
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/install/cloudy/cloudy.sh"

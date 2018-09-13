@@ -13,6 +13,7 @@ use Symfony\Component\Yaml\Yaml;
 require_once dirname(__FILE__) . '/_bootstrap.php';
 
 $path_to_cloudy_config = $argv[2];
+$skip_config_validation = $argv[3] === 'true';
 
 try {
   $data = [];
@@ -41,11 +42,13 @@ try {
     if (!($schema = json_decode(file_get_contents(__DIR__ . '/base-config.schema.json')))) {
       throw new \RuntimeException("Invalid JSON in base-config.schema.json");
     }
-    $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);
+    if (!$skip_config_validation) {
+      $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);
+    }
   }
   catch (\Exception $exception) {
     $class = get_class($exception);
-    throw new $class("Configuration Syntax Error in \"" . basename($path_to_cloudy_config) . '": ' . $exception->getMessage());
+    throw new $class("Configuration syntax error in \"" . basename($path_to_cloudy_config) . '": ' . $exception->getMessage());
   }
 
   echo json_encode($data);

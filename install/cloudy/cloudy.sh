@@ -533,6 +533,9 @@ function exit_with_failure() {
     if [ ${#CLOUDY_FAILURES[@]} -gt 0 ]; then
         echo_list_array=("${CLOUDY_FAILURES[@]}")
         echo_red_list
+        for i in "${CLOUDY_FAILURES[@]}"; do
+           write_log_error "Failed because: $i"
+        done
     fi
 
     echo
@@ -685,6 +688,16 @@ function write_log_error() {
 function write_log_warning() {
     local args=("warning" "$@")
     _cloudy_write_log ${args[@]}
+}
+
+##
+ # Log states that should only be thus during development or debugging.
+ #
+ # Adds a "... in dev only message to your warning"
+ #
+function write_log_dev_warning() {
+    local args=("warning" "$@")
+    _cloudy_write_log "${args[@]}  This should only be the case for development/debugging."
 }
 
 function write_log_notice() {

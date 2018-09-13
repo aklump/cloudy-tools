@@ -17,12 +17,12 @@ try {
 
   $config_key = $g->get($argv, 3, '');
   $default_value = $g->get($argv, 4, []);
-  $default_type = $g->get($argv, 5, 'string');
-  $array_keys = $g->get($argv, 6, FALSE, function ($value, $default) {
+  $var_name = $g->get($argv, 5);
+  $default_type = $g->get($argv, 6, 'string');
+  $array_keys = $g->get($argv, 7, FALSE, function ($value, $default) {
     return $value === 'true' ? TRUE : $default;
   });
-  $mutator = $g->get($argv, 7, NULL);
-  $cached_var_name = $g->get($argv, 8, NULL);
+  $mutator = $g->get($argv, 8, NULL);
 
   $data = json_decode($json, TRUE);
   if ($data === NULL) {
@@ -41,8 +41,9 @@ try {
         break;
     }
 
-    $value = get_value($data, $config_key, $default_value, [
-      'cached_var_name' => $cached_var_name,
+    $value = get_value($data, $config_key, [
+      'default' => $default_value,
+      'var_name' => $var_name,
       'array_keys' => $array_keys,
       'mutator' => $mutator,
     ]);

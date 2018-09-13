@@ -4,6 +4,11 @@
 # @file
 # Core functions used by the cloudy api.
 #
+function _cloudy_define_cloudy_vars() {
+    # todo Can we move more things here, or would that break scope?
+    LI="├──"
+    LIL="└──"
+}
 
 function _cloudy_bootstrap() {
     SECONDS=0
@@ -20,9 +25,7 @@ function _cloudy_bootstrap() {
 #    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
 #    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
 
-    # Create some "constants".
-    LI="├──"
-    LIL="└──"
+
 
     command=$(get_command)
     # Add in the alias options based on master options.
@@ -54,9 +57,32 @@ function _cloudy_bootstrap() {
 }
 
 ##
- # Detect if cached config is stale.
+ # Delete $CACHED_CONFIG_FILEPATH as necessary.
  #
 function _cloudy_auto_purge_config() {
+    local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
+
+    if [[ "$cloudy_development_do_not_cache_config" == true ]] || _cloudy_has_config_changed; then
+        if [[ "$cloudy_development_do_not_cache_config" == true ]]; then
+            write_log_dev_warning "Configuration purge detected due to \$cloudy_development_do_not_cache_config = true."
+        else
+            write_log_notice "Configuration changes detected."
+        fi
+        if ! rm -f "$CACHED_CONFIG_FILEPATH"; then
+            fail_because "Could not rm $CACHED_CONFIG_FILEPATH during purge."
+            write_log_critical "Cannot delete $CACHED_CONFIG_FILEPATH.  Cached configuration may be stale."
+        fi
+        ! has_failed && echo "$config_mtime" > "$cache_mtime_filepath"
+    fi
+
+    has_failed && exit_with_failure "Cannot auto purge config."
+    return 0
+}
+
+##
+ # Detect if cached config is stale against $CONFIG.
+ #
+function _cloudy_has_config_changed() {
     local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
     [ -f "$cache_mtime_filepath" ] || touch "$cache_mtime_filepath" || fail
 
@@ -64,79 +90,140 @@ function _cloudy_auto_purge_config() {
     local config_mtime=$(php -r "echo filemtime('$CONFIG');")
 
     # Test if the yaml file was modified and automatically rebuild config.yml.sh
-    if [[ "$cache_mtime" -lt "$config_mtime" ]]; then
-        rm -f "$CACHED_CONFIG_FILEPATH" || fail
-        echo "$config_mtime" > "$cache_mtime_filepath"
-        write_log_notice "Configuration changes detected; auto-purged $CACHED_CONFIG_FILEPATH"
-    fi
-
-    touch $CACHED_CONFIG_FILEPATH || fail_because  "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
-
-    has_failed && exit_with_failure "Cannot auto purge config."
-    return 0
+    [[ "$cache_mtime" -lt "$config_mtime" ]]
+    return $?
 }
 
+##
+ # Return config eval code for a given config path.
+ #
+ # @param string
+ #   The config path, e.g. "commands.help.help"
+ # @param string
+ #   The default value if not found. This yields an exit status of 2.
+ #
+ # Options:
+ # --as={custom_var_name}
+ # --keys You want to return array keys.
+ # --mutator={function name} Optional mutator function name.
+ #
 function _cloudy_get_config() {
-    local config_key=$1
-    local default_value=$2
-    local default_type=$3
-    local array_keys=$4
-    local mutator=$5
+    local config_path="$1"
+    local default_value="$2"
 
-    local return
-    local var_type
-    local var_name=${config_key//./_}
-    local var_cached_name="cloudy_config_${var_name}"
-    [[ "$default_type" ]] && var_cached_name="${var_cached_name}__${default_type}"
-    [[ "$array_keys" ]] && var_cached_name="${var_cached_name}__keys"
-write_log "cache_name" $var_cached_name
-    local var_eval
+    local default_type
+    local var_name
+    local var_value
+    local array_keys
+    local mutator
+    local eval_code
+    local dev_null
+    local code
+    local cached_var_name
+    local cached_var_name_keys
 
-    # Check if the variable is in memory because it was previously written to
-    # $CACHED_CONFIG_FILEPATH, if not pull it in with the slower PHP process.
-    if [[ "$CACHED_CONFIG" != *"$var_cached_name="* ]]; then
-        write_log "config_read" "$var_cached_name"
-        return=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_key" "$default_value" "$default_type" "$array_keys" "$mutator" "$var_cached_name")
+    parse_arguments $@
+    config_path=${parse_arguments__args[0]}
+    cached_var_name="cloudy_config___${config_path//./___}"
 
-        if [ $? -eq 0 ]; then
-            local IFS="|"; read var_type var_cached_name var_eval suffix <<< "$return"
-            if [[ "$cloudy_development_do_not_cache_config" != true ]]; then
-                echo "${var_eval}${suffix}" >> "$CACHED_CONFIG_FILEPATH" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                echo "unset $var_cached_name" >> "${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}" || fail_because "Could not write to $(basename $CACHED_CONFIG_FILEPATH)"
-                write_log_debug "${var_eval}${suffix} was written to $(basename $CACHED_CONFIG_FILEPATH)"
-                write_log "config_write" "${var_eval}${suffix}"
-            else
-                write_log_warning "${var_eval}${suffix} not written since \$cloudy_development_do_not_cache_config is TRUE."
-            fi
+    # This is the name of the variable containing the keys for $cached_var_name
+    cached_var_name_keys=${cached_var_name/cloudy_config___/cloudy_config_keys___}
+
+    get_array_keys=${parse_arguments__option__keys}
+    [[ "$get_array_keys" ]] && cached_var_name="cloudy_config_keys___${config_path//./___}"
+    default_value=${parse_arguments__args[1]}
+
+    # Use the synonym if --as is passed
+    var_name=${parse_arguments__option__as:-${config_path//./_}}
+
+    [[ "${parse_arguments__option__a}" == true ]] && default_type='array'
+    mutator=${parse_arguments__option__mutator}
+
+    #todo apply mutator
+
+    var_value=$(eval "echo "\$$cached_var_name"")
+
+    # Determine the default value
+    # @todo How to handle array defaults, syntax?
+    # @link https://trello.com/c/6JXskrQn/9-c-619-allow-arrays-to-have-default-values-in-getconfig
+    if ! [[ "$var_value" ]]; then
+        if [[ "$default_type" == 'array' ]]; then
+            eval "local $cached_var_name=("$default_value")"
         else
-           local IFS="|"; read file message <<< "$return"
-           write_log_error "$message In file $file"
-           return 1
-        fi
-
-
-        # Beware this only has the scope of this function if a new
-        # variable.  It won't be until the next run of the script that
-        # the scope will be at the top level, because that's when the
-        # cache file is sourced by cloudy.sh.  We need to evaluate it
-        # here though, because it's used below.
-        if [[ "$var_eval" ]]; then
-            eval "$var_eval"
-        else
-            write_log_critical "\$var_eval was empty"
-            return 1
+            eval "local $cached_var_name="$default_value""
         fi
     fi
 
-    [ "$CLOUDY_CONFIG_VARNAME" ] && var_name="$CLOUDY_CONFIG_VARNAME"
+    local var_type="$default_type"
+    # todo discern the type.
 
-    # Either way the variable is in memory at this point as $var_cached_name.
-    # We now need to figure out what to echo back to the caller.
-    # Todo not sure this is necessary
-    local code=$(declare -p $var_cached_name)
+    if [[ "$var_type" == "array" ]]; then
+        eval "local get_array_keys=("\${$cached_var_name_keys[@]}")"
+        [[ "${get_array_keys[0]}" == 0 ]] && var_type="indexed_array" || var_type="associative_array"
+    fi
 
-    echo "${code//$var_cached_name/$var_name}${suffix//$var_cached_name/$var_name}" && return 0
-    return 1
+    if [[ "$var_type" == "associative_array" ]]; then
+        code=''
+        for key in "${get_array_keys[@]}"; do
+            eval "var_value=\"\$${cached_var_name}___${key}\""
+            code="${code}${var_name}_${key}=\"$var_value\";"
+        done
+    else
+        code=$(declare -p $cached_var_name)
+        code="${code//$cached_var_name=/$var_name=}"
+    fi
+
+    echo $code && return 0
+}
+
+
+function _old_cloudy_get_config() {
+    local config_path="$1"
+    local default_value="$2"
+
+    local default_type
+    local var_name
+    local array_keys
+    local mutator
+    local eval_code
+    local dev_null
+
+    parse_arguments $@
+    config_path=${parse_arguments__args[0]}
+    default_value=${parse_arguments__args[2]}
+    var_name=${config_path//./_}
+    [[ "${parse_arguments__option__a}" == true ]] && default_type='array'
+    array_keys=${parse_arguments__option__keys}
+    mutator=${parse_arguments__option__mutator}
+
+    debug "$config_path;\$config_path"
+    debug "$default_value;\$default_value"
+    debug "$default_type;\$default_type"
+    debug "$array_keys;\$array_keys"
+    debug "$mutator;\$mutator"
+
+    # Load from memory
+    config_data=("$(echo "$CACHED_CONFIG" | grep "$config_path|")")
+    if ! [[ "$config_data" ]]; then
+
+        # Load using PHP
+        config_data=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" "$config_path" "$default_value" "$var_name" "$default_type" "$array_keys" "$mutator")
+    fi
+
+    local IFS="|";
+    if [ $? -eq 0 ]; then
+       read dev_null eval_code <<< "$config_data"
+    else
+       read file message <<< "$config_data"
+       write_log_error "$message In file $file"
+       return 1
+    fi
+
+    if [[ "${parse_arguments__option__as}" ]]; then
+        eval_code="${eval_code/$var_name=/$parse_arguments__option__as=}"
+    fi
+
+    echo $eval_code && return 0
 }
 
 ##
@@ -148,7 +235,7 @@ function _cloudy_validate_config() {
     if [ $? -eq 0 ]; then
       return 0
     fi
-    exit_with_failure "$error in cloudy.json"
+    exit_with_failure "Configuration syntax error in $(basename $CLOUDY_CONFIG_JSON)."
 }
 
 function _cloudy_exit() {
@@ -420,12 +507,15 @@ function _cloudy_write_log() {
 #
 
 # Set this to true and config will be read from YAML every time.
-cloudy_development_do_not_cache_config=false
+cloudy_development_do_not_cache_config=true
 
+cloudy_development_skip_config_validation=true
 
 # Expand some vars from our controlling script.
 CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
 [[ "$LOGFILE" ]] && LOGFILE="$(cd $(dirname "$r/$LOGFILE") && pwd)/$(basename $LOGFILE)"
+
+_cloudy_define_cloudy_vars
 
 # Store the script options for later use.
 parse_arguments $@
@@ -449,33 +539,94 @@ CLOUDY_EXIT_STATUS=0
 # For scope reasons we have to source these here and not inside _cloudy_bootstrap.
 CACHE_DIR="$CLOUDY_ROOT/cache"
 CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
+CACHED_CONFIG_INDEX_FILEPATH="${CACHED_CONFIG_FILEPATH/.sh/.index.txt}"
 CACHED_CONFIG=''
 
 # Ensure the configuration cache environment is present and writeable.
 if [ -d "$CACHE_DIR" ]; then
     mkdir -p "$CACHE_DIR" || exit_with_failure "Unable to create cache folder: $CACHE_DIR"
 fi
-touch $CACHED_CONFIG_FILEPATH || exit_with_failure  "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
 
 # Detect changes in YAML and purge config cache if necessary.
 _cloudy_auto_purge_config
 
-# Import the cached config variables at this top scope.
-source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
-CACHED_CONFIG=$(cat "$CACHED_CONFIG_FILEPATH")
+# Generate the cached configuration file.
+if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
+    touch $CACHED_CONFIG_FILEPATH || exit_with_failure  "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
 
-# Load the configuration JSON into memory which is used by get_config*.
-if [ -f "$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json" ]; then
-    CLOUDY_CONFIG_JSON=$(cat "$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json")
-else
-    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG")"
-    if [[ "$cloudy_development_do_not_cache_config" != true ]]; then
-        echo $CLOUDY_CONFIG_JSON > "$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json"
+    # Normalize the config file to JSON.
+    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG" "$cloudy_development_skip_config_validation")"
+
+    [[ "$cloudy_development_skip_config_validation" == true ]] && write_log_dev_warning "Configuration validation is disabled due to \$cloudy_development_skip_config_validation == true."
+
+    # Convert the JSON to bash config.
+    php "$CLOUDY_ROOT/_generate_bash_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot create cached config filepath"
+    if [ $? -ne 0 ]; then
+        compiled=$(cat  "$CACHED_CONFIG_FILEPATH")
+        fail_because "$(IFS="|"; read file reason <<< "$compiled"; echo "$reason")"
+        exit_with_failure "Cannot create cached config filepath."
+    else
+        write_log_debug "$(basename $CONFIG) configuration compiled to $CACHED_CONFIG_FILEPATH."
     fi
 fi
+
+# Import the cached config variables at this top scope into memory.
+source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
 
 #
 # End caching setup
 #
 
+
+#_cloudy_get_config "title"
+#_cloudy_get_config "fifo" "gigo"
+#_cloudy_get_config "prod.db" --keys
+#_cloudy_get_config "prod.db" --keys --as=db_keys
+#_cloudy_get_config "prod.db" -a --as=database
+#_cloudy_get_config "prod.db" -a
+#_cloudy_get_config "prod.db"
+#_cloudy_get_config -a "user.images.tags"
+#_cloudy_get_config -a "user.images.tags" --keys
+#_cloudy_get_config "user.images.tags.0"
+#_cloudy_get_config "user.images.tags.1"
+#_cloudy_get_config "user.images.tags.2"
+#_cloudy_get_config "user.images.tags.3"
+#_cloudy_get_config "user.images.tags.3"
+throw ";$0;$FUNCNAME;$LINENO"
+
+#eval $(_cloudy_get_config -a "db")
+#debug "$db_user;\$db_user"
+#debug "$db_name;\$db_name"
+#debug "$db_pass;\$db_pass"
+#echo
+#echo
+
+eval $(_cloudy_get_config -a "user.images.types.bitmap" --as=cmds --keys)
+
+echo $0 at line $LINENO
+echo Function: $FUNCNAME
+echo '  "'$cmds'"'
+echo '    [#] => '${#cmds[@]}
+echo '    [@] => '${cmds[@]}
+echo '    [*] => '${cmds[*]}
+echo 'Array'
+echo '('
+echo '    [0] => '${cmds[0]}
+echo '    [1] => '${cmds[1]}
+echo '    [2] => '${cmds[2]}
+echo '    [3] => '${cmds[3]}
+echo '    [4] => '${cmds[4]}
+echo '    [5] => '${cmds[5]}
+echo '    [6] => '${cmds[6]}
+echo '    [7] => '${cmds[7]}
+echo '    [8] => '${cmds[8]}
+echo '    [9] => '${cmds[9]}
+echo ')'
+exit
+
+
+_cloudy_get_config 'commands'
+
 _cloudy_bootstrap $@
+
+
