@@ -347,8 +347,8 @@ function _cloudy_help_for_single_command() {
     local help_alias
     local help_argument
 
-    eval $(get_config_as 'arguments' -a "commands.${command_help_topic}.arguments")
-    eval $(get_config_as -a 'options' "commands.${command_help_topic}.options")
+    eval $(get_config_keys_as 'arguments' -a "commands.${command_help_topic}.arguments")
+    eval $(get_config_keys_as -a 'options' "commands.${command_help_topic}.options")
 
     usage="$(basename $SCRIPT) $command_help_topic"
 
