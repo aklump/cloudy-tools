@@ -115,6 +115,7 @@ function _cloudy_get_config() {
 
     local default_type
     local var_name
+    local var_type
     local var_value
     local array_keys
     local mutator
@@ -140,27 +141,35 @@ function _cloudy_get_config() {
     [[ "${parse_arguments__option__a}" == true ]] && default_type='array'
     mutator=${parse_arguments__option__mutator}
 
-    #todo apply mutator
+#    if [[ "$mutator" == "_cloudy_realpath" ]]; then
+#        #todo apply mutator
+#    fi
 
     var_value=$(eval "echo "\$$cached_var_name"")
+    var_type="$default_type"
+#    local var_type=$(declare -p $(eval $cached_variable_name 2> /dev/null | grep -q '^declare \-a')
 
     # Determine the default value
     # @todo How to handle array defaults, syntax?
     # @link https://trello.com/c/6JXskrQn/9-c-619-allow-arrays-to-have-default-values-in-getconfig
     if ! [[ "$var_value" ]]; then
-        if [[ "$default_type" == 'array' ]]; then
-            eval "local $cached_var_name=("$default_value")"
+        if [[ "$var_type" == 'array' ]]; then
+            # Todo this is not fully implemented yet.
+            local eval_code="declare -a local $cached_var_name=("$default_value")"
         else
-            eval "local $cached_var_name="$default_value""
+            local eval_code="local $cached_var_name="$default_value""
         fi
+        eval $eval_code
     fi
 
-    local var_type="$default_type"
-    # todo discern the type.
-
+    # Determine what type of array.
     if [[ "$var_type" == "array" ]]; then
         eval "local var_keys=("\${$cached_var_name_keys[@]}")"
-        [[ "${var_keys[0]}" == 0 ]] && var_type="indexed_array" || var_type="associative_array"
+        if [[ "${var_keys[0]}" == 0 ]] || [[ "${var_keys[0]}" == "" ]]; then
+            var_type="indexed_array"
+        else
+            var_type="associative_array"
+        fi
     fi
 
     # It's an array and the keys are being asked for.
@@ -170,7 +179,7 @@ function _cloudy_get_config() {
 
     elif [[ "$var_type" == "associative_array" ]]; then
         code=''
-        for key in "${get_array_keys[@]}"; do
+        for key in "${var_keys[@]}"; do
             eval "var_value=\"\$${cached_var_name}___${key}\""
             code="${code}${var_name}_${key}=\"$var_value\";"
         done
