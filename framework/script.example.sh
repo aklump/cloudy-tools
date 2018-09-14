@@ -44,11 +44,7 @@ case $command in
     exit_with_help
     ;;
 
-*)
-    throw "Unhandled command \"$command\""
-    ;;
-
 esac
 
 has_failed && exit_with_failure
-exit_with_success_elapsed "Example completed."
+throw "Unhandled command \"$command\"."
