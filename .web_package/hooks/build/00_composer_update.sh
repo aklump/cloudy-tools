@@ -4,7 +4,7 @@
 #
 
 composer=$(type composer >/dev/null 2>&1 && which composer)
-cd "$7/install/cloudy/php" && $composer update
+cd "$7/framework/cloudy/php" && $composer update
 
-git add "$7/install/cloudy/php/vendor"
-git add "$7/install/cloudy/php/composer.lock"
+git add "$7/framework/cloudy/php/vendor"
+git add "$7/framework/cloudy/php/composer.lock"

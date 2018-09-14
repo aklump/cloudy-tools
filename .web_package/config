@@ -7,4 +7,4 @@ push_master = auto
 push_develop = no
 patch_prefix = .
 git_root = .
-info_file = cloudy_installer.yml
+info_file = cloudy*.yml
