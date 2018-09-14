@@ -24,14 +24,14 @@
 
 <h2>on_boot</h2>
 
-<p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>coretest</code> path in <em>cloudy_installer.sh</em>.</p>
+<p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>tests</code> path in <em>cloudy_installer.sh</em>.</p>
 
 <pre><code>#!/usr/bin/env bash
 
 ...
 
 function on_boot() {
-    [[ "$1" == "coretest" ]] || return 0
+    [[ "$1" == "tests" ]] || return 0
     do_tests_in "cloudy_installer.tests.sh"
     exit_with_test_results
 }
@@ -53,7 +53,7 @@ s="${BASH_SOURCE[0]}";while ...
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 13 Sep 2018 12:14:03 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 13 Sep 2018 20:50:17 -0700</p>
   </div>
 </footer>
 

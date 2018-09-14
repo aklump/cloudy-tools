@@ -7,7 +7,7 @@
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page--unittesting">
+<body class="page--testing">
 <header>
   <div class="pager">
   <a href="strings.html" class="prev strings">&laquo;String Manipulation</a>
@@ -25,10 +25,29 @@
 <p>Cloudy offers a simple unit testing framework based on PhpUnit.  To see how you might implement unit tests, refer to the following files</p>
 
 <ul>
-<li><em>cloudy_installer.sh</em> and find how the command <code>coretest</code> is handled.</li>
+<li><em>cloudy_installer.sh</em> and find how the command <code>tests</code> is handled.</li>
 <li><em>cloudy_installer.tests.sh</em> to see how the tests themselves are written.</li>
 <li><em>cloudy.sh</em> for a list of assertions.</li>
 </ul>
+
+<h2>Setup</h2>
+
+<p>You will want to implement the <code>on_boot</code> hook if you want to run tests.</p>
+
+<pre><code>...
+# Uncomment this line to enable file logging.
+LOGFILE="install/cloudy/cache/cloudy_installer.log"
+
+function on_boot() {
+    [[ "$(get_command)" == "tests" ]] || return 0
+    source "$CLOUDY_ROOT/inc/cloudy.testing.sh"
+    do_tests_in "cloudy_installer.tests.sh"
+    do_tests_in ...
+    do_tests_in ...
+    exit_with_test_results
+}
+...
+</code></pre>
 
 <h2>Fixtures</h2>
 
@@ -51,7 +70,7 @@ teardown_after_test
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 13 Sep 2018 12:14:04 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 13 Sep 2018 20:50:18 -0700</p>
   </div>
 </footer>
 
