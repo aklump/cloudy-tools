@@ -15,12 +15,16 @@ commands:
         help: 'Show help for command "new"'
         aliases: [h]
       config:
-        type: string,
+        type: string
         help: 'Set the basename of the config file.'
       force:
         type: boolean
         aliases: [f]
         help: 'Overwrite an existing script.'
+      examples:
+        type: boolean
+        aliases: [e]
+        help: 'Create script.example.sh as well'
   tests:
     help: 'Run Cloudy''s core unit tests.'
 

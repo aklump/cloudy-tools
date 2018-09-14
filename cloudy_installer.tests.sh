@@ -135,6 +135,9 @@ function testArraySortWorksAsExpected() {
 function testArrayJoinWorks() {
     declare -a array_join__array=("uno" "dos" "tres")
     assert_same "uno, dos, tres" "$(array_join ', ')"
+
+    declare -a array_join__array=("-h" "--help" "--name=aaron")
+    assert_same "-h, --help, --name=aaron" "$(array_join ', ')"
 }
 
 function testStringUpper() {

@@ -393,13 +393,12 @@ function _cloudy_help_for_single_command() {
 
             # Add in the aliases
             eval $(get_config_as -a 'aliases' "commands.${command_help_topic}.options.${option}.aliases")
-
             for help_alias in "${aliases[@]}"; do
                help_options=("${help_options[@]}" "$help_alias")
             done
 
             array_sort_by_item_length__array=(${help_options[@]})
-            array_sort_by_item_length "array_sort_by_item_length__array"
+            array_sort_by_item_length
 
             # Add in hyphens and values
             help_options=()
@@ -411,8 +410,8 @@ function _cloudy_help_for_single_command() {
                fi
             done
 
-            array_join_array=(${help_options[@]})
-            options=$(array_join ", ")
+            array_join__array=(${help_options[@]})
+            help_options=$(array_join ", ")
 
             eval $(get_config_as 'help' "commands.${command_help_topic}.options.${option}.help")
 
