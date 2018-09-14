@@ -433,7 +433,7 @@ function _cloudy_validate_command() {
     eval $(get_config_keys "commands")
     array_has_value__array=(${commands[@]})
     array_has_value "$command" && return 0
-    fail_because "You have called your script using a command, \"$command\", which does not exist."
+    fail_because "You have called $(basename $SCRIPT) using a command, \"$command\", which does not exist."
     return 1
 }
 
