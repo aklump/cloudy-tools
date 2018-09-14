@@ -61,7 +61,7 @@
 
 <ul>
 <li>Works with BASH 3</li>
-<li>PHP (used on the backend for configuration processing)</li>
+<li>PHP (Used invisibly on the backend for configuration processing; no PHP knowledge is required to use Cloudy.)</li>
 </ul>
 
 <h2>Contributing</h2>
@@ -70,7 +70,16 @@
 
 <h2>Installation</h2>
 
-<p>To use Cloudy in your script...</p>
+<p>Installation means downloading this repository to your system.  It contains an installer program <em>cloudy_installer.sh</em> as well as the cloudy framework.  You should use the installer tool to generate new cloudy scripts.</p>
+
+<p>Here is a snippet to clone this repo to a directory on your system <em>$HOME/opt/cloudy</em> and create a symlink in <em>$HOME/bin/cloudy</em>.  This assumes <em>~/bin</em> is in your <code>$PATH</code> variable.</p>
+
+<pre><code>(cd $HOME &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; (test -d cloudy || git clone https://github.com/aklump/cloudy.git) &amp;&amp; (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) &amp;&amp; cloudy
+</code></pre>
+
+<p>On success you should see:</p>
+
+<p>⭐  CLOUDY INSTALLER VER 1.0.3</p>
 
 <h2>Usage</h2>
 
@@ -125,7 +134,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Fri, 14 Sep 2018 10:53:11 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Fri, 14 Sep 2018 11:40:46 -0700</p>
   </div>
 </footer>
 
