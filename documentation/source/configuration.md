@@ -4,7 +4,7 @@ Configuration is provided by YAML or JSON files.  Examples here will be shown wi
 
 In the header of your script you will find `CONFIG`, this is for the base configuration file, e.g.,
 
-        CONFIG=script.example.config.yml
+        CONFIG=script.example.yml
         CONFIG=script.example.config.json
         
 1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname $CONFIG)`

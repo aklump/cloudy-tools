@@ -15,7 +15,7 @@ You may hard-code the version in a YAML config file like this:
 If you would rather provide your version dynamically with BASH, you can override the default `get_version` by adding it to your script file anytime after the bootstrap; this allows you to provide it via PHP, `cat` or whatever, e.g.,
 
     ...
-    done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/install/cloudy/cloudy.sh"
+    done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/framework/cloudy/cloudy.sh"
     # End Cloudy Bootstrap
     
     function get_version() {

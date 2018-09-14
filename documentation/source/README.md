@@ -40,7 +40,7 @@ If you find this project useful... please consider [making a donation](https://w
 
 ## Installation
 
-Installation means downloading this repository to your system.  It contains an installer program _cloudy_installer.sh_ as well as the cloudy framework.  You should use the installer tool to generate new cloudy scripts.
+Installation means downloading this repository to your system.  It contains _cloudy_tools.sh_ which is used to generate new scripts, as well as the cloudy framework.
 
 Here is a snippet to clone this repo to a directory on your system _$HOME/opt/cloudy_ and create a symlink in _$HOME/bin/cloudy_.  This assumes _~/bin_ is in your `$PATH` variable.
 
@@ -48,7 +48,7 @@ Here is a snippet to clone this repo to a directory on your system _$HOME/opt/cl
 
 On success you should see:
 
-⭐  CLOUDY INSTALLER VER 1.0.3
+![Successful installation](images/installed.jpg)
 
 ## Usage
 
