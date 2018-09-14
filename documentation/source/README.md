@@ -32,7 +32,7 @@ After installing Cloudy, to write a new script called _thunder.sh_ ...
 ## Requirements
 
 * Works with BASH 3
-* PHP (used on the backend for configuration processing)
+* PHP (Used invisibly on the backend for configuration processing; no PHP knowledge is required to use Cloudy.)
 
 ## Contributing
 
@@ -40,7 +40,15 @@ If you find this project useful... please consider [making a donation](https://w
 
 ## Installation
 
-To use Cloudy in your script...
+Installation means downloading this repository to your system.  It contains an installer program _cloudy_installer.sh_ as well as the cloudy framework.  You should use the installer tool to generate new cloudy scripts.
+
+Here is a snippet to clone this repo to a directory on your system _$HOME/opt/cloudy_ and create a symlink in _$HOME/bin/cloudy_.  This assumes _~/bin_ is in your `$PATH` variable.
+
+    (cd $HOME && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy || git clone https://github.com/aklump/cloudy.git) && (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) && cloudy
+
+On success you should see:
+
+⭐  CLOUDY INSTALLER VER 1.0.3
 
 ## Usage
 
