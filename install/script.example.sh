@@ -16,12 +16,16 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # End Cloudy Bootstrap
 
 # Input validation
-validate_input || exit_with_failure "Uh, that's not quite right..."
-
-hi=$(succeed_because "bla")
+validate_input || exit_with_failure "Something didn't work..."
 
 # Handle the various operations.
 command=$(get_command)
+
+# Handle help.
+has_option "h" && exit_with_help $command
+[[ "$command" == "help" ]] && exit_with_help $(get_command_arg 0)
+
+# Handle other commands.
 case $command in
 "alpha")
     has_param "pass" || fail_because "Alpha does nothing yet"

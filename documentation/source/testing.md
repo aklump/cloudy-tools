@@ -16,7 +16,7 @@ You will want to implement the `on_boot` hook if you want to run tests.
     
     function on_boot() {
         [[ "$(get_command)" == "tests" ]] || return 0
-        source "$CLOUDY_ROOT/cloudy.tests.sh"
+        source "$CLOUDY_ROOT/inc/cloudy.testing.sh"
         do_tests_in "cloudy_installer.tests.sh"
         do_tests_in ...
         do_tests_in ...
