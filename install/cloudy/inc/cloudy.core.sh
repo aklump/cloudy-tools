@@ -120,6 +120,7 @@ function _cloudy_get_config() {
     local var_name
     local var_type
     local var_value
+    local var_code
     local array_keys
     local mutator
     local eval_code
@@ -181,9 +182,9 @@ function _cloudy_get_config() {
     elif [[ "$var_type" == "associative_array" ]]; then
         code=''
         for key in "${var_keys[@]}"; do
-            eval "var_value=\"\$${cached_var_name}___${key}\""
-            #todo mutator for array values.
-            code="${code}${var_name}_${key}=\"$var_value\";"
+            var_code=$(declare -p ${cached_var_name}___${key})
+            code="${code}${var_code/${cached_var_name}___${key}/${var_name}_${key}};"
+            # todo mutator for array values.
         done
     else
         if [[ "$mutator" ]]; then
@@ -193,7 +194,7 @@ function _cloudy_get_config() {
         code="${code//$cached_var_name=/$var_name=}"
     fi
 
-    echo $code && return 0
+    echo ${code%;} && return 0
 }
 
 ##

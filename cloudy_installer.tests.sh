@@ -1,6 +1,26 @@
 #!/usr/bin/env bash
 
 
+function testGetConfigWorksAsExpectedOnAssociativeArray() {
+    local result="$(get_config -a "tests.associative_array")"
+    assert_same "declare -- tests_associative_array_do=\"alpha\";declare -- tests_associative_array_re=\"bravo\";declare -- tests_associative_array_mi=\"charlie\"" "$result"
+
+    eval "$result"
+    assert_same "alpha" "$tests_associative_array_do"
+    assert_same "bravo" "$tests_associative_array_re"
+    assert_same "charlie" "$tests_associative_array_mi"
+}
+
+function testGetConfigWorksAsExpectedOnAssociativeArrayWithArrayValues() {
+    local result="$(get_config -a "tests.user.images.types")"
+    assert_same "declare -a tests_user_images_types_bitmap='([0]=\"jpg\" [1]=\"png\" [2]=\"gif\")'" "$result"
+
+    eval "$result"
+    assert_same "jpg" "${tests_user_images_types_bitmap[0]}"
+    assert_same "png" "${tests_user_images_types_bitmap[1]}"
+    assert_same "gif" "${tests_user_images_types_bitmap[2]}"
+}
+
 function testArraySortLengthWorksAsExpected() {
     array_sort_by_item_length__array=("september" "five" "three" "on")
     array_sort_by_item_length; assert_exit_status 0
@@ -38,16 +58,6 @@ function testGetConfigPathWorksAsItShould() {
 
     eval $(get_config_path 'tests.filepaths.cache')
     assert_same "$ROOT/install/cloudy/cache" $tests_filepaths_cache
-}
-
-function testGetConfigWorksAsExpectedOnAssociativeArray() {
-    local result="$(get_config -a "tests.associative_array")"
-    assert_same "tests_associative_array_do=\"alpha\";tests_associative_array_re=\"bravo\";tests_associative_array_mi=\"charlie\";" "$result"
-
-    eval "$result"
-    assert_same "alpha" "$tests_associative_array_do"
-    assert_same "bravo" "$tests_associative_array_re"
-    assert_same "charlie" "$tests_associative_array_mi"
 }
 
 function testGetConfigAndTheAOptionWorksAsExpected() {

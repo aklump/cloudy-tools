@@ -23,6 +23,8 @@ commands:
         help: 'Overwrite an existing script.'
   tests:
     help: 'Run Cloudy''s core unit tests.'
+
+# These are used by the 'tests' command.
 tests:
   string: 'Adam ate apples at Andrew''s abode.'
   indexed_array:
@@ -42,9 +44,7 @@ tests:
     images:
       tags: [literature, nature, space, religion]
       types:
-        vector: [svg]
         bitmap: [jpg, png, gif]
-        animated: [gif]
   prod:
     db:
       name: db
