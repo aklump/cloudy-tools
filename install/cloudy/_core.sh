@@ -344,6 +344,7 @@ function _cloudy_help_for_single_command() {
     local option_type
     local help_option
     local help_options
+    local help_options_sorted
     local help_alias
     local help_argument
 
@@ -391,17 +392,18 @@ function _cloudy_help_for_single_command() {
             help_options=("$option")
 
             # Add in the aliases
-            eval $(get_config_as -a 'options' "commands.${command_help_topic}.options.${option}.aliases")
+            eval $(get_config_as -a 'aliases' "commands.${command_help_topic}.options.${option}.aliases")
+
             for help_alias in "${aliases[@]}"; do
                help_options=("${help_options[@]}" "$help_alias")
             done
 
-            array_sort_by_item_length_array=(${help_options[@]})
-            array_sort_by_item_length
+            array_sort_by_item_length__array=(${help_options[@]})
+            eval $(array_sort_by_item_length "help_options_sorted")
 
             # Add in hyphens and values
             help_options=()
-            for help_option in "${array_sort_by_item_length_array[@]}"; do
+            for help_option in "${help_options_sorted[@]}"; do
                if [ ${#help_option} -eq 1 ]; then
                     help_options=("${help_options[@]}" "-${help_option}${option_value}")
                else
@@ -414,7 +416,7 @@ function _cloudy_help_for_single_command() {
 
             eval $(get_config_as 'help' "commands.${command_help_topic}.options.${option}.help")
 
-            echo_list_array=("${echo_list_array[@]}" "$(echo_green "$options") $help")
+            echo_list_array=("${echo_list_array[@]}" "$(echo_green "$help_options") $help")
         done
         echo_list
     fi
