@@ -489,6 +489,8 @@ function echo_elapsed() {
 function exit_with_help() {
     local help_command=$1
 
+    _cloudy_echo_credits
+
     # Focused help_command, show info about single command.
     if [[ "$help_command" ]]; then
         _cloudy_validate_command $help_command || exit_with_failure "No help for that!"

@@ -240,6 +240,10 @@ function _cloudy_echo_color() {
     fi
 }
 
+function _cloudy_echo_credits() {
+    echo "Cloudy $(get_version) by Aaron Klump"
+}
+
 ##
  # Echo a list of items with bullets in color
  #

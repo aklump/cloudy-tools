@@ -46,7 +46,7 @@ function mark_test_skipped() {
 }
 
 function exit_with_test_results() {
-    echo "Cloudy $(get_version) by Aaron Klump"
+    _cloudy_echo_credits
     echo_headline "Test Results"
     echo "Runtime: BASH $BASH_VERSION"
     echo
