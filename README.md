@@ -4,16 +4,35 @@
 
 ## Summary
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac blandit risus. Mauris tempor a lacus a placerat. Vivamus viverra dapibus metus non finibus. Nulla ultricies est nulla, eget efficitur nibh viverra non. Sed sed est viverra nunc malesuada venenatis vitae at tellus. Suspendisse potenti. Morbi non blandit elit, sit amet consectetur mi.
+A lightweight BASH framework, which uses YAML or JSON for your script's configuration and provides a unit testing framework.
+
+Cloudy Boosts the following features:
+
+* Clean configuration options (YAML, JSON) for your scripts
+* A BASH Unit Testing framework inspired by [PHPUnit](https://phpunit.de)
+* Auto-generated help output
 
 **Visit <https://aklump.github.io/cloudy> for full documentation.**
 
 ## Quick Start
 
+After installing Cloudy, to write a new script called _thunder.sh_ ...
+
+1. `cd` to the directory where you want the script to be created.
+1. Type `cloudy new thunder.sh` and the necessary files/directories will be created in the current directory.
+1. Open _thunder.sh_ and write your code.
+1. Open _thunder.yml_ and add some configuration.
+1. To learn about the options to use with `new` type `cloudy help new`.
+1. Refer to [the documentation](https://aklump.github.io/cloudy/README.html) for to learn more.
+ 
+### Using JSON
+
+1. To work with JSON configuration instead type `cloudy new thunder.sh --json`.
+ 
 ## Requirements
 
-* alpha
-* bravo
+* Works with BASH 3
+* PHP (used on the backend for configuration processing)
 
 ## Contributing
 
