@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+function testTimestamp() {
+    assert_same "$(date +%s)" "$(timestamp)"
+}
+
 function testGetConfigWorksAsExpectedOnAssociativeArray() {
     local result="$(get_config -a "tests.associative_array")"
     assert_same "declare -- tests_associative_array_do=\"alpha\";declare -- tests_associative_array_re=\"bravo\";declare -- tests_associative_array_mi=\"charlie\"" "$result"

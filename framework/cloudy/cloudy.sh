@@ -14,6 +14,13 @@ function get_version() {
     echo $version
 }
 
+##
+ # Return the current UNIX timestamp.
+ #
+function timestamp() {
+    echo $(date +%s)
+}
+
 #
 # SECTION: Arguments, options, parameters
 #
