@@ -344,7 +344,6 @@ function _cloudy_help_for_single_command() {
     local option_type
     local help_option
     local help_options
-    local help_options_sorted
     local help_alias
     local help_argument
 
@@ -399,11 +398,11 @@ function _cloudy_help_for_single_command() {
             done
 
             array_sort_by_item_length__array=(${help_options[@]})
-            eval $(array_sort_by_item_length "help_options_sorted")
+            array_sort_by_item_length "array_sort_by_item_length__array"
 
             # Add in hyphens and values
             help_options=()
-            for help_option in "${help_options_sorted[@]}"; do
+            for help_option in "${array_sort_by_item_length__array[@]}"; do
                if [ ${#help_option} -eq 1 ]; then
                     help_options=("${help_options[@]}" "-${help_option}${option_value}")
                else
