@@ -17,18 +17,18 @@ use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/bootstrap.php';
 
-$path_to_cloudy_config = $argv[2];
+$filepath_to_config_file = $argv[2];
 $skip_config_validation = $argv[3] === 'true';
 
 try {
   $data = [];
-  if (!file_exists($path_to_cloudy_config)) {
-    throw new \RuntimeException("Missing configuration file: $path_to_cloudy_config");
+  if (!file_exists($filepath_to_config_file)) {
+    throw new \RuntimeException("Missing configuration file: $filepath_to_config_file");
   }
-  if (!($contents = file_get_contents($path_to_cloudy_config))) {
-    throw new \RuntimeException("Empty configuration files: $path_to_cloudy_config");
+  if (!($contents = file_get_contents($filepath_to_config_file))) {
+    throw new \RuntimeException("Empty configuration files: $filepath_to_config_file");
   }
-  switch (($extension = pathinfo($path_to_cloudy_config, PATHINFO_EXTENSION))) {
+  switch (($extension = pathinfo($filepath_to_config_file, PATHINFO_EXTENSION))) {
     case 'yml':
     case 'yaml':
       if ($yaml = Yaml::parse($contents)) {
@@ -68,7 +68,7 @@ try {
   }
   catch (\Exception $exception) {
     $class = get_class($exception);
-    throw new $class("Configuration syntax error in \"" . basename($path_to_cloudy_config) . '": ' . $exception->getMessage());
+    throw new $class("Configuration syntax error in \"" . basename($filepath_to_config_file) . '": ' . $exception->getMessage());
   }
 
   echo json_encode($data);

@@ -76,7 +76,10 @@
             "type": "string"
         },
         "additional_config": {
-            "type": "array",
+            "type": [
+                "null",
+                "array"
+            ],
             "uniqueItems": true
         },
         "default_command": {

@@ -1,6 +1,6 @@
-title:
+title: ""
 additional_config:
-default_operation: help
+default_command: help
 commands:
   help:
     help: Show this help screen.

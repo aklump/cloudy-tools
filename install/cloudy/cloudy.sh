@@ -495,7 +495,7 @@ function exit_with_help() {
     if [[ "$help_command" ]]; then
         _cloudy_validate_command $help_command || exit_with_failure "No help for that!"
         _cloudy_help_for_single_command $help_command
-        exit_with_success "Use just \"help\" for more commands"
+        exit_with_success "Use just \"help\" to list all commands"
     fi
 
     # Top-level just show all commands.

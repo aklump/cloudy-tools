@@ -357,8 +357,8 @@ function _cloudy_help_for_single_command() {
 
     usage="$(basename $SCRIPT) $command_help_topic"
 
-    [ ${#options} -gt 0 ] && usage="$usage <options>"
     [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"
+    [ ${#options} -gt 0 ] && usage="$usage <options>"
 
     echo_headline "Help Topic: $command_help_topic"
 

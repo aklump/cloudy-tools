@@ -39,21 +39,42 @@ case $command in
 "new")
     basename=$(get_command_arg 0 "cloudy-script.sh")
     script_filename=$(path_filename "$basename")
-    default_config="$script_filename.yml"
-    example_script="$script_filename.example.sh"
-    config_file=$(get_option 'config' "$default_config")
-    [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
-    if ! has_failed; then
-        rsync -a $ROOT/install/ ./  --exclude=*.log --exclude=cache/ || fail_because "Could not copy Cloudy core to $WDIR."
-        mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
-        mv script.example.sh $example_script || fail_because "Could not rename script.example.sh to $example_script"
-        sed -i '' "s/__CONFIG/$config_file/g" $basename || fail_because "Could not update config file in $basename"
-        sed -i '' "s/__FILENAME/$script_filename/g" $basename || fail_because "Could not replace __FILENAME in $basename"
+    config_file="$script_filename.yml"
+    has_option "json" && config_file="$script_filename.json"
 
-        if [[ "$config_file" != "script.yml" ]]; then
-            mv ./script.yml $config_file || fail_because "Could not copy script.yml to $config_file"
+    example_script="script.example.sh"
+
+    # Protect an existing script by that name.
+    [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
+
+    if ! has_failed; then
+        rsync -a $ROOT/install/ ./  --exclude=*.log --exclude=cache/ --exclude=*.example.* || fail_because "Could not copy Cloudy core to $WDIR."
+
+        # The stub file script.sh
+        mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
+        sed -i '' "s/__FILENAME/$script_filename/g" $basename || fail_because "Could not replace __FILENAME in $basename"
+        sed -i '' "s/__CONFIG/${config_file}/g" $basename || fail_because "Could not update config filepath in $basename."
+
+        # Copy over examples.
+        if has_option "examples"; then
+            cp "$ROOT/install/script.example.sh" . || fail_because "Could not copy script.example.sh"
+            cp "$ROOT/install/script.example.config.yml" . || fail_because "Could not copy script.example.config.yml"
+
+            has_option "json" && debug "json" && sed -i '' "s/config.yml/config.json/g" script.example.sh || fail_because "Could not update config filepath in script.example.config.yml."
         fi
 
+        # Convert YAML config files to JSON, if necessary.
+        if has_option "json"; then
+            echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "script.yml") > ${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
+            [ $? -eq 0 ] && rm script.yml
+
+            echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$WDIR/script.example.config.yml") > script.example.config.json || fail_because "Could not convert script.example.config.yml to JSON"
+            [ $? -eq 0 ] && rm script.example.config.yml
+        else
+            mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."
+        fi
+
+        # Backout our files on failure.
         if has_failed; then
             [ -e $basename ] && rm $basename
             [ -e $config_file ] && rm $config_file
