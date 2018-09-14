@@ -24,7 +24,7 @@ commands:
   tests:
     help: Run Cloudy's core unit tests.
 
-# These are values used by core get_config tests.
+# These are values used by the 'tests' command.
 tests:
   string: Adam ate apples at Andrew's abode.
   indexed_array:

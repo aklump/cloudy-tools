@@ -218,10 +218,15 @@ function array_sort() {
 ##
  # Sort a stack based on length of values.
  #
+ # @code
+ #
+ # @endcode
+ #
 function array_sort_by_item_length() {
-    eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "array_sort_by_item_length__array" "${array_sort_by_item_length__array[@]}")
+    local custom_var_name="${1:-array_sort_by_item_length__array}"
+    local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "$custom_var_name" "${array_sort_by_item_length__array[@]}")
     result=$?
-    eval $eval
+    echo "$eval"
     return $result
 }
 

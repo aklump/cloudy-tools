@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
 
+function testArraySortLengthWorksAsExpected() {
+    array_sort_by_item_length__array=("september" "five" "three" "on")
+    eval $(array_sort_by_item_length); assert_exit_status 0
+    assert_same "on" ${array_sort_by_item_length__array[0]}
+    assert_same "five" ${array_sort_by_item_length__array[1]}
+    assert_same "three" ${array_sort_by_item_length__array[2]}
+    assert_same "september" ${array_sort_by_item_length__array[3]}
+}
+
 function testGetConfigPathAsWorksAsItShould() {
     # This one handles the realpath portion as the subject involves traversal.
     eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
@@ -82,16 +91,6 @@ function testGetConfigReturnsIndexedArray() {
     assert_same "declare -a tests_user_images_tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config -a "tests.user.images.tags")"
 
     assert_same "declare -a tests_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "tests.indexed_array")"
-}
-
-function _testArraySortLengthWorksAsExpected() {
-    declare -a array_sort_by_item_length__array=("september" "five" "three" "on")
-
-    array_sort_by_item_length; assert_exit_status 0
-    assert_same "on" ${array_sort_by_item_length__array[0]}
-    assert_same "five" ${array_sort_by_item_length__array[1]}
-    assert_same "three" ${array_sort_by_item_length__array[2]}
-    assert_same "september" ${array_sort_by_item_length__array[3]}
 }
 
 function testArraySplitWorksForMultipleChars() {
