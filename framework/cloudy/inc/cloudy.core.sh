@@ -15,8 +15,8 @@ function _cloudy_bootstrap_translations() {
     eval $(get_config_as "CLOUDY_LANGUAGE" "language" "en")
 
     # todo may not need to do these two?
-    CLOUDY_SUCCESS=$(translate "exit_with_success" "Completed successfully.")
-    CLOUDY_FAILED=$(translate "exit_with_failure" "Failed.")
+    CLOUDY_SUCCESS="Completed successfully."
+    CLOUDY_FAILED="Failed."
 }
 
 function _cloudy_bootstrap() {
