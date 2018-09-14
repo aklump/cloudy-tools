@@ -1,36 +1,21 @@
-title: Cloudy Installer
-version: "1.0"
+title: 'Cloudy Installer'
+version: 1.0.1
 default_command: help
 commands:
   help:
-    help: Show this help screen.
+    help: 'Show this help screen.'
   new:
-    help: Create a new script using Cloudy.
-    arguments:
-      basename:
-        help: The basename of the script to create.
-    options:
-      help:
-        type: boolean
-        help: Show help for command "new"
-        aliases: [h]
-      config:
-        type: string
-        help: Set the basename of the config file.
-      force:
-        type: boolean
-        aliases: [f]
-        help: Overwrite an existing script.
+    help: 'Create a new script using Cloudy.'
+    arguments: { basename: { help: 'The basename of the script to create.' } }
+    options: { help: { type: boolean, help: 'Show help for command "new"', aliases: [h] }, config: { type: string, help: 'Set the basename of the config file.' }, force: { type: boolean, aliases: [f], help: 'Overwrite an existing script.' } }
   tests:
-    help: Run Cloudy's core unit tests.
-
-# These are values used by the 'tests' command.
+    help: 'Run Cloudy''s core unit tests.'
 tests:
-  string: Adam ate apples at Andrew's abode.
+  string: 'Adam ate apples at Andrew''s abode.'
   indexed_array:
-  - alpha
-  - bravo
-  - charlie
+    - alpha
+    - bravo
+    - charlie
   associative_array:
     do: alpha
     re: bravo
@@ -39,19 +24,8 @@ tests:
     install: install
     cache: install/cloudy/cache
     cloudy: install/cloudy/..
-    absolute: "/dev/null"
+    absolute: /dev/null
   user:
-    images:
-      tags:
-      - literature
-      - nature
-      - space
-      - religion
-      types:
-        vector: [svg]
-        bitmap: [jpg, png, gif]
-        animated: [gif]
+    images: { tags: [literature, nature, space, religion], types: { vector: [svg], bitmap: [jpg, png, gif], animated: [gif] } }
   prod:
-    db:
-      name: db
-      pass: 2394873910
+    db: { name: db, pass: 2394873910 }
