@@ -512,7 +512,7 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
     [[ "$cloudy_development_skip_config_validation" == true ]] && write_log_dev_warning "Configuration validation is disabled due to \$cloudy_development_skip_config_validation == true."
 
     # Convert the JSON to bash config.
-    php "$CLOUDY_ROOT/php/generate_bash_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot create cached config filepath"
+    php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH"
     if [ $? -ne 0 ]; then
         compiled=$(cat  "$CACHED_CONFIG_FILEPATH")
         fail_because "$(IFS="|"; read file reason <<< "$compiled"; echo "$reason")"

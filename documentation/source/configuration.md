@@ -1,12 +1,13 @@
 # Configuration
 
-Configuration is provided by YAML files.
+Configuration is provided by YAML or JSON files.  Examples will be shown with YAML.
 
 In the header of your script you will find `CONFIG`, this is for the base configuration file, e.g.,
 
         CONFIG=script.example.config.yml
+        CONFIG=script.example.config.json
         
-1. Set it's value to the path of a YAML file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname $CONFIG)`
+1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname $CONFIG)`
 1. You may add additional configuration files by adding something like following in the YAML of the base configuration file.
 
         additional_config:

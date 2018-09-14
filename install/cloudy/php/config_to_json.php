@@ -3,7 +3,12 @@
 
 /**
  * @file
- * Load configuration and echo a json string.
+ * Load actual configuration file and echo a json string.
+ *
+ * This is the first step in the configuration compiling.
+ *
+ * @group configuration
+ * @see json_to_bash.php
  */
 
 use JsonSchema\Constraints\Constraint;
@@ -20,12 +25,27 @@ try {
   if (!file_exists($path_to_cloudy_config)) {
     throw new \RuntimeException("Missing configuration file: $path_to_cloudy_config");
   }
-  if (($yaml = file_get_contents($path_to_cloudy_config)) && ($yaml = Yaml::parse($yaml))) {
-    $data += $yaml;
+  if (!($contents = file_get_contents($path_to_cloudy_config))) {
+    throw new \RuntimeException("Empty configuration files: $path_to_cloudy_config");
   }
-  $data += [
-    'config' => [],
-  ];
+  switch (($extension = pathinfo($path_to_cloudy_config, PATHINFO_EXTENSION))) {
+    case 'yml':
+    case 'yaml':
+      if ($yaml = Yaml::parse($contents)) {
+        $data += $yaml;
+      }
+      break;
+
+    case 'json':
+      if ($json = json_decode($contents, TRUE)) {
+        $data += $json;
+      }
+      break;
+
+    default:
+      throw new \RuntimeException("Configuration files of type \"$extension\" are not supported.");
+
+  }
 
   foreach ($g->get($data, 'additional_config', []) as $basename) {
     $path = ROOT . "/$basename";

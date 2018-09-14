@@ -4,6 +4,11 @@
 /**
  * @file
  * Write a bash config file based on JSON.
+ *
+ * This is the second step in the configuration compiling.
+ *
+ * @group configuration
+ * @see config_to_json.php
  */
 
 use AKlump\LoftLib\Bash\Configuration;
@@ -33,7 +38,7 @@ try {
 
 }
 catch (\Exception $exception) {
-  echo __FILE__ . '|' . $exception->getMessage();
+  $exception->getMessage();
 }
 
 exit(1);
