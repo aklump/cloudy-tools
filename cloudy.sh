@@ -16,7 +16,7 @@ function on_boot() {
     # Run the test command before the bootstrap to avoid conflicts.
     [[ "$(get_command)" == "tests" ]] || return 0
     source "$CLOUDY_ROOT/inc/cloudy.testing.sh"
-    do_tests_in "cloudy_installer.tests.sh"
+    do_tests_in "cloudy.tests.sh"
     exit_with_test_results
 }
 

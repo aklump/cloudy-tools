@@ -1,6 +1,6 @@
 # Configuration
 
-Configuration is provided by YAML or JSON files.  Examples will be shown with YAML.
+Configuration is provided by YAML or JSON files.  Examples here will be shown with YAML.
 
 In the header of your script you will find `CONFIG`, this is for the base configuration file, e.g.,
 
@@ -14,6 +14,7 @@ In the header of your script you will find `CONFIG`, this is for the base config
           - _install.local.yml
 
 1. You may have any number of configuration files.
+1. Consider limited file permissions on your configuration files; e.g. `chmod go-rwx`.
 
 ## Using Config
 

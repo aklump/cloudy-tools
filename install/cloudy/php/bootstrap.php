@@ -27,7 +27,7 @@ define('CONFIG_PREFIX', 'cloudy_config');
  */
 define('CLOUDY_ROOT', realpath(__DIR__ . '/../'));
 
-require_once CLOUDY_ROOT . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 $g = new Data();
 $var_service = new Configuration(CONFIG_PREFIX);

@@ -55,12 +55,12 @@ try {
     $data = array_merge_recursive($data, Yaml::parse(file_get_contents($path)));
   }
 
-  // Validate against base-config.schema.json.
+  // Validate against cloudy_config.schema.json.
   $validator = new Validator();
   $validate_data = json_decode(json_encode($data));
   try {
-    if (!($schema = json_decode(file_get_contents(CLOUDY_ROOT . '/base-config.schema.json')))) {
-      throw new \RuntimeException("Invalid JSON in base-config.schema.json");
+    if (!($schema = json_decode(file_get_contents(CLOUDY_ROOT . '/cloudy_config.schema.json')))) {
+      throw new \RuntimeException("Invalid JSON in cloudy_config.schema.json");
     }
     if (!$skip_config_validation) {
       $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);
