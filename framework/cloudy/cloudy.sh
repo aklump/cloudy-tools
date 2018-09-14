@@ -647,7 +647,7 @@ function string_lower() {
  # @endcode
  #
 function debug() {
-    _cloudy_debug_helper "debug;3;0;$@"
+    _cloudy_debug_helper "Debug;3;0;$@"
 }
 
 function echo_key_value() {
@@ -660,7 +660,7 @@ function echo_key_value() {
  # Echo an exception message and exit.
  #
 function throw() {
-    _cloudy_debug_helper "exception;1;7;$@"
+    _cloudy_debug_helper "Exception;1;7;$@"
     exit 3
 }
 
