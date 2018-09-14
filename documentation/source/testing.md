@@ -6,6 +6,23 @@ Cloudy offers a simple unit testing framework based on PhpUnit.  To see how you 
 * _cloudy_installer.tests.sh_ to see how the tests themselves are written.
 * _cloudy.sh_ for a list of assertions.
 
+## Setup
+
+You will want to implement the `on_boot` hook if you want to run tests.
+
+    ...
+    # Uncomment this line to enable file logging.
+    LOGFILE="install/cloudy/cache/cloudy_installer.log"
+    
+    function on_boot() {
+        [[ "$(get_command)" == "tests" ]] || return 0
+        source "$CLOUDY_ROOT/cloudy.tests.sh"
+        do_tests_in "cloudy_installer.tests.sh"
+        do_tests_in ...
+        do_tests_in ...
+        exit_with_test_results
+    }
+    ...
 
 ## Fixtures
 

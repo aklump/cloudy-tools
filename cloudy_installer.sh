@@ -13,6 +13,7 @@ LOGFILE="install/cloudy/cache/cloudy_installer.log"
 
 function on_boot() {
     [[ "$(get_command)" == "tests" ]] || return 0
+    source "$CLOUDY_ROOT/cloudy.tests.sh"
     do_tests_in "cloudy_installer.tests.sh"
     exit_with_test_results
 }
