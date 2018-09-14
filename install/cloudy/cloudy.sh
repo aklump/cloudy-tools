@@ -211,7 +211,7 @@ function array_sort() {
  # Sort a stack based on length of values.
  #
 function array_sort_by_item_length() {
-    eval=$(php "$CLOUDY_ROOT/_helpers.php" "array_sort_by_item_length" "array_sort_by_item_length__array" "${array_sort_by_item_length__array[@]}")
+    eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "array_sort_by_item_length__array" "${array_sort_by_item_length__array[@]}")
     result=$?
     eval $eval
     return $result
@@ -763,7 +763,12 @@ function mark_test_skipped() {
 }
 
 function exit_with_test_results() {
+    echo "Cloudy $(get_version) by Aaron Klump"
     echo_headline "Test Results"
+    echo "Runtime: BASH $BASH_VERSION"
+    echo
+    echo
+    echo
 
     [ $CLOUDY_TEST_COUNT -eq 0 ] && echo_key_value "?" "No tests found."
     [ $CLOUDY_ASSERTION_COUNT -eq 0 ] && echo_key_value "?" "No assertions found."
@@ -773,7 +778,7 @@ function exit_with_test_results() {
     echo "Time: $SECONDS seconds" && echo
 
     if ! has_failed; then
-        echo "Tests: ${CLOUDY_TEST_COUNT}, Assertions: ${CLOUDY_ASSERTION_COUNT}"
+        echo "OK (${CLOUDY_TEST_COUNT} tests, ${CLOUDY_ASSERTION_COUNT} assertions)"
         exit_with_success "All tests passed."
     fi
 

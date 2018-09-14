@@ -10,7 +10,7 @@ use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 use Symfony\Component\Yaml\Yaml;
 
-require_once dirname(__FILE__) . '/_bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 $path_to_cloudy_config = $argv[2];
 $skip_config_validation = $argv[3] === 'true';
@@ -39,7 +39,7 @@ try {
   $validator = new Validator();
   $validate_data = json_decode(json_encode($data));
   try {
-    if (!($schema = json_decode(file_get_contents(__DIR__ . '/base-config.schema.json')))) {
+    if (!($schema = json_decode(file_get_contents(CLOUDY_ROOT . '/base-config.schema.json')))) {
       throw new \RuntimeException("Invalid JSON in base-config.schema.json");
     }
     if (!$skip_config_validation) {

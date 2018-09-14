@@ -6,7 +6,7 @@
  * Return a configuration value by key.
  */
 
-require_once dirname(__FILE__) . '/_bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 $args = $argv;
 array_shift($args);

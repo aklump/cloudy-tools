@@ -7,9 +7,20 @@
 
 use AKlump\Data\Data;
 
+/**
+ * Root directory of the Cloudy instance script.
+ */
 define('ROOT', $argv[1]);
 
-require_once dirname(__FILE__) . '/vendor/autoload.php';
+/**
+ * The root directory of Cloudy core.
+ *
+ * @var CLOUDY_ROOT
+ */
+define('CLOUDY_ROOT', realpath(__DIR__ . '/../'));
+
+
+require_once CLOUDY_ROOT . '/vendor/autoload.php';
 
 $g = new Data();
 
@@ -112,79 +123,6 @@ function array_sort_by_item_length() {
   });
 
   return array_values($stack);
-}
-
-function _cloudy_bash_typecast_value($value) {
-  if ($value === NULL) {
-    $value = 'null';
-  }
-  if ($value === TRUE) {
-    $value = 'true';
-  }
-  if ($value === FALSE) {
-    $value = 'false';
-  }
-
-  return $value;
-}
-
-/**
- * Ensure proper quotes around a variable value.
- *
- * @param mixed $value
- *   The variable value.
- *
- * @return mixed
- *   The quoted variable value.
- */
-function _cloudy_bash_quote_value($value, $force = FALSE) {
-  $value = str_replace('"', '\"', $value);
-
-  if (!$force && is_numeric($value)) {
-    $value = $value * 1;
-  }
-  if (!$force && in_array($value, ['true', 'false', 'null'])) {
-    $value = $value;
-  }
-  else {
-    $value = '"' . $value . '"';
-  }
-
-  return $value;
-}
-
-/**
- * Create a BASH eval declaration for a variable and value.
- *
- * @param string $var_name
- *   The bash variable name to use.
- * @param mixed $value
- *   The value of the variable.
- *
- * @return string
- *   Code to be used by BASH eval.
- */
-function _cloudy_declare_bash_variable($var_name, $value) {
-  if (is_array($value)) {
-    array_walk($value, function (&$value) {
-      $value = _cloudy_bash_typecast_value($value);
-      // Array values appear to need quotes always.
-      $value = _cloudy_bash_quote_value($value, TRUE);
-    });
-
-    if (empty($value)) {
-      return "declare -a $var_name=()";
-    }
-
-    $open = substr($value[0], 0, 1) === '"' ? '' : '"';
-    $close = substr($value[count($value) - 1], -1) === '"' ? '' : '"';
-
-    return "declare -a $var_name=($open" . implode(' ', $value) . $close . ")";
-  }
-
-  $value = _cloudy_bash_typecast_value($value);
-
-  return $var_name . '=' . _cloudy_bash_quote_value($value);
 }
 
 function _cloudy_realpath($value) {

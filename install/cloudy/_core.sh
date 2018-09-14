@@ -194,19 +194,6 @@ function _cloudy_get_config() {
     echo $code && return 0
 }
 
-##
- # Validate the configuration JSON or do a exit_with_failure.
- #
-function _cloudy_validate_config() {
-    local error
-    error=$(php "$CLOUDY_ROOT/_get_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON")
-    if [ $? -eq 0 ]; then
-      return 0
-    fi
-    write_log_critical "$error"
-    exit_with_failure "Configuration syntax error in $(basename $CLOUDY_CONFIG_JSON)."
-}
-
 function _cloudy_exit() {
     exit $CLOUDY_EXIT
 }
@@ -312,8 +299,9 @@ function _cloudy_validate_against_scheme() {
     local config_path_to_schema=$1
     local name=$2
     local value=$3
+
     local errors
-    echo $(php $CLOUDY_ROOT/_validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
+    echo $(php $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
     return $?
 }
 
@@ -518,13 +506,13 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
     touch $CACHED_CONFIG_FILEPATH || exit_with_failure  "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
 
     # Normalize the config file to JSON.
-    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/_config_to_json.php "$ROOT" "$CONFIG" "$cloudy_development_skip_config_validation")"
-    _cloudy_validate_config
+    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CONFIG" "$cloudy_development_skip_config_validation")"
+    [ $? -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
 
     [[ "$cloudy_development_skip_config_validation" == true ]] && write_log_dev_warning "Configuration validation is disabled due to \$cloudy_development_skip_config_validation == true."
 
     # Convert the JSON to bash config.
-    php "$CLOUDY_ROOT/_generate_bash_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot create cached config filepath"
+    php "$CLOUDY_ROOT/php/generate_bash_config.php" "$ROOT" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot create cached config filepath"
     if [ $? -ne 0 ]; then
         compiled=$(cat  "$CACHED_CONFIG_FILEPATH")
         fail_because "$(IFS="|"; read file reason <<< "$compiled"; echo "$reason")"
