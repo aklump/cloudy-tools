@@ -1,5 +1,36 @@
 #!/usr/bin/env bash
 
+
+function testGetConfigPathAsWorksAsItShould() {
+    # This one handles the realpath portion as the subject involves traversal.
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
+    assert_same "$ROOT/install" $testpath
+
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
+    assert_same "/dev/null" $testpath
+
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
+    assert_same "$ROOT/install" $testpath
+
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
+    assert_same "$ROOT/install/cloudy/cache" $testpath
+}
+
+function testGetConfigPathWorksAsItShould() {
+    # This one handles the realpath portion as the subject involves traversal.
+    eval $(get_config_path 'tests.filepaths.cloudy')
+    assert_same "$ROOT/install" $tests_filepaths_cloudy
+
+    eval $(get_config_path 'tests.filepaths.absolute')
+    assert_same "/dev/null" $tests_filepaths_absolute
+
+    eval $(get_config_path 'tests.filepaths.install')
+    assert_same "$ROOT/install" $tests_filepaths_install
+
+    eval $(get_config_path 'tests.filepaths.cache')
+    assert_same "$ROOT/install/cloudy/cache" $tests_filepaths_cache
+}
+
 function testGetConfigWorksAsExpectedOnAssociativeArray() {
     local result="$(get_config -a "tests.associative_array")"
     assert_same "tests_associative_array_do=\"alpha\";tests_associative_array_re=\"bravo\";tests_associative_array_mi=\"charlie\";" "$result"
@@ -51,38 +82,6 @@ function testGetConfigReturnsIndexedArray() {
     assert_same "declare -a tests_user_images_tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config -a "tests.user.images.tags")"
 
     assert_same "declare -a tests_indexed_array='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config -a "tests.indexed_array")"
-}
-
-function _testGetConfigPathAsWorksAsItShould() {
-
-    # This one handles the realpath portion as the subject involves traversal.
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
-    assert_same "$ROOT/install" $testpath
-
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
-    assert_same "/dev/null" $testpath
-
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
-    assert_same "$ROOT/install" $testpath
-
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
-    assert_same "$ROOT/install/cloudy/cache" $testpath
-}
-
-function _testGetConfigPathWorksAsItShould() {
-
-    # This one handles the realpath portion as the subject involves traversal.
-    eval $(get_config_path 'tests.filepaths.cloudy')
-    assert_same "$ROOT/install" $tests_filepaths_cloudy
-
-    eval $(get_config_path 'tests.filepaths.absolute')
-    assert_same "/dev/null" $tests_filepaths_absolute
-
-    eval $(get_config_path 'tests.filepaths.install')
-    assert_same "$ROOT/install" $tests_filepaths_install
-
-    eval $(get_config_path 'tests.filepaths.cache')
-    assert_same "$ROOT/install/cloudy/cache" $tests_filepaths_cache
 }
 
 function _testArraySortLengthWorksAsExpected() {

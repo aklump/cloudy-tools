@@ -124,18 +124,3 @@ function array_sort_by_item_length() {
 
   return array_values($stack);
 }
-
-function _cloudy_realpath($value) {
-  if (substr($value, 0, 1) === '/') {
-    if (!($path = realpath($value))) {
-      $path = $value;
-    }
-  }
-  else {
-    if (!($path = realpath(ROOT . "/$value"))) {
-      $path = ROOT . "/$value";
-    }
-  }
-
-  return $path;
-}

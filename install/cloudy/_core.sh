@@ -144,10 +144,6 @@ function _cloudy_get_config() {
     [[ "${parse_args__option__a}" == true ]] && default_type='array'
     mutator=${parse_args__option__mutator}
 
-#    if [[ "$mutator" == "_cloudy_realpath" ]]; then
-#        #todo apply mutator
-#    fi
-
     var_value=$(eval "echo "\$$cached_var_name"")
 
     # Todo should we try and autodetect?
@@ -178,6 +174,7 @@ function _cloudy_get_config() {
 
     # It's an array and the keys are being asked for.
     if [[ "$get_array_keys" ]] && [[ "$var_type" =~ _array$ ]]; then
+        #todo mutator for array values.
         code=$(declare -p $cached_var_name_keys)
         code="${code//$cached_var_name=/$var_name=}"
 
@@ -185,14 +182,28 @@ function _cloudy_get_config() {
         code=''
         for key in "${var_keys[@]}"; do
             eval "var_value=\"\$${cached_var_name}___${key}\""
+            #todo mutator for array values.
             code="${code}${var_name}_${key}=\"$var_value\";"
         done
     else
+        if [[ "$mutator" ]]; then
+            eval "$cached_var_name=\$($mutator \$$cached_var_name)"
+        fi
         code=$(declare -p $cached_var_name)
         code="${code//$cached_var_name=/$var_name=}"
     fi
 
     echo $code && return 0
+}
+
+##
+ # Return paths relative to the root or do nothing if absolute.
+ #
+function _cloudy_realpath() {
+    local path="$1"
+    [[ "${path:0:1}" == "/" ]] && echo "$path" && return 0
+    echo $(realpath "$ROOT/$path")
+    return $?
 }
 
 function _cloudy_exit() {
