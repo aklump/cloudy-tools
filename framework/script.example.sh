@@ -6,7 +6,7 @@
 #
 
 # Define the configuration file relative to this script.
-CONFIG="script.example.config.yml";
+CONFIG="script.example.yml";
 
 # Uncomment this line to enable file logging.
 LOGFILE="script.example.log"

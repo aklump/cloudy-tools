@@ -6,22 +6,22 @@
 #
 
 # Define the configuration file relative to this script.
-CONFIG="cloudy.yml";
+CONFIG="cloudy_tools.yml";
 
 # Uncomment this line to enable file logging.
-LOGFILE="install/cloudy/cache/cloudy_installer.log"
+#LOGFILE="~/cloudy_tools.log"
 
 function on_boot() {
 
     # Run the test command before the bootstrap to avoid conflicts.
     [[ "$(get_command)" == "tests" ]] || return 0
     source "$CLOUDY_ROOT/inc/cloudy.testing.sh"
-    do_tests_in "cloudy.tests.sh"
+    do_tests_in "tests/cloudy.tests.sh"
     exit_with_test_results
 }
 
 # Begin Cloudy Bootstrap
-s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/install/cloudy/cloudy.sh"
+s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/framework/cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
 # Input validation
@@ -37,6 +37,7 @@ has_option "h" && exit_with_help $command
 case $command in
 
 "new")
+    framework=$(realpath $CLOUDY_ROOT/..) || exit_with_failure "Missing Cloudy framework"
     basename=$(get_command_arg 0 "cloudy_script.sh")
     script_filename=$(path_filename "$basename")
     config_file="$script_filename.yml"
@@ -48,7 +49,7 @@ case $command in
     [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
 
     if ! has_failed; then
-        rsync -a $ROOT/install/ ./  --exclude=*.log --exclude=cache/ --exclude=*.example.* || fail_because "Could not copy Cloudy core to $WDIR."
+        rsync -a $framework/ ./  --exclude=*.log --exclude=cache/ --exclude=*.example.* || fail_because "Could not copy Cloudy core to $WDIR."
 
         # The stub file script.sh
         mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
@@ -57,10 +58,10 @@ case $command in
 
         # Copy over examples.
         if has_option "examples"; then
-            cp "$ROOT/install/script.example.sh" . || fail_because "Could not copy script.example.sh"
-            cp "$ROOT/install/script.example.config.yml" . || fail_because "Could not copy script.example.config.yml"
+            cp "$framework/script.example.sh" . || fail_because "Could not copy script.example.sh"
+            cp "$framework/script.example.yml" . || fail_because "Could not copy script.example.yml"
 
-            has_option "json" && debug "json" && sed -i '' "s/config.yml/config.json/g" script.example.sh || fail_because "Could not update config filepath in script.example.config.yml."
+            has_option "json" && sed -i '' "s/config.yml/config.json/g" script.example.sh || fail_because "Could not update config filepath in script.example.yml."
         fi
 
         # Convert YAML config files to JSON, if necessary.
@@ -68,8 +69,8 @@ case $command in
             echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "script.yml") > ${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
             [ $? -eq 0 ] && rm script.yml
 
-            echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$WDIR/script.example.config.yml") > script.example.config.json || fail_because "Could not convert script.example.config.yml to JSON"
-            [ $? -eq 0 ] && rm script.example.config.yml
+            echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$WDIR/script.example.yml") > script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
+            [ $? -eq 0 ] && rm script.example.yml
         else
             mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."
         fi

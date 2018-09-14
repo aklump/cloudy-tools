@@ -43,9 +43,9 @@ tests:
     re: bravo
     mi: charlie
   filepaths:
-    install: install
-    cache: install/cloudy/cache
-    cloudy: install/cloudy/..
+    install: framework
+    cache: framework/cloudy/cache
+    cloudy: framework/cloudy/..
     absolute: /dev/null
   user:
     images:

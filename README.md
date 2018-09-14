@@ -48,7 +48,7 @@ Here is a snippet to clone this repo to a directory on your system _$HOME/opt/cl
 
 On success you should see:
 
-⭐  CLOUDY INSTALLER VER 1.0.3
+![Successful installation](images/installed.jpg)
 
 ## Usage
 
