@@ -1,5 +1,5 @@
 title: 'Cloudy Installer'
-version: 1.0.2
+version: 1.0.3
 default_command: help
 commands:
   help:
