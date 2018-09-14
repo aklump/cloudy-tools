@@ -11,10 +11,6 @@
  * @see config_to_json.php
  */
 
-use AKlump\LoftLib\Bash\Configuration;
-
-define('CONFIG_PREFIX', 'cloudy_config');
-
 require_once __DIR__ . '/bootstrap.php';
 
 try {
@@ -26,8 +22,6 @@ try {
   if ($data === NULL) {
     throw new \RuntimeException("Invalid JSON: \"$json\"");
   }
-
-  $var_service = new Configuration(CONFIG_PREFIX);
 
   $context = ['stack' => []];
   $context['stack'][] = "#!/usr/bin/env bash\n";

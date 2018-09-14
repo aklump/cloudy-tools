@@ -5,7 +5,6 @@
  * @file
  * Return a configuration value by key.
  */
-
 require_once __DIR__ . '/bootstrap.php';
 
 $args = $argv;
@@ -21,7 +20,7 @@ if (!function_exists($function)) {
 $result = call_user_func_array($function, $args);
 
 if (is_array($result)) {
-  $eval_code = _cloudy_declare_bash_variable($var_name, $result);
+  $eval_code = $var_service->getVarEvalCode($var_name, $result);
   echo $eval_code;
   exit(0);
 }
