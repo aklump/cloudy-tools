@@ -3,7 +3,7 @@
 
 function testArraySortLengthWorksAsExpected() {
     array_sort_by_item_length__array=("september" "five" "three" "on")
-    eval $(array_sort_by_item_length); assert_exit_status 0
+    array_sort_by_item_length; assert_exit_status 0
     assert_same "on" ${array_sort_by_item_length__array[0]}
     assert_same "five" ${array_sort_by_item_length__array[1]}
     assert_same "three" ${array_sort_by_item_length__array[2]}

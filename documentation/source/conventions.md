@@ -50,20 +50,51 @@ And here is the usage
     array_join__array=("${_config_values[@]}")
     local options="-$(array_join ", -"), --${option}"    
 
-* The same is true if the function has to **return an array**.
-* If a single function operates on more than one array, then the suffix should be modified as necessary.  `_cloudy_parse_option_arguments` is a good example.  You still want the suffix to begin with two underscores.
+However, if a single function operates on more than one array, then the suffix should be modified as necessary.  Look at `_cloudy_parse_option_arguments` for a good example.  You still want the suffix to begin with two underscores.
+
+
+### Functions that return an array
+The same naming conventions apply, if the function has to "return" an array, which, in BASH means it _sets_ or _mutates_ a global array.
+
+Beware of a scope issue for functions that use `eval` to set or mutate.  This first example does not work, because `eval` doesn't affect the value of a global variable, even if said variable was already defined outside of the function.  My understanding is that  `eval` creates [local variables by definition](https://stackoverflow.com/questions/40079054/eval-variable-assignment-in-a-bash-function-causes-variable-to-be-local) when called within a function.
+
+    function array_sort_by_item_length() {
+        local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+
+        # note: [ $eval = 'declare -a array_sort_by_item_length__array=("on" "five" "three" "september")' ]
+        # Notice the eval code aims to mutate $array_sort_by_item_length__array
+        # Even though $array_sort_by_item_length__array was already global, the eval doesn't not mutate the global value.
+        
+        eval $eval
+        ...
+    }
+
+Here is the fix to make it work:
+
+    function array_sort_by_item_length() {
+        local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+        
+        eval $eval
+        
+        # note: [ $eval = 'declare -a sorted=("on" "five" "three" "september")' ]
+        # It's the following assignment here that makes it work.
+        array_sort_by_item_length__array=("${sorted[@]}")
+        
+        ...
+    }    
+    
 
 ### Name your function arguments
 
 To make your code more readible, the first line(s) of a function should name the function arguments.  Declare them as `local`.  Then follow with a blank space, after which you begin the process of the function.
 
     function get_config() {
-        local config_key_path=$1
+        local config_key_path="$1"
         local default_value="$2"
         
         # Now do the function stuff...
 
-### Declare local variables near the top
+### Next, declare local variables just below that
 
 Group all local variable names below arguments and declare them there rather than deeper in the function where they are used.  Even if no default values, declare them here anyway.
 

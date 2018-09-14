@@ -216,17 +216,19 @@ function array_sort() {
 }
 
 ##
- # Sort a stack based on length of values.
+ # Sort and mutate an array based on length of values.
  #
  # @code
- #
+ #  array_sort_by_item_length__array=("september" "five" "three" "on")
+ #  array_sort_by_item_length
  # @endcode
  #
 function array_sort_by_item_length() {
-    local custom_var_name="${1:-array_sort_by_item_length__array}"
-    local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "$custom_var_name" "${array_sort_by_item_length__array[@]}")
+    local sorted
+    local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
     result=$?
-    echo "$eval"
+    eval $eval
+    array_sort_by_item_length__array=("${sorted[@]}")
     return $result
 }
 
