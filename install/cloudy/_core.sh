@@ -11,6 +11,7 @@ function _cloudy_define_cloudy_vars() {
 }
 
 function _cloudy_bootstrap_translations() {
+    # todo Document this and add to schema.
     eval $(get_config_as "CLOUDY_LANGUAGE" "language" "en")
 
     # todo may not need to do these two?
@@ -481,7 +482,6 @@ done
 # Define shared variables
 declare -a CLOUDY_FAILURES=()
 declare -a CLOUDY_SUCCESSES=()
-declare -a CLOUDY_STACK=()
 CLOUDY_EXIT_STATUS=0
 
 #

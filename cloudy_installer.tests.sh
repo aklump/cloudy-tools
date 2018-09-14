@@ -219,7 +219,10 @@ function testGetVersionIsNotEmpty() {
 }
 
 function testCloudyParseOptionsArgsWorksAsExpected() {
-    parse_args init --file=index.php -y dev -abc
+    parse_args init --file=index.php -y dev -abc -t=free --yellow
+
+    assert_array_has_key 't' 'parse_args__options'
+    assert_array_has_key 'yellow' 'parse_args__options'
 
     assert_array_has_key 'file' 'parse_args__options'
     assert_array_has_key 'y' 'parse_args__options'
@@ -233,10 +236,12 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     assert_array_not_has_key 'a' 'parse_args__args'
 
     assert_same 'index.php' $parse_args__option__file
+    assert_same 'free' $parse_args__option__t
     assert_same true $parse_args__option__y
     assert_same true $parse_args__option__a
     assert_same true $parse_args__option__b
     assert_same true $parse_args__option__c
+    assert_same true $parse_args__option__yellow
 
     # Now call again and make sure the old values are cleared out
     parse_args help

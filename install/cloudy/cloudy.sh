@@ -85,26 +85,34 @@ function parse_args() {
 
     # Set the new values.
     for arg in "$@"; do
-      if [[ "$arg" =~ ^--(.*) ]]; then
-        name="${BASH_REMATCH[1]}"
-        value=true
-        if [[ "$name" =~ ^(.*)=(.*)$ ]]; then
-            name="${BASH_REMATCH[1]}"
-            value="${BASH_REMATCH[2]}"
+        if ! [[ "$arg" =~ ^(-{1,2})(.+)$ ]]; then
+            parse_args__args=("${parse_args__args[@]}" "$arg")
+            continue
         fi
-        parse_args__options=("${parse_args__options[@]}" "$name")
-        eval "parse_args__option__${name}=${value}"
-        parse_args__options_passthru="$parse_args__options_passthru $arg"
-      elif [[ "$arg" =~ ^-(.*) ]]; then
-        options=($(echo "${BASH_REMATCH[1]}" | grep -o .))
-        for name in "${options[@]}"; do
+
+        # a=1, dog=bark
+        if [[ ${BASH_REMATCH[2]} = *"="* ]]; then
+            [[ ${BASH_REMATCH[2]} =~ (.+)=(.+) ]]
+            name=${BASH_REMATCH[1]}
+            value=${BASH_REMATCH[2]}
+
             parse_args__options=("${parse_args__options[@]}" "$name")
-            eval "parse_args__option__${name}=true"
-            parse_args__options_passthru="$parse_args__options_passthru -${name}"
-        done
-      else
-        parse_args__args=("${parse_args__args[@]}" "$arg")
-      fi
+            eval "parse_args__option__${name}=${value}"
+            parse_args__options_passthru="$parse_args__options_passthru $arg"
+
+        # bc, tree
+        else
+            if [ ${#BASH_REMATCH[1]} -gt 1 ]; then
+                options=("${BASH_REMATCH[2]}")
+            else
+                options=($(echo "${BASH_REMATCH[2]}" | grep -o .))
+            fi
+            for name in "${options[@]}"; do
+                parse_args__options=("${parse_args__options[@]}" "$name")
+                eval "parse_args__option__${name}=true"
+                parse_args__options_passthru="$parse_args__options_passthru -${name}"
+            done
+        fi
     done
 }
 
