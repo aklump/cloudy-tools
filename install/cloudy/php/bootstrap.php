@@ -19,103 +19,19 @@ define('ROOT', $argv[1]);
  */
 define('CLOUDY_ROOT', realpath(__DIR__ . '/../'));
 
-
 require_once CLOUDY_ROOT . '/vendor/autoload.php';
 
 $g = new Data();
 
 /**
- * Get a nested value using $path.
+ * Sort an array by the length of it's values.
  *
- * @param array $config
- *   A nested configuration array.
- * @param string|array $path
- *   A space-delimited path to the config value.
+ * @param string ...
+ *   Any number of items to be taken as an array.
  *
- * @return mixed
- *   The value of the configuration
- *
- * @throws \RuntimeException
- *   When the configuration is not found.
+ * @return array
+ *   The sorted array
  */
-function get_value(array $config, $path, $context = []) {
-  $path = is_string($path) ? explode('.', $path) : $path;
-  $key = array_shift($path);
-  $context['parents'][] = $key;
-
-  if ($path) {
-    $value = isset($config[$key]) ? $config[$key] : [];
-
-    return get_value($value, $path, $context);
-  }
-
-  $value = isset($config[$key]) ? $config[$key] : $context['default'];
-
-  if (!empty($context['mutator']) && function_exists($context['mutator'])) {
-    if (is_array($value)) {
-      $value = array_map($context['mutator'], $value);
-    }
-    else {
-      $value = $context['mutator']($value);
-    }
-  }
-
-  $var_name = $context['var_name'];
-
-  $value_type = gettype($value);
-  switch ($value_type) {
-    case 'NULL':
-      $value = "$var_name=null";
-      break;
-
-    case 'boolean':
-      $value = $value ? 'true' : 'false';
-      $value = "$var_name=$value";
-      break;
-
-    case 'object':
-      $value = $value->__toString();
-      $value = "$var_name=\"$value\"";
-      break;
-
-    case 'array':
-      if (empty($value)) {
-        $value = 'declare -a ' . $var_name . '=()';
-      }
-      elseif (is_numeric(key($value))) {
-        $value = 'declare -a ' . $var_name . '=("' . implode('" "', $value) . '")';
-      }
-      elseif ($context['array_keys']) {
-        $value = 'declare -a ' . $var_name . '=("' . implode('" "', array_keys($value)) . '")';
-      }
-      else {
-        $suffix = [];
-        foreach ($value as $k => $v) {
-          if (is_scalar($v)) {
-            $suffix[] = "{$var_name}_{$k}=\"$v\"";
-          }
-        }
-        $suffix = implode(';', $suffix);
-        $value = "${var_name}=true";
-      }
-      break;
-
-    case 'integer':
-    case 'double':
-      $value = "$var_name=$value";
-      break;
-
-    case 'string':
-      $value = "$var_name=\"$value\"";
-      break;
-  }
-
-  return implode('|', [
-    $var_name,
-    $value,
-  ]);
-}
-
 function array_sort_by_item_length() {
   $stack = func_get_args();
   uasort($stack, function ($a, $b) {

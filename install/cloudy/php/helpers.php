@@ -14,6 +14,7 @@ $function = array_shift($args);
 $var_name = array_shift($args);
 
 if (!function_exists($function)) {
+  echo "Missing function \"$function\".";
   exit(1);
 }
 
