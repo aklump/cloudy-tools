@@ -20,7 +20,10 @@ function on_boot() {
 }
 
 function rsync_framework() {
-    [[ "$framework" ]] && rsync -a $framework/ ./  --exclude=*.log --exclude=cache/ --exclude=*.example.*
+    [[ "$framework" ]] || return 1
+    rsync -a $framework/cloudy/ ./cloudy  --exclude=*.log --exclude=cache/
+    cp $framework/script.sh ./
+    cp $framework/script.yml ./
 }
 
 function write_version_file() {
@@ -43,14 +46,13 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # Input validation
 validate_input || exit_with_failure "Something didn't work..."
 
-command=$(get_command)
-
 implement_cloudy_basic
 
 framework=$(realpath $CLOUDY_ROOT/..) || exit_with_failure "Missing Cloudy framework"
 installation_info_filepath="$WDIR/cloudy/version.sh"
 
 # Handle other commands.
+command=$(get_command)
 case $command in
 
     "flush")
@@ -115,7 +117,9 @@ case $command in
                 cp "$framework/script.example.sh" . || fail_because "Could not copy script.example.sh"
                 cp "$framework/script.example.yml" . || fail_because "Could not copy script.example.yml"
 
-                has_option "json" && sed -i '' "s/config.yml/config.json/g" script.example.sh || fail_because "Could not update config filepath in script.example.yml."
+                if has_option "json"; then
+                    sed -i '' "s/script.example.yml/script.example.json/g" script.example.sh || fail_because "Could not update config filepath in script.example.sh."
+                fi
             fi
 
             # Convert YAML config files to JSON, if necessary.
@@ -136,6 +140,9 @@ case $command in
 
             # Backout our files on failure.
             if has_failed; then
+                [ -e "script.example.sh" ] && rm "script.example.sh"
+                [ -e "script.example.yml" ] && rm "script.example.yml"
+                [ -e "script.example.json" ] && rm "script.example.json"
                 [ -e $basename ] && rm $basename
                 [ -e $config_file ] && rm $config_file
                 [ -e cloudy ] && rm -r cloudy
