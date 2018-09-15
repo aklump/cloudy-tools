@@ -1,39 +1,49 @@
-title: 'Cloudy Tools'
+title: Cloudy Tools
 version: 1.0.3
 default_command: help
 commands:
   help:
-    help: 'Show this help screen.'
+    help: Show this help screen.
+  cc:
+    help: Clear the Cloudy Tools caches.
+  flush:
+    help: Flush all cached data for the current directory's cloudy scripts.
+  update:
+    help: Update a cloudy framework in the current directory.  The version is updated to the version being used by cloudy_tools.sh, not pulled from the internet.  If you installed Cloudy Tools using Git, then you need only to a git pull in $HOME/opt/cloudy to update.
+    options:
+      dry-run:
+        help: Show what will be happen, but don't do anything.
+        type: boolean
   new:
-    help: 'Create a new script using Cloudy.'
+    help: Create a new script using Cloudy.
     arguments:
       basename:
-        help: 'The basename of the script to create.'
+        help: The basename of the script to create.
     options:
       json:
         type: boolean
-        help: 'Use JSON configuration.'
+        help: Use JSON configuration.
       yaml:
         type: boolean
-        help: 'Use YAML configuration. This is the default.'
+        help: Use YAML configuration. This is the default.
       force:
         type: boolean
         aliases: [f]
-        help: 'Overwrite an existing script.'
+        help: Overwrite an existing script.
       examples:
         type: boolean
         aliases: [e]
-        help: 'Create a demo as script.example.sh'
+        help: Create a demo as script.example.sh
       help:
         type: boolean
-        help: 'Show help for command "new".'
+        help: Show help for command "new".
         aliases: [h]
   tests:
-    help: 'Run Cloudy''s core unit tests.'
+    help: Run Cloudy's core unit tests.
 
 # These are used by the 'tests' command.
 tests:
-  string: 'Adam ate apples at Andrew''s abode.'
+  string: Adam ate apples at Andrew's abode.
   indexed_array:
     - alpha
     - bravo

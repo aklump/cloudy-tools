@@ -433,7 +433,7 @@ function _cloudy_validate_command() {
     eval $(get_config_keys "commands")
     array_has_value__array=(${commands[@]})
     array_has_value "$command" && return 0
-    fail_because "You have called $(basename $SCRIPT) using a command, \"$command\", which does not exist."
+    fail_because "You have called $(basename $SCRIPT) using the command \"$command\", which does not exist."
     return 1
 }
 
@@ -473,7 +473,6 @@ function _cloudy_write_log() {
     test -d "$directory" || mkdir -p "$directory"
     touch "$LOGFILE"
     echo "[$(date)] [$level] $@" >> "$LOGFILE"
-#    echo "[$(date)] [$level] [$(whoami)] $@" >> "$LOGFILE"
 }
 
 function _cloudy_trigger_event() {
@@ -524,7 +523,7 @@ CACHED_CONFIG_FILEPATH="$CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
 CACHED_CONFIG_MTIME_FILEPATH="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
 
 # Ensure the configuration cache environment is present and writeable.
-if [ -d "$CACHE_DIR" ]; then
+if [ ! -d "$CACHE_DIR" ]; then
     mkdir -p "$CACHE_DIR" || exit_with_failure "Unable to create cache folder: $CACHE_DIR"
 fi
 
