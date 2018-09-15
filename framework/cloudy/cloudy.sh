@@ -163,7 +163,7 @@ function get_command() {
         array_has_value "$command" && echo $c && return 0
     done
 
-    return 1
+    echo $command && return 1
 }
 
 ##
