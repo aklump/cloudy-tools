@@ -223,9 +223,9 @@ function _cloudy_message() {
     local suffix=$3
 
     if [[ "$override" ]]; then
-      echo ${override%.}${suffix%.}. && return 0
+      echo ${override%.}${suffix} && return 0
     fi
-    echo ${default%.}${suffix%.}. && return 2
+    echo ${default%.}${suffix} && return 2
 }
 
 function _cloudy_echo_color() {
