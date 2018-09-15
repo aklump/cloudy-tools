@@ -476,6 +476,16 @@ function _cloudy_write_log() {
 #    echo "[$(date)] [$level] [$(whoami)] $@" >> "$LOGFILE"
 }
 
+function _cloudy_trigger_event() {
+    local hook_name="on_${1}"
+
+    shift
+    if [[ "$(type -t $hook_name)" == "function" ]]; then
+        eval $hook_name $@ || return 1
+    fi
+    return 0
+}
+
 #
 # Begin Core Controller Section.
 #
@@ -550,10 +560,7 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 # End caching setup
 #
 
-if [[ $(type -t on_boot) == "function" ]]; then
-    on_boot
-fi
-
+_cloudy_trigger_event "boot" || exit_with_failure "Could not bootstrap $(get_title)"
 _cloudy_bootstrap $@
 
 
