@@ -22,23 +22,26 @@
 
 <section>
 
-<h2>on_boot</h2>
-
-<p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>tests</code> path in <em>cloudy_installer.sh</em>.</p>
+<ul>
+<li><p>Event handlers are functions that must be defined before the Cloudy bootstrap.</p>
 
 <pre><code>#!/usr/bin/env bash
 
 ...
 
-function on_boot() {
-    [[ "$1" == "tests" ]] || return 0
-    do_tests_in "cloudy_installer.tests.sh"
-    exit_with_test_results
-}
+#
+# Define all event handlers here.
+#
 
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while ...
-</code></pre>
+</code></pre></li>
+<li><p>To see the available events look at <em>framework/cloudy.events.sh</em>.</p></li>
+</ul>
+
+<h2>on_boot</h2>
+
+<p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>tests</code> path in <em>cloudy_installer.sh</em>.</p>
 </section>
 
 <div class="search__results">
@@ -53,7 +56,7 @@ s="${BASH_SOURCE[0]}";while ...
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.3 &bull; Last Updated: Fri, 14 Sep 2018 12:11:43 -0700</p>
+    <p class="legaleeze center">Version: 1.0.3 &bull; Last Updated: Fri, 14 Sep 2018 18:44:04 -0700</p>
   </div>
 </footer>
 

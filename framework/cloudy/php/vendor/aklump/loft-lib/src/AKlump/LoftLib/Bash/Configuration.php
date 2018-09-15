@@ -128,6 +128,7 @@ class Configuration {
    *   Code to be used by BASH eval.
    */
   public function getVarEvalCode($var_name, $value) {
+    $var_name = str_replace('-', '_', $var_name);
     if (is_array($value)) {
       array_walk($value, function (&$value) {
         $value = static::typecast($value);

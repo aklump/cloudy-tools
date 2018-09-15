@@ -82,6 +82,22 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
 
     $tests[] = array(
       [
+        'declare -a config_keys=("options")',
+        'declare -a config_keys___options=("dry-run")',
+        'declare -a config_keys___options___dry_run=("help")',
+        'config___options___dry_run___help="bla bla"',
+      ],
+      [
+        'options' => [
+          'dry-run' => [
+            'help' => 'bla bla',
+          ],
+        ],
+      ],
+    );
+
+    $tests[] = array(
+      [
         'declare -a config_keys=("images")',
         'declare -a config_keys___images=("types")',
         'declare -a config_keys___images___types=("bitmap")',
