@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+##
+ # Determine if a given directory has any files in it.
+ #
+function dir_has_files() {
+    local path_to_dir="$1"
+
+    [ -d "$path_to_dir" ] && [[ "$(ls "$path_to_dir")" ]]
+}
+
 function get_title() {
     local default="$1"
 
