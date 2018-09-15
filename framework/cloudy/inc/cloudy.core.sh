@@ -430,9 +430,18 @@ function _cloudy_validate_command() {
 
     local commands
 
+    # See if it's a master command.
     eval $(get_config_keys "commands")
     array_has_value__array=(${commands[@]})
     array_has_value "$command" && return 0
+
+    # Look for command as an alias.
+    for c in "${commands[@]}"; do
+        eval $(get_config_as -a "aliases" "commands.$c.aliases")
+        array_has_value__array=(${aliases[@]})
+        array_has_value "$command" && return 0
+    done
+
     fail_because "You have called $(basename $SCRIPT) using the command \"$command\", which does not exist."
     return 1
 }

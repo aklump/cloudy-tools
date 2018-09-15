@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+function testValidateCommandWorksForMasterCommandsAndAliases() {
+    _cloudy_validate_command "clear-cache" ;assert_exit_status 0
+    _cloudy_validate_command "clearcache" ;assert_exit_status 0
+    _cloudy_validate_command "cc" ;assert_exit_status 0
+}
+
 function testTimestamp() {
     assert_same "$(date +%s)" "$(timestamp)"
 }
