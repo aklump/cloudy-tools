@@ -19,7 +19,6 @@ function on_boot() {
     exit_with_test_results
 }
 
-
 function rsync_framework() {
     [[ "$framework" ]] && rsync -a $framework/ ./  --exclude=*.log --exclude=cache/ --exclude=*.example.*
 }

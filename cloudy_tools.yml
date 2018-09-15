@@ -4,7 +4,8 @@ default_command: help
 commands:
   help:
     help: Show this help screen.
-  cc:
+  clear-cache:
+    aliases: [clearcache, cc]
     help: Clear the Cloudy Tools caches.
   flush:
     help: Flush all cached data for the current directory's cloudy scripts.

@@ -140,10 +140,30 @@ function has_command() {
 }
 
 function get_command() {
-    [ ${#CLOUDY_ARGS[0]} -gt 0 ] && echo ${CLOUDY_ARGS[0]} && return 0
-    local default_command
-    eval $(get_config default_command)
-    echo $default_command && return 2
+    local command
+    local c
+
+    # Return default if no command given.
+    if [ ${#CLOUDY_ARGS[0]} -eq 0 ]; then
+        eval $(get_config_as "command" "default_command")
+        echo $command && return 2
+    fi
+
+    command="${CLOUDY_ARGS[0]}"
+
+    # See if it's a master command.
+    eval $(get_config_keys "commands")
+    array_has_value__array=(${commands[@]})
+    array_has_value "$command" && echo $command && return 0
+
+    # Look for command as an alias.
+    for c in "${commands[@]}"; do
+        eval $(get_config_as -a "aliases" "commands.$c.aliases")
+        array_has_value__array=(${aliases[@]})
+        array_has_value "$command" && echo $c && return 0
+    done
+
+    return 1
 }
 
 ##
@@ -520,9 +540,10 @@ function implement_cloudy_basic() {
             exit_with_help $(get_command_arg 0)
             ;;
 
-        "cc")
+        "clear-cache")
             exit_with_cache_clear
             ;;
+
     esac
 }
 ##

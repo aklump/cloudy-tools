@@ -11,6 +11,9 @@
         "command": {
             "type": "object",
             "properties": {
+                "aliases": {
+                    "type": "array"
+                },
                 "help": {
                     "$ref": "#/definitions/help"
                 },
@@ -35,11 +38,11 @@
         "argument": {
             "type": "object",
             "properties": {
-                "help": {
-                    "$ref": "#/definitions/help"
-                },
                 "aliases": {
                     "type": "array"
+                },
+                "help": {
+                    "$ref": "#/definitions/help"
                 }
             },
             "additionalProperties": false,
@@ -50,6 +53,9 @@
         "option": {
             "type": "object",
             "properties": {
+                "aliases": {
+                    "type": "array"
+                },
                 "help": {
                     "$ref": "#/definitions/help"
                 },
@@ -57,9 +63,6 @@
                     "type": "string"
                 },
                 "enum": {
-                    "type": "array"
-                },
-                "aliases": {
                     "type": "array"
                 }
             },
