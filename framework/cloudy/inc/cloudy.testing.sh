@@ -51,7 +51,6 @@ function exit_with_test_results() {
     echo "Runtime: BASH $BASH_VERSION"
     echo
     echo
-    echo
 
     [ $CLOUDY_TEST_COUNT -eq 0 ] && echo_key_value "?" "No tests found."
     [ $CLOUDY_ASSERTION_COUNT -eq 0 ] && echo_key_value "?" "No assertions found."
