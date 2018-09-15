@@ -253,7 +253,7 @@ function _cloudy_echo_list() {
     local color_bullets=$2
     local bullet
     local item
-    for i in "${echo_list_array[@]}"; do
+    for i in "${echo_list__array[@]}"; do
         bullet="$LI"
         if [[ "$color_bullets" ]]; then
             bullet=$(_cloudy_echo_color $color_bullets "$LI")
@@ -283,12 +283,33 @@ function _cloudy_exit_with_success() {
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_SUCCESSES[@]} -gt 0 ]; then
-        echo_list_array=("${CLOUDY_SUCCESSES[@]}")
+        echo_list__array=("${CLOUDY_SUCCESSES[@]}")
         echo_blue_list
     fi
 
     echo
     CLOUDY_EXIT_STATUS=0 && _cloudy_exit
+}
+
+##
+ # Echo command or command alias' target.
+ #
+function _cloudy_get_master_command() {
+    local command_or_alias="$1"
+
+    # See if it's a master command.
+    eval $(get_config_keys "commands")
+    array_has_value__array=(${commands[@]})
+    array_has_value "$command_or_alias" && echo $command_or_alias && return 0
+
+    # Look for command as an alias.
+    for c in "${commands[@]}"; do
+        eval $(get_config_as -a "aliases" "commands.$c.aliases")
+        array_has_value__array=(${aliases[@]})
+        array_has_value "$command_or_alias" && echo $c && return 0
+    done
+
+    return 1
 }
 
 ##
@@ -333,13 +354,13 @@ function _cloudy_help_commands() {
     eval $(get_config_keys "commands")
     for help_command in "${commands[@]}"; do
         eval $(get_config_as 'help' "commands.$help_command.help")
-        echo_list_array=("${echo_list_array[@]}" "$(echo_green "${help_command}") $help")
+        echo_list__array=("${echo_list__array[@]}" "$(echo_green "${help_command}") $help")
     done
     echo_list
 }
 
 function _cloudy_help_for_single_command() {
-    local command_help_topic="$1"
+    local command_help_topic=$1
 
     local arguments
     local options
@@ -355,28 +376,34 @@ function _cloudy_help_for_single_command() {
     eval $(get_config_keys_as 'arguments' -a "commands.${command_help_topic}.arguments")
     eval $(get_config_keys_as -a 'options' "commands.${command_help_topic}.options")
 
-    usage="$(basename $SCRIPT) $command_help_topic"
-
-    [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"
-    [ ${#options} -gt 0 ] && usage="$usage <options>"
-
     echo_headline "Help Topic: $command_help_topic"
 
     eval $(get_config_as 'help' "commands.${command_help_topic}.help")
     echo_green "$help"
     echo
 
+    usage="./$(basename $SCRIPT) CMD"
+    [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"
+    [ ${#options} -gt 0 ] && usage="$usage <options>"
+
+    # Generate a list of command + aliases.
+    eval $(get_config_as 'usage_commands' "commands.${command_help_topic}.aliases")
+    usage_commands=("$command_help_topic" ${usage_commands[@]})
+    for usage_command in "${usage_commands[@]}"; do
+        echo_list__array=("${echo_list__array[@]}" "${usage/CMD/$usage_command}")
+    done
     echo_yellow "Usage:"
-    echo $LIL $(echo_green "$usage") && echo
+    echo_list
+    echo
 
     # The arguments.
     if [ ${#arguments} -gt 0 ]; then
         echo_yellow "Arguments:"
-        echo_list_array=()
+        echo_list__array=()
 
         for help_argument in "${arguments[@]}"; do
             eval $(get_config_as 'help' "commands.${command_help_topic}.arguments.${help_argument}.help")
-            echo_list_array=("${echo_list_array[@]}" "$(echo_green "$help_argument") $help")
+            echo_list__array=("${echo_list__array[@]}" "$(echo_green "$help_argument") $help")
         done
         echo_list
         echo
@@ -385,7 +412,7 @@ function _cloudy_help_for_single_command() {
     # The options.
     if [ ${#options} -gt 0 ]; then
         echo_yellow "Available options:"
-        echo_list_array=()
+        echo_list__array=()
 
         for option in "${options[@]}"; do
 
@@ -419,7 +446,7 @@ function _cloudy_help_for_single_command() {
 
             eval $(get_config_as 'help' "commands.${command_help_topic}.options.${option}.help")
 
-            echo_list_array=("${echo_list_array[@]}" "$(echo_green "$help_options") $help")
+            echo_list__array=("${echo_list__array[@]}" "$(echo_green "$help_options") $help")
         done
         echo_list
     fi

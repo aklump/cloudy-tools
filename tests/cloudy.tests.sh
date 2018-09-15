@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function testCloudyGetMasterCommand() {
+    assert_same "new" "$(_cloudy_get_master_command "new")"
+    assert_same "clear-cache" "$(_cloudy_get_master_command "clear-cache")"
+    assert_same "clear-cache" "$(_cloudy_get_master_command "clearcache")"
+    assert_same "clear-cache" "$(_cloudy_get_master_command "cc")"
+}
+
 function testValidateCommandWorksForMasterCommandsAndAliases() {
     _cloudy_validate_command "clear-cache" ;assert_exit_status 0
     _cloudy_validate_command "clearcache" ;assert_exit_status 0

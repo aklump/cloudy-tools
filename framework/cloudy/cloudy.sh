@@ -236,7 +236,8 @@ function array_split() {
  # Join a stack into an array with delimiter.
  #
 function array_join() {
-    local glue=$1
+    local glue="$1"
+
     local string
     string=$(printf "%s$glue" "${array_join__array[@]}") && string=${string%$glue} || return 1
     echo $string
@@ -469,11 +470,11 @@ function echo_headline() {
 ##
  # Echo an array as a bulletted list.
  #
- # @param $echo_list_array
+ # @param $echo_list__array
  #
- # You must provide your list array as $echo_list_array like so:
+ # You must provide your list array as $echo_list__array like so:
  # @code
- #   echo_list_array=("${some_array_to_echo[@]}")
+ #   echo_list__array=("${some_array_to_echo[@]}")
  #   echo_list
  # @endcode
  #
@@ -482,28 +483,28 @@ function echo_list() {
 }
 
 ##
- # @param $echo_list_array
+ # @param $echo_list__array
  #
 function echo_red_list() {
     _cloudy_echo_list 1 1
 }
 
 ##
- # @param $echo_list_array
+ # @param $echo_list__array
  #
 function echo_green_list() {
     _cloudy_echo_list 2 2
 }
 
 ##
- # @param $echo_list_array
+ # @param $echo_list__array
  #
 function echo_yellow_list() {
     _cloudy_echo_list 3 3
 }
 
 ##
- # @param $echo_list_array
+ # @param $echo_list__array
  #
 function echo_blue_list() {
     _cloudy_echo_list 4 4
@@ -567,7 +568,7 @@ function exit_with_cache_clear() {
 
 
 function exit_with_help() {
-    local help_command=$1
+    local help_command=$(_cloudy_get_master_command "$1")
 
     _cloudy_echo_credits
 
@@ -619,7 +620,7 @@ function exit_with_failure() {
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_FAILURES[@]} -gt 0 ]; then
-        echo_list_array=("${CLOUDY_FAILURES[@]}")
+        echo_list__array=("${CLOUDY_FAILURES[@]}")
         echo_red_list
         for i in "${CLOUDY_FAILURES[@]}"; do
            write_log_error "Failed because: $i"

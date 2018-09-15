@@ -4,5 +4,6 @@ default_command: help
 commands:
   help:
     help: Show this help screen.
-  cc:
-    help: Clear caches
+  clear-cache:
+    aliases: [clearcache, cc]
+    help: Clear the Cloudy Tools caches.
