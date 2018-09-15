@@ -132,6 +132,7 @@ function _cloudy_get_config() {
     parse_args $@
     config_path=${parse_args__args[0]}
     cached_var_name="cloudy_config___${config_path//./___}"
+    cached_var_name=${cached_var_name/-/_}
 
     # This is the name of the variable containing the keys for $cached_var_name
     cached_var_name_keys=${cached_var_name/cloudy_config___/cloudy_config_keys___}
