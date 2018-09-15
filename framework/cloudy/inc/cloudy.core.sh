@@ -8,6 +8,8 @@ function _cloudy_define_cloudy_vars() {
     # todo Can we move more things here, or would that break scope?
     LI="├──"
     LIL="└──"
+    LI2="│   $LI"
+    LIL2="│   $LIL"
 }
 
 function _cloudy_bootstrap_translations() {
