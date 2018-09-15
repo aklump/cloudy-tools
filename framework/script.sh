@@ -23,20 +23,20 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 validate_input || exit_with_failure "Something didn't work..."
 command=$(get_command)
 
-# Handle help.
-has_option "h" && exit_with_help $command
-[[ "$command" == "help" ]] && exit_with_help $(get_command_arg 0)
+implement_cloudy_basic
 
 # Handle other commands.
 case $command in
-    *)
+
+    "command")
 
     #
-    # Begin building your code here.
+    # Begin building your command code here.
     #
 
+    has_failed && exit_with_failure
+    exit_with_success
     ;;
 esac
 
-has_failed && exit_with_failure
 throw "Unhandled command \"$command\"".

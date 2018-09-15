@@ -4,3 +4,5 @@ default_command: help
 commands:
   help:
     help: Show this help screen.
+  cc:
+    help: Clear caches

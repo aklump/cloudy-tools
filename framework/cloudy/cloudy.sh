@@ -493,6 +493,49 @@ function echo_elapsed() {
 # @link https://www.tldp.org/LDP/abs/html/exit-status.html
 #
 
+##
+ # Implement cloudy common commands and options.
+ #
+ # An optional set of commands for all scripts.  This is just the handlers,
+ # you must still set up the commands in the config file as usual.
+ #
+function implement_cloudy_basic() {
+
+    # Handle options on any command.
+    has_option "h" && exit_with_help $command
+
+    # Handle certain commands.
+    case $(get_command) in
+
+        "help")
+            exit_with_help $(get_command_arg 0)
+            ;;
+
+        "cc")
+            exit_with_cache_clear
+            ;;
+    esac
+}
+##
+ # Empties caches in $CLOUDY_ROOT or other directory if provided.
+ #
+function exit_with_cache_clear() {
+    local cloudy_dir="${1:-$CLOUDY_ROOT}"
+    _cloudy_trigger_event "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
+    if dir_has_files "$cloudy_dir/cache"; then
+        clear=$(rm -rv "$cloudy_dir/cache/"*)
+        status=$?
+        [ $status -eq 0 ] || exit_with_failure "Could not remove all cached files in $cloudy_dir"
+        file_list=($clear)
+        for i in "${file_list[@]}"; do
+           succeed_because "$(echo_green "$(basename $i)")"
+        done
+        exit_with_success "Caches have been cleared."
+    fi
+    exit_with_success "Caches are clear."
+}
+
+
 function exit_with_help() {
     local help_command=$1
 
