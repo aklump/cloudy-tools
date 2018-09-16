@@ -122,7 +122,7 @@
                 "strings": {
                     "type": "object",
                     "patternProperties": {
-                        "^\\S{2}$": {
+                        "^\\S{2,3}$": {
                             "type": [
                                 "null",
                                 "array"
