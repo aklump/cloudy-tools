@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Localization/Translation</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--localize">
+<header>
+  <div class="pager">
+  <a href="events.html" class="prev events">&laquo;Events</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="logging.html" class="next logging">Logging to File&raquo;</a>
+</div>
+</header>
+
+
+  <h1>Localization/Translation</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<h2>Translate or reword</h2>
+
+<p>You can translate or reword certain strings with this feature</p>
+
+<pre><code>translate:
+  ids:
+  - Completed successfully.
+  - Failed.
+  strings:
+    en:
+    - Installation succeeded.
+    - Installation failed.
+</code></pre>
+
+<ul>
+<li>The ids are the strings that appear normally.</li>
+<li>To begin a translation, copy the entire ids array as <code>translate.strings.LANG</code> and then alter the strings you mean to.  The value of <code>LANG</code> must be a <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php">two or three letter ISO 639 language code</a>.</li>
+<li>The indexes of the ids array must match with the <code>translate.strings.LANG</code> array.</li>
+</ul>
+
+<h2>Implementation</h2>
+
+<p>To implement localization in a script, do like this:</p>
+
+<pre><code> echo_headline $(translate "Welcome to your new script!")
+</code></pre>
+
+<p>Then add that to <code>translate.ids</code>:</p>
+
+<pre><code>translate:
+  ids:
+  - Completed successfully.
+  - Failed. 
+  - Welcome to your new script!    
+</code></pre>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="events.html" class="prev events">&laquo;Events</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="logging.html" class="next logging">Logging to File&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0.3 &bull; Last Updated: Sat, 15 Sep 2018 20:06:14 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

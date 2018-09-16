@@ -11,6 +11,7 @@ Cloudy Boosts the following features:
 * Clean configuration options (YAML, JSON) for your scripts
 * A BASH Unit Testing framework inspired by [PHPUnit](https://phpunit.de)
 * Auto-generated help output
+* Support for multilingual localization
 
 **Visit <https://aklump.github.io/cloudy> for full documentation.**
 
