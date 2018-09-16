@@ -14,11 +14,12 @@ function _cloudy_define_cloudy_vars() {
 
 function _cloudy_bootstrap_translations() {
     # todo Document this and add to schema.
-    eval $(get_config_as "CLOUDY_LANGUAGE" "language" "en")
+    eval $(get_config_as "lang" "language" "en")
+    CLOUDY_LANGUAGE=$lang
 
     # todo may not need to do these two?
-    CLOUDY_SUCCESS="Completed successfully."
-    CLOUDY_FAILED="Failed."
+    CLOUDY_SUCCESS=$(translate "Completed successfully.")
+    CLOUDY_FAILED=$(translate "Failed.")
 }
 
 function _cloudy_bootstrap() {

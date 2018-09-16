@@ -208,10 +208,13 @@ function get_option() {
  # @endcode
  #
 function array_has_value() {
-    local needle=$1
+    local needle="$1"
     local value
+    local index=0
+    array_has_value__index=null
     for value in "${array_has_value__array[@]}"; do
-       [[ "$value" == "$needle" ]] && return 0
+       [[ "$value" == "$needle" ]] && array_has_value__index=$index && return 0
+       let index++
     done
     return 1
 }
@@ -400,10 +403,25 @@ function get_config_path_as() {
     _cloudy_get_config "$config_key_path" "$default_value"  --as="$custom_var_name" --mutator=_cloudy_realpath $parse_args__options_passthru
 }
 
+##
+ # Translate a message id into $CLOUDY_LANGUAGE.
+ #
 function translate() {
-    local translation_key=$1
-    local default_value=$2
-    _cloudy_get_config "translate.$CLOUDY_LANGUAGE.$translation_key" "$default_value" "string"
+    local untranslated_message="$1"
+
+    # A faster way to response if no translate.
+    [ ${#cloudy_config_keys___translate[@]} -eq 0 ] && echo "$untranslated_message" && return 2
+
+    # Look up the index of the translation id...
+    eval $(_cloudy_get_config -a --as=ids "translate.ids")
+    array_has_value__array=("${ids[@]}")
+    ! array_has_value "$untranslated_message" && echo "$untranslated_message" && return 2
+
+    # Look for a string under that index in the current language.
+    eval $(_cloudy_get_config --as=translated "translate.strings.$CLOUDY_LANGUAGE.$array_has_value__index")
+
+    # Echo the translate or the original.
+    echo ${translated:-$untranslated_message} && return 0
 }
 
 #

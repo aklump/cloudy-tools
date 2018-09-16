@@ -41,6 +41,12 @@ commands:
         aliases: [h]
   tests:
     help: Run Cloudy's core unit tests.
+translate:
+  ids:
+    - Completed successfully.
+    - Failed.
+  strings:
+    en:
 
 # These are used by the 'tests' command.
 tests:

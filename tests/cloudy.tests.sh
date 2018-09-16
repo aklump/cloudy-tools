@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+function testArrayHasValue() {
+    array_has_value__array=('value1' 'value2');
+    array_has_value 'value2'; assert_exit_status 0
+    assert_same 1 $array_has_value__index
+
+    array_has_value 'value1'; assert_exit_status 0
+    assert_same 0 $array_has_value__index
+
+    array_has_value 'no_value'; assert_exit_status 1
+}
+
 function testCloudyGetMasterCommand() {
     assert_same "new" "$(_cloudy_get_master_command "new")"
     assert_same "clear-cache" "$(_cloudy_get_master_command "clear-cache")"

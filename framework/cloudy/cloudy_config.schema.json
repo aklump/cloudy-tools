@@ -112,6 +112,26 @@
             "additionalProperties": {
                 "$ref": "#/definitions/command"
             }
+        },
+        "translate": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array"
+                },
+                "strings": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^\\S{2}$": {
+                            "type": [
+                                "null",
+                                "array"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            }
         }
     },
     "required": [
