@@ -376,7 +376,7 @@ function _cloudy_help_commands() {
     local help_command
     local help
 
-    echo_headline "$(get_title) VER $(get_version)"
+    echo_title "$(get_title) VER $(get_version)"
 
     echo_yellow "Available commands:"
     eval $(get_config_keys "commands")
@@ -404,7 +404,7 @@ function _cloudy_help_for_single_command() {
     eval $(get_config_keys_as 'arguments' -a "commands.${command_help_topic}.arguments")
     eval $(get_config_keys_as -a 'options' "commands.${command_help_topic}.options")
 
-    echo_headline "Help Topic: $command_help_topic"
+    echo_title "Help Topic: $command_help_topic"
 
     eval $(get_config_as 'help' "commands.${command_help_topic}.help")
     echo_green "$help"

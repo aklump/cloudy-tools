@@ -61,7 +61,7 @@ case $command in
         ;;
 
     "update")
-        echo_headline "Cloudy Framework Updater"
+        echo_title "Cloudy Framework Updater"
 
         available_version=$(get_version)
 

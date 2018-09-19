@@ -47,7 +47,7 @@ function mark_test_skipped() {
 
 function exit_with_test_results() {
     _cloudy_echo_credits
-    echo_headline "Test Results"
+    echo_title "Test Results"
     echo "Runtime: BASH $BASH_VERSION"
     echo
     echo

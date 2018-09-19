@@ -479,10 +479,19 @@ function echo_blue() {
 ##
  # Print out a headline for a section of user output.
  #
+function echo_title() {
+    local headline=$1
+    [[ ! "$headline" ]] && return 1
+    echo && echo "🔶 $(string_upper "${headline}")" && echo
+}
+
+##
+ # Print out a headline for a section of user output.
+ #
 function echo_headline() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
-    echo && echo "⭐  $(string_upper "${headline}")" && echo
+    echo "🔸 $(string_upper "${headline}")"
 }
 
 ##

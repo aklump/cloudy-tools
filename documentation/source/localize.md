@@ -23,7 +23,7 @@ You can translate or reword certain strings with this feature
 
 To implement localization in a script, do like this:
 
-     echo_headline $(translate "Welcome to your new script!")
+     echo_title $(translate "Welcome to your new script!")
      
 Then add that to `translate.ids`:
 
