@@ -1,5 +1,69 @@
 #!/usr/bin/env bash
 
+
+function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
+    eval $(get_config_path_as "fish" -a 'tests.paths_indexed')
+    assert_same "tests/stubs/bogus.md" ${fish[3]}
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${fish[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${fish[1]}
+    assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${fish[2]}
+    assert_same 4 ${#fish[@]}
+}
+
+function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
+    eval $(get_config_path -a 'tests.paths_indexed')
+    assert_same "tests/stubs/bogus.md" ${tests_paths_indexed[3]}
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_indexed[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_indexed[1]}
+    assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${tests_paths_indexed[2]}
+    assert_same 4 ${#tests_paths_indexed[@]}
+}
+
+function _testGetConfigPathAsUsingGlobWorksAsExpected() {
+    eval $(get_config_path_as "wed" -a 'tests.globtest')
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${wed[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${wed[1]}
+    assert_same 2 ${#wed[@]}
+}
+
+function testGetConfigPathUsingGlobWorksAsExpected() {
+    eval $(get_config_path -a 'tests.globtest')
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_globtest[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_globtest[1]}
+    assert_same 2 ${#tests_globtest[@]}
+}
+
+function testGetConfigPathWorksAsItShould() {
+
+    # This one handles the realpath portion as the subject involves traversal.
+    eval $(get_config_path 'tests.filepaths.cloudy')
+    assert_same "$(realpath $CLOUDY_ROOT/..)" $tests_filepaths_cloudy
+
+    eval $(get_config_path 'tests.filepaths.absolute')
+    assert_same "/dev/null" $tests_filepaths_absolute
+
+    eval $(get_config_path 'tests.filepaths.install')
+    assert_same "$(realpath $CLOUDY_ROOT/..)" $tests_filepaths_install
+
+    eval $(get_config_path 'tests.filepaths.cache')
+    assert_same "$CLOUDY_ROOT/cache" $tests_filepaths_cache
+}
+
+function testGetConfigPathAsWorksAsItShould() {
+    # This one handles the realpath portion as the subject involves traversal.
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
+    assert_same "$(realpath $CLOUDY_ROOT/..)" $testpath
+
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
+    assert_same "/dev/null" $testpath
+
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
+    assert_same "$(realpath $CLOUDY_ROOT/..)" $testpath
+
+    eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
+    assert_same "$CLOUDY_ROOT/cache" $testpath
+}
+
 function testArrayHasValue() {
     array_has_value__array=('value1' 'value2');
     array_has_value 'value2'; assert_exit_status 0
@@ -55,36 +119,6 @@ function testArraySortLengthWorksAsExpected() {
     assert_same "five" ${array_sort_by_item_length__array[1]}
     assert_same "three" ${array_sort_by_item_length__array[2]}
     assert_same "september" ${array_sort_by_item_length__array[3]}
-}
-
-function testGetConfigPathAsWorksAsItShould() {
-    # This one handles the realpath portion as the subject involves traversal.
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
-    assert_same "$(realpath $CLOUDY_ROOT/..)" $testpath
-
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
-    assert_same "/dev/null" $testpath
-
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
-    assert_same "$(realpath $CLOUDY_ROOT/..)" $testpath
-
-    eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
-    assert_same "$CLOUDY_ROOT/cache" $testpath
-}
-
-function testGetConfigPathWorksAsItShould() {
-    # This one handles the realpath portion as the subject involves traversal.
-    eval $(get_config_path 'tests.filepaths.cloudy')
-    assert_same "$(realpath $CLOUDY_ROOT/..)" $tests_filepaths_cloudy
-
-    eval $(get_config_path 'tests.filepaths.absolute')
-    assert_same "/dev/null" $tests_filepaths_absolute
-
-    eval $(get_config_path 'tests.filepaths.install')
-    assert_same "$(realpath $CLOUDY_ROOT/..)" $tests_filepaths_install
-
-    eval $(get_config_path 'tests.filepaths.cache')
-    assert_same "$CLOUDY_ROOT/cache" $tests_filepaths_cache
 }
 
 function testGetConfigAndTheAOptionWorksAsExpected() {

@@ -131,6 +131,7 @@ function _cloudy_get_config() {
     local code
     local cached_var_name
     local cached_var_name_keys
+    local file_list
 
     parse_args $@
     config_path=${parse_args__args[0]/-/_}
@@ -148,7 +149,13 @@ function _cloudy_get_config() {
     [[ "${parse_args__option__a}" == true ]] && default_type='array'
     mutator=${parse_args__option__mutator}
 
+    # todo Can we simplify this a bit?
     var_value=$(eval "echo "\$$cached_var_name"")
+    if [[ "$var_value" ]]; then
+        code=$(declare -p "$cached_var_name")
+        code="${code/$cached_var_name=/var_value=}"
+        eval "$code"
+    fi
 
     # Todo should we try and autodetect?
     var_type="$default_type"
@@ -190,9 +197,35 @@ function _cloudy_get_config() {
             # todo mutator for array values.
         done
     else
-        if [[ "$mutator" ]]; then
-            eval "$cached_var_name=\$($mutator \$$cached_var_name)"
+
+        if [[ "$mutator" == "_cloudy_realpath" ]]; then
+
+            # On first pass we will try to expand globbed filenames, which will
+            # cause file_list to be longer than var_value.
+            file_list=()
+            for path in "${var_value[@]}"; do
+                # This will expand a glob finder.
+                if [ -d "$path" ]; then
+                    file_list=("${file_list[@]}" $path)
+                elif [ -f "$path" ]; then
+                    file_list=("${file_list[@]}" $(ls $path))
+                else
+                    file_list=("${file_list[@]}" $path)
+                fi
+            done
+
+            # Glob may have increased our file_list so we apply realpath to all
+            # of them here.
+            local i=0
+            for path in "${file_list[@]}"; do
+                if [ -e "$path" ]; then
+                    file_list[$i]=$(realpath "$path")
+                fi
+                let i++
+            done
+            eval "$cached_var_name=("${file_list[@]}")"
         fi
+
         code=$(declare -p $cached_var_name)
         code="${code//$cached_var_name=/$var_name=}"
     fi
@@ -200,15 +233,7 @@ function _cloudy_get_config() {
     echo ${code%;} && return 0
 }
 
-##
- # Return paths relative to the root or do nothing if absolute.
- #
-function _cloudy_realpath() {
-    local path="$1"
-    [[ "${path:0:1}" == "/" ]] && echo "$path" && return 0
-    echo $(realpath "$ROOT/$path")
-    return $?
-}
+
 
 function _cloudy_exit() {
     exit $CLOUDY_EXIT

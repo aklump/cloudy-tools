@@ -64,6 +64,13 @@ tests:
     cache: framework/cloudy/cache
     cloudy: framework/cloudy/..
     absolute: /dev/null
+  globtest:
+    tests/stubs/*.txt
+  paths_indexed:
+    - tests/stubs/alpha.txt
+    - tests/stubs/bravo.txt
+    - tests/stubs/charlie.md
+    - tests/stubs/bogus.md
   user:
     images:
       tags: [literature, nature, space, religion]
