@@ -849,6 +849,107 @@ function write_log_debug() {
     _cloudy_write_log ${args[@]}
 }
 
+##
+ # Send any number of arguments, each is a column value for a single row.
+ #
+function table_set_header() {
+    _cloudy_table_header=()
+    i=0
+    for cell in "$@"; do
+        if [[ ${#cell} -gt "${_cloudy_table_col_widths[$i]}" ]]; then
+            _cloudy_table_col_widths[$i]=${#cell}
+        fi
+        _cloudy_table_header=("${_cloudy_table_header[@]}" "$cell")
+        let i++
+    done
+}
+
+
+##
+ # Send any number of arguments, each is a column value for a single row.
+ #
+function table_add_row() {
+    array_join__array=()
+    i=0
+    for cell in "$@"; do
+        if [[ ${#cell} -gt "${_cloudy_table_col_widths[$i]}" ]]; then
+            _cloudy_table_col_widths[$i]=${#cell}
+        fi
+        array_join__array=("${array_join__array[@]}" "$cell")
+        let i++
+    done
+
+    _cloudy_table_rows=("${_cloudy_table_rows[@]}" $(array_join '|'))
+}
+
+##
+ # Echo a table output.
+ #
+ # @options
+ # --padding={n}
+ #
+ # @see table_header_separator
+ # @see table_column separators
+ #
+function echo_table() {
+    parse_args $@
+    local padding=${parse_args__option__padding:-4}
+
+    table_header_separator=${table_header_separator:-"-"}
+    if [[ ${#table_column_separators} -eq 0 ]]; then
+        table_column_separators=("| " " | " " |")
+    fi
+
+    # Draw a line
+    local width=0
+    width=$(( $width + ${#table_column_separators[0]} ))
+    i=1
+    for column_width in "${_cloudy_table_col_widths[@]}"; do
+        width=$(( $width + $column_width + $padding))
+        if [[ $i -lt ${#table_column_separators} ]]; then
+            width=$(( $width + ${#table_column_separators[1]} ))
+        fi
+        let i++
+    done
+    width=$(( $width + ${#table_column_separators[2]} ))
+    local line=$(for ((i=0; i < $width; i++)){ echo -n $table_header_separator; })
+
+    echo $line
+
+    # Deal with header
+    if [ ${#_cloudy_table_header[@]} -gt 0 ]; then
+        array_join__array=("${_cloudy_table_header[@]}")
+        _cloudy_table_rows=("$(array_join '|')" "${_cloudy_table_rows[@]}")
+    fi
+
+    # Output the body
+    local row_id=0
+    for array_split__string in "${_cloudy_table_rows[@]}"; do
+        array_split '|'
+        local column_index=0
+        echo -n "${table_column_separators[0]}"
+        for cell in "${array_split__array[@]}"; do
+            echo -n "$cell"
+            for ((i=0; i< (${_cloudy_table_col_widths[$column_index]} - ${#cell} + $padding); i++)){ echo -n " "; };
+            echo -n "${table_column_separators[1]}"
+            let column_index++
+        done
+        echo
+
+        if [ ${#_cloudy_table_header[@]} -gt 0 ] && [ $row_id -eq 0 ]; then
+            echo $line
+        fi
+
+        let row_id++
+    done
+
+    echo $line
+
+    _cloudy_table_col_widths=()
+    _cloudy_table_header=()
+    _cloudy_table_rows=()
+}
+
 #
 # End Public API
 #
