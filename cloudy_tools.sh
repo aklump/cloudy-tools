@@ -104,6 +104,8 @@ case $command in
         # Protect an existing script by that name.
         [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
 
+        ! has_option 'y' && ! confirm "Create $script_filename in the current directory?" && exit_with_failure "Nothing accomplished."
+
         if ! has_failed; then
             rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
 
