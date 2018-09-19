@@ -25,6 +25,11 @@ validate_input || exit_with_failure "Something didn't work..."
 # comments for more information.
 implement_cloudy_basic
 
+eval $(get_config "some.thing")
+
+# This is a short way to validate your configuration before moving on.
+exit_with_failure_if_empty_config "some.thing"
+
 # Handle other commands.
 command=$(get_command)
 case $command in

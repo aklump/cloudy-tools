@@ -642,6 +642,24 @@ function succeed_because() {
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
+##
+ # Checks for a non-empty variable in memory or exist with failure.
+ #
+ # Asks the user to add to their configuration filepath.
+ #
+ # @param string
+ #   This should be the same as passed to get_config, using dot separation.
+ #
+function exit_with_failure_if_empty_config() {
+    local variable=${1//./_}
+
+    local code=$(echo_blue "eval \$(get_config_path \"$variable\")")
+    local config_name=$(echo_blue "$variable")
+
+    [[ ! "$(eval "echo \$$variable")" ]] && exit_with_failure "Failed due to missing configuration; please add $config_name $(echo_red "to your configuration in $CONFIG.  Also, make sure it is being read into memory with") $code"
+    return 0
+}
+
 function exit_with_failure() {
     echo && echo_red "🔥  $(_cloudy_message "$1" "$CLOUDY_FAILED")"
 
