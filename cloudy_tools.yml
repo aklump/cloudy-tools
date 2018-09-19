@@ -1,56 +1,31 @@
-title: Cloudy Tools
-version: 1.0.3
+title: 'Cloudy Tools'
+version: 1.0.4
 default_command: help
 commands:
   help:
-    help: Show this help screen.
+    help: 'Show this help screen.'
   clear-cache:
     aliases: [clearcache, cc]
-    help: Clear the Cloudy Tools caches.
+    help: 'Clear the Cloudy Tools caches.'
   flush:
-    help: Flush all cached data for the current directory's cloudy scripts.
+    help: 'Flush all cached data for the current directory''s cloudy scripts.'
   update:
-    help: Update a cloudy framework in the current directory.  The version is updated to the version being used by cloudy_tools.sh, not pulled from the internet.  If you installed Cloudy Tools using Git, then you need only to a git pull in $HOME/opt/cloudy to update.
-    options:
-      dry-run:
-        help: Show what will be happen, but don't do anything.
-        type: boolean
+    help: 'Update a cloudy framework in the current directory.  The version is updated to the version being used by cloudy_tools.sh, not pulled from the internet.  If you installed Cloudy Tools using Git, then you need only to a git pull in $HOME/opt/cloudy to update.'
+    options: { dry-run: { help: 'Show what will be happen, but don''t do anything.', type: boolean } }
   new:
-    help: Create a new script using Cloudy.
-    arguments:
-      basename:
-        help: The basename of the script to create.
-    options:
-      json:
-        type: boolean
-        help: Use JSON configuration.
-      yaml:
-        type: boolean
-        help: Use YAML configuration. This is the default.
-      force:
-        type: boolean
-        aliases: [f]
-        help: Overwrite an existing script.
-      examples:
-        type: boolean
-        aliases: [e]
-        help: Create a demo as script.example.sh
-      help:
-        type: boolean
-        help: Show help for command "new".
-        aliases: [h]
+    help: 'Create a new script using Cloudy.'
+    arguments: { basename: { help: 'The basename of the script to create.' } }
+    options: { json: { type: boolean, help: 'Use JSON configuration.' }, yaml: { type: boolean, help: 'Use YAML configuration. This is the default.' }, force: { type: boolean, aliases: [f], help: 'Overwrite an existing script.' }, examples: { type: boolean, aliases: [e], help: 'Create a demo as script.example.sh' }, help: { type: boolean, help: 'Show help for command "new".', aliases: [h] } }
   tests:
-    help: Run Cloudy's core unit tests.
+    help: 'Run Cloudy''s core unit tests.'
 translate:
   ids:
-    - Completed successfully.
+    - 'Completed successfully.'
     - Failed.
   strings:
-    en:
-
-# These are used by the 'tests' command.
+    en: null
 tests:
-  string: Adam ate apples at Andrew's abode.
+  string: 'Adam ate apples at Andrew''s abode.'
   indexed_array:
     - alpha
     - bravo
@@ -64,19 +39,13 @@ tests:
     cache: framework/cloudy/cache
     cloudy: framework/cloudy/..
     absolute: /dev/null
-  globtest:
-    tests/stubs/*.txt
+  globtest: 'tests/stubs/*.txt'
   paths_indexed:
     - tests/stubs/alpha.txt
     - tests/stubs/bravo.txt
     - tests/stubs/charlie.md
     - tests/stubs/bogus.md
   user:
-    images:
-      tags: [literature, nature, space, religion]
-      types:
-        bitmap: [jpg, png, gif]
+    images: { tags: [literature, nature, space, religion], types: { bitmap: [jpg, png, gif] } }
   prod:
-    db:
-      name: db
-      pass: 2394873910
+    db: { name: db, pass: 2394873910 }
