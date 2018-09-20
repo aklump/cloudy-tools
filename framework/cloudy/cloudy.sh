@@ -495,7 +495,7 @@ function echo_title() {
 function echo_headline() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
-    echo "🔸 $(string_upper "${headline}")"
+    echo "🔸 ${headline}"
 }
 
 ##
