@@ -886,6 +886,12 @@ function table_add_row() {
     _cloudy_table_rows=("${_cloudy_table_rows[@]}" "$(array_join '|')")
 }
 
+function string_repeat() {
+    local string="$1"
+    local repetitions=$2
+    for ((i=0; i < $repetitions; i++)){ echo -n "$string"; }
+}
+
 ##
  # Echo a table output.
  #
