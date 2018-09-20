@@ -903,28 +903,28 @@ function string_repeat() {
  #
 function echo_table() {
     parse_args $@
-    local padding=${parse_args__option__padding:-4}
+    local lpad=${parse_args__option__lpad:-1}
+    local rpad=${parse_args__option__rpad:-4}
 
     table_header_separator=${table_header_separator:-"-"}
     if [[ ${#table_column_separators} -eq 0 ]]; then
-        table_column_separators=("| " " | " " |")
+        table_column_separators=("|" "|" "|")
     fi
 
     # Draw a line
-    local width=0
-    width=$(( $width + ${#table_column_separators[0]} ))
+    local width=${#table_column_separators[0]}
     i=1
     for column_width in "${_cloudy_table_col_widths[@]}"; do
-        width=$(( $width + $column_width + $padding))
-        if [[ $i -lt ${#table_column_separators} ]]; then
-            width=$(( $width + ${#table_column_separators[1]} ))
+        width=$(( $width + $lpad + $column_width + $rpad))
+        if [[ $i -lt ${#_cloudy_table_col_widths} ]]; then
+            width=$(( $width + ${#table_column_separators[1]}))
         fi
         let i++
     done
-    width=$(( $width + ${#table_column_separators[2]} ))
-    local line=$(for ((i=0; i < $width; i++)){ echo -n $table_header_separator; })
+    width=$(( $width + ${#table_column_separators[2]}))
+    local line="$(string_repeat "$table_header_separator" $width)"
 
-    echo $line
+    echo "$line"
 
     # Deal with header
     if [ ${#_cloudy_table_header[@]} -gt 0 ]; then
@@ -934,13 +934,14 @@ function echo_table() {
 
     # Output the body
     local row_id=0
-    for array_split__string in "${_cloudy_table_rows[@]}"; do
-        array_split '|'
+    for string_split__string in "${_cloudy_table_rows[@]}"; do
+        string_split '|'
         local column_index=0
         echo -n "${table_column_separators[0]}"
-        for cell in "${array_split__array[@]}"; do
-            echo -n "$cell"
-            for ((i=0; i< (${_cloudy_table_col_widths[$column_index]} - ${#cell} + $padding); i++)){ echo -n " "; };
+        for cell in "${string_split__array[@]}"; do
+            echo -n "$(string_repeat " " $lpad)$cell"
+            echo -n "$(string_repeat " " $(( ${_cloudy_table_col_widths[$column_index]} - ${#cell} + $rpad )))"
+
             echo -n "${table_column_separators[1]}"
             let column_index++
         done
@@ -953,8 +954,9 @@ function echo_table() {
         let row_id++
     done
 
-    echo $line
+    echo "$line"
 
+    # Reset the table global vars.
     _cloudy_table_col_widths=()
     _cloudy_table_header=()
     _cloudy_table_rows=()
