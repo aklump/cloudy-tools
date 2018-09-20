@@ -223,19 +223,19 @@ function array_has_value() {
  # Join a stack into an array with delimiter.
  #
  # @code
- #  array_split__string="do<br />re<br />mi"
- #  array_split '<br />' && local words=("${array_split__array}")
+ #  string_split__string="do<br />re<br />mi"
+ #  string_split '<br />' && local words=("${string_split__array}")
  # @endcode
  #
  #
-function array_split() {
+function string_split() {
     local delimiter="$1"
 
     if [ ${#delimiter} -eq 1 ]; then
-        IFS=$delimiter; array_split__array=($array_split__string); unset IFS;
+        IFS=$delimiter; string_split__array=($string_split__string); unset IFS;
     else
         #http://www.linuxquestions.org/questions/programming-9/bash-shell-script-split-array-383848/#post3270796
-        array_split__array=(${array_split__string//$delimiter/ })
+        string_split__array=(${string_split__string//$delimiter/ })
     fi
 }
 

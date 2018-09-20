@@ -4,7 +4,7 @@
 
     new_array=("${old_array[@]}")
 
-This comes in to play after array-based functions like `array_split`
+This comes in to play after array-based functions like `string_split`
 
-    array_split__string="do<br />re<br />mi"
-    array_split '<br />' && local words=("${array_split__array}")
+    string_split__string="do<br />re<br />mi"
+    string_split '<br />' && local words=("${string_split__array}")

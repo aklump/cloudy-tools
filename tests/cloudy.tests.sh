@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
 function testArraySplitWorksWithSpaces() {
-    array_split__string="my my;this is good"
-    array_split ';'; assert_exit_status 0
+    string_split__string="my my;this is good"
+    string_split ';'; assert_exit_status 0
 
-    assert_count 2 'array_split__array'
-    assert_same "my my" "${array_split__array[0]}"
-    assert_same "this is good" "${array_split__array[1]}"
+    assert_count 2 'string_split__array'
+    assert_same "my my" "${string_split__array[0]}"
+    assert_same "this is good" "${string_split__array[1]}"
 
-    array_split__string="my my|this is good"
-    array_split '|'; assert_exit_status 0
+    string_split__string="my my|this is good"
+    string_split '|'; assert_exit_status 0
 
-    assert_count 2 'array_split__array'
-    assert_same "my my" "${array_split__array[0]}"
-    assert_same "this is good" "${array_split__array[1]}"
+    assert_count 2 'string_split__array'
+    assert_same "my my" "${string_split__array[0]}"
+    assert_same "this is good" "${string_split__array[1]}"
 }
 
 function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
@@ -180,23 +180,23 @@ function testGetConfigReturnsIndexedArray() {
 }
 
 function testArraySplitWorksForMultipleChars() {
-    array_split__string="do<br />re<br />mi"
-    array_split '<br />'; assert_exit_status 0
+    string_split__string="do<br />re<br />mi"
+    string_split '<br />'; assert_exit_status 0
 
-    assert_count 3 'array_split__array'
-    assert_same "do" ${array_split__array[0]}
-    assert_same "re" ${array_split__array[1]}
-    assert_same "mi" ${array_split__array[2]}
+    assert_count 3 'string_split__array'
+    assert_same "do" ${string_split__array[0]}
+    assert_same "re" ${string_split__array[1]}
+    assert_same "mi" ${string_split__array[2]}
 }
 
 function testArraySplitWorksForCSV() {
-    array_split__string="do,re,mi"
-    array_split ','; assert_exit_status 0
+    string_split__string="do,re,mi"
+    string_split ','; assert_exit_status 0
 
-    assert_count 3 'array_split__array'
-    assert_same "do" ${array_split__array[0]}
-    assert_same "re" ${array_split__array[1]}
-    assert_same "mi" ${array_split__array[2]}
+    assert_count 3 'string_split__array'
+    assert_same "do" ${string_split__array[0]}
+    assert_same "re" ${string_split__array[1]}
+    assert_same "mi" ${string_split__array[2]}
 }
 
 function testArraySortWorksAsExpected() {
