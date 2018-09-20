@@ -955,6 +955,7 @@ function echo_table() {
     done
 
     echo "$line"
+    echo
 
     # Reset the table global vars.
     _cloudy_table_col_widths=()
