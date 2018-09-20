@@ -231,8 +231,12 @@ function array_has_value() {
 function array_split() {
     local delimiter="$1"
 
-    #http://www.linuxquestions.org/questions/programming-9/bash-shell-script-split-array-383848/#post3270796
-    array_split__array=(${array_split__string//$delimiter/ })
+    if [ ${#delimiter} -eq 1 ]; then
+        IFS=$delimiter; array_split__array=($array_split__string); unset IFS;
+    else
+        #http://www.linuxquestions.org/questions/programming-9/bash-shell-script-split-array-383848/#post3270796
+        array_split__array=(${array_split__string//$delimiter/ })
+    fi
 }
 
 ##

@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+function testArraySplitWorksWithSpaces() {
+    array_split__string="my my;this is good"
+    array_split ';'; assert_exit_status 0
+
+    assert_count 2 'array_split__array'
+    assert_same "my my" "${array_split__array[0]}"
+    assert_same "this is good" "${array_split__array[1]}"
+
+    array_split__string="my my|this is good"
+    array_split '|'; assert_exit_status 0
+
+    assert_count 2 'array_split__array'
+    assert_same "my my" "${array_split__array[0]}"
+    assert_same "this is good" "${array_split__array[1]}"
+}
 
 function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
     eval $(get_config_path_as "fish" -a 'tests.paths_indexed')
@@ -194,6 +209,9 @@ function testArraySortWorksAsExpected() {
 }
 
 function testArrayJoinWorks() {
+    declare -a array_join__array=("my my" "this is good")
+    assert_same "my my, this is good" "$(array_join ', ')"
+
     declare -a array_join__array=("uno" "dos" "tres")
     assert_same "uno, dos, tres" "$(array_join ', ')"
 
