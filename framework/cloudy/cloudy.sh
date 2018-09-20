@@ -921,7 +921,9 @@ function echo_table() {
         fi
         let i++
     done
-    width=$(( $width + ${#table_column_separators[2]}))
+    if [ ${#_cloudy_table_col_widths[@]} -gt 1 ]; then
+        width=$(( $width + ${#table_column_separators[2]}))
+    fi
     local line="$(string_repeat "$table_header_separator" $width)"
 
     echo "$line"
