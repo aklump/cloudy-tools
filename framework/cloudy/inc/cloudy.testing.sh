@@ -161,10 +161,12 @@ function assert_array_not_has_key() {
 }
 
 function assert_count() {
-    local expected=$1
-    local array_var_name=$2
+    local expected="$1"
+    local array_var_name="$2"
 
-    eval value=(\${"$array_var_name"[@]})
+    code=$(declare -p $array_var_name)
+    code=${code/$array_var_name=/value=}
+    eval $code
     assert_same $expected ${#value[@]}
 }
 
