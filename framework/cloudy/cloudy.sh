@@ -883,7 +883,7 @@ function table_add_row() {
         let i++
     done
 
-    _cloudy_table_rows=("${_cloudy_table_rows[@]}" $(array_join '|'))
+    _cloudy_table_rows=("${_cloudy_table_rows[@]}" "$(array_join '|')")
 }
 
 ##
