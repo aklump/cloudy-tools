@@ -22,8 +22,6 @@ function on_boot() {
 function rsync_framework() {
     [[ "$framework" ]] || return 1
     rsync -a $framework/cloudy/ ./cloudy  --exclude=*.log --exclude=cache/
-    cp $framework/script.sh ./
-    cp $framework/script.yml ./
 }
 
 function write_version_file() {
@@ -108,6 +106,8 @@ case $command in
 
         if ! has_failed; then
             rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
+            cp $framework/script.sh ./
+            cp $framework/script.yml ./
 
             # The stub file script.sh
             mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
