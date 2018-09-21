@@ -28,3 +28,15 @@ function on_boot() {
     do_tests_in "tests/cloudy.tests.sh"
     exit_with_test_results
 }
+
+##
+ # Fires when the configuration is about to be converted from YAML/JSON
+ # Used to add additional configuration files to merge in.
+ #
+ # @return ignored
+ #
+function on_compile_config() {
+    echo "$config_dir/config.yml"
+    echo "$config_dir/config2.yml"
+    echo "$config_dir/config3.yml"
+}
