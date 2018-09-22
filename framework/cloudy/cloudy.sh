@@ -499,7 +499,7 @@ function echo_blue() {
  # Print out a headline for a section of user output.
  #
 function echo_title() {
-    local headline=$1
+    local headline="$1"
     [[ ! "$headline" ]] && return 1
     echo && echo "🔶  $(string_upper "${headline}")" && echo
 }
@@ -508,7 +508,7 @@ function echo_title() {
  # Print out a headline for a section of user output.
  #
 function echo_heading() {
-    local headline=$1
+    local headline="$1"
     [[ ! "$headline" ]] && return 1
     echo "🔸  ${headline}"
 }
@@ -761,15 +761,15 @@ function path_extension() {
 }
 
 function string_upper() {
-    local string=$1
+    local string="$1"
 
-    echo $string | tr [a-z] [A-Z]
+    echo "$string" | tr [a-z] [A-Z]
 }
 
 function string_lower() {
-    local string=$1
+    local string="$1"
 
-    echo $string | tr [A-Z] [a-z]
+    echo "$string" | tr [A-Z] [a-z]
 }
 
 #
