@@ -625,7 +625,7 @@ function exit_with_help() {
 
     # Top-level just show all commands.
     _cloudy_help_commands
-    exit_with_success "Use \"help [command]\" for specific info"
+    exit_with_success "Use \"help <command>\" for specific info"
 }
 
 function exit_with_success() {

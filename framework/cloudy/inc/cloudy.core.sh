@@ -378,7 +378,9 @@ function _cloudy_help_commands() {
 
     echo_title "$(get_title) VER $(get_version)"
 
-    echo_yellow "Available commands:"
+    echo_heading "Available commands:"
+    echo
+
     eval $(get_config_keys "commands")
     for help_command in "${commands[@]}"; do
         eval $(get_config_as 'help' "commands.$help_command.help")
