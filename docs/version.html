@@ -47,7 +47,8 @@ done;r="$(cd -P "$(dirname "$s")" &amp;&amp; pwd)";source "$r/framework/cloudy/c
 # End Cloudy Bootstrap
 
 function get_version() {
-    echo "3.2.4"
+    local version=$(grep "version = " "$ROOT/web_package.info")
+    echo ${version/version = / }
 }
 </code></pre>
 </section>
@@ -64,7 +65,7 @@ function get_version() {
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Sat, 22 Sep 2018 08:26:46 -0700</p>
+    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Sat, 22 Sep 2018 08:40:50 -0700</p>
   </div>
 </footer>
 

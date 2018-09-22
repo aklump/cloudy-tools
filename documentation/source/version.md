@@ -19,5 +19,6 @@ If you would rather provide your version dynamically with BASH, you can override
     # End Cloudy Bootstrap
     
     function get_version() {
-        echo "3.2.4"
+        local version=$(grep "version = " "$ROOT/web_package.info")
+        echo ${version/version = / }
     }
