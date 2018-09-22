@@ -6,7 +6,7 @@ commands:
     help: Show this help screen.
   clear-cache:
     aliases: [clearcache, cc]
-    help: Clear the Cloudy Tools caches.
+    help: Clear all cached data.
 translate:
   ids:
     - Completed successfully.

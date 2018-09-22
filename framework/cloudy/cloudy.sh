@@ -668,6 +668,10 @@ function succeed_because() {
  #   This should be the same as passed to get_config, using dot separation.
  #
 function exit_with_failure_if_empty_config() {
+    parse_args $@
+    if [[ "$parse_args__option__status" ]]; then
+      CLOUDY_EXIT_STATUS=$parse_args__option__status
+    fi
     local variable=${1//./_}
 
     local code=$(echo_blue "eval \$(get_config_path \"$variable\")")
@@ -677,7 +681,12 @@ function exit_with_failure_if_empty_config() {
     return 0
 }
 
+##
+ # @option --status=N Optional, set the exit status, a number > 0
+ #
 function exit_with_failure() {
+    parse_args $@
+
     echo && echo_red "🔥  $(_cloudy_message "$1" "$CLOUDY_FAILED")"
 
     ## Write out the failure messages if any.
@@ -694,6 +703,11 @@ function exit_with_failure() {
     if [ $CLOUDY_EXIT_STATUS -lt 2 ]; then
       CLOUDY_EXIT_STATUS=1
     fi
+
+    if [[ "$parse_args__option__status" ]]; then
+      CLOUDY_EXIT_STATUS=$parse_args__option__status
+    fi
+
     _cloudy_exit
 }
 
@@ -702,9 +716,15 @@ function exit_with_failure() {
  #
  # Try not to use this because it gives no indication as to why
  #
+ # @option --status=N Optional, set the exit status, a number > 0
+ #
  # @see exit_with_failure
  #
 function fail() {
+    parse_args $@
+    if [[ "$parse_args__option__status" ]]; then
+      CLOUDY_EXIT_STATUS=$parse_args__option__status && return 0
+    fi
     CLOUDY_EXIT_STATUS=1 && return 0
 }
 
@@ -713,7 +733,7 @@ function fail() {
  #
 function fail_because() {
     local message=$1
-    fail
+    fail $@
     if [[ "$message" ]]; then
         CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
     fi

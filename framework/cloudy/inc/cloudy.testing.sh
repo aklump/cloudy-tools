@@ -16,7 +16,6 @@ function do_tests_in() {
     source $CLOUDY_ACTIVE_TESTFILE
 
     declare -a local tests=();
-    local stashed_exit_status;
 
     # Find all functions in a given test file.
     local data=($(grep "^\s*function test*" $CLOUDY_ACTIVE_TESTFILE))
