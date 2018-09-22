@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+function testListAddItemAndListClearWorkAsExpected() {
+    list_add_item "alpha"
+    list_add_item "bravo"
+    assert_count 2 "echo_list__array"
+    list_has_items; assert_exit_status 0
+
+    list_clear
+    assert_count 0 "echo_list__array"
+    list_has_items; assert_exit_status 1
+}
+
 function testUrlHostWorks() {
     assert_same "www.abc.com" $(url_host "https://www.abc.com/do/re/me")
 }
