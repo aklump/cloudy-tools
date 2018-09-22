@@ -30,6 +30,21 @@ function timestamp() {
     echo $(date +%s)
 }
 
+##
+ # Return the current datetime in iso 8601 in UTC.
+ #
+ # @option -c Remove punctuation for a compressed output say, for a filename.
+ #
+function date8601() {
+    parse_args $@
+    if [[ "$parse_args__option__c" ]]; then
+        echo $(date -u +%Y%m%dT%H%M%S)
+    else
+        echo $(date -u +%Y-%m-%dT%H:%M:%S)
+    fi
+    return 0
+}
+
 #
 # SECTION: Arguments, options, parameters
 #
