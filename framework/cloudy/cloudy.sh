@@ -925,6 +925,13 @@ function table_set_header() {
     done
 }
 
+function table_clear() {
+    _cloudy_table_rows=()
+}
+
+function table_has_rows() {
+    [ ${#_cloudy_table_rows[@]} -gt 0 ]
+}
 
 ##
  # Send any number of arguments, each is a column value for a single row.

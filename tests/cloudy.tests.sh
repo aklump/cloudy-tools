@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+function testTableAddRowTableHasRowsTableClearWorKAsExpected() {
+    table_add_row "alpha"
+    table_add_row "bravo"
+    assert_count 2 "_cloudy_table_rows"
+    table_has_rows; assert_exit_status 0
+
+    table_clear
+    assert_count 0 "_cloudy_table_rows"
+    table_has_rows; assert_exit_status 1
+}
+
 function testListAddItemAndListClearWorkAsExpected() {
     list_add_item "alpha"
     list_add_item "bravo"
