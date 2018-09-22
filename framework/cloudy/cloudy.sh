@@ -501,7 +501,7 @@ function echo_blue() {
 function echo_title() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
-    echo && echo "🔶 $(string_upper "${headline}")" && echo
+    echo && echo "🔶  $(string_upper "${headline}")" && echo
 }
 
 ##
@@ -510,7 +510,7 @@ function echo_title() {
 function echo_headline() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
-    echo "🔸 ${headline}"
+    echo "🔸  ${headline}"
 }
 
 ##
