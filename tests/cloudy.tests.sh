@@ -311,19 +311,19 @@ function testGetVersionIsNotEmpty() {
 function testCloudyParseOptionsArgsWorksAsExpected() {
     parse_args init --file=index.php -y dev -abc -t=free --yellow
 
-    assert_array_has_key 't' 'parse_args__options'
-    assert_array_has_key 'yellow' 'parse_args__options'
+    assert_contains 't' 'parse_args__options'
+    assert_contains 'yellow' 'parse_args__options'
 
-    assert_array_has_key 'file' 'parse_args__options'
-    assert_array_has_key 'y' 'parse_args__options'
-    assert_array_has_key 'a' 'parse_args__options'
-    assert_array_has_key 'b' 'parse_args__options'
-    assert_array_has_key 'c' 'parse_args__options'
-    assert_array_not_has_key 'init' 'parse_args__options'
+    assert_contains 'file' 'parse_args__options'
+    assert_contains 'y' 'parse_args__options'
+    assert_contains 'a' 'parse_args__options'
+    assert_contains 'b' 'parse_args__options'
+    assert_contains 'c' 'parse_args__options'
+    assert_not_contains 'init' 'parse_args__options'
 
-    assert_array_has_key 'init' 'parse_args__args'
-    assert_array_has_key 'dev' 'parse_args__args'
-    assert_array_not_has_key 'a' 'parse_args__args'
+    assert_contains 'init' 'parse_args__args'
+    assert_contains 'dev' 'parse_args__args'
+    assert_not_contains 'a' 'parse_args__args'
 
     assert_same 'index.php' $parse_args__option__file
     assert_same 'free' $parse_args__option__t
@@ -336,15 +336,15 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     # Now call again and make sure the old values are cleared out
     parse_args help
 
-    assert_array_not_has_key 'files' 'parse_args__options'
-    assert_array_not_has_key 'y' 'parse_args__options'
-    assert_array_not_has_key 'a' 'parse_args__options'
-    assert_array_not_has_key 'b' 'parse_args__options'
-    assert_array_not_has_key 'c' 'parse_args__options'
+    assert_not_contains 'files' 'parse_args__options'
+    assert_not_contains 'y' 'parse_args__options'
+    assert_not_contains 'a' 'parse_args__options'
+    assert_not_contains 'b' 'parse_args__options'
+    assert_not_contains 'c' 'parse_args__options'
 
-    assert_array_has_key 'help' 'parse_args__args'
-    assert_array_not_has_key 'init' 'parse_args__args'
-    assert_array_not_has_key 'dev' 'parse_args__args'
+    assert_contains 'help' 'parse_args__args'
+    assert_not_contains 'init' 'parse_args__args'
+    assert_not_contains 'dev' 'parse_args__args'
 }
 
 function testGetConfigKeysWorksAsExpected() {
