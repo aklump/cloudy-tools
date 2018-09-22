@@ -4,7 +4,7 @@ You can easily create tables with _Cloudy_.
 
 The following code:
 
-    echo_headline "Tabular Data Example"
+    echo_heading "Tabular Data Example"
     table_set_header "Word" "Part of Speech"
     table_add_row "jump" "verb"
     table_add_row "chocolaty" "adjective"
@@ -21,7 +21,7 @@ Will produce output like the following
 
 Use the options `--lpad` and `--rpad` to control the horizontal padding.
 
-        echo_headline "Tabular Data Example"
+        echo_heading "Tabular Data Example"
         table_set_header "Word" "Part of Speech"
         table_add_row "jump" "verb"
         ...

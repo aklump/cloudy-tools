@@ -507,7 +507,7 @@ function echo_title() {
 ##
  # Print out a headline for a section of user output.
  #
-function echo_headline() {
+function echo_heading() {
     local headline=$1
     [[ ! "$headline" ]] && return 1
     echo "🔸  ${headline}"
