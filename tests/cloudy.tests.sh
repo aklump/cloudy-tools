@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+function testUrlHostWorks() {
+    assert_same "www.abc.com" $(url_host "https://www.abc.com/do/re/me")
+}
+
 function testArraySplitWorksWithSpaces() {
     string_split__string="my my;this is good"
     string_split ';'; assert_exit_status 0
