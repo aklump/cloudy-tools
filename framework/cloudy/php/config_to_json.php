@@ -48,7 +48,7 @@ try {
   }
 
   // TODO There is no support for JSON additional config yet.
-  $additional_config += $g->get($data, 'additional_config', []);
+  $additional_config += (array) $g->get($data, 'additional_config', []);
   foreach ($additional_config as $basename) {
     $path = strpos($basename, '/') !== 0 ? ROOT . "/$basename" : $basename;
     if (!file_exists($path)) {
