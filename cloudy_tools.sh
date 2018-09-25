@@ -92,6 +92,7 @@ case $command in
     ;;
 
     "core")
+        [ -e ./cloudy ] && exit_with_success "Cloudy is already installed.  Did you mean \"update\"?"
         rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
         if ! has_failed; then
             write_version_file
