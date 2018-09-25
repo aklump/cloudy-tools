@@ -2,6 +2,8 @@ title: 'Cloudy Tools'
 version: 1.0.5
 default_command: help
 commands:
+  core:
+    help: Install cloudy core only, in the current directory.  This is similar to "new" but it doesn't create the script and configuration files.
   help:
     help: 'Show this help screen.'
   clear-cache:

@@ -91,6 +91,16 @@ case $command in
         ! has_failed && exit_with_success "Framework has been updated"
     ;;
 
+    "core")
+        rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
+        if ! has_failed; then
+            write_version_file
+        fi
+        has_failed && exit_with_failure "Failed to install core in current directory."
+        write_log_notice "Installed Cloudy core in $WDIR"
+        exit_with_success_elapsed "Core installed."
+    ;;
+
     "new")
         basename=$(get_command_arg 0 "cloudy_script.sh")
         script_filename=$(path_filename "$basename")
