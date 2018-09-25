@@ -351,13 +351,13 @@ function testCloudyParseOptionsArgsWorksAsExpected() {
     assert_contains 'dev' 'parse_args__args'
     assert_not_contains 'a' 'parse_args__args'
 
-    assert_same 'index.php' $parse_args__option__file
-    assert_same 'free' $parse_args__option__t
-    assert_same true $parse_args__option__y
-    assert_same true $parse_args__option__a
-    assert_same true $parse_args__option__b
-    assert_same true $parse_args__option__c
-    assert_same true $parse_args__option__yellow
+    assert_same 'index.php' $parse_args__options__file
+    assert_same 'free' $parse_args__options__t
+    assert_same true $parse_args__options__y
+    assert_same true $parse_args__options__a
+    assert_same true $parse_args__options__b
+    assert_same true $parse_args__options__c
+    assert_same true $parse_args__options__yellow
 
     # Now call again and make sure the old values are cleared out
     parse_args help
