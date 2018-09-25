@@ -668,6 +668,8 @@ if [ ! -d "$CACHE_DIR" ]; then
     mkdir -p "$CACHE_DIR" || exit_with_failure "Unable to create cache folder: $CACHE_DIR"
 fi
 
+_cloudy_trigger_event "pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
+
 # Detect changes in YAML and purge config cache if necessary.
 _cloudy_auto_purge_config
 

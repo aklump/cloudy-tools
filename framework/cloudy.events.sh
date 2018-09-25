@@ -17,9 +17,20 @@ function on_clear_cache() {
 }
 
 ##
+ # Fires before configuration has been read in.
+ #
+ # You will want to use this for any installation commands that setup configuration files.
+ #
+ # @return a non zero will exit with failure.
+ #
+function on_pre_config() {
+
+}
+
+##
  # Fires as soon as the minimum bootstrap has been executed.
  #
- # @return Ignored.
+ # @return a non zero will exit with failure.
  #
 function on_boot() {
     # Run the test command before the bootstrap to avoid conflicts.
@@ -28,6 +39,9 @@ function on_boot() {
     do_tests_in "tests/cloudy.tests.sh"
     exit_with_test_results
 }
+
+
+
 
 ##
  # Fires when the configuration is about to be converted from YAML/JSON
