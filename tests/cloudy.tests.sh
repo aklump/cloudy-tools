@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
 function testGetConfigPathUsingAssociateArrayReturnsRealPaths() {
-#    echo $(get_config_path -a "tests.paths_associative")
-#    throw ";$0;$FUNCNAME;$LINENO"
-
     eval $(get_config_path -a "tests.paths_associative")
+
+    assert_not_internal_type "array" "tests_paths_associative_alpha"
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_associative_alpha}
-    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_associative_bravo}
+
+    assert_internal_type "array" "tests_paths_associative_all"
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_associative_all[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_associative_all[1]}
 
 }
 

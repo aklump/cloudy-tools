@@ -195,3 +195,30 @@ function assert_exit_status() {
     local expected=$1
     assert_same $expected $actual
 }
+
+function assert_internal_type() {
+    local type=$1
+    local var_name=$2
+
+    case $type in
+    array)
+        [[ "$(declare -p $var_name)" =~ "declare -a" ]] && return 0
+       ;;
+    esac
+
+    _cloudy_assert_failed "$var_name" "should be of type \"$type\"."
+}
+
+function assert_not_internal_type() {
+
+    local type=$1
+    local var_name=$2
+
+    case $type in
+    array)
+        ! [[ "$(declare -p $var_name)" =~ "declare -a" ]] && return 0
+       ;;
+    esac
+
+    _cloudy_assert_failed "$var_name" "should not be of type \"$type\"."
+}

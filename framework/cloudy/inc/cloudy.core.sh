@@ -222,7 +222,11 @@ function _cloudy_get_config() {
                     fi
                     let i++
                 done
-                eval "${cached_var_name}___${key}=("${file_list[@]}")"
+                if [[ ${#file_list[@]} -eq 1 ]]; then
+                    eval "${cached_var_name}___${key}="${file_list[0]}""
+                else
+                    eval "${cached_var_name}___${key}=("${file_list[@]}")"
+                fi
             fi
 
             var_code=$(declare -p ${cached_var_name}___${key})
