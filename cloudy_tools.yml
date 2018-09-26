@@ -52,3 +52,4 @@ tests:
     images: { tags: [literature, nature, space, religion], types: { bitmap: [jpg, png, gif] } }
   prod:
     db: { name: db, pass: 2394873910 }
+  empty_array:

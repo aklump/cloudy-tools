@@ -151,6 +151,7 @@ function _cloudy_get_config() {
 
     # todo Can we simplify this a bit?
     var_value=$(eval "echo "\$$cached_var_name"")
+
     if [[ "$var_value" ]]; then
         code=$(declare -p "$cached_var_name")
         code="${code/$cached_var_name=/var_value=}"
@@ -197,7 +198,6 @@ function _cloudy_get_config() {
             # todo mutator for array values.
         done
     else
-
         if [[ "$mutator" == "_cloudy_realpath" ]]; then
 
             # On first pass we will try to expand globbed filenames, which will
@@ -206,7 +206,7 @@ function _cloudy_get_config() {
             for path in "${var_value[@]}"; do
 
                 # Make relative to $ROOT.
-                [[ "${path:0:1}" == "/" ]] || path=${ROOT}/${path}
+                [[ "$var_value" ]] && [[ "${path:0:1}" != "/" ]] && path=${ROOT}/${path}
 
                 # This will expand a glob finder.
                 if [ -d "$path" ]; then

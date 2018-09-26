@@ -684,6 +684,8 @@ function succeed_because() {
  #
  # @param string
  #   This should be the same as passed to get_config, using dot separation.
+ # @option as=name
+ #   If the configuration has been renamed, send the memory var name --as=varname.
  #
 function exit_with_failure_if_empty_config() {
     parse_args $@
@@ -691,6 +693,9 @@ function exit_with_failure_if_empty_config() {
       CLOUDY_EXIT_STATUS=$parse_args__options__status
     fi
     local variable=${1//./_}
+    if [[ "$parse_args__options__as" ]]; then
+        variable="$parse_args__options__as"
+    fi
 
     local code=$(echo_blue "eval \$(get_config_path \"$variable\")")
     local config_name=$(echo_blue "$variable")

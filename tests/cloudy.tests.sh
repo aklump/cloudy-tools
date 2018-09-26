@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function testGetConfigPathOnNullReturnsArray() {
+#    get_config_path -a "tests_empty_array"
+#    throw ";$0;$FUNCNAME;$LINENO"
+    eval $(get_config_path -a "tests_empty_array")
+    assert_count 0 "tests_empty_array"
+}
+
 function testTableAddRowTableHasRowsTableClearWorKAsExpected() {
     table_add_row "alpha"
     table_add_row "bravo"
