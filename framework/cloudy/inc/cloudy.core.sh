@@ -206,14 +206,14 @@ function _cloudy_get_config() {
             for path in "${var_value[@]}"; do
 
                 # Make relative to $ROOT.
-                [[ "$var_value" ]] && [[ "${path:0:1}" != "/" ]] && path=${ROOT}/${path}
+                [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${ROOT}/${path}
 
                 # This will expand a glob finder.
                 if [ -d "$path" ]; then
                     file_list=("${file_list[@]}" $path)
                 elif [ -f "$path" ]; then
                     file_list=("${file_list[@]}" $(ls $path))
-                else
+                elif [[ "$path" != null ]]; then
                     file_list=("${file_list[@]}" $path)
                 fi
             done

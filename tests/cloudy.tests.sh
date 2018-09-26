@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 function testGetConfigPathOnNullReturnsArray() {
-#    get_config_path -a "tests_empty_array"
-#    throw ";$0;$FUNCNAME;$LINENO"
+
+    # Does exist but is null.
+    eval $(get_config_path -a "tests.empty_array")
+    assert_count 0 "tests_empty_array"
+
+    # Does not exist.
     eval $(get_config_path -a "tests_empty_array")
     assert_count 0 "tests_empty_array"
 }
