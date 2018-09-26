@@ -42,22 +42,24 @@ function testArraySplitWorksWithSpaces() {
     assert_same "this is good" "${string_split__array[1]}"
 }
 
-function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
+function testGetConfigPathAsOnIndexedArrayMakesAllElementsRealPaths() {
     eval $(get_config_path_as "fish" -a 'tests.paths_indexed')
-    assert_same "tests/stubs/bogus.md" ${fish[3]}
+    assert_same "/an/absolute/bogus/path" ${fish[4]}
+    assert_same "$ROOT/tests/stubs/bogus.md" ${fish[3]}
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${fish[0]}
     assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${fish[1]}
     assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${fish[2]}
-    assert_same 4 ${#fish[@]}
+    assert_same 5 ${#fish[@]}
 }
 
 function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
     eval $(get_config_path -a 'tests.paths_indexed')
-    assert_same "tests/stubs/bogus.md" ${tests_paths_indexed[3]}
+    assert_same "/an/absolute/bogus/path" ${tests_paths_indexed[4]}
+    assert_same "$ROOT/tests/stubs/bogus.md" ${tests_paths_indexed[3]}
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_indexed[0]}
     assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_indexed[1]}
     assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${tests_paths_indexed[2]}
-    assert_same 4 ${#tests_paths_indexed[@]}
+    assert_same 5 ${#tests_paths_indexed[@]}
 }
 
 function _testGetConfigPathAsUsingGlobWorksAsExpected() {

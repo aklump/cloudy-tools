@@ -204,6 +204,10 @@ function _cloudy_get_config() {
             # cause file_list to be longer than var_value.
             file_list=()
             for path in "${var_value[@]}"; do
+
+                # Make relative to $ROOT.
+                [[ "${path:0:1}" == "/" ]] || path=${ROOT}/${path}
+
                 # This will expand a glob finder.
                 if [ -d "$path" ]; then
                     file_list=("${file_list[@]}" $path)
