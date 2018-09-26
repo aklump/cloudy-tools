@@ -74,16 +74,15 @@ case $command in
         echo_key_value "Available System Version" "$available_version"
 
         # Check installed version.
-        [[ "$cloudy_update__version" == "$available_version" ]] && exit_with_success "You're already up-to-date."
+        ! has_option "f" && [[ "$cloudy_update__version" == "$available_version" ]] && exit_with_success "You're already up-to-date."
 
         echo
-        echo_yellow "Your version $cloudy_update__version is out-of-date."
-        echo
+        [[ "$cloudy_update__version" != "$available_version" ]] && echo_yellow "Your version $cloudy_update__version is out-of-date." && echo
 
         has_option "dry_run" && exit_with_success "This was a dry run; nothing was changed."
 
         # Ask if they want to update.
-        confirm "Do you want to update now?" || exit_with_failure "Update cancelled"
+        ! has_option 'y' && ! confirm "Do you want to update now?" && exit_with_failure "Update cancelled"
 
         rsync_framework || exit_with_failure "An error occurred while updating this Cloudy framework."
         write_version_file
