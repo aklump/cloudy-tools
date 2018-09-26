@@ -193,9 +193,40 @@ function _cloudy_get_config() {
     elif [[ "$var_type" == "associative_array" ]]; then
         code=''
         for key in "${var_keys[@]}"; do
+
+            if [[ "$mutator" == "_cloudy_realpath" ]]; then
+                local path=$(eval "echo \$${cached_var_name}___${key}")
+
+                # On first pass we will try to expand globbed filenames, which will
+                # cause file_list to be longer than var_value.
+                file_list=()
+
+                # Make relative to $ROOT.
+                [[ "$path" ]] && [[ "$path" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${ROOT}/${path}
+
+                # This will expand a glob finder.
+                if [ -d "$path" ]; then
+                    file_list=("${file_list[@]}" $path)
+                elif [ -f "$path" ]; then
+                    file_list=("${file_list[@]}" $(ls $path))
+                elif [[ "$path" != null ]]; then
+                    file_list=("${file_list[@]}" $path)
+                fi
+
+                # Glob may have increased our file_list so we apply realpath to all
+                # of them here.
+                local i=0
+                for path in "${file_list[@]}"; do
+                    if [ -e "$path" ]; then
+                        file_list[$i]=$(realpath "$path")
+                    fi
+                    let i++
+                done
+                eval "${cached_var_name}___${key}=("${file_list[@]}")"
+            fi
+
             var_code=$(declare -p ${cached_var_name}___${key})
             code="${code}${var_code/${cached_var_name}___${key}/${var_name}_${key}};"
-            # todo mutator for array values.
         done
     else
         if [[ "$mutator" == "_cloudy_realpath" ]]; then
