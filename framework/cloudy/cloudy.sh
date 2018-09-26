@@ -677,6 +677,30 @@ function succeed_because() {
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
+function exit_with_failure_if_config_is_not_path() {
+    parse_args $@
+    if [[ "$parse_args__options__status" ]]; then
+      CLOUDY_EXIT_STATUS=$parse_args__options__status
+    fi
+    local variable=${1//./_}
+    if [[ "$parse_args__options__as" ]]; then
+        variable="$parse_args__options__as"
+    fi
+
+    local code=$(echo_blue "eval \$(get_config_path \"$variable\")")
+    local config_name=$(echo_blue "$variable")
+    local config_value="$(eval "echo \$$variable")"
+
+    exit_with_failure_if_empty_config $@
+    # Make sure it's not empty.
+#    [[ ! "$config_value" ]] && exit_with_failure "Failed due to missing configuration; please add $config_name $(echo_red "to your configuration in $CONFIG.  Also, make sure it is being read into memory with") $code"
+
+    # Make sure it's a path.
+    [ ! -e "$config_value" ] && exit_with_failure "Failed because the path \"$config_value\" read in by $config_name does not exit."
+
+    return 0
+}
+
 ##
  # Checks for a non-empty variable in memory or exist with failure.
  #
