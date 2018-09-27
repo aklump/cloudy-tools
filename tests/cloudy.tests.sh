@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+function testTempdirCreatesExistingDirectory() {
+    local dir=$(tempdir); assert_exit_status 0
+    assert_not_empty $dir
+    assert_file_exists $dir
+}
+
 function testGetConfigPathUsingAssociateArrayReturnsRealPaths() {
     eval $(get_config_path -a "tests.paths_associative")
 
@@ -9,7 +15,6 @@ function testGetConfigPathUsingAssociateArrayReturnsRealPaths() {
     assert_internal_type "array" "tests_paths_associative_all"
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_associative_all[0]}
     assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_associative_all[1]}
-
 }
 
 function testGetConfigPathOnNullReturnsArray() {

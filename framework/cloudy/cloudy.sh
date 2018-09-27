@@ -842,6 +842,13 @@ if [ $? -gt 0 ]; then
     }
 fi
 
+##
+ # Create and echo a new temp directory.
+ #
+function tempdir() {
+    mktemp -d 2>/dev/null || mktemp -d -t 'temp'
+}
+
 function string_upper() {
     local string="$1"
 
