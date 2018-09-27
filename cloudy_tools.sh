@@ -104,6 +104,7 @@ case $command in
     "new")
         basename=$(get_command_arg 0 "cloudy_script.sh")
         script_filename=$(path_filename "$basename")
+        has_option 'config' && script_filename=$(path_filename $(get_option "config"))
         config_file="$script_filename.yml"
         has_option "json" && config_file="$script_filename.json"
 

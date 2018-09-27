@@ -38,6 +38,9 @@ commands:
       basename:
         help: The basename of the script to create.
     options:
+      config:
+        help: The filename of the configuration file; omit the extension.
+        type: string
       yes:
         help: Answer yes to all confirmation questions.
         type: boolean
