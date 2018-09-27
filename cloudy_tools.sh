@@ -53,6 +53,15 @@ installation_info_filepath="$WDIR/cloudy/version.sh"
 command=$(get_command)
 case $command in
 
+    "pm-install")
+        echo_title "Package Installer"
+        package=$(get_command_arg 0)
+        confirm "Install $(echo_green $package) in $WDIR?" || exit_with_failure "User cancelled."
+        _cloudy_install_package $package
+        has_failed && exit_with_failure "Could not install $package."
+        exit_with_success_elapsed "$package was installed."
+        ;;
+
     "flush")
         validate_cloudy_instance_or_exit_with_failure
         exit_with_cache_clear "$WDIR/cloudy"

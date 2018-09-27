@@ -3,6 +3,13 @@ title: Cloudy Tools
 version: 1.0.5
 default_command: help
 commands:
+  pm-install:
+    help: Install a cloudy package from the Cloudy package registry.
+    aliases:
+      - pmi
+    arguments:
+      package_name:
+        help: The name of the package, e.g. aklump/install
   core:
     help: Install cloudy core only, in the current directory.  This is similar to
             "new" but it doesn't create the script and configuration files.

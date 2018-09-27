@@ -671,6 +671,79 @@ function _cloudy_echo_aligned_columns() {
     _cloudy_table_rows=()
 }
 
+function _cloudy_install_package() {
+    local package="$1"
+    local url
+
+    local cloudy_destination_dir="$WDIR/opt/cloudy/cloudy"
+    local package_destination_dir="$WDIR/opt/$package"
+    local package_basename=$(basename $package_destination_dir)
+    local bin="$WDIR/bin"
+
+    # Not installed, let's download it.
+    _cloudy_load_package_info "$package"
+    package_loaded=$?
+    [ $package_loaded -gt 0 ] && fail_because "Package \"$1\" is not found in the registry." && return 1
+
+    echo_heading "Package located, installing..."
+
+    if [ ! -d "$cloudy_destination_dir" ]; then
+        (mkdir -p "$(dirname $cloudy_destination_dir)" && cd "$(dirname $cloudy_destination_dir)" && cloudy core > /dev/null)
+        echo_green "$LI Installed Cloudy."
+    fi
+
+    [ -d "$package_destination_dir" ] && fail_because "Package already installed." && return 1
+
+
+    # Install the package
+    [ ! -d "$(dirname $package_destination_dir)" ] && mkdir -p $(dirname $package_destination_dir)
+    (cd $(dirname $package_destination_dir) && git clone "$cloudypm___clone_from" "$package_basename" >/dev/null 2>&1 && rm -rf $package_destination_dir/.git) && echo_green "$LI Downloaded package."
+
+    # Manage the bin/symlink.
+    ! [ -d "$bin" ] && mkdir "$bin" && echo_green "$LI Created directory \"$(basename bin)\"."
+
+    [[ "$cloudypm___symlink" ]] || cloudypm___symlink="$(path_filename $cloudypm___entry_script)"
+    local symlink="$WDIR/bin/$cloudypm___symlink"
+    if [ ! -s "$symlink" ]; then
+        local target="../opt/$package/$cloudypm___entry_script"
+        if [ -f "$bin/$target" ]; then
+            (cd "$bin" && ln -s "$target" "$symlink") && echo_green "$LI Symlink \"$symlink\" created."
+        else
+            fail_because "Could not create symlink to missing target: $bin/$target" && return 1
+        fi
+    fi
+
+    if [[ "$cloudypm___on_install" ]]; then
+        cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_install" || fail_because "The command $cloudypm___on_install failed."
+    fi
+
+    return 0
+}
+
+function _cloudy_load_package_info() {
+    local package="$1"
+
+    local cached_info="$CACHE_DIR/cpm/$package.sh"
+    local found=$(grep "$package:" "$ROOT/cloudy_package_registry.txt")
+    local json
+    IFS=":"; read name url <<< "$found"
+    [[ "$url" ]] || return 1
+
+    # Download YAML and convert to cached BASH.
+    if [ ! -f "$cached_info" ]; then
+        local cache_info_yml=${cached_info/.sh/.yml}
+        curl -o $cache_info_yml --create-dirs "$url" || fail_because "Cannot download $url"
+        json=$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudypm_info.schema.json" "$cache_info_yml")
+        json_result=$?
+        rm $cache_info_yml
+        [ $json_result -gt 0 ] && fail_because "Cannot convert package info to JSON." && return 1
+        php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "cloudypm" "$json" > "$cached_info"
+    fi
+
+    source $cached_info && return 0
+    return 1
+}
+
 #
 # Begin Core Controller Section.
 #
@@ -739,7 +812,7 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
     [[ "$cloudy_development_skip_config_validation" == true ]] && write_log_dev_warning "Configuration validation is disabled due to \$cloudy_development_skip_config_validation == true."
 
     # Convert the JSON to bash config.
-    php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH"
+    php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "cloudy_config" "$CLOUDY_CONFIG_JSON" > "$CACHED_CONFIG_FILEPATH"
     if [ $? -ne 0 ]; then
         compiled=$(cat  "$CACHED_CONFIG_FILEPATH")
         fail_because "$(IFS="|"; read file reason <<< "$compiled"; echo "$reason")"

@@ -14,13 +14,6 @@ use AKlump\LoftLib\Bash\Configuration;
 define('ROOT', $argv[1]);
 
 /**
- * The prefix to use for BASH vars.
- *
- * @var string
- */
-define('CONFIG_PREFIX', 'cloudy_config');
-
-/**
  * The root directory of Cloudy core.
  *
  * @var string
@@ -30,7 +23,6 @@ define('CLOUDY_ROOT', realpath(__DIR__ . '/../'));
 require_once __DIR__ . '/vendor/autoload.php';
 
 $g = new Data();
-$var_service = new Configuration(CONFIG_PREFIX);
 
 /**
  * Sort an array by the length of it's values.
