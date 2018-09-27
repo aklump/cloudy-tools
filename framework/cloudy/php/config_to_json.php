@@ -16,9 +16,10 @@ use JsonSchema\Validator;
 use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/bootstrap.php';
-$filepath_to_config_file = $argv[2];
-$skip_config_validation = $argv[3] === 'true';
-$additional_config = array_filter(explode("\n", trim($g->get($argv, '4', ''))));
+$filepath_to_schema_file = $argv[2];
+$filepath_to_config_file = $argv[3];
+$skip_config_validation = $g->get($argv, 4, false) === 'true';
+$additional_config = array_filter(explode("\n", trim($g->get($argv, 5, ''))));
 
 try {
   $data = [];
@@ -61,8 +62,8 @@ try {
   $validator = new Validator();
   $validate_data = json_decode(json_encode($data));
   try {
-    if (!($schema = json_decode(file_get_contents(CLOUDY_ROOT . '/cloudy_config.schema.json')))) {
-      throw new \RuntimeException("Invalid JSON in cloudy_config.schema.json");
+    if (!($schema = json_decode(file_get_contents($filepath_to_schema_file)))) {
+      throw new \RuntimeException("Invalid JSON in $filepath_to_schema_file");
     }
     if (!$skip_config_validation) {
       $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);

@@ -716,7 +716,7 @@ _cloudy_auto_purge_config
 if [ ! -f "$CACHED_CONFIG_JSON_FILEPATH" ]; then
     # Normalize the config file to JSON.
     additional_config=$(_cloudy_trigger_event "compile_config")
-    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CONFIG" "$cloudy_development_skip_config_validation" "$additional_config")"
+    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$additional_config")"
     json_result=$?
     [[ "$CLOUDY_CONFIG_JSON" ]] || exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
     [ $json_result -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
