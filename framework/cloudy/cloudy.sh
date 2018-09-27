@@ -832,6 +832,16 @@ function path_extension() {
     echo "${path##*.}"
 }
 
+##
+ # Define realpath if it's not defined.
+ #
+type realpath >/dev/null 2>&1
+if [ $? -gt 0 ]; then
+    function realpath() {
+         readlink -f -- "$@"
+    }
+fi
+
 function string_upper() {
     local string="$1"
 
