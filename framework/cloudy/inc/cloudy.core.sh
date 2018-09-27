@@ -697,7 +697,7 @@ function _cloudy_install_package() {
 
     # Install the package
     [ ! -d "$(dirname $package_destination_dir)" ] && mkdir -p $(dirname $package_destination_dir)
-    (cd $(dirname $package_destination_dir) && git clone "$cloudypm___clone_from" "$package_basename" >/dev/null 2>&1 && rm -rf $package_destination_dir/.git) && echo_green "$LI Downloaded package."
+    (cd $(dirname $package_destination_dir) && git clone "$cloudypm___clone_from" "$package_basename" >/dev/null 2>&1 && rm -rf $package_destination_dir/.git) && echo_green "$LI Downloaded package version $cloudypm___version."
 
     # Manage the bin/symlink.
     ! [ -d "$bin" ] && mkdir "$bin" && echo_green "$LI Created directory \"$(basename bin)\"."
@@ -717,6 +717,8 @@ function _cloudy_install_package() {
         cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_install" || fail_because "The command $cloudypm___on_install failed."
     fi
 
+    touch $WDIR/cloudypm.lock && echo "$package:$cloudypm___version" > $WDIR/cloudypm.lock
+
     return 0
 }
 
@@ -732,16 +734,26 @@ function _cloudy_load_package_info() {
     # Download YAML and convert to cached BASH.
     if [ ! -f "$cached_info" ]; then
         local cache_info_yml=${cached_info/.sh/.yml}
-        curl -o $cache_info_yml --create-dirs "$url" || fail_because "Cannot download $url"
+        curl -o $cache_info_yml --create-dirs "$url" >/dev/null 2>&1 || fail_because "Cannot download $url"
         json=$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudypm_info.schema.json" "$cache_info_yml")
         json_result=$?
         rm $cache_info_yml
         [ $json_result -gt 0 ] && fail_because "Cannot convert package info to JSON." && return 1
         php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "cloudypm" "$json" > "$cached_info"
+        source $cached_info || return 1
+
+        # Use the git clone to determine the version based on the latest tag.
+        local stash=$(tempdir)
+        (cd $stash && git clone "$cloudypm___clone_from" repo >/dev/null 2>&1)
+        cloudypm___version=$(cd "$stash/repo" && echo $(git describe --abbrev=0 --tags))
+        if [[ ! "$cloudypm___version" ]]; then
+            cloudypm__version="dev-$(cd "$stash/repo" && echo $(git rev-parse --abbrev-ref HEAD))"
+        fi
+        rm -rf $stash && echo >> $cached_info && echo "cloudypm___version=\"$cloudypm___version\"" >> $cached_info || return 1
+        return 0
     fi
 
-    source $cached_info && return 0
-    return 1
+    source $cached_info
 }
 
 #
