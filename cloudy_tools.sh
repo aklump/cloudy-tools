@@ -54,18 +54,20 @@ command=$(get_command)
 case $command in
 
     "pm-update")
+        source "$ROOT/inc/cloudy.pm.sh"
         echo_title "Package Updater"
         package=$(get_command_arg 0)
-        _cloudy_update_package $package
+        _cloudypm_update_package $package
         has_failed && exit_with_failure "Could not update \"$package\"."
-        exit_with_success_elapsed "$package was updated to version $_cloudy_update_package__new_version."
+        exit_with_success_elapsed "$package was updated to version $_cloudypm_update_package__new_version."
         ;;
 
     "pm-install")
+        source "$ROOT/inc/cloudy.pm.sh"
         echo_title "Package Installer"
         package=$(get_command_arg 0)
         confirm "Install $(echo_green $package) in $WDIR?" || exit_with_failure "User cancelled."
-        _cloudy_install_package $package
+        _cloudypm_install_package $package
         has_failed && exit_with_failure "Could not install \"$package\"."
         exit_with_success_elapsed "$package was installed."
         ;;
