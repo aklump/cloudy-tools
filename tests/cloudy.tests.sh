@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+function testUrlAddCacheBuster() {
+    local url
+    url=$(url_add_cache_buster "site.com")
+    assert_reg_exp "site\.com\?[0-9]+$" "$url"
+
+    url=$(url_add_cache_buster "site.com?t=1234")
+    assert_reg_exp "site\.com\?t=1234&[0-9]+$" "$url"
+}
+
 function testSucceedBecauseCausesExitToBeZero() {
     (fail_because "bla" && succeed_because "blu" && _cloudy_exit >/dev/null 2>&1)
     assert_same 0 $?

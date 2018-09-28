@@ -798,6 +798,20 @@ function url_host() {
     echo "$url_path" | awk -F/ '{print $3}'
 }
 
+##
+ # Add a cache-busting timestamp to an URL and echo the new url.
+ #
+function url_add_cache_buster() {
+    local url="$1"
+
+    if [[ $url == *"?"* ]]; then
+        url="$url&$(date +%s)"
+    else
+        url="$url?$(date +%s)"
+    fi
+    echo $url
+}
+
 #
 # Filepaths
 #
