@@ -53,12 +53,20 @@ installation_info_filepath="$WDIR/cloudy/version.sh"
 command=$(get_command)
 case $command in
 
+    "pm-update")
+        echo_title "Package Updater"
+        package=$(get_command_arg 0)
+        _cloudy_update_package $package
+        has_failed && exit_with_failure "Could not update \"$package\"."
+        exit_with_success_elapsed "$package was updated to version $_cloudy_update_package__new_version."
+        ;;
+
     "pm-install")
         echo_title "Package Installer"
         package=$(get_command_arg 0)
         confirm "Install $(echo_green $package) in $WDIR?" || exit_with_failure "User cancelled."
         _cloudy_install_package $package
-        has_failed && exit_with_failure "Could not install $package."
+        has_failed && exit_with_failure "Could not install \"$package\"."
         exit_with_success_elapsed "$package was installed."
         ;;
 

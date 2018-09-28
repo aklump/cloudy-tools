@@ -671,21 +671,55 @@ function _cloudy_echo_aligned_columns() {
     _cloudy_table_rows=()
 }
 
+function _cloudy_load_and_validate_package() {
+    local package="$1"
+
+    _cloudy_load_package_info "$package"
+    [ $? -gt 0 ] && fail_because "Package \"$1\" is not found in the registry." && return 1
+    return 0
+}
+
+function _cloudy_update_package() {
+    local package="$1"
+
+    ! [[ "$package" ]] && fail_because "Missing package name, e.g. \"aklump/perms\"." && return 1
+
+    _cloudy_update_package__new_version=''
+    _cloudy_load_and_validate_package $package|| return 1
+    echo_heading "Package located, updating..."
+    local lockfile="$WDIR/cloudypm.lock"
+    local package_destination_dir="$WDIR/opt/$package"
+    local package_basename=$(basename $package_destination_dir)
+    local stash=$(tempdir)
+
+    (cd $stash && git clone "$cloudypm___clone_from" repo >/dev/null 2>&1)
+    [ -d "$stash/repo" ] || return 1
+    rsync -a --delete --exclude=.git* "$stash/repo/" "$package_destination_dir/" || return 1
+    rm -rf $stash
+
+    local find=$(grep $package $lockfile)
+    local replace="$package:$cloudypm___version"
+    if [[ "$find" ]]; then
+        sed -i '' -E "s#$find#$replace#g" $lockfile || return 1
+    else
+        echo "$replace" >> $lockfile
+    fi
+    _cloudy_update_package__new_version=$cloudypm___version
+}
+
 function _cloudy_install_package() {
     local package="$1"
-    local url
 
+    ! [[ "$package" ]] && fail_because "Missing package name, e.g. \"aklump/perms\"." && return 1
+
+    _cloudy_load_and_validate_package $package|| return 1
+    echo_heading "Package located, installing..."
+
+    local lockfile="$WDIR/cloudypm.lock"
     local cloudy_destination_dir="$WDIR/opt/cloudy/cloudy"
     local package_destination_dir="$WDIR/opt/$package"
     local package_basename=$(basename $package_destination_dir)
     local bin="$WDIR/bin"
-
-    # Not installed, let's download it.
-    _cloudy_load_package_info "$package"
-    package_loaded=$?
-    [ $package_loaded -gt 0 ] && fail_because "Package \"$1\" is not found in the registry." && return 1
-
-    echo_heading "Package located, installing..."
 
     if [ ! -d "$cloudy_destination_dir" ]; then
         (mkdir -p "$(dirname $cloudy_destination_dir)" && cd "$(dirname $cloudy_destination_dir)" && cloudy core > /dev/null)
@@ -717,7 +751,7 @@ function _cloudy_install_package() {
         cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_install" || fail_because "The command $cloudypm___on_install failed."
     fi
 
-    touch $WDIR/cloudypm.lock && echo "$package:$cloudypm___version" > $WDIR/cloudypm.lock
+    touch $lockfile && echo "$package:$cloudypm___version" >> $lockfile
 
     return 0
 }

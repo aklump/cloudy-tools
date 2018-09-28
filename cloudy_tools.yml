@@ -4,12 +4,21 @@ version: 1.0.5
 default_command: help
 commands:
   pm-install:
-    help: Install a cloudy package from the Cloudy package registry.
+    help: Install a Cloudy package from the Cloudy Package Registry.
     aliases:
       - pmi
+      - pminstall
     arguments:
       package_name:
         help: The name of the package, e.g. aklump/install
+  pm-update:
+    help: Update an installed Cloudy package from the Cloudy Package Registry.
+    aliases:
+      - pmu
+      - pmupdate
+    arguments:
+      package_name:
+        help: The name of the installed package, e.g. aklump/install
   core:
     help: Install cloudy core only, in the current directory.  This is similar to
             "new" but it doesn't create the script and configuration files.
