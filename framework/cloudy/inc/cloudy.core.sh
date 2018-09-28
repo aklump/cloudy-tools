@@ -556,6 +556,9 @@ function _cloudy_write_log() {
     echo "[$(date)] [$level] $@" >> "$LOGFILE"
 }
 
+##
+ # @see event_dispatch
+ #
 function _cloudy_trigger_event() {
     local event=$1
     local callback=$2
@@ -724,7 +727,7 @@ if [ ! -d "$CACHE_DIR" ]; then
     mkdir -p "$CACHE_DIR" || exit_with_failure "Unable to create cache folder: $CACHE_DIR"
 fi
 
-_cloudy_trigger_event "pre_config" "on_pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
+event_dispatch "pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
 
 # Detect changes in YAML and purge config cache if necessary.
 _cloudy_auto_purge_config
@@ -732,7 +735,7 @@ _cloudy_auto_purge_config
 # Generate the cached configuration file.
 if [ ! -f "$CACHED_CONFIG_JSON_FILEPATH" ]; then
     # Normalize the config file to JSON.
-    additional_config=$(_cloudy_trigger_event "compile_config" "on_compile_config")
+    additional_config=$(event_dispatch "compile_config")
     CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$additional_config")"
     json_result=$?
     [[ "$CLOUDY_CONFIG_JSON" ]] || exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
@@ -767,7 +770,7 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 # End caching setup
 #
 
-_cloudy_trigger_event "boot" "on_boot" || exit_with_failure "Could not bootstrap $(get_title)"
+event_dispatch "boot" || exit_with_failure "Could not bootstrap $(get_title)"
 _cloudy_bootstrap $@
 
 
