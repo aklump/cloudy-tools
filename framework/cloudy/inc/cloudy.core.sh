@@ -771,7 +771,7 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 #
 eval $(get_config -a additional_bootstrap)
 for include in "${additional_bootstrap[@]}"; do
-   [ -f $include ] && source $include
+   source "$ROOT/$include"
 done
 event_dispatch "boot" || exit_with_failure "Could not bootstrap $(get_title)"
 _cloudy_bootstrap $@
