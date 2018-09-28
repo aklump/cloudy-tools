@@ -29,10 +29,9 @@
 
 <p>When you call <code>exit_with_success</code> and <code>exit_with_success_elapsed</code> the exit status is set to 0 and the script exits.  With the latter, the elapsed time is also printed.</p>
 
-<p>When you call <code>exit_with_failure</code> the exit status is set to 1 by default.  To change the exit status to something other than 1, then do something like the following, which will return a 2.  Valid exit codes are from 0-255. <a href="https://www.tldp.org/LDP/abs/html/exit-status.html">Learn more</a>.</p>
+<p>When you call <code>exit_with_failure</code> the exit status is set to 1 by default.  To change the exit status to something other than 1, then pass the <code>--status={code}</code> option, like the following, which will return a 2.  Valid exit codes are from 0-255. <a href="https://www.tldp.org/LDP/abs/html/exit-status.html">Learn more</a>.</p>
 
-<pre><code>CLOUDY_EXIT_STATUS=2
-exit_with_failure "Missing $ROOT/_perms.local.sh."
+<pre><code>exit_with_failure --status=2 "Missing $ROOT/_perms.local.sh."
 </code></pre>
 
 <p>You can use <code>throw</code> kind of like an exception.</p>
@@ -50,7 +49,7 @@ exit_with_failure "Missing $ROOT/_perms.local.sh."
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Sat, 22 Sep 2018 08:40:47 -0700</p>
+    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Fri, 28 Sep 2018 10:28:21 -0700</p>
   </div>
 </footer>
 

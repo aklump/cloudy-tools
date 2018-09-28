@@ -133,7 +133,7 @@ ${config_keys[2]} == "new"
 
 <h3>Filepaths</h3>
 
-<p>Configuration values which are filepaths can be added to the YAML as relative paths (relative to the script file) like this;</p>
+<p>Configuration values which are filepaths can be added to the YAML as relative paths:</p>
 
 <pre><code>webroot: ../web
 path_to_binaries: .
@@ -146,6 +146,17 @@ public_files: ../web/sites/default/files
 </code></pre>
 
 <p>The value of <code>$webroot</code> will be an an absolute filepath.</p>
+
+<h4>How are relative filepaths made absolute?</h4>
+
+<ol>
+<li>By default <code>$ROOT</code> is used as the basepath, which is the directory that contains your Cloudy script.</li>
+<li><p>You can alter this behavior by setting the configuration variable as <code>relative_paths_base</code> with a value, which is either an absolute path, or a relative path, relative to <code>$ROOT</code>.  Both of these are valid values:</p>
+
+<pre><code>relative_paths_base: ../../..
+relative_paths_base: /Users/aklump/config
+</code></pre></li>
+</ol>
 
 <h4>Pro Tip</h4>
 
@@ -196,7 +207,7 @@ writeable_directories=($_config_values[@]})
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Sat, 22 Sep 2018 08:40:47 -0700</p>
+    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Fri, 28 Sep 2018 10:28:21 -0700</p>
   </div>
 </footer>
 

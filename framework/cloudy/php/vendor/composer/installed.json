@@ -158,8 +158,8 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v5.7.5",
-        "version_normalized": "5.7.5.0",
+        "version": "v5.7.6",
+        "version_normalized": "5.7.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
@@ -204,8 +204,8 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.7.5",
-        "version_normalized": "5.7.5.0",
+        "version": "v5.7.6",
+        "version_normalized": "5.7.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
