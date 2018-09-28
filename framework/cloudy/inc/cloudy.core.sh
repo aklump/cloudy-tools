@@ -407,16 +407,6 @@ function _cloudy_get_valid_operations_by_command() {
     _cloudy_get_valid_operations_by_command__array=("${options[@]}")
 }
 
-function _cloudy_validate_against_scheme() {
-    local config_path_to_schema=$1
-    local name=$2
-    local value=$3
-
-    local errors
-    echo $(php $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
-    return $?
-}
-
 function _cloudy_help_commands() {
     local commands
     local help_command
@@ -526,27 +516,6 @@ function _cloudy_help_for_single_command() {
         done
         echo_list
     fi
-}
-
-function _cloudy_validate_command() {
-    local command=$1
-
-    local commands
-
-    # See if it's a master command.
-    eval $(get_config_keys "commands")
-    array_has_value__array=(${commands[@]})
-    array_has_value "$command" && return 0
-
-    # Look for command as an alias.
-    for c in "${commands[@]}"; do
-        eval $(get_config_as -a "aliases" "commands.$c.aliases")
-        array_has_value__array=(${aliases[@]})
-        array_has_value "$command" && return 0
-    done
-
-    fail_because "You have called $(basename $SCRIPT) using the command \"$command\", which does not exist."
-    return 1
 }
 
 function _cloudy_debug_helper() {

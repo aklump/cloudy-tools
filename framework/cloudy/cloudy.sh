@@ -71,7 +71,7 @@ function validate_input() {
        eval "value=\"\$CLOUDY_OPTION__$(string_upper $name)\""
 
        # Assert the provided value matches schema.
-       eval $(_cloudy_validate_against_scheme "commands.$command.options.$name" "$name" "$value")
+       eval $(_cloudy_validate_input_against_schema "commands.$command.options.$name" "$name" "$value")
        if [[ "$schema_errors" ]]; then
             for error in "${schema_errors[@]}"; do
                fail_because "$error"
