@@ -58,7 +58,7 @@ function _cloudypm_load_package_info() {
     local package="$1"
 
     local cached_info="$CACHE_DIR/cpm/$package.sh"
-    local found=$(grep "$package:" "$ROOT/cloudy_package_registry.txt")
+    local found=$(grep "$package " "$ROOT/cloudy_package_registry.txt")
     local json
     read name url <<< "$found"
     [[ "$url" ]] || return 1
@@ -102,6 +102,9 @@ function _cloudypm_update_package() {
     local package="$1"
 
     ! [[ "$package" ]] && fail_because "Missing package name, e.g. \"aklump/perms\"." && return 1
+
+    local package_destination_dir="$WDIR/opt/$package"
+    ! [ -d "$package_destination_dir" ] && fail_because "Package is not installed; try pm-install $package" && return 1
 
     _cloudypm_update_package__new_version=''
     _cloudypm_load_and_validate_package $package|| return 1
