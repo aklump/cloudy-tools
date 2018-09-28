@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+function testSucceedBecauseCausesExitToBeZero() {
+    (fail_because "bla" && succeed_because "blu" && _cloudy_exit >/dev/null 2>&1)
+    assert_same 0 $?
+}
+
+function testFailBecauseCausesExitToBeNonZero() {
+    (succeed_because "blu" && fail_because "bla" && _cloudy_exit >/dev/null 2>&1)
+    assert_same 1 $?
+}
+
+function testCloudyExitWithFailureExitsWithNonZero() {
+    (exit_with_failure >/dev/null 2>&1)
+    assert_same 1 $?
+    (exit_with_failure --status=4 >/dev/null 2>&1)
+    assert_same 4 $?
+}
+
+function testCloudyExitWithSuccessExitsWithZero() {
+    (exit_with_success >/dev/null 2>&1)
+    assert_same 0 $?
+    (exit_with_success_elapsed >/dev/null 2>&1)
+    assert_same 0 $?
+}
+
 function testTempdirCreatesExistingDirectory() {
     local dir=$(tempdir); assert_exit_status 0
     assert_not_empty $dir

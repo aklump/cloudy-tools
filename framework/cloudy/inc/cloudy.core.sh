@@ -282,7 +282,7 @@ function _cloudy_get_config() {
 
 
 function _cloudy_exit() {
-    exit $CLOUDY_EXIT
+    exit $CLOUDY_EXIT_STATUS
 }
 
 ##
