@@ -222,3 +222,10 @@ function assert_not_internal_type() {
 
     _cloudy_assert_failed "$var_name" "should not be of type \"$type\"."
 }
+
+function assert_reg_exp() {
+    local pattern="$1"
+    local string="$2"
+
+    [[ "$string" =~ $pattern ]] || _cloudy_assert_failed "$string" "Does not match regular expression \"$pattern\""
+}
