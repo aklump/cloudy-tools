@@ -113,10 +113,10 @@ The value of `$webroot` will be an an absolute filepath.
 #### How are relative filepaths made absolute?
 
 1. By default `$ROOT` is used as the basepath, which is the directory that contains your Cloudy script.
-1. You can alter this behavior by setting the configuration variable as `relative_paths_base` with a value, which is either an absolute path, or a relative path, relative to `$ROOT`.  Both of these are valid values:
+1. You can alter this behavior by setting the configuration variable as `config_path_base` with a value, which is either an absolute path, or a relative path, relative to `$ROOT`.  Both of these are valid values:
 
-        relative_paths_base: ../../..
-        relative_paths_base: /Users/aklump/config
+        config_path_base: ../../..
+        config_path_base: /Users/aklump/config
         
 #### Pro Tip
 
