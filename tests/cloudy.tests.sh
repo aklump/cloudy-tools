@@ -1,5 +1,33 @@
 #!/usr/bin/env bash
 
+##
+ # @see testEventListenAndDispatch
+ #
+function on_test_bravo() {
+    [[ "$1" == "do re" ]] && [[ "$2" == "mi" ]] && on_test_bravo__value=true
+}
+
+function testEventListenAndDispatchWithOnEventFunctionName() {
+    event_listen test_bravo
+    on_test_bravo__value=false
+    event_dispatch "test_bravo" "do re" "mi"; assert_exit_status 0
+    assert_same true $on_test_bravo__value
+}
+
+##
+ # @see testEventListenAndDispatch
+ #
+function was_called_with_do_re() {
+    [[ "$1" == "do re" ]] && [[ "$2" == "mi" ]] && was_called_with_do_re__value=true
+}
+
+function testEventListenAndDispatchWithCustomFunctionName() {
+    event_listen test_alpha was_called_with_do_re
+    was_called_with_do_re__value=false
+    event_dispatch "test_alpha" "do re" "mi"; assert_exit_status 0
+    assert_same true $was_called_with_do_re__value
+}
+
 function testUrlAddCacheBuster() {
     local url
     url=$(url_add_cache_buster "site.com")

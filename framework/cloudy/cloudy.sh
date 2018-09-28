@@ -616,7 +616,7 @@ function implement_cloudy_basic() {
  #
 function exit_with_cache_clear() {
     local cloudy_dir="${1:-$CLOUDY_ROOT}"
-    _cloudy_trigger_event "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
+    _cloudy_trigger_event "clear_cache" "on_clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
     if dir_has_files "$cloudy_dir/cache"; then
         clear=$(rm -rv "$cloudy_dir/cache/"*)
         status=$?
@@ -810,6 +810,35 @@ function url_add_cache_buster() {
         url="$url?$(date +%s)"
     fi
     echo $url
+}
+
+##
+ # Dispatch that an event has occurred to all listeners.
+ #
+ # Additional arguments beyond $1 are passed on to the listeners.
+ #
+function event_dispatch() {
+    local event_id=$1
+
+    shift
+    local args
+    local varname="_cloudy_event_listen__${event_id}__array"
+    array_has_value__array=$(eval "echo "\$$varname"")
+    array_has_value "on_$event_id" || array_has_value__array=("${array_has_value__array[@]}" "on_$event_id")
+    for listener in ${array_has_value__array[@]}; do
+        _cloudy_trigger_event "$event_id" "$listener" "$@"
+    done
+}
+
+##
+ # Register an event listener.
+ #
+function event_listen() {
+    local event_id="$1"
+    local callback="${2:-on_$1}"
+
+    local varname="_cloudy_event_listen__${event_id}__array"
+    eval "$varname=(\"\${$varname[@]}\" $callback)"
 }
 
 #

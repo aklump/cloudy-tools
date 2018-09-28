@@ -1,4 +1,4 @@
-# Events
+# Events (Hooks)
 
 * Event handlers are functions that must be defined before the Cloudy bootstrap.
 
@@ -18,3 +18,23 @@
 ## on_boot
 
 If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the `tests` path in _cloudy_installer.sh_.
+
+
+## Example of a Custom Event
+
+Imagine a custom event like showing info.  Let's call the event `show_info`.  You Cloudy script will fire or trigger the event with a line like this:
+
+    event_trigger "show_info" "do" "re" "mi"
+    local trigger_result=$?
+    
+How might another script respond to this event?
+
+    function on_show_info() {
+        local do=$1
+        local re=$2
+        local mi=$3
+        
+        ...
+    }
+
+You can register custom callbacks using `event_listen`; see codebase for more info.
