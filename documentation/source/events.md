@@ -37,4 +37,20 @@ How might another script respond to this event?
         ...
     }
 
-You can register custom callbacks using `event_listen`; see codebase for more info.
+### Listening for events
+
+You can register custom callbacks using `event_listen`.  See below...
+
+### Using `additional_bootstrap` files
+
+In some cases you will need to add your listeners in a custom bootstrap file which is registered in your configuration as `additional_bootstrap`.  They are sourced after all configuration has been loaded.  The contents of such file could look like this:
+
+    #!/usr/bin/env bash
+    
+    function here_we_go() {
+        debug "$FUNCNAME;\$FUNCNAME"
+    }
+    
+    event_listen "boot" "here_we_go"
+
+

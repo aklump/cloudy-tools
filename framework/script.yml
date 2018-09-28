@@ -1,5 +1,6 @@
 title: ""
 additional_config:
+additional_bootstrap:
 default_command: help
 commands:
   help:

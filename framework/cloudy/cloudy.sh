@@ -852,6 +852,13 @@ function event_listen() {
     local callback="${2:-on_$1}"
 
     local varname="_cloudy_event_listen__${event_id}__array"
+    local listeners=$(eval "echo "\$$varname"")
+
+    # Prevent multiple listeners of the same name.
+    for value in "${listeners[@]}"; do
+       [[ "$value" == "$callback" ]] && throw "Listener $callback has already been added; you must provide a different function name;$0;$FUNCNAME;$LINENO"
+    done
+
     eval "$varname=(\"\${$varname[@]}\" $callback)"
 }
 

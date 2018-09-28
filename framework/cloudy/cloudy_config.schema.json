@@ -88,6 +88,13 @@
             ],
             "uniqueItems": true
         },
+        "additional_bootstrap": {
+            "type": [
+                "null",
+                "array"
+            ],
+            "uniqueItems": true
+        },
         "default_command": {
             "$ref": "#/definitions/commandName"
         },
