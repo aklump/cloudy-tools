@@ -132,13 +132,13 @@ function _cloudy_get_config() {
     local cached_var_name
     local cached_var_name_keys
     local file_list
-    local relative_paths_base=${cloudy_config___relative_paths_base}
+    local config_path_base=${cloudy_config___config_path_base}
 
     # Determine if we have an absolute relative path base or, if not prepent $ROOT.
-    [[ "${relative_paths_base:0:1}" != '/' ]] && relative_paths_base="${ROOT}/$relative_paths_base"
+    [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
 
     # Remove trailing / for proper path construction.
-    relative_paths_base=${relative_paths_base%/}
+    config_path_base=${config_path_base%/}
 
     parse_args $@
     config_path=${parse_args__args[0]/-/_}
@@ -209,7 +209,7 @@ function _cloudy_get_config() {
                 file_list=()
 
                 # Make relative to $ROOT.
-                [[ "$path" ]] && [[ "$path" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${relative_paths_base}/${path}
+                [[ "$path" ]] && [[ "$path" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}
 
                 # This will expand a glob finder.
                 if [ -d "$path" ]; then
@@ -248,7 +248,7 @@ function _cloudy_get_config() {
             for path in "${var_value[@]}"; do
 
                 # Make relative to $ROOT.
-                [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${relative_paths_base}/${path}
+                [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}
 
                 # This will expand a glob finder.
                 if [ -d "$path" ]; then

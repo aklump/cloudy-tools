@@ -78,6 +78,9 @@
         "title": {
             "type": "string"
         },
+        "config_path_base": {
+            "type": "string"
+        },
         "additional_config": {
             "type": [
                 "null",
