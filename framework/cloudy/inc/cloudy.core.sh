@@ -697,6 +697,12 @@ function _cloudy_update_package() {
     rsync -a --delete --exclude=.git* "$stash/repo/" "$package_destination_dir/" || return 1
     rm -rf $stash
 
+    if [[ "$cloudypm___on_update" ]]; then
+        [[ "$cloudypm___symlink" ]] || cloudypm___symlink="$(path_filename $cloudypm___entry_script)"
+        local symlink="$WDIR/bin/$cloudypm___symlink"
+        cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_update" || fail_because "The command $cloudypm___on_update failed."
+    fi
+
     local find=$(grep $package $lockfile)
     local replace="$package:$cloudypm___version"
     if [[ "$find" ]]; then
@@ -705,6 +711,8 @@ function _cloudy_update_package() {
         echo "$replace" >> $lockfile
     fi
     _cloudy_update_package__new_version=$cloudypm___version
+
+    has_failed ? return 1 : return 0
 }
 
 function _cloudy_install_package() {
@@ -768,6 +776,7 @@ function _cloudy_load_package_info() {
     # Download YAML and convert to cached BASH.
     if [ ! -f "$cached_info" ]; then
         local cache_info_yml=${cached_info/.sh/.yml}
+        url=$(url_add_cache_buster "$url")
         curl -o $cache_info_yml --create-dirs "$url" >/dev/null 2>&1 || fail_because "Cannot download $url"
         json=$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudypm_info.schema.json" "$cache_info_yml")
         json_result=$?
