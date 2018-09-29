@@ -40,9 +40,6 @@ function on_boot() {
     exit_with_test_results
 }
 
-
-
-
 ##
  # Fires when the configuration is about to be converted from YAML/JSON
  # Used to add additional configuration files to merge in.

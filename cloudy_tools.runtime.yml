@@ -1,0 +1,6 @@
+tests:
+  config:
+    meat: bear
+    merge_test:
+      - cinco
+      - seis

@@ -1,6 +1,8 @@
 ---
 title: Cloudy Tools
 version: 1.0.5
+additional_config:
+  - cloudy_tools.additional.yml
 default_command: help
 commands:
   pm-install:
@@ -91,6 +93,12 @@ translate:
   strings:
     en:
 tests:
+  config:
+    fruit: apple
+    merge_test:
+      - uno
+      - dos
+      - tres
   string: Adam ate apples at Andrew's abode.
   indexed_array:
     - alpha

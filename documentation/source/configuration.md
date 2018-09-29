@@ -1,18 +1,37 @@
 # Configuration
 
-Configuration is provided by YAML or JSON files.  Examples here will be shown with YAML.
+## Overview
 
-In the header of your script you will find `CONFIG`, this is for the base configuration file, e.g.,
+Configuration files are YAML or JSON.  They are connected to your script in one, two, or three ways.
+
+The main configuration file is required and is hardcoded in your script as `$CONFIG`.
+
+Within that file, you may indicate additional configuration files using the key `additional_config`.
+
+Finally, configuration files may be provided dynamically at run time listening to the event `compile_config`.
+
+If configuration values conflict, those that came later will take prescendence; note: arrays will be merged.
+
+## In Depth
+
+The following examples will be shown with YAML.
+
+In the header of your script you will find `$CONFIG`, this is for the base configuration file, e.g.,
 
         CONFIG=script.example.yml
-        CONFIG=script.example.config.json
         
-1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname $CONFIG)`
+1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname your_cloudy_script.sh)`
 1. You may add additional configuration files by adding something like following in the YAML of the base configuration file.
 
         additional_config:
           - _install.local.yml
 
+1. Thirdly, you may provide configuration paths at run-time:
+
+        function on_compile_config() {
+            echo "some/other/config.yml"
+        }
+        
 1. You may have any number of configuration files.
 1. Consider limited file permissions on your configuration files; e.g. `chmod go-rwx`.
 
@@ -113,9 +132,12 @@ The value of `$webroot` will be an an absolute filepath.
 #### How are relative filepaths made absolute?
 
 1. By default `$ROOT` is used as the basepath, which is the directory that contains your Cloudy script.
-1. You can alter this behavior by setting the configuration variable as `config_path_base` with a value, which is either an absolute path, or a relative path, relative to `$ROOT`.  Both of these are valid values:
+1. You can alter this behavior by setting the configuration variable as `config_path_base` with a value, which is either an absolute path, or a relative path, relative to `$ROOT`.  Both of the following are valid values:
 
+        # relative to $ROOT
         config_path_base: ../../..
+        
+        # or using an absolute path...
         config_path_base: /Users/aklump/config
         
 #### Pro Tip

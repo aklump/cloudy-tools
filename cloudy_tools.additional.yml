@@ -1,0 +1,7 @@
+tests:
+  config:
+    fruit: banana
+    vegetable: artichoke
+    meat: ardvaark
+    merge_test:
+      - quatro
