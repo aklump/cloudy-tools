@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Events</title>
+  <title>Events (Hooks)</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -22,7 +22,7 @@
   </form>
 </div>
 
-  <h1>Events</h1>
+  <h1>Events (Hooks)</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
@@ -47,6 +47,42 @@ s="${BASH_SOURCE[0]}";while ...
 <h2>on_boot</h2>
 
 <p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>tests</code> path in <em>cloudy_installer.sh</em>.</p>
+
+<h2>Example of a Custom Event</h2>
+
+<p>Imagine a custom event like showing info.  Let's call the event <code>show_info</code>.  You Cloudy script will fire or trigger the event with a line like this:</p>
+
+<pre><code>event_trigger "show_info" "do" "re" "mi"
+local trigger_result=$?
+</code></pre>
+
+<p>How might another script respond to this event?</p>
+
+<pre><code>function on_show_info() {
+    local do=$1
+    local re=$2
+    local mi=$3
+
+    ...
+}
+</code></pre>
+
+<h3>Listening for events</h3>
+
+<p>You can register custom callbacks using <code>event_listen</code>.  See below...</p>
+
+<h3>Using <code>additional_bootstrap</code> files</h3>
+
+<p>In some cases you will need to add your listeners in a custom bootstrap file which is registered in your configuration as <code>additional_bootstrap</code>.  They are sourced after all configuration has been loaded.  The contents of such file could look like this:</p>
+
+<pre><code>#!/usr/bin/env bash
+
+function here_we_go() {
+    debug "$FUNCNAME;\$FUNCNAME"
+}
+
+event_listen "boot" "here_we_go"
+</code></pre>
 </section>
 
 <div class="search__results">
@@ -61,7 +97,7 @@ s="${BASH_SOURCE[0]}";while ...
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Fri, 28 Sep 2018 10:42:27 -0700</p>
+    <p class="legaleeze center">Version: 1.0.5 &bull; Last Updated: Fri, 28 Sep 2018 17:16:39 -0700</p>
   </div>
 </footer>
 
