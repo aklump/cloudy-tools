@@ -758,7 +758,17 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
         fail_because "$(IFS="|"; read file reason <<< "$compiled"; echo "$reason")"
         exit_with_failure "Cannot create cached config filepath."
     else
-        echo "$(_cloudy_get_file_mtime $CONFIG)" > "$CACHED_CONFIG_MTIME_FILEPATH"
+        source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
+        eval $(get_config -a "additional_config")
+        config_files=("$CONFIG")
+        for file in "${additional_config[@]}"; do
+           config_files=("${config_files[@]}" "$ROOT/$file")
+        done
+        echo >  $CACHED_CONFIG_MTIME_FILEPATH
+        for file in "${config_files[@]}"; do
+            echo "$file $(_cloudy_get_file_mtime $file)" >> "$CACHED_CONFIG_MTIME_FILEPATH"
+        done
+
         write_log_notice "$(basename $CONFIG) configuration compiled to $CACHED_CONFIG_FILEPATH."
     fi
 fi
