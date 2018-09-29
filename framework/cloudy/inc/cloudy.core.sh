@@ -65,7 +65,6 @@ function _cloudy_bootstrap() {
  #
 function _cloudy_auto_purge_config() {
     local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
-
     if [[ "$cloudy_development_do_not_cache_config" == true ]] || _cloudy_has_config_changed; then
         if [[ "$cloudy_development_do_not_cache_config" == true ]]; then
             write_log_dev_warning "Configuration purge detected due to \$cloudy_development_do_not_cache_config = true."
@@ -75,6 +74,10 @@ function _cloudy_auto_purge_config() {
         if ! rm -f "$CACHED_CONFIG_FILEPATH"; then
             fail_because "Could not rm $CACHED_CONFIG_FILEPATH during purge."
             write_log_critical "Cannot delete $CACHED_CONFIG_FILEPATH.  Cached configuration may be stale."
+        fi
+        if ! rm -f "$CACHED_CONFIG_JSON_FILEPATH"; then
+            fail_because "Could not rm $CACHED_CONFIG_JSON_FILEPATH during purge."
+            write_log_critical "Cannot delete $CACHED_CONFIG_JSON_FILEPATH.  Cached configuration may be stale."
         fi
     fi
 
