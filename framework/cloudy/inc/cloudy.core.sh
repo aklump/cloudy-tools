@@ -88,13 +88,10 @@ function _cloudy_auto_purge_config() {
 function _cloudy_has_config_changed() {
     local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
     [ -f "$CACHED_CONFIG_MTIME_FILEPATH" ] || touch "$CACHED_CONFIG_MTIME_FILEPATH" || fail
-
-    local cache_mtime=$(cat "$CACHED_CONFIG_MTIME_FILEPATH")
-    [[ "$cache_mtime" ]] || write_log_error "Missing timestamp in $CACHED_CONFIG_MTIME_FILEPATH"
-
-    # Test if the yaml file was modified and automatically rebuild config.yml.sh
-    [[ $(_cloudy_get_file_mtime $CONFIG) -gt "$cache_mtime" ]]
-    return $?
+    while read path cached_mtime; do
+        [[ $(_cloudy_get_file_mtime $path) -gt "$cached_mtime" ]] && return 0
+    done < $cache_mtime_filepath
+    return 1
 }
 
 function _cloudy_get_file_mtime() {
