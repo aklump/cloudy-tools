@@ -1,5 +1,30 @@
 #!/usr/bin/env bash
 
+function testConfigurationMerge() {
+    eval $(get_config "tests.config.fruit")
+    assert_same "banana" $tests_config_fruit
+    eval $(get_config "tests.config.vegetable")
+    assert_same "artichoke" $tests_config_vegetable
+    eval $(get_config "tests.config.meat")
+    assert_same "bear" $tests_config_meat
+    eval $(get_config -a "tests.config.merge_test")
+    assert_count 7 "tests_config_merge_test"
+    assert_same "uno" ${tests_config_merge_test[0]}
+    assert_same "dos" ${tests_config_merge_test[1]}
+    assert_same "tres" ${tests_config_merge_test[2]}
+    assert_same "quatro" ${tests_config_merge_test[3]}
+    assert_same "cinco" ${tests_config_merge_test[4]}
+    assert_same "seis" ${tests_config_merge_test[5]}
+    assert_same "siete" ${tests_config_merge_test[6]}
+}
+
+##
+ # @see testEventListenAndDispatch
+ #
+function on_test_bravo__custom() {
+    [[ "$1" == "do re" ]] && [[ "$2" == "mi" ]] && on_test_bravo__custom=true
+}
+
 ##
  # @see testEventListenAndDispatch
  #
@@ -8,14 +33,13 @@ function on_test_bravo() {
 }
 
 function testEventListenAndDispatchWithOnEventExplicitFunctionName() {
-    event_listen test_bravo on_test_bravo
+    event_listen test_bravo on_test_bravo__custom
     on_test_bravo__value=false
     event_dispatch "test_bravo" "do re" "mi"; assert_exit_status 0
-    assert_same true $on_test_bravo__value
+    assert_same true $on_test_bravo__custom
 }
 
 function testEventListenAndDispatchWithOnEventFunctionName() {
-    event_listen test_bravo
     on_test_bravo__value=false
     event_dispatch "test_bravo" "do re" "mi"; assert_exit_status 0
     assert_same true $on_test_bravo__value
@@ -25,7 +49,6 @@ function testEventListenAndDispatchWithOnEventFunctionName() {
  # @see testEventListenAndDispatch
  #
 function was_called_with_do_re() {
-was_called_with_do_re__value=true
     [[ "$1" == "do re" ]] && [[ "$2" == "mi" ]] && was_called_with_do_re__value=true
 }
 

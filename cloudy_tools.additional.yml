@@ -5,3 +5,4 @@ tests:
     meat: ardvaark
     merge_test:
       - quatro
+      - cinco

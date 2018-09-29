@@ -69,7 +69,7 @@ function _cloudy_auto_purge_config() {
         if [[ "$cloudy_development_do_not_cache_config" == true ]]; then
             write_log_dev_warning "Configuration purge detected due to \$cloudy_development_do_not_cache_config = true."
         else
-            write_log_notice "Config changes detected.  $CACHED_CONFIG_FILEPATH is out of date."
+            write_log_notice "Config changes detected in \"$(basename $_cloudy_has_config_changed__file)\"."
         fi
         if ! rm -f "$CACHED_CONFIG_FILEPATH"; then
             fail_because "Could not rm $CACHED_CONFIG_FILEPATH during purge."
@@ -92,7 +92,7 @@ function _cloudy_has_config_changed() {
     local cache_mtime_filepath="${CACHED_CONFIG_FILEPATH/.sh/.modified.txt}"
     [ -f "$CACHED_CONFIG_MTIME_FILEPATH" ] || touch "$CACHED_CONFIG_MTIME_FILEPATH" || fail
     while read path cached_mtime; do
-        [[ $(_cloudy_get_file_mtime $path) -gt "$cached_mtime" ]] && return 0
+        [[ $(_cloudy_get_file_mtime $path) -gt "$cached_mtime" ]] && _cloudy_has_config_changed__file="$path" && return 0
     done < $cache_mtime_filepath
     return 1
 }
@@ -728,6 +728,7 @@ if [ ! -d "$CACHE_DIR" ]; then
 fi
 
 event_dispatch "pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
+compile_config__runtime_files=$(event_dispatch "compile_config")
 
 # Detect changes in YAML and purge config cache if necessary.
 _cloudy_auto_purge_config
@@ -735,8 +736,7 @@ _cloudy_auto_purge_config
 # Generate the cached configuration file.
 if [ ! -f "$CACHED_CONFIG_JSON_FILEPATH" ]; then
     # Normalize the config file to JSON.
-    additional_config=$(event_dispatch "compile_config")
-    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$additional_config")"
+    CLOUDY_CONFIG_JSON="$(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
     json_result=$?
     [[ "$CLOUDY_CONFIG_JSON" ]] || exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
     [ $json_result -ne 0 ] && exit_with_failure "$CLOUDY_CONFIG_JSON"
@@ -764,6 +764,7 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
         for file in "${additional_config[@]}"; do
            config_files=("${config_files[@]}" "$ROOT/$file")
         done
+        config_files=("${config_files[@]}" "${compile_config__runtime_files[@]}")
         echo >  $CACHED_CONFIG_MTIME_FILEPATH
         for file in "${config_files[@]}"; do
             echo "$file $(_cloudy_get_file_mtime $file)" >> "$CACHED_CONFIG_MTIME_FILEPATH"

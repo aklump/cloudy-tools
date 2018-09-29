@@ -19,6 +19,10 @@ function on_boot() {
     exit_with_test_results
 }
 
+function on_compile_config() {
+    echo "$ROOT/cloudy_tools.runtime.yml"
+}
+
 function rsync_framework() {
     [[ "$framework" ]] || return 1
     rsync -a $framework/cloudy/ ./cloudy  --exclude=*.log --exclude=cache/

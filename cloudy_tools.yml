@@ -93,12 +93,6 @@ translate:
   strings:
     en:
 tests:
-  config:
-    fruit: apple
-    merge_test:
-      - uno
-      - dos
-      - tres
   string: Adam ate apples at Andrew's abode.
   indexed_array:
     - alpha
@@ -140,3 +134,9 @@ tests:
       name: db
       pass: 2394873910
   empty_array:
+  config:
+    fruit: apple
+    merge_test:
+      - uno
+      - dos
+      - tres

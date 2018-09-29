@@ -7,6 +7,7 @@
 
 use AKlump\Data\Data;
 use AKlump\LoftLib\Bash\Configuration;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Root directory of the Cloudy instance script.
@@ -40,4 +41,68 @@ function array_sort_by_item_length() {
   });
 
   return array_values($stack);
+}
+
+/**
+ * Load a configuration file into memory.
+ *
+ * @param $filepath
+ *   The absolute filepath to a configuration file.
+ *
+ * @return array|mixed
+ */
+function load_configuration_data($filepath) {
+  $data = [];
+  if (!file_exists($filepath)) {
+    throw new \RuntimeException("Missing configuration file: $filepath");
+  }
+  if (!($contents = file_get_contents($filepath))) {
+    throw new \RuntimeException("Empty configuration files: $filepath");
+  }
+  switch (($extension = pathinfo($filepath, PATHINFO_EXTENSION))) {
+    case 'yml':
+    case 'yaml':
+      if ($yaml = Yaml::parse($contents)) {
+        $data += $yaml;
+      }
+      break;
+
+    case 'json':
+      if ($json = json_decode($contents, TRUE)) {
+        $data += $json;
+      }
+      break;
+
+    default:
+      throw new \RuntimeException("Configuration files of type \"$extension\" are not supported.");
+
+  }
+
+  return $data;
+}
+
+function drupal_array_merge_deep_array($arrays) {
+  $result = array();
+  foreach ($arrays as $array) {
+    foreach ($array as $key => $value) {
+
+      // Renumber integer keys as array_merge_recursive() does. Note that PHP
+      // automatically converts array keys that are integer strings (e.g., '1')
+      // to integers.
+      if (is_integer($key)) {
+        $result[] = $value;
+      }
+      elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+        $result[$key] = drupal_array_merge_deep_array(array(
+          $result[$key],
+          $value,
+        ));
+      }
+      else {
+        $result[$key] = $value;
+      }
+    }
+  }
+
+  return $result;
 }
