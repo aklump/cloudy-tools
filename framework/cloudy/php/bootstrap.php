@@ -81,19 +81,24 @@ function load_configuration_data($filepath) {
   return $data;
 }
 
-function drupal_array_merge_deep_array($arrays) {
-  $result = array();
+/**
+ * Replace scalar values instead of merging to create arrays.
+ *
+ * @param... any number of arrays to merge.
+ *
+ * @return array
+ *   A single merged array.
+ */
+function merge_configuration() {
+  $arrays = func_get_args();
+  $result = [];
   foreach ($arrays as $array) {
     foreach ($array as $key => $value) {
-
-      // Renumber integer keys as array_merge_recursive() does. Note that PHP
-      // automatically converts array keys that are integer strings (e.g., '1')
-      // to integers.
-      if (is_integer($key)) {
+      if (is_int($key)) {
         $result[] = $value;
       }
       elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
-        $result[$key] = drupal_array_merge_deep_array(array(
+        $result[$key] = merge_configuration(array(
           $result[$key],
           $value,
         ));

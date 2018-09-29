@@ -27,7 +27,7 @@ try {
   foreach ($merge_config as $basename) {
     $path = strpos($basename, '/') !== 0 ? ROOT . "/$basename" : $basename;
     $additional_data = load_configuration_data($path);
-    $data = drupal_array_merge_deep_array([$data, $additional_data]);
+    $data = merge_configuration($data, $additional_data);
   }
 
   // Validate against cloudy_config.schema.json.
