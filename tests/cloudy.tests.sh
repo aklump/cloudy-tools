@@ -16,6 +16,12 @@ function testConfigurationMerge() {
     assert_same "cinco" ${tests_config_merge_test[4]}
     assert_same "seis" ${tests_config_merge_test[5]}
     assert_same "siete" ${tests_config_merge_test[6]}
+
+    eval $(get_config_as "assoc_test" -a "tests.config.associative_merge_test")
+    assert_same "zebra" "$assoc_test_z"
+    assert_same "yak" "$assoc_test_y"
+    assert_same "xylitol" "$assoc_test_x"
+    assert_same "whisky" "$assoc_test_w"
 }
 
 ##

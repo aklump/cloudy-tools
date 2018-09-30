@@ -140,3 +140,6 @@ tests:
       - uno
       - dos
       - tres
+    associative_merge_test:
+      z: zebra
+      y: yak

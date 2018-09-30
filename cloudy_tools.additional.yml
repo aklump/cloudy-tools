@@ -6,3 +6,6 @@ tests:
     merge_test:
       - quatro
       - cinco
+    associative_merge_test:
+      x: xylitol
+      w: whisky
