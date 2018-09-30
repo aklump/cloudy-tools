@@ -25,6 +25,14 @@ function do_tests_in() {
         fi
     done
 
+    local duplicates=($(printf '%s\n' "${tests[@]}"|awk '!($0 in seen){seen[$0];next} 1'))
+    if [ ${#duplicates[@]} -gt 0 ]; then
+        for duplicate in "${duplicates[@]}"; do
+           fail_because "Duplicated test function \"$duplicate\"."
+        done
+        exit_with_failure "Tests failed due to code problems."
+    fi
+
     for CLOUDY_ACTIVE_TEST in "${tests[@]}"; do
         if [[ "$(type -t $CLOUDY_ACTIVE_TEST)" != "function" ]]; then
           fail_because "Test not found: $CLOUDY_ACTIVE_TEST"
