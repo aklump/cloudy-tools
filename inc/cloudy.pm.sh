@@ -49,7 +49,7 @@ function _cloudypm_install_package() {
         cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_install" || fail_because "The command $cloudypm___on_install failed."
     fi
 
-    touch $lockfile && echo "$package:$cloudypm___version" >> $lockfile
+    _cloudypm_update_lock_file $package
 
     return 0
 }
@@ -109,7 +109,6 @@ function _cloudypm_update_package() {
     _cloudypm_update_package__new_version=''
     _cloudypm_load_and_validate_package $package|| return 1
     echo_heading "Package located, updating..."
-    local lockfile="$WDIR/cloudypm.lock"
     local package_destination_dir="$WDIR/opt/$package"
     local package_basename=$(basename $package_destination_dir)
     local stash=$(tempdir)
@@ -124,15 +123,23 @@ function _cloudypm_update_package() {
         local symlink="$WDIR/bin/$cloudypm___symlink"
         cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_update" || fail_because "The command $cloudypm___on_update failed."
     fi
-
-    local find=$(grep $package $lockfile)
-    local replace="$package:$cloudypm___version"
-    if [[ "$find" ]]; then
-        sed -i '' -E "s#$find#$replace#g" $lockfile || return 1
-    else
-        echo "$replace" >> $lockfile
-    fi
+    _cloudypm_update_lock_file $package
     _cloudypm_update_package__new_version=$cloudypm___version
 
     has_failed ? return 1 : return 0
+}
+
+function _cloudypm_update_lock_file() {
+    local package=$1
+
+    local lockfile="$WDIR/cloudypm.lock"
+    touch $lockfile
+    local find=($(grep $package $lockfile))
+    [ ${#find[@]} -gt 1 ] && write_log_error "Data corruption detected in $lockfile; duplicate entries for \"$package\" found."
+    local replace="$package:$cloudypm___version"
+    if [[ "$find" ]]; then
+        sed -i '' -E "s#${find}#${replace}#g" $lockfile || return 1
+    else
+        echo "$replace" >> $lockfile
+    fi
 }
