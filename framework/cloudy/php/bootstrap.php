@@ -82,32 +82,39 @@ function load_configuration_data($filepath) {
 }
 
 /**
- * Replace scalar values instead of merging to create arrays.
+ * Merge an array of configuration arrays.
  *
- * @param... any number of arrays to merge.
+ * @param... two or more arrays to merge.
  *
- * @return array
- *   A single merged array.
+ * @return array|mixed
+ *   The merged array.
  */
-function merge_configuration() {
+function merge_config($arrays) {
   $arrays = func_get_args();
-  $result = [];
-  foreach ($arrays as $array) {
-    foreach ($array as $key => $value) {
-      if (is_int($key)) {
-        $result[] = $value;
-      }
-      elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
-        $result[$key] = merge_configuration(array(
-          $result[$key],
-          $value,
-        ));
-      }
-      else {
-        $result[$key] = $value;
+  $master = array_shift($arrays);
+  foreach ($arrays as $merge) {
+    if (is_numeric(key($merge))) {
+      $master = array_merge($master, $merge);
+    }
+    else {
+      foreach ($merge as $key => $value) {
+        $type = NULL;
+        if (isset($master[$key])) {
+          $type = gettype($master[$key]);
+        }
+        if ($type && $type !== gettype($value)) {
+          throw new \RuntimeException("Cannot merge key $key; values are not the same type.");
+        }
+
+        if (is_scalar($value)) {
+          $master[$key] = $value;
+        }
+        else {
+          $master[$key] = merge_config($master[$key], $value);
+        }
       }
     }
   }
 
-  return $result;
+  return $master;
 }
