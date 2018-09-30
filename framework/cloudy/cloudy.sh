@@ -60,7 +60,7 @@ function validate_input() {
     command=$(get_command)
 
     # Assert only defined operations are valid.
-    [[ "$command" ]] && _cloudy_validate_command $command
+    [[ "$command" ]] && _cloudy_validate_command $command && _cloudy_validate_command_arguments $command
 
     # Assert only defined options for a given op.
     _cloudy_get_valid_operations_by_command $command

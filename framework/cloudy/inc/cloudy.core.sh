@@ -671,6 +671,27 @@ function _cloudy_validate_command() {
     return 1
 }
 
+function _cloudy_validate_command_arguments() {
+    local command=$1
+
+    command=$(_cloudy_get_master_command $command)
+    local argument_keys
+    local index=1
+    local status=0
+    local key
+    local entered_value
+
+    # See if it's a master command.
+    eval $(get_config_keys_as "argument_keys" -a "commands.$command.arguments")
+    for key in "${argument_keys[@]}"; do
+        eval $(get_config_as "required" "commands.$command.arguments.$key.required")
+        entered_value=$(eval "echo \${CLOUDY_ARGS[$index]}")
+        [[ "$required" == true ]] && [[ ! "$entered_value" ]] && fail_because "Please provide <$key>." && status=1
+    done
+
+    return $status
+}
+
 ##
  # Validate command input against the script's schema.
  #
