@@ -781,9 +781,11 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 # End caching setup
 #
 eval $(get_config -a additional_bootstrap)
-for include in "${additional_bootstrap[@]}"; do
-   source "$ROOT/$include"
-done
+if [[ "$additional_bootstrap" != null ]]; then
+    for include in "${additional_bootstrap[@]}"; do
+       source "$ROOT/$include"
+    done
+fi
 event_dispatch "boot" || exit_with_failure "Could not bootstrap $(get_title)"
 _cloudy_bootstrap $@
 
