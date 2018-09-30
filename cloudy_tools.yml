@@ -13,6 +13,7 @@ commands:
     arguments:
       package_name:
         help: The name of the package, e.g. aklump/install
+        required: true
   pm-update:
     help: Update an installed Cloudy package from the Cloudy Package Registry.
     aliases:
@@ -21,6 +22,7 @@ commands:
     arguments:
       package_name:
         help: The name of the installed package, e.g. aklump/install
+        required: true
   core:
     help: Install cloudy core only, in the current directory.  This is similar to
             "new" but it doesn't create the script and configuration files.
