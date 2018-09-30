@@ -106,7 +106,7 @@ function merge_config($arrays) {
           throw new \RuntimeException("Cannot merge key $key; values are not the same type.");
         }
 
-        if (is_scalar($value)) {
+        if (is_scalar($value) || empty($master[$key])) {
           $master[$key] = $value;
         }
         else {

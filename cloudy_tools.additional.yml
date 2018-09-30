@@ -1,5 +1,8 @@
 tests:
   config:
+    child_only_key:
+      - mike
+      - joe
     fruit: banana
     vegetable: artichoke
     meat: ardvaark

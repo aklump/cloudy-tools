@@ -22,6 +22,13 @@ function testConfigurationMerge() {
     assert_same "yak" "$assoc_test_y"
     assert_same "xylitol" "$assoc_test_x"
     assert_same "whisky" "$assoc_test_w"
+
+    eval $(get_config_as "child_only" -a "tests.config.child_only_key")
+    assert_internal_type "array" "child_only"
+    assert_count 2 "child_only"
+    assert_same "mike" "${child_only[0]}"
+    assert_same "joe" "${child_only[1]}"
+
 }
 
 ##
