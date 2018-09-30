@@ -762,12 +762,12 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
         eval $(get_config -a "additional_config")
         config_files=("$CONFIG")
         for file in "${additional_config[@]}"; do
-           config_files=("${config_files[@]}" "$ROOT/$file")
+           [[ "$file" ]] && [ -f "$ROOT/$file" ] && config_files=("${config_files[@]}" "$ROOT/$file")
         done
-        config_files=("${config_files[@]}" "${compile_config__runtime_files[@]}")
-        echo >  $CACHED_CONFIG_MTIME_FILEPATH
+        [ ${#compile_config__runtime_files[@]} -gt 0 ] && config_files=("${config_files[@]}" "${compile_config__runtime_files[@]}")
+        echo -n >  $CACHED_CONFIG_MTIME_FILEPATH
         for file in "${config_files[@]}"; do
-            echo "$file $(_cloudy_get_file_mtime $file)" >> "$CACHED_CONFIG_MTIME_FILEPATH"
+            [[ "$file" ]] && [ -f "$file" ] && echo "$(realpath "$file") $(_cloudy_get_file_mtime $file)" >> "$CACHED_CONFIG_MTIME_FILEPATH"
         done
 
         write_log_notice "$(basename $CONFIG) configuration compiled to $CACHED_CONFIG_FILEPATH."
