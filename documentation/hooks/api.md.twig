@@ -1,0 +1,39 @@
+---
+title: Cloudy API
+---
+<h2>Cloudy Functions</h2>
+<div class="function-index">
+  {% for function in api_functions %}
+    <a href="#{{ function.name }}">{{ function.name }}</a>
+  {% endfor %}
+</div>
+
+<h2>Cloudy Test Functions</h2>
+<div class="function-index">
+  {% for function in test_functions %}
+    <a href="#{{ function.name }}">{{ function.name }}</a>
+  {% endfor %}
+</div>
+
+<div class="function-list">
+  {% for function in functions %}
+    <h2 id="{{ function.name }}">{{ function.name }}()</h2>
+    <p class="summary">{{ function.summary }}</p>
+    
+    {% if function.args %}
+      <ul>
+      {% for name, description in function.args %}
+        <li>${{ name }}: {{ description }}</li>
+      {% endfor %}
+      {% if function.return %}
+      </ul><ul><li>{{ function.return }}</li>
+      {% endif %}
+      </ul>
+    {% endif %}
+    
+    {% if function.description %}
+    <pre><code>{{ function.description|nl2br }}</code></pre>
+    {% endif %}
+    
+  {% endfor %}
+</div>

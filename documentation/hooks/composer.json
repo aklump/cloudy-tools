@@ -1,0 +1,10 @@
+{
+    "require": {
+        "aklump/loft-lib": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AKlump\\LoftDocs\\": "src/AKlump/LoftDocs"
+        }
+    }
+}
