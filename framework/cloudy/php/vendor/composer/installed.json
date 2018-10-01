@@ -654,17 +654,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v4.1.4",
-        "version_normalized": "4.1.4.0",
+        "version": "v4.1.5",
+        "version_normalized": "4.1.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "fa2182669f7983b7aa5f1a770d053f79f0ef144f"
+            "reference": "6e49130ddf150b7bfe9e34edb2f3f698aa1aa43b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/fa2182669f7983b7aa5f1a770d053f79f0ef144f",
-            "reference": "fa2182669f7983b7aa5f1a770d053f79f0ef144f",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/6e49130ddf150b7bfe9e34edb2f3f698aa1aa43b",
+            "reference": "6e49130ddf150b7bfe9e34edb2f3f698aa1aa43b",
             "shasum": ""
         },
         "require": {
@@ -690,7 +690,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2018-08-07T12:45:11+00:00",
+        "time": "2018-09-21T12:49:42+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -725,17 +725,17 @@
     },
     {
         "name": "symfony/yaml",
-        "version": "v3.4.15",
-        "version_normalized": "3.4.15.0",
+        "version": "v3.4.16",
+        "version_normalized": "3.4.16.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",
-            "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8"
+            "reference": "61973ecda60e9f3561e929e19c07d4878b960fc1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/yaml/zipball/c2f4812ead9f847cb69e90917ca7502e6892d6b8",
-            "reference": "c2f4812ead9f847cb69e90917ca7502e6892d6b8",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/61973ecda60e9f3561e929e19c07d4878b960fc1",
+            "reference": "61973ecda60e9f3561e929e19c07d4878b960fc1",
             "shasum": ""
         },
         "require": {
@@ -751,7 +751,7 @@
         "suggest": {
             "symfony/console": "For validating YAML files using the lint command"
         },
-        "time": "2018-08-10T07:34:36+00:00",
+        "time": "2018-09-24T08:15:45+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

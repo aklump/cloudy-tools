@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Cloudy API</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--api">
+<header>
+  <div class="pager">
+  <a href="_tasklist.html" class="prev _tasklist">&laquo;Tasklist</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="index.html" class="next index">Index&raquo;</a>
+</div>
+</header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>Cloudy API</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><h2>Cloudy Functions</h2>
+
+<div class="function-index">
+      <a href="#array_has_value">array_has_value</a>
+      <a href="#array_join">array_join</a>
+      <a href="#array_sort">array_sort</a>
+      <a href="#array_sort_by_item_length">array_sort_by_item_length</a>
+      <a href="#confirm">confirm</a>
+      <a href="#date8601">date8601</a>
+      <a href="#debug">debug</a>
+      <a href="#dir_has_files">dir_has_files</a>
+      <a href="#echo_blue">echo_blue</a>
+      <a href="#echo_blue_list">echo_blue_list</a>
+      <a href="#echo_elapsed">echo_elapsed</a>
+      <a href="#echo_green">echo_green</a>
+      <a href="#echo_green_list">echo_green_list</a>
+      <a href="#echo_heading">echo_heading</a>
+      <a href="#echo_key_value">echo_key_value</a>
+      <a href="#echo_list">echo_list</a>
+      <a href="#echo_red">echo_red</a>
+      <a href="#echo_red_list">echo_red_list</a>
+      <a href="#echo_slim_table">echo_slim_table</a>
+      <a href="#echo_table">echo_table</a>
+      <a href="#echo_title">echo_title</a>
+      <a href="#echo_yellow">echo_yellow</a>
+      <a href="#echo_yellow_list">echo_yellow_list</a>
+      <a href="#event_dispatch">event_dispatch</a>
+      <a href="#event_listen">event_listen</a>
+      <a href="#exit_with_cache_clear">exit_with_cache_clear</a>
+      <a href="#exit_with_failure">exit_with_failure</a>
+      <a href="#exit_with_failure_if_empty_config">exit_with_failure_if_empty_config</a>
+      <a href="#fail">fail</a>
+      <a href="#fail_because">fail_because</a>
+      <a href="#get_command">get_command</a>
+      <a href="#get_command_arg">get_command_arg</a>
+      <a href="#get_config">get_config</a>
+      <a href="#get_config_as">get_config_as</a>
+      <a href="#get_config_path">get_config_path</a>
+      <a href="#get_option">get_option</a>
+      <a href="#get_title">get_title</a>
+      <a href="#get_version">get_version</a>
+      <a href="#has_command">has_command</a>
+      <a href="#has_command_args">has_command_args</a>
+      <a href="#has_option">has_option</a>
+      <a href="#has_options">has_options</a>
+      <a href="#implement_cloudy_basic">implement_cloudy_basic</a>
+      <a href="#parse_args">parse_args</a>
+      <a href="#path_extension">path_extension</a>
+      <a href="#path_filename">path_filename</a>
+      <a href="#path_relative_to_root">path_relative_to_root</a>
+      <a href="#purge_config">purge_config</a>
+      <a href="#string_repeat">string_repeat</a>
+      <a href="#string_split">string_split</a>
+      <a href="#succeed_because">succeed_because</a>
+      <a href="#table_add_row">table_add_row</a>
+      <a href="#table_clear">table_clear</a>
+      <a href="#table_has_rows">table_has_rows</a>
+      <a href="#table_set_header">table_set_header</a>
+      <a href="#tempdir">tempdir</a>
+      <a href="#throw">throw</a>
+      <a href="#timestamp">timestamp</a>
+      <a href="#translate">translate</a>
+      <a href="#url_add_cache_buster">url_add_cache_buster</a>
+      <a href="#url_host">url_host</a>
+      <a href="#validate_input">validate_input</a>
+      <a href="#warn_because">warn_because</a>
+      <a href="#write_log">write_log</a>
+      <a href="#write_log_alert">write_log_alert</a>
+      <a href="#write_log_dev_warning">write_log_dev_warning</a>
+      <a href="#write_log_emergency">write_log_emergency</a>
+  </div>
+
+<h2>Cloudy Test Functions</h2>
+
+<div class="function-index">
+      <a href="#assert_exit_status">assert_exit_status</a>
+      <a href="#do_tests_in">do_tests_in</a>
+  </div>
+
+<div class="function-list">
+      <h2 id="array_has_value">array_has_value()</h2>
+    <p class="summary">Search $array_has_value__array for a value.</p>
+    
+          <ul>
+              <li>$1: The value to search for in array.</li>
+                  </ul>
+        
+        <pre><code>array_has_value__array<br />
+You must provide your array as $array_has_value__array like so:<br />
+@code<br />
+  array_has_value__array=(&quot;${some_array_to_search[@]}&quot;)<br />
+  array_has &quot;tree&quot; &amp;&amp; echo &quot;found tree&quot;<br />
+@endcode</code></pre>
+        
+      <h2 id="array_join">array_join()</h2>
+    <p class="summary">Join a stack into an array with delimiter.</p>
+    
+        
+        
+      <h2 id="array_sort">array_sort()</h2>
+    <p class="summary">Alphabetically sort a stack.</p>
+    
+        
+        
+      <h2 id="array_sort_by_item_length">array_sort_by_item_length()</h2>
+    <p class="summary">Sort and mutate an array based on length of values.</p>
+    
+        
+        <pre><code>@code<br />
+ array_sort_by_item_length__array=(&quot;september&quot; &quot;five&quot; &quot;three&quot; &quot;on&quot;)<br />
+ array_sort_by_item_length<br />
+@endcode</code></pre>
+        
+      <h2 id="assert_exit_status">assert_exit_status()</h2>
+    <p class="summary">Assert a function returns a given exit code.</p>
+    
+        
+        <pre><code>Here are three examples of how to call...<br />
+@code<br />
+  array_sort; assert_exit_status 0<br />
+  $(has_option &#039;name&#039;); assert_exit_status 0<br />
+  has_option &#039;name&#039; &gt; /dev/null; assert_exit_status 0<br />
+@endcode</code></pre>
+        
+      <h2 id="confirm">confirm()</h2>
+    <p class="summary">Accept a y/n confirmation message or end</p>
+    
+        
+        <pre><code>@param string $1<br />
+  A question to ask ending with a &#039;?&#039; mark.  Leave blank for default.<br />
+@return bool<br />
+  Sets the value of confirm_result</code></pre>
+        
+      <h2 id="date8601">date8601()</h2>
+    <p class="summary">Return the current datatime in ISO8601 in UTC.</p>
+    
+        
+        <pre><code>options -<br />
+  -c - Remove hyphens and colons for use in a filename</code></pre>
+        
+      <h2 id="debug">debug()</h2>
+    <p class="summary">Echo the arguments sent to this is an eye-catching manner.</p>
+    
+        
+        <pre><code>Call as in the example below for better tracing.<br />
+@code<br />
+  debug &quot;Some message to show|$0|$FUNCNAME|$LINENO&quot;<br />
+@endcode</code></pre>
+        
+      <h2 id="dir_has_files">dir_has_files()</h2>
+    <p class="summary">Determine if a given directory has any files in it.</p>
+    
+          <ul>
+              <li>$1: The path to a directory to check</li>
+                  </ul><ul><li>Returns 0 if the path contains non-hidden files or 1 if not.</li>
+            </ul>
+        
+        
+      <h2 id="do_tests_in">do_tests_in()</h2>
+    <p class="summary">Perform all tests in a given file.</p>
+    
+        
+        
+      <h2 id="echo_blue">echo_blue()</h2>
+    <p class="summary">Echo a string in blue.</p>
+    
+        
+        
+      <h2 id="echo_blue_list">echo_blue_list()</h2>
+    <p class="summary">@param $echo_list__array</p>
+    
+        
+        
+      <h2 id="echo_elapsed">echo_elapsed()</h2>
+    <p class="summary">Return the elapsed time in seconds since the beginning of the script.</p>
+    
+        
+        
+      <h2 id="echo_green">echo_green()</h2>
+    <p class="summary">Echo a string in green.</p>
+    
+        
+        
+      <h2 id="echo_green_list">echo_green_list()</h2>
+    <p class="summary">@param $echo_list__array</p>
+    
+        
+        
+      <h2 id="echo_heading">echo_heading()</h2>
+    <p class="summary">Print out a headline for a section of user output.</p>
+    
+        
+        
+      <h2 id="echo_key_value">echo_key_value()</h2>
+    <p class="summary">$DESCRIPTION</p>
+    
+          <ul>
+              <li>$1: $PARAM$</li>
+                  </ul><ul><li>Returns 0 if $END$.</li>
+            </ul>
+        
+        
+      <h2 id="echo_list">echo_list()</h2>
+    <p class="summary">Echo an array as a bulletted list.</p>
+    
+        
+        <pre><code>@param $echo_list__array<br />
+You must add items to your list first:<br />
+@code<br />
+  list_add_item &quot;List item&quot;<br />
+  echo_list<br />
+@endcode<br />
+@see echo_list__array=(&quot;${some_array_to_echo[@]}&quot;)</code></pre>
+        
+      <h2 id="echo_red">echo_red()</h2>
+    <p class="summary">Echo a string in red.</p>
+    
+        
+        
+      <h2 id="echo_red_list">echo_red_list()</h2>
+    <p class="summary">@param $echo_list__array</p>
+    
+        
+        
+      <h2 id="echo_slim_table">echo_slim_table()</h2>
+    <p class="summary">Echo a slim version of the table as it&#039;s been defined.</p>
+    
+        
+        
+      <h2 id="echo_table">echo_table()</h2>
+    <p class="summary">Echo the table as it&#039;s been defined.</p>
+    
+        
+        
+      <h2 id="echo_title">echo_title()</h2>
+    <p class="summary">Print out a headline for a section of user output.</p>
+    
+        
+        
+      <h2 id="echo_yellow">echo_yellow()</h2>
+    <p class="summary">Echo a string in yellow.</p>
+    
+        
+        
+      <h2 id="echo_yellow_list">echo_yellow_list()</h2>
+    <p class="summary">@param $echo_list__array</p>
+    
+        
+        
+      <h2 id="event_dispatch">event_dispatch()</h2>
+    <p class="summary">Dispatch that an event has occurred to all listeners.</p>
+    
+        
+        <pre><code>Additional arguments beyond $1 are passed on to the listeners.</code></pre>
+        
+      <h2 id="event_listen">event_listen()</h2>
+    <p class="summary">Register an event listener.</p>
+    
+        
+        
+      <h2 id="exit_with_cache_clear">exit_with_cache_clear()</h2>
+    <p class="summary">Empties caches in $CLOUDY_ROOT or other directory if provided.</p>
+    
+        
+        
+      <h2 id="exit_with_failure">exit_with_failure()</h2>
+    <p class="summary">@option --status=N Optional, set the exit status, a number &gt; 0</p>
+    
+        
+        
+      <h2 id="exit_with_failure_if_empty_config">exit_with_failure_if_empty_config()</h2>
+    <p class="summary">Checks for a non-empty variable in memory or exist with failure.</p>
+    
+        
+        <pre><code>Asks the user to add to their configuration filepath.<br />
+@param string<br />
+  This should be the same as passed to get_config, using dot separation.<br />
+@option as=name<br />
+  If the configuration has been renamed, send the memory var name --as=varname.</code></pre>
+        
+      <h2 id="fail">fail()</h2>
+    <p class="summary">Set the exit status to fail with no message.  Does not stop execution.</p>
+    
+        
+        <pre><code>Try not to use this because it gives no indication as to why<br />
+@option --status=N Optional, set the exit status, a number &gt; 0<br />
+@see exit_with_failure</code></pre>
+        
+      <h2 id="fail_because">fail_because()</h2>
+    <p class="summary">Add a failure message to be shown on exit.</p>
+    
+        
+        
+      <h2 id="get_command">get_command()</h2>
+    <p class="summary">Echo the command that was used to call the script.</p>
+    
+        
+        
+      <h2 id="get_command_arg">get_command_arg()</h2>
+    <p class="summary">Return a operation argument by zero-based index key.</p>
+    
+        
+        <pre><code>As an example see the following code:<br />
+@code<br />
+  ./script.sh action blue apple<br />
+  get_command --&gt; &quot;action&quot;<br />
+  get_command_arg 0 --&gt; &quot;blue&quot;<br />
+  get_command_arg 1 --&gt; &quot;apple&quot;<br />
+@endcode</code></pre>
+        
+      <h2 id="get_config">get_config()</h2>
+    <p class="summary">Get a config path assignment.</p>
+    
+        
+        <pre><code>@code<br />
+  eval $(get_config &#039;path.to.config&#039;)<br />
+@code<br />
+When requesting an array you must pass -a as the first argument if there&#039;s<br />
+any chance that the return value will be empty.<br />
+@code<br />
+  eval $(get_config &#039;path.to.string&#039; &#039;default_value&#039;)<br />
+  eval $(get_config -a &#039;path.to.array&#039; &#039;default_value&#039;)<br />
+@code</code></pre>
+        
+      <h2 id="get_config_as">get_config_as()</h2>
+    <p class="summary">Get config path but assign it&#039;s value to a custom variable.</p>
+    
+        
+        <pre><code>@code<br />
+  eval $(get_config_as &#039;title&#039; &#039;path.to.some.title&#039; &#039;default&#039;)<br />
+  eval $(get_config_as &#039;title&#039; -a &#039;path.to.some.array&#039; )<br />
+@code</code></pre>
+        
+      <h2 id="get_config_path">get_config_path()</h2>
+    <p class="summary">Return configuration value or values as full path(s) relative to $ROOT.</p>
+    
+        
+        
+      <h2 id="get_option">get_option()</h2>
+    <p class="summary">Echo the value of a script option, or a default.</p>
+    
+          <ul>
+              <li>$1: The name of the option</li>
+                  </ul><ul><li>Returns 0 if the option was used; 2 if the default is echoed.</li>
+            </ul>
+        
+        
+      <h2 id="get_title">get_title()</h2>
+    <p class="summary">Echo the title as defined in the configuration.</p>
+    
+          <ul>
+              <li>$1: A default value if no title is defined.</li>
+                  </ul><ul><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="get_version">get_version()</h2>
+    <p class="summary">Echos the version of the script.</p>
+    
+        
+        
+      <h2 id="has_command">has_command()</h2>
+    <p class="summary">Determine if the script was called with a command.</p>
+    
+        
+        
+      <h2 id="has_command_args">has_command_args()</h2>
+    <p class="summary">Determine if there are any arguments for the script &quot;command&quot;.</p>
+    
+        
+        
+      <h2 id="has_option">has_option()</h2>
+    <p class="summary">Determine if the script was called with a given option.</p>
+    
+          <ul>
+              <li>$1: The option to check for.</li>
+                  </ul><ul><li>Returns 0 if the option was used; 1 if not.</li>
+            </ul>
+        
+        
+      <h2 id="has_options">has_options()</h2>
+    <p class="summary">Determine if any options were used when calling the script.</p>
+    
+        
+        
+      <h2 id="implement_cloudy_basic">implement_cloudy_basic()</h2>
+    <p class="summary">Implement cloudy common commands and options.</p>
+    
+        
+        <pre><code>An optional set of commands for all scripts.  This is just the handlers,<br />
+you must still set up the commands in the config file as usual.</code></pre>
+        
+      <h2 id="parse_args">parse_args()</h2>
+    <p class="summary">Parses arguments into options, args and option values.</p>
+    
+        
+        <pre><code>@code<br />
+  function my_func{) {<br />
+    parse_args @$<br />
+    ...<br />
+@endcode<br />
+The following variables are generated for:<br />
+@code<br />
+  my_func -ab --tree=life do re<br />
+@endcode<br />
+- parse_args__args=(do re)<br />
+- parse_args__options=(a b tree)<br />
+- parse_args__options__a=true<br />
+- parse_args__options__b=true<br />
+- parse_args__options__tree=life<br />
+- parse_args__options_passthru=&quot;-a -b -tree=life&quot;</code></pre>
+        
+      <h2 id="path_extension">path_extension()</h2>
+    <p class="summary">Return the extension of a file.</p>
+    
+        
+        
+      <h2 id="path_filename">path_filename()</h2>
+    <p class="summary">Return the basename less the extension.</p>
+    
+        
+        
+      <h2 id="path_relative_to_root">path_relative_to_root()</h2>
+    <p class="summary">Expand a relative path using $ROOT as base.</p>
+    
+        
+        <pre><code>If the path begins with / it is unchanged.</code></pre>
+        
+      <h2 id="purge_config">purge_config()</h2>
+    <p class="summary">Purges all cached configuration from disk and memory.</p>
+    
+        
+        <pre><code>@todo This may not be needed.</code></pre>
+        
+      <h2 id="string_repeat">string_repeat()</h2>
+    <p class="summary">Repeat a string N times.</p>
+    
+          <ul>
+              <li>$1: The string to repeat.</li>
+                  </ul><ul><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="string_split">string_split()</h2>
+    <p class="summary">Join a stack into an array with delimiter.</p>
+    
+        
+        <pre><code>@code<br />
+ string_split__string=&quot;do&lt;br /&gt;re&lt;br /&gt;mi&quot;<br />
+ string_split &#039;&lt;br /&gt;&#039; &amp;&amp; local words=(&quot;${string_split__array}&quot;)<br />
+@endcode</code></pre>
+        
+      <h2 id="succeed_because">succeed_because()</h2>
+    <p class="summary">Add a success message to be shown on exit.</p>
+    
+        
+        
+      <h2 id="table_add_row">table_add_row()</h2>
+    <p class="summary">Send any number of arguments, each is a column value for a single row.</p>
+    
+        
+        
+      <h2 id="table_clear">table_clear()</h2>
+    <p class="summary">Clear all rows from the table definition.</p>
+    
+        
+        
+      <h2 id="table_has_rows">table_has_rows()</h2>
+    <p class="summary">Determine if the table definition has any rows.</p>
+    
+        
+        
+      <h2 id="table_set_header">table_set_header()</h2>
+    <p class="summary">Set the column headers for a table.</p>
+    
+          <ul>
+              <li>$@: Each argument is the column header value.</li>
+                  </ul><ul><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="tempdir">tempdir()</h2>
+    <p class="summary">Create and echo a new temp directory.</p>
+    
+        
+        
+      <h2 id="throw">throw()</h2>
+    <p class="summary">Echo an exception message and exit.</p>
+    
+        
+        
+      <h2 id="timestamp">timestamp()</h2>
+    <p class="summary">Echo the current unix timestamp.</p>
+    
+        
+        
+      <h2 id="translate">translate()</h2>
+    <p class="summary">Translate a message id into $CLOUDY_LANGUAGE.</p>
+    
+        
+        
+      <h2 id="url_add_cache_buster">url_add_cache_buster()</h2>
+    <p class="summary">Add a cache-busting timestamp to an URL and echo the new url.</p>
+    
+        
+        
+      <h2 id="url_host">url_host()</h2>
+    <p class="summary">Echo the host portion an URL.</p>
+    
+        
+        
+      <h2 id="validate_input">validate_input()</h2>
+    <p class="summary">Validate the CLI input arguments and options.</p>
+    
+        
+        
+      <h2 id="warn_because">warn_because()</h2>
+    <p class="summary">Add a warning message to be shown on exit.</p>
+    
+        
+        
+      <h2 id="write_log">write_log()</h2>
+    <p class="summary">You may include 1 or two arguments; when 2, the first is a log label</p>
+    
+        
+        
+      <h2 id="write_log_alert">write_log_alert()</h2>
+    <p class="summary">Writes a log message using the alert level.</p>
+    
+          <ul>
+              <li>$@: Any number of strings to write to the log.</li>
+                  </ul><ul><li>Returns 0 on success or 1 if the log cannot be written to.</li>
+            </ul>
+        
+        
+      <h2 id="write_log_dev_warning">write_log_dev_warning()</h2>
+    <p class="summary">Log states that should only be thus during development or debugging.</p>
+    
+        
+        <pre><code>Adds a &quot;... in dev only message to your warning&quot;</code></pre>
+        
+      <h2 id="write_log_emergency">write_log_emergency()</h2>
+    <p class="summary">@link https://www.php-fig.org/psr/psr-3/</p>
+    
+        
+        
+  </div>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="_tasklist.html" class="prev _tasklist">&laquo;Tasklist</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="index.html" class="next index">Index&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 12:30:12 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

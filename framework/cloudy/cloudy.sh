@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 
-##
- # Determine if a given directory has any files in it.
- #
+# Determine if a given directory has any files in it.
+#
+# $1 - The path to a directory to check
+#
+# Returns 0 if the path contains non-hidden files or 1 if not.
 function dir_has_files() {
     local path_to_dir="$1"
 
     [ -d "$path_to_dir" ] && [[ "$(ls "$path_to_dir")" ]]
 }
 
+# Echo the title as defined in the configuration.
+#
+# $1 - A default value if no title is defined.
+#
+# Returns nothing.
 function get_title() {
     local default="$1"
 
@@ -17,24 +24,28 @@ function get_title() {
     echo $title
 }
 
+# Echos the version of the script.
+#
+# Returns nothing.
 function get_version() {
     local version
     eval $(get_config "version" "1.0")
     echo $version
 }
 
-##
- # Return the current UNIX timestamp.
- #
+# Echo the current unix timestamp.
+#
+# Returns nothing.
 function timestamp() {
     echo $(date +%s)
 }
 
-##
- # Return the current datetime in iso 8601 in UTC.
- #
- # @option -c Remove punctuation for a compressed output say, for a filename.
- #
+# Return the current datatime in ISO8601 in UTC.
+#
+# options -
+#   -c - Remove hyphens and colons for use in a filename
+#
+# Returns 0 if .
 function date8601() {
     parse_args $@
     if [[ "$parse_args__options__c" ]]; then
@@ -45,13 +56,9 @@ function date8601() {
     return 0
 }
 
+# Validate the CLI input arguments and options.
 #
-# SECTION: Arguments, options, parameters
-#
-
-##
- # Validate the CLI input arguments and options.
- #
+# Returns 0 if all input is valid; 1 otherwise.
 function validate_input() {
     local command
 
@@ -149,13 +156,16 @@ function parse_args() {
     done
 }
 
-##
- # Determine if the script was called with a command.
- #
+# Determine if the script was called with a command.
+#
+# Returns 0 if a command was used.
 function has_command() {
   [ ${#CLOUDY_ARGS[0]} -gt 0 ]
 }
 
+# Echo the command that was used to call the script.
+#
+# Returns 0 if a valid command, 1 otherwise.
 function get_command() {
     local command
     local c
@@ -183,9 +193,11 @@ function get_command() {
     echo $command && return 1
 }
 
-##
- # Determine if the script was called with a given option.
- #
+# Determine if the script was called with a given option.
+#
+# $1 - The option to check for.
+#
+# Returns 0 if the option was used; 1 if not.
 function has_option() {
     local option=$1
 
@@ -194,17 +206,20 @@ function has_option() {
     return 1
 }
 
-##
- # Determine if any options were used when calling the script.
- #
+# Determine if any options were used when calling the script.
+#
+# Returns 0 if at least one option was used; 1 otherwise.
 function has_options() {
     [ ${#CLOUDY_OPTIONS[@]} -gt 0 ] && return 0
     return 1
 }
 
-##
- # Get the value of a given script parameter, if it exists.
- #
+# Echo the value of a script option, or a default.
+#
+# $1 - The name of the option
+# $2 - A default value if the option was not used.
+#
+# Returns 0 if the option was used; 2 if the default is echoed.
 function get_option() {
     local param=$1
     local default=$2
@@ -215,17 +230,21 @@ function get_option() {
     echo "$default" && return 2
 }
 
-##
- # Search $array_has_value__array for a value.
- #
- # You must provide your array as $array_has_value__array like so:
- # @code
- #   array_has_value__array=("${some_array_to_search[@]}")
- #   array_has "tree" && echo "found tree"
- # @endcode
- #
+# Search $array_has_value__array for a value.
+#
+# array_has_value__array
+#
+# $1 - The value to search for in array.
+#
+# You must provide your array as $array_has_value__array like so:
+# @code
+#   array_has_value__array=("${some_array_to_search[@]}")
+#   array_has "tree" && echo "found tree"
+# @endcode
+#
 function array_has_value() {
     local needle="$1"
+
     local value
     local index=0
     array_has_value__index=null
@@ -941,15 +960,20 @@ function debug() {
     _cloudy_debug_helper "Debug;3;0;$@"
 }
 
+# $DESCRIPTION
+#
+# $1 - $PARAM$
+#
+# Returns 0 if $END$.
 function echo_key_value() {
     local key=$1
     local value=$2
     echo "$(tput setaf 0)$(tput setab 7) $key $(tput smso) "$value" $(tput sgr0)"
 }
 
-##
- # Echo an exception message and exit.
- #
+# Echo an exception message and exit.
+#
+# Returns 3.
 function throw() {
     _cloudy_debug_helper "Exception;1;7;$@"
     exit 3
@@ -976,6 +1000,11 @@ function write_log() {
     _cloudy_write_log ${args[@]}
 }
 
+# Writes a log message using the alert level.
+#
+# $@ - Any number of strings to write to the log.
+#
+# Returns 0 on success or 1 if the log cannot be written to.
 function write_log_alert() {
     local args=("alert" "$@")
     _cloudy_write_log ${args[@]}
@@ -1021,9 +1050,11 @@ function write_log_debug() {
     _cloudy_write_log ${args[@]}
 }
 
-##
- # Send any number of arguments, each is a column value for a single row.
- #
+# Set the column headers for a table.
+#
+# $@ - Each argument is the column header value.
+#
+# Returns nothing.
 function table_set_header() {
     _cloudy_table_header=()
     i=0
@@ -1036,10 +1067,16 @@ function table_set_header() {
     done
 }
 
+# Clear all rows from the table definition.
+#
+# Returns nothing.
 function table_clear() {
     _cloudy_table_rows=()
 }
 
+# Determine if the table definition has any rows.
+#
+# Returns 0 if one or more rows in the definition; 1 if table is empty.
 function table_has_rows() {
     [ ${#_cloudy_table_rows[@]} -gt 0 ]
 }
@@ -1061,15 +1098,28 @@ function table_add_row() {
     _cloudy_table_rows=("${_cloudy_table_rows[@]}" "$(array_join '|')")
 }
 
+# Repeat a string N times.
+#
+# $1 - The string to repeat.
+# $2 - The number of repetitions.
+#
+# Returns nothing.
 function string_repeat() {
     local string="$1"
     local repetitions=$2
     for ((i=0; i < $repetitions; i++)){ echo -n "$string"; }
 }
 
+# Echo a slim version of the table as it's been defined.
+#
+# Returns nothing.
 function echo_slim_table() {
     _cloudy_echo_aligned_columns --lpad=1 --top="" --lborder="" --mborder=":" --rborder=""
 }
+
+# Echo the table as it's been defined.
+#
+# Returns nothing.
 function echo_table() {
     _cloudy_echo_aligned_columns --lpad=1 --top="-" --lborder="|" --mborder="|" --rborder="|"
 }

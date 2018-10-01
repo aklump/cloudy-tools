@@ -28,7 +28,6 @@ function testConfigurationMerge() {
     assert_count 2 "child_only"
     assert_same "mike" "${child_only[0]}"
     assert_same "joe" "${child_only[1]}"
-
 }
 
 ##

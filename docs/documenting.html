@@ -2,17 +2,17 @@
 
 <html>
 <head>
-  <title>Arrays</title>
+  <title>Documenting Code</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page--arrays">
+<body class="page--documenting">
 <header>
   <div class="pager">
-  <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
+  <a href="development.html" class="prev development">&laquo;Development Tools</a>
   <a href="index.html" class="index">Index</a>
-  <a href="configuration.html" class="next configuration">Configuration&raquo;</a>
+  <a href="error-handling.html" class="next error-handling">Exit Status&raquo;</a>
 </div>
 </header>
 
@@ -22,21 +22,14 @@
   </form>
 </div>
 
-  <h1>Arrays</h1>
+  <h1>Documenting Code</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
 
-<h2>How to copy an array</h2>
+<p>Cloudy scripts should include function documentation per <a href="http://tomdoc.org">TomDoc</a> syntax.</p>
 
-<pre><code>new_array=("${old_array[@]}")
-</code></pre>
-
-<p>This comes in to play after array-based functions like <code>string_split</code></p>
-
-<pre><code>string_split__string="do&lt;br /&gt;re&lt;br /&gt;mi"
-string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
-</code></pre>
+<p>Documentation can be extracted using <a href="https://github.com/tests-always-included/tomdoc.sh">tomdoc.sh</a></p>
 </section>
 
 <div class="search__results">
@@ -45,13 +38,13 @@ string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
 
 <footer>
   <div class="pager">
-  <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
+  <a href="development.html" class="prev development">&laquo;Development Tools</a>
   <a href="index.html" class="index">Index</a>
-  <a href="configuration.html" class="next configuration">Configuration&raquo;</a>
+  <a href="error-handling.html" class="next error-handling">Exit Status&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 12:30:12 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 12:30:13 -0700</p>
   </div>
 </footer>
 
