@@ -340,24 +340,6 @@ function get_command_arg() {
 }
 
 ##
- # Purges all cached configuration from disk and memory.
- #
- # @todo This may not be needed.
- #
-function purge_config() {
-    local purge="${CACHED_CONFIG_FILEPATH/.sh/.purge.sh}"
-
-    # remove all variables from memory.
-    [ -f "$purge" ] && source "$purge"
-
-    # empty the purge script.
-    echo "" > "$purge"
-
-    # empty the set var script.
-    echo "" > "${CACHED_CONFIG_FILEPATH}"
-}
-
-##
  # Get a config path assignment.
  #
  # @code
