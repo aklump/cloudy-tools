@@ -75,7 +75,6 @@
       <a href="#path_extension">path_extension</a>
       <a href="#path_filename">path_filename</a>
       <a href="#path_relative_to_root">path_relative_to_root</a>
-      <a href="#purge_config">purge_config</a>
       <a href="#string_repeat">string_repeat</a>
       <a href="#string_split">string_split</a>
       <a href="#succeed_because">succeed_because</a>
@@ -99,16 +98,38 @@
 
 <h2>Cloudy Test Functions</h2>
 
+<p>The following functions available with: <code>source
+"$CLOUDY_ROOT/inc/cloudy.testing.sh"</code></p>
+
 <div class="function-index">
+      <a href="#assert_contains">assert_contains</a>
+      <a href="#assert_count">assert_count</a>
+      <a href="#assert_empty">assert_empty</a>
+      <a href="#assert_equals">assert_equals</a>
       <a href="#assert_exit_status">assert_exit_status</a>
+      <a href="#assert_false">assert_false</a>
+      <a href="#assert_file_exists">assert_file_exists</a>
+      <a href="#assert_file_not_exists">assert_file_not_exists</a>
+      <a href="#assert_internal_type">assert_internal_type</a>
+      <a href="#assert_not_contains">assert_not_contains</a>
+      <a href="#assert_not_empty">assert_not_empty</a>
+      <a href="#assert_not_equals">assert_not_equals</a>
+      <a href="#assert_not_internal_type">assert_not_internal_type</a>
+      <a href="#assert_reg_exp">assert_reg_exp</a>
+      <a href="#assert_same">assert_same</a>
+      <a href="#assert_true">assert_true</a>
       <a href="#do_tests_in">do_tests_in</a>
+      <a href="#exit_with_test_results">exit_with_test_results</a>
+      <a href="#mark_test_skipped">mark_test_skipped</a>
   </div>
+
+<h2>Functions In Depth By Name</h2>
 
 <div class="function-list">
       <h2 id="array_has_value">array_has_value()</h2>
     <p class="summary">Search $array_has_value__array for a value.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: The value to search for in array.</li>
                   </ul>
         
@@ -138,9 +159,48 @@ You must provide your array as $array_has_value__array like so:<br />
  array_sort_by_item_length<br />
 @endcode</code></pre>
         
+      <h2 id="assert_contains">assert_contains()</h2>
+    <p class="summary">Assert that an array contains a value.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The value to search for.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_count">assert_count()</h2>
+    <p class="summary">Assert that an array has a given number of elements.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The expected length.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_empty">assert_empty()</h2>
+    <p class="summary">Assert that variable by name is empty.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The name of a global variable.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_equals">assert_equals()</h2>
+    <p class="summary">Assert that two values are equal in value but not necessarily type.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The expected value.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
       <h2 id="assert_exit_status">assert_exit_status()</h2>
     <p class="summary">Assert a function returns a given exit code.</p>
     
+          <ul class="function-list__arguments">
+              <li>$: </li>
+                  </ul>
         
         <pre><code>Here are three examples of how to call...<br />
 @code<br />
@@ -148,6 +208,106 @@ You must provide your array as $array_has_value__array like so:<br />
   $(has_option &#039;name&#039;); assert_exit_status 0<br />
   has_option &#039;name&#039; &gt; /dev/null; assert_exit_status 0<br />
 @endcode</code></pre>
+        
+      <h2 id="assert_false">assert_false()</h2>
+    <p class="summary">Assert that a value equals &quot;false&quot; or &quot;FALSE&quot;.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The value to test.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_file_exists">assert_file_exists()</h2>
+    <p class="summary">Assert that a file exists by path.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The filepath of the expected file.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_file_not_exists">assert_file_not_exists()</h2>
+    <p class="summary">Assert that a file does not exist at path.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The filepath to ensure does not exist.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_internal_type">assert_internal_type()</h2>
+    <p class="summary">Assert that an global variable is of a given type.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The expected type.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_not_contains">assert_not_contains()</h2>
+    <p class="summary">Assert that an array does not contain a value.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The value to search for.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_not_empty">assert_not_empty()</h2>
+    <p class="summary">Assert that variable by name is not empty.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The name of a global variable.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_not_equals">assert_not_equals()</h2>
+    <p class="summary">Assert that two values are not the same.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The expected value.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_not_internal_type">assert_not_internal_type()</h2>
+    <p class="summary">Assert that an global variable is not of a given type.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The expected type.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_reg_exp">assert_reg_exp()</h2>
+    <p class="summary">Assert that a value matches a regular expression.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The regular expression.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <h2 id="assert_same">assert_same()</h2>
+    <p class="summary">Assert that two values are equal and of the same type.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The expected value.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        <pre><code>@todo is this needed, since bash is untyped?</code></pre>
+        
+      <h2 id="assert_true">assert_true()</h2>
+    <p class="summary">Assert that a value equals &quot;true&quot; or &quot;TRUE&quot;.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The value to test.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
         
       <h2 id="confirm">confirm()</h2>
     <p class="summary">Accept a y/n confirmation message or end</p>
@@ -177,15 +337,19 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="dir_has_files">dir_has_files()</h2>
     <p class="summary">Determine if a given directory has any files in it.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: The path to a directory to check</li>
-                  </ul><ul><li>Returns 0 if the path contains non-hidden files or 1 if not.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if the path contains non-hidden files or 1 if not.</li>
             </ul>
         
         
       <h2 id="do_tests_in">do_tests_in()</h2>
-    <p class="summary">Perform all tests in a given file.</p>
+    <p class="summary">Perform all tests in a file.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The path to a test file.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if all tests pass; 1 otherwise.</li>
+            </ul>
         
         
       <h2 id="echo_blue">echo_blue()</h2>
@@ -221,9 +385,9 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="echo_key_value">echo_key_value()</h2>
     <p class="summary">$DESCRIPTION</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: $PARAM$</li>
-                  </ul><ul><li>Returns 0 if $END$.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if $END$.</li>
             </ul>
         
         
@@ -305,6 +469,11 @@ You must add items to your list first:<br />
 @option as=name<br />
   If the configuration has been renamed, send the memory var name --as=varname.</code></pre>
         
+      <h2 id="exit_with_test_results">exit_with_test_results()</h2>
+    <p class="summary">Echo test results and exit.</p>
+    
+        
+        
       <h2 id="fail">fail()</h2>
     <p class="summary">Set the exit status to fail with no message.  Does not stop execution.</p>
     
@@ -366,18 +535,18 @@ any chance that the return value will be empty.<br />
       <h2 id="get_option">get_option()</h2>
     <p class="summary">Echo the value of a script option, or a default.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: The name of the option</li>
-                  </ul><ul><li>Returns 0 if the option was used; 2 if the default is echoed.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if the option was used; 2 if the default is echoed.</li>
             </ul>
         
         
       <h2 id="get_title">get_title()</h2>
     <p class="summary">Echo the title as defined in the configuration.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: A default value if no title is defined.</li>
-                  </ul><ul><li>Returns nothing.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -399,9 +568,9 @@ any chance that the return value will be empty.<br />
       <h2 id="has_option">has_option()</h2>
     <p class="summary">Determine if the script was called with a given option.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: The option to check for.</li>
-                  </ul><ul><li>Returns 0 if the option was used; 1 if not.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if the option was used; 1 if not.</li>
             </ul>
         
         
@@ -416,6 +585,11 @@ any chance that the return value will be empty.<br />
         
         <pre><code>An optional set of commands for all scripts.  This is just the handlers,<br />
 you must still set up the commands in the config file as usual.</code></pre>
+        
+      <h2 id="mark_test_skipped">mark_test_skipped()</h2>
+    <p class="summary">Mark a single test as skipped</p>
+    
+        
         
       <h2 id="parse_args">parse_args()</h2>
     <p class="summary">Parses arguments into options, args and option values.</p>
@@ -453,18 +627,12 @@ The following variables are generated for:<br />
         
         <pre><code>If the path begins with / it is unchanged.</code></pre>
         
-      <h2 id="purge_config">purge_config()</h2>
-    <p class="summary">Purges all cached configuration from disk and memory.</p>
-    
-        
-        <pre><code>@todo This may not be needed.</code></pre>
-        
       <h2 id="string_repeat">string_repeat()</h2>
     <p class="summary">Repeat a string N times.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$1: The string to repeat.</li>
-                  </ul><ul><li>Returns nothing.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -500,9 +668,9 @@ The following variables are generated for:<br />
       <h2 id="table_set_header">table_set_header()</h2>
     <p class="summary">Set the column headers for a table.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$@: Each argument is the column header value.</li>
-                  </ul><ul><li>Returns nothing.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -554,9 +722,9 @@ The following variables are generated for:<br />
       <h2 id="write_log_alert">write_log_alert()</h2>
     <p class="summary">Writes a log message using the alert level.</p>
     
-          <ul>
+          <ul class="function-list__arguments">
               <li>$@: Any number of strings to write to the log.</li>
-                  </ul><ul><li>Returns 0 on success or 1 if the log cannot be written to.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success or 1 if the log cannot be written to.</li>
             </ul>
         
         
@@ -586,7 +754,7 @@ The following variables are generated for:<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 12:30:12 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 13:13:18 -0700</p>
   </div>
 </footer>
 

@@ -9,24 +9,27 @@ title: Cloudy API
 </div>
 
 <h2>Cloudy Test Functions</h2>
+The following functions available with: <code>source
+"$CLOUDY_ROOT/inc/cloudy.testing.sh"</code>
 <div class="function-index">
   {% for function in test_functions %}
     <a href="#{{ function.name }}">{{ function.name }}</a>
   {% endfor %}
 </div>
 
+<h2>Functions In Depth By Name</h2>
 <div class="function-list">
   {% for function in functions %}
     <h2 id="{{ function.name }}">{{ function.name }}()</h2>
     <p class="summary">{{ function.summary }}</p>
     
     {% if function.args %}
-      <ul>
+      <ul class="function-list__arguments">
       {% for name, description in function.args %}
         <li>${{ name }}: {{ description }}</li>
       {% endfor %}
       {% if function.return %}
-      </ul><ul><li>{{ function.return }}</li>
+      </ul><ul class="function-list__return"><li>{{ function.return }}</li>
       {% endif %}
       </ul>
     {% endif %}

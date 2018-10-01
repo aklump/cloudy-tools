@@ -462,7 +462,7 @@ function testHasOptionsWorksAsExpected() {
 }
 
 function testGetTitleIsNotEmpty() {
-    assert_not_empty 'Cloudy Installer' $(get_title)
+    assert_not_empty $(get_title)
 }
 
 function testGetVersionIsNotEmpty() {
