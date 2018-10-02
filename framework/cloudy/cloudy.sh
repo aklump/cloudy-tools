@@ -612,8 +612,68 @@ function implement_cloudy_basic() {
 
     esac
 }
+
+# Performs a standard 'install' command and exists.
+#
+# You must set up and install command in your core config file.
+# Then call this function from inside `on_pre_config`, e.g.
+# [[ "$(get_command)" == "install" ]] && exit_with_install
+#
+# Returns nothing.
+function exit_with_install() {
+    local path_to_files_map="$ROOT/install/cloudypm.files_map.txt"
+    [ -f "$path_to_files_map" ] || fail_because "Missing required installation file: $path_to_files_map."
+
+    local install_source_dir="$ROOT/install"
+    [ -d "$install_source_dir" ] || fail_because "Missing installation source directory: $install_source_dir"
+    local from_map=()
+    local to_map=()
+    local install_config_dir
+    local from
+    local to
+
+    while read -r from to || [[ -n "$line" ]]; do
+        if [[ "$from" == "*" ]]; then
+            to="${to%\*}"
+            install_config_dir="${to%/}"
+        else
+            from_map=("${from_map[@]}" "$from")
+            to_map=("${to_map[@]}" "$to")
+        fi
+    done < $path_to_files_map
+
+    [[ "$install_config_dir" ]] || fail_because "Missing default installation directory; should be defined in: $(basename $path_to_files_map)."
+
+    if ! has_failed; then
+        for file in $(ls $install_source_dir); do
+            [[ "$file" == cloudypm* ]] && continue
+            destination=$(path_relative_to_root "$install_config_dir/$file")
+            local i=0
+            for special_file in "${from_map[@]}"; do
+               if [[ "$special_file" == "$file" ]];then
+                    destination=$(path_relative_to_root ${to_map[$i]})
+               fi
+               let i++
+            done
+            if [[ "$file" == "gitignore" ]]; then
+                destination="$ROOT/opt/.gitignore"
+                [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
+                # todo This will write more than once, so this is not very elegant.  Should figure that out somehow.
+                touch "$destination" && cat "$install_source_dir/$file" >> "$destination" && succeed_because "$destination merged."
+            elif ! [ -e "$destination" ]; then
+                [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
+                cp "$install_source_dir/$file" "$destination" && succeed_because "$file created" || fail_because "Could not copy $file"
+            fi
+        done
+    fi
+    has_failed && exit_with_failure "Installation failed."
+    exit_with_success "Installation complete."
+}
+
 ##
- # Empties caches in $CLOUDY_ROOT or other directory if provided.
+ # Empties caches in $CLOUDY_ROOT (or other directory if provided) and exits.
+ #
+ # Returns nothing.
  #
 function exit_with_cache_clear() {
     local cloudy_dir="${1:-$CLOUDY_ROOT}"

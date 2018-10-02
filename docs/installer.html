@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>The Install API</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--installer">
+<header>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="localize.html" class="next localize">Localization/Translation&raquo;</a>
+</div>
+</header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>The Install API</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+<p>If you want you may hook into the Cloudy install api, which normalizes the work of installing configuration files on and instance of your Cloudy Package.</p>
+
+<ol>
+<li>Create a folder <em>install</em> and place all files needed during installation.</li>
+<li>Create a file <em>install/cloudypm.files_map.txt</em> and define where the files go.  See below.</li>
+</ol>
+
+<h2>The files map</h2>
+
+<p>This is a text file that tells what files install where.  Basically two columns, separated by a space.  The first column lists filenames in <em>install</em>.  The second column are filenames (not directories) relative to $ROOT, or absolute.</p>
+
+<p>The contents of the files map must have at least one line, e.g.</p>
+
+<pre><code>* ../../../bin/config/*
+</code></pre>
+
+<ul>
+<li>The <code>*</code> represents all filenames in <em>install</em>.</li>
+</ul>
+
+<p>But let's say you want one of the files to go elsewhere.  The contents of <em>cloudypm.files_map.txt</em> might look like this:</p>
+
+<pre><code>* ../../../bin/config/*
+_perms.custom.sh ../../../bin/_perms.custom.sh
+</code></pre>
+
+<p>In this case <code>*</code> represents all files except for <em>&#95;perms.custom.sh</em>.  They are installed as before, however <em>&#95;perms.custom.sh</em> is installed at <em>$ROOT/../../../bin/&#95;perms.custom.sh</em>.</p>
+
+<p>Remember you must indicate filenames, not directories.  And, you can rename the file by indicating a different filename in column two.</p>
+
+<p>Finally let's say you want to skip over a file completely; do not include a destination for it, and it will be ignored, like this</p>
+
+<pre><code>* ../../../bin/config/*
+_perms.custom.sh ../../../bin/_perms.custom.sh
+ignored_file.txt
+</code></pre>
+
+<h2>Special Handling for files named <em>gitignore</em></h2>
+
+<p>If you create <em>install/gitignore</em> (no leading dot), it will be copied to <em>../../../opt/.gitignore</em>.  (This is the recommended location by Cloudy Package Manager.)  <strong>However, it will be merged with an existing .gitignore file, which already exists at that location.</strong>  Do not make an entry in <em>cloudypm.files_map.txt</em>.</p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="localize.html" class="next localize">Localization/Translation&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 18:23:06 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

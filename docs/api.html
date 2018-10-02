@@ -10,9 +10,9 @@
 <body class="page--api">
 <header>
   <div class="pager">
-  <a href="_tasklist.html" class="prev _tasklist">&laquo;Tasklist</a>
+  <a href="conventions.html" class="prev conventions">&laquo;Cloudy Conventions</a>
   <a href="index.html" class="index">Index</a>
-  <a href="index.html" class="next index">Index&raquo;</a>
+  <a href="testing.html" class="next testing">Unit Testing&raquo;</a>
 </div>
 </header>
 
@@ -56,6 +56,7 @@
       <a href="#exit_with_cache_clear">exit_with_cache_clear</a>
       <a href="#exit_with_failure">exit_with_failure</a>
       <a href="#exit_with_failure_if_empty_config">exit_with_failure_if_empty_config</a>
+      <a href="#exit_with_install">exit_with_install</a>
       <a href="#fail">fail</a>
       <a href="#fail_because">fail_because</a>
       <a href="#get_command">get_command</a>
@@ -450,7 +451,7 @@ You must add items to your list first:<br />
         
         
       <h2 id="exit_with_cache_clear">exit_with_cache_clear()</h2>
-    <p class="summary">Empties caches in $CLOUDY_ROOT or other directory if provided.</p>
+    <p class="summary">Empties caches in $CLOUDY_ROOT (or other directory if provided) and exits.</p>
     
         
         
@@ -468,6 +469,14 @@ You must add items to your list first:<br />
   This should be the same as passed to get_config, using dot separation.<br />
 @option as=name<br />
   If the configuration has been renamed, send the memory var name --as=varname.</code></pre>
+        
+      <h2 id="exit_with_install">exit_with_install()</h2>
+    <p class="summary">Performs a standard &#039;install&#039; command and exists.</p>
+    
+        
+        <pre><code>You must set up and install command in your core config file.<br />
+Then call this function from inside `on_pre_config`, e.g.<br />
+[[ &quot;$(get_command)&quot; == &quot;install&quot; ]] &amp;&amp; exit_with_install</code></pre>
         
       <h2 id="exit_with_test_results">exit_with_test_results()</h2>
     <p class="summary">Echo test results and exit.</p>
@@ -748,13 +757,13 @@ The following variables are generated for:<br />
 
 <footer>
   <div class="pager">
-  <a href="_tasklist.html" class="prev _tasklist">&laquo;Tasklist</a>
+  <a href="conventions.html" class="prev conventions">&laquo;Cloudy Conventions</a>
   <a href="index.html" class="index">Index</a>
-  <a href="index.html" class="next index">Index&raquo;</a>
+  <a href="testing.html" class="next testing">Unit Testing&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 13:13:18 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 18:23:03 -0700</p>
   </div>
 </footer>
 
