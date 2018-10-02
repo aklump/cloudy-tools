@@ -53,7 +53,7 @@ function array_sort_by_item_length() {
 function load_configuration_data($filepath) {
   $data = [];
   if (!file_exists($filepath)) {
-    throw new \RuntimeException("Missing configuration file: " . realpath($filepath));
+    throw new \RuntimeException("Missing configuration file: " . $filepath);
   }
   if (!($contents = file_get_contents($filepath))) {
     // TODO Need a php method to write a log file, and then log this.
