@@ -513,7 +513,7 @@ function echo_white() {
 #
 # Returns nothing.
 function echo_red() {
-    _cloudy_echo_color -c=31 "$1"
+    _cloudy_echo_color -c=31 "$1" -i=1
 }
 
 # Echo a string with a red background.
@@ -540,7 +540,7 @@ function echo_error() {
 #
 # Returns nothing.
 function echo_warning() {
-    _cloudy_echo_color -b=103 -c=90 "$1"
+    _cloudy_echo_color -b=43 -c=30 "$1"
 }
 
 # Echo a string with green text.
@@ -549,7 +549,7 @@ function echo_warning() {
 #
 # Returns nothing.
 function echo_green() {
-    _cloudy_echo_color -c=32 "$1"
+    _cloudy_echo_color -c=32 "$1" -i=0
 }
 
 # Echo a string with yellow text.
@@ -567,7 +567,7 @@ function echo_yellow() {
 #
 # Returns nothing.
 function echo_yellow_highlight() {
-    _cloudy_echo_color -b=103 -c=90 "$1"
+    _cloudy_echo_color -b=43 -c=30 "$1"
 }
 
 # Echo a string with blue text.

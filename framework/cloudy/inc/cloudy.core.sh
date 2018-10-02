@@ -306,9 +306,8 @@ function _cloudy_message() {
 #
 # $1 - The message to echo.
 # -i - The intensity 0 dark, 1 light.
-# -c - The ANSI color value, e.g. 30-37, 39 and 90-97
-# -b - The background color value. 40-47, 49 and 100-107
-# -n - The color to return to; defaults to 0
+# -c - The ANSI color value, e.g. 30-37, 39
+# -b - The background color value. 40-47, 49
 #
 # @link https://misc.flogisoft.com/bash/tip_colors_and_formatting
 #
@@ -317,12 +316,22 @@ function _cloudy_echo_color() {
     parse_args "$@"
 
     local message=${parse_args__args[0]}
-    local intensity=${parse_args__options__intensity:-1}
+    local intensity=${parse_args__options__i:-1}
     local color=$parse_args__options__c
     local bg=$parse_args__options__b
-    local next_color=${parse_args__options__n:-0}
 
-    echo -e "\033[${intensity};${color};${bg}m$message\033[${next_color}m"
+    # tput is more portable so we use that and convert to it's colors.
+    # https://linux.101hacks.com/ps1-examples/prompt-color-using-tput/
+    let color-=30
+    [ $intensity -eq 1 ] && echo -n $(tput bold)
+    if [[ "$bg" ]]; then
+        let bg-=40
+        echo -n $(tput setab $bg)
+    fi
+    echo -n $(tput setaf $color)
+    echo -n ${message}
+    echo -n $(tput sgr0)
+    echo
 }
 
 # Echo a demonstration of the ANSI color rainbow.
@@ -330,6 +339,10 @@ function _cloudy_echo_color() {
 # Returns nothing.
 function _cloudy_echo_ansi_rainbow() {
     for (( i = 30; i < 38; i++ )); do echo -e "\033[0;"$i"m Normal: (0;$i); \033[1;"$i"m Light: (1;$i)"; done
+}
+
+function _cloudy_echo_tput_rainbow() {
+    for c in {0..255}; do tput setaf $c; tput setaf $c | cat -v; echo =$c; done
 }
 
 function _cloudy_echo_credits() {
