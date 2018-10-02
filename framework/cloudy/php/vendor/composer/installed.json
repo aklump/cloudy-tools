@@ -158,17 +158,17 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v5.7.6",
-        "version_normalized": "5.7.6.0",
+        "version": "v5.7.7",
+        "version_normalized": "5.7.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
-            "reference": "2daf3c078610f744e2a4dc2f44fb5060cce9835b"
+            "reference": "72e125b25d3f7aabbf4b2ef68590db7637b8223c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/contracts/zipball/2daf3c078610f744e2a4dc2f44fb5060cce9835b",
-            "reference": "2daf3c078610f744e2a4dc2f44fb5060cce9835b",
+            "url": "https://api.github.com/repos/illuminate/contracts/zipball/72e125b25d3f7aabbf4b2ef68590db7637b8223c",
+            "reference": "72e125b25d3f7aabbf4b2ef68590db7637b8223c",
             "shasum": ""
         },
         "require": {
@@ -176,7 +176,7 @@
             "psr/container": "^1.0",
             "psr/simple-cache": "^1.0"
         },
-        "time": "2018-09-18T12:50:05+00:00",
+        "time": "2018-09-27T14:15:29+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -204,17 +204,17 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.7.6",
-        "version_normalized": "5.7.6.0",
+        "version": "v5.7.7",
+        "version_normalized": "5.7.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "f7c68e8c8aab200cc8ad84f974d5511cda58a742"
+            "reference": "d01c9ac04dee022ff3cd931e60e989a0d950812a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/f7c68e8c8aab200cc8ad84f974d5511cda58a742",
-            "reference": "f7c68e8c8aab200cc8ad84f974d5511cda58a742",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/d01c9ac04dee022ff3cd931e60e989a0d950812a",
+            "reference": "d01c9ac04dee022ff3cd931e60e989a0d950812a",
             "shasum": ""
         },
         "require": {
@@ -234,7 +234,7 @@
             "symfony/process": "Required to use the composer class (^4.1).",
             "symfony/var-dumper": "Required to use the dd function (^4.1)."
         },
-        "time": "2018-09-19T18:36:57+00:00",
+        "time": "2018-10-01T13:13:54+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
