@@ -1,1 +1,2 @@
 aklump/perms https://raw.githubusercontent.com/aklump/website-perms/master/cloudypm.yml?token=AAZ_CajHqKkAfvJNQT5WKrtqwcYZivzGks5btjkEwA%3D%3D
+aklump/install https://raw.githubusercontent.com/aklump/website-install/master/cloudypm.yml?token=AAZ_CQcRXGRLDTN38-EgX9gTAjfVmcJDks5bvRRKwA%3D%3D
