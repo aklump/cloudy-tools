@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+# Prompt for a Y or N confirmation.
+#
+# $1 - The confirmation message
+# --caution - Use when answering Y requires caution.
+# --danger - Use when answering Y is a dangerous thing.
+#
+# Returns 0 if the user answers Y; 1 if not.
+function confirm() {
+    local message="$1"
+
+    parse_args "$@"
+    local message="${parse_args__args:-Continue?} [y/n]:"
+    [[ "$parse_args__options__caution" ]] && message=$(echo_warning "$message")
+    [[ "$parse_args__options__danger" ]] && message=$(echo_error "$message")
+    while true; do
+        read -r -n 1 -p "$message " REPLY
+        case $REPLY in
+            [yY]) echo ; return 0 ;;
+            [nN]) echo ; return 1 ;;
+            *) printf " \033[31m %s \n\033[0m" "invalid input"
+        esac
+    done
+}
+
 # Determine if a given directory has any files in it.
 #
 # $1 - The path to a directory to check
@@ -474,30 +498,6 @@ function translate() {
     echo ${translated:-$untranslated_message} && return 0
 }
 
-#
-# SECTION: User feedback and output
-#
-
-##
- # Accept a y/n confirmation message or end
- #
- # @param string $1
- #   A question to ask ending with a '?' mark.  Leave blank for default.
- #
- # @return bool
- #   Sets the value of confirm_result
- #
-function confirm() {
-    while true; do
-        read -r -n 1 -p "${1:-Continue?} [y/n]: " REPLY
-        case $REPLY in
-            [yY]) echo ; return 0 ;;
-            [nN]) echo ; return 1 ;;
-            *) printf " \033[31m %s \n\033[0m" "invalid input"
-        esac
-    done
-}
-
 # Echo a string with white text.
 #
 # $1 - The string to echo.
@@ -523,6 +523,24 @@ function echo_red() {
 # Returns nothing.
 function echo_red_highlight() {
     _cloudy_echo_color -b=41 -c=37 "$1"
+}
+
+# Echo an error message
+#
+# $1 - The error message.
+#
+# Returns nothing.
+function echo_error() {
+    _cloudy_echo_color -b=41 -c=37 "$1"
+}
+
+# Echo a warning message
+#
+# $1 - The warning message.
+#
+# Returns nothing.
+function echo_warning() {
+    _cloudy_echo_color -b=103 -c=90 "$1"
 }
 
 # Echo a string with green text.
@@ -887,9 +905,12 @@ function exit_with_failure_if_empty_config() {
  # @option --status=N Optional, set the exit status, a number > 0
  #
 function exit_with_failure() {
-    parse_args $@
+    parse_args "$@"
 
-    echo && echo_red "🔥  $(_cloudy_message "$1" "$CLOUDY_FAILED")"
+    [ $CLOUDY_EXIT_STATUS -lt 2 ] && CLOUDY_EXIT_STATUS=1
+    CLOUDY_EXIT_STATUS=${parse_args__options__status:-$CLOUDY_EXIT_STATUS}
+
+    echo && echo_error "🔥  $(_cloudy_message "$1" "$CLOUDY_FAILED")"
 
     ## Write out the failure messages if any.
     if [ ${#CLOUDY_FAILURES[@]} -gt 0 ]; then
@@ -901,14 +922,6 @@ function exit_with_failure() {
     fi
 
     echo
-
-    if [ $CLOUDY_EXIT_STATUS -lt 2 ]; then
-      CLOUDY_EXIT_STATUS=1
-    fi
-
-    if [[ "$parse_args__options__status" ]]; then
-      CLOUDY_EXIT_STATUS=$parse_args__options__status
-    fi
 
     _cloudy_exit
 }

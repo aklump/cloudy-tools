@@ -103,19 +103,17 @@ function assert_empty() {
 
 # Assert that variable by name is not empty.
 #
-# $1 - The name of a global variable.
+# $1 - The actual value
 # $2 - A custom message on failure.
 #
 # Returns 0 if assertion is true; 1 otherwise.
 function assert_not_empty() {
-    local variable_name="$1"
-    local custom_message="$2"
+    local actual_value="$1"
+    local custom_message="${3:-Value should not be empty}"
 
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
-    [ ${#actual} -gt 0 ] && return 0
-    [[ "$variable_name" ]] || variable_name="variable"
-    [[ "$custom_message" ]] || custom_message="should not be empty"
-    _cloudy_assert_failed "$variable_name" "$custom_message"
+    [ ${#actual_value} -gt 0 ] && return 0
+    _cloudy_assert_failed "$actual_value" "$custom_message"
 }
 
 # Assert that two values are not the same.

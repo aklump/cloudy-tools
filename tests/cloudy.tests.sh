@@ -1,5 +1,27 @@
 #!/usr/bin/env bash
 
+
+function testCloudyExitWithFailureExitsWithNonZero() {
+    (exit_with_failure >/dev/null 2>&1)
+    assert_same 1 $?
+    (exit_with_failure --status=4 >/dev/null 2>&1)
+    assert_same 4 $?
+}
+
+function testGetVersionIsNotEmpty() {
+    assert_not_empty $(get_version)
+}
+
+function testGetTitleIsNotEmpty() {
+    assert_not_empty $(get_title)
+}
+
+function testTempdirCreatesExistingDirectory() {
+    local dir=$(tempdir); assert_exit_status 0
+    assert_not_empty $dir
+    assert_file_exists $dir
+}
+
 function testConfigurationMerge() {
     eval $(get_config "tests.config.fruit")
     assert_same "banana" $tests_config_fruit
@@ -91,24 +113,11 @@ function testFailBecauseCausesExitToBeNonZero() {
     assert_same 1 $?
 }
 
-function testCloudyExitWithFailureExitsWithNonZero() {
-    (exit_with_failure >/dev/null 2>&1)
-    assert_same 1 $?
-    (exit_with_failure --status=4 >/dev/null 2>&1)
-    assert_same 4 $?
-}
-
 function testCloudyExitWithSuccessExitsWithZero() {
     (exit_with_success >/dev/null 2>&1)
     assert_same 0 $?
     (exit_with_success_elapsed >/dev/null 2>&1)
     assert_same 0 $?
-}
-
-function testTempdirCreatesExistingDirectory() {
-    local dir=$(tempdir); assert_exit_status 0
-    assert_not_empty $dir
-    assert_file_exists $dir
 }
 
 function testGetConfigPathUsingAssociateArrayReturnsRealPaths() {
@@ -195,7 +204,7 @@ function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
     assert_same 5 ${#tests_paths_indexed[@]}
 }
 
-function _testGetConfigPathAsUsingGlobWorksAsExpected() {
+function testGetConfigPathAsUsingGlobWorksAsExpected() {
     eval $(get_config_path_as "wed" -a 'tests.globtest')
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${wed[0]}
     assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${wed[1]}
@@ -459,14 +468,6 @@ function testHasOptionsWorksAsExpected() {
     assert_exit_status 0 $(has_options)
     CLOUDY_OPTIONS=();
     assert_exit_status 1 $(has_options)
-}
-
-function testGetTitleIsNotEmpty() {
-    assert_not_empty $(get_title)
-}
-
-function testGetVersionIsNotEmpty() {
-    assert_not_empty $(get_version)
 }
 
 function testCloudyParseOptionsArgsWorksAsExpected() {
