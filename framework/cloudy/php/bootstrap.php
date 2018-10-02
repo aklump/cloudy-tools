@@ -6,7 +6,6 @@
  */
 
 use AKlump\Data\Data;
-use AKlump\LoftLib\Bash\Configuration;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -54,28 +53,31 @@ function array_sort_by_item_length() {
 function load_configuration_data($filepath) {
   $data = [];
   if (!file_exists($filepath)) {
-    throw new \RuntimeException("Missing configuration file: $filepath");
+    throw new \RuntimeException("Missing configuration file: " . realpath($filepath));
   }
   if (!($contents = file_get_contents($filepath))) {
-    throw new \RuntimeException("Empty configuration files: $filepath");
+    // TODO Need a php method to write a log file, and then log this.
+//    throw new \RuntimeException("Empty configuration file: " . realpath($filepath));
   }
-  switch (($extension = pathinfo($filepath, PATHINFO_EXTENSION))) {
-    case 'yml':
-    case 'yaml':
-      if ($yaml = Yaml::parse($contents)) {
-        $data += $yaml;
-      }
-      break;
+  if ($contents) {
+    switch (($extension = pathinfo($filepath, PATHINFO_EXTENSION))) {
+      case 'yml':
+      case 'yaml':
+        if ($yaml = Yaml::parse($contents)) {
+          $data += $yaml;
+        }
+        break;
 
-    case 'json':
-      if ($json = json_decode($contents, TRUE)) {
-        $data += $json;
-      }
-      break;
+      case 'json':
+        if ($json = json_decode($contents, TRUE)) {
+          $data += $json;
+        }
+        break;
 
-    default:
-      throw new \RuntimeException("Configuration files of type \"$extension\" are not supported.");
+      default:
+        throw new \RuntimeException("Configuration files of type \"$extension\" are not supported.");
 
+    }
   }
 
   return $data;
