@@ -712,14 +712,11 @@ function implement_cloudy_basic() {
 
 # Performs a standard 'install' command and exists.
 #
-# You must set up and install command in your core config file.
+# You must set up an install command in your core config file.
 # Then call this function from inside `on_pre_config`, e.g.
-#
 # [[ "$(get_command)" == "install" ]] && exit_with_install
-#
 # The translation service is not yet bootstrapped in on_pre_config, so if you
 # want to alter the strings printed you can do something like this:
-#
 # if [[ "$(get_command)" == "init" ]]; then
 #     CLOUDY_FAILED="Initialization failed."
 #     CLOUDY_SUCCESS="Initialization complete."
