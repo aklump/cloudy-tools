@@ -760,13 +760,13 @@ function exit_with_install() {
                let i++
             done
             if [[ "$file" == "gitignore" ]]; then
-                destination="$ROOT/../../../opt/.gitignore"
+                destination=$(realpath "$ROOT/../../../opt/.gitignore")
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
                 # todo This will write more than once, so this is not very elegant.  Should figure that out somehow.
                 touch "$destination" && cat "$install_source_dir/$file" >> "$destination" && succeed_because "$destination merged."
             elif ! [ -e "$destination" ]; then
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
-                cp "$install_source_dir/$file" "$destination" && succeed_because "$file created" || fail_because "Could not copy $file"
+                cp "$install_source_dir/$file" "$destination" && succeed_because "$(realpath $destination) created." || fail_because "Could not copy $file."
             fi
         done
     fi
