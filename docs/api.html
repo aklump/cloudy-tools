@@ -39,6 +39,7 @@
       <a href="#echo_blue">echo_blue</a>
       <a href="#echo_blue_list">echo_blue_list</a>
       <a href="#echo_elapsed">echo_elapsed</a>
+      <a href="#echo_error">echo_error</a>
       <a href="#echo_green">echo_green</a>
       <a href="#echo_green_list">echo_green_list</a>
       <a href="#echo_heading">echo_heading</a>
@@ -50,6 +51,7 @@
       <a href="#echo_slim_table">echo_slim_table</a>
       <a href="#echo_table">echo_table</a>
       <a href="#echo_title">echo_title</a>
+      <a href="#echo_warning">echo_warning</a>
       <a href="#echo_white">echo_white</a>
       <a href="#echo_yellow">echo_yellow</a>
       <a href="#echo_yellow_highlight">echo_yellow_highlight</a>
@@ -151,9 +153,9 @@
       <h2 id="array_has_value">array_has_value()</h2>
     <p class="summary">Search $array_has_value__array for a value.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The value to search for in array.</li>
-                  </ul>
+                        </ul>
         
         <pre><code>array_has_value__array<br />
 You must provide your array as $array_has_value__array like so:<br />
@@ -165,9 +167,9 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="array_join">array_join()</h2>
     <p class="summary">Echo a string, which is an array joined by a substring.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to use to glue the pieces together with.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if all goes well; 1 on failure.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if all goes well; 1 on failure.</li>
             </ul>
         
         <pre><code>array_join__array</code></pre>
@@ -191,45 +193,48 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="assert_contains">assert_contains()</h2>
     <p class="summary">Assert that an array contains a value.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The value to search for.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The name of a global variable.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_count">assert_count()</h2>
     <p class="summary">Assert that an array has a given number of elements.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The expected length.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The name of a global array.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_empty">assert_empty()</h2>
     <p class="summary">Assert that variable by name is empty.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The name of a global variable.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_equals">assert_equals()</h2>
     <p class="summary">Assert that two values are equal in value but not necessarily type.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The expected value.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The value to test.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_exit_status">assert_exit_status()</h2>
     <p class="summary">Assert a function returns a given exit code.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$: </li>
-                  </ul>
+                        </ul>
         
         <pre><code>Here are three examples of how to call...<br />
 @code<br />
@@ -241,90 +246,97 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="assert_false">assert_false()</h2>
     <p class="summary">Assert that a value equals &quot;false&quot; or &quot;FALSE&quot;.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The value to test.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_file_exists">assert_file_exists()</h2>
     <p class="summary">Assert that a file exists by path.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The filepath of the expected file.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_file_not_exists">assert_file_not_exists()</h2>
     <p class="summary">Assert that a file does not exist at path.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The filepath to ensure does not exist.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_internal_type">assert_internal_type()</h2>
     <p class="summary">Assert that an global variable is of a given type.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The expected type.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The name of a global variable.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_not_contains">assert_not_contains()</h2>
     <p class="summary">Assert that an array does not contain a value.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The value to search for.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The name of a global variable.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_not_empty">assert_not_empty()</h2>
     <p class="summary">Assert that variable by name is not empty.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The name of a global variable.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: A custom message on failure.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_not_equals">assert_not_equals()</h2>
     <p class="summary">Assert that two values are not the same.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The expected value.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The value to test.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_not_internal_type">assert_not_internal_type()</h2>
     <p class="summary">Assert that an global variable is not of a given type.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The expected type.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The name of a global variable.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_reg_exp">assert_reg_exp()</h2>
     <p class="summary">Assert that a value matches a regular expression.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The regular expression.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The value to match against the regexp.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="assert_same">assert_same()</h2>
     <p class="summary">Assert that two values are equal and of the same type.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The expected value.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+              <li>$2: The value to test.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         <pre><code>@todo is this needed, since bash is untyped?</code></pre>
@@ -332,20 +344,23 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="assert_true">assert_true()</h2>
     <p class="summary">Assert that a value equals &quot;true&quot; or &quot;TRUE&quot;.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The value to test.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="confirm">confirm()</h2>
-    <p class="summary">Accept a y/n confirmation message or end</p>
+    <p class="summary">Prompt for a Y or N confirmation.</p>
     
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The confirmation message</li>
+                    </ul>Options: <ul class="function-list__options">
+                  <li>--caution: Use when answering Y requires caution.</li>
+                  <li>--danger: Use when answering Y is a dangerous thing.</li>
+                            </ul><ul class="function-list__return"><li>Returns 0 if the user answers Y; 1 if not.</li>
+            </ul>
         
-        <pre><code>@param string $1<br />
-  A question to ask ending with a &#039;?&#039; mark.  Leave blank for default.<br />
-@return bool<br />
-  Sets the value of confirm_result</code></pre>
         
       <h2 id="date8601">date8601()</h2>
     <p class="summary">Return the current datatime in ISO8601 in UTC.</p>
@@ -366,27 +381,27 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="dir_has_files">dir_has_files()</h2>
     <p class="summary">Determine if a given directory has any files in it.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The path to a directory to check</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if the path contains non-hidden files or 1 if not.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if the path contains non-hidden files or 1 if not.</li>
             </ul>
         
         
       <h2 id="do_tests_in">do_tests_in()</h2>
     <p class="summary">Perform all tests in a file.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The path to a test file.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if all tests pass; 1 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if all tests pass; 1 otherwise.</li>
             </ul>
         
         
       <h2 id="echo_blue">echo_blue()</h2>
     <p class="summary">Echo a string with blue text.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -400,12 +415,21 @@ You must provide your array as $array_has_value__array like so:<br />
     
         
         
+      <h2 id="echo_error">echo_error()</h2>
+    <p class="summary">Echo an error message</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The error message.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
       <h2 id="echo_green">echo_green()</h2>
     <p class="summary">Echo a string with green text.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -417,18 +441,18 @@ You must provide your array as $array_has_value__array like so:<br />
       <h2 id="echo_heading">echo_heading()</h2>
     <p class="summary">Echo a heading string.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The heading string.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="echo_key_value">echo_key_value()</h2>
     <p class="summary">$DESCRIPTION</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: $PARAM$</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if $END$.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if $END$.</li>
             </ul>
         
         
@@ -447,18 +471,18 @@ You must add items to your list first:<br />
       <h2 id="echo_red">echo_red()</h2>
     <p class="summary">Echo a string with red text.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="echo_red_highlight">echo_red_highlight()</h2>
     <p class="summary">Echo a string with a red background.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -480,36 +504,45 @@ You must add items to your list first:<br />
       <h2 id="echo_title">echo_title()</h2>
     <p class="summary">Echo a title string.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The title string.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="echo_warning">echo_warning()</h2>
+    <p class="summary">Echo a warning message</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The warning message.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="echo_white">echo_white()</h2>
     <p class="summary">Echo a string with white text.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="echo_yellow">echo_yellow()</h2>
     <p class="summary">Echo a string with yellow text.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="echo_yellow_highlight">echo_yellow_highlight()</h2>
     <p class="summary">Echo a string with a yellow background.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to echo.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -542,9 +575,9 @@ You must add items to your list first:<br />
       <h2 id="exit_with_failure_if_config_is_not_path">exit_with_failure_if_config_is_not_path()</h2>
     <p class="summary">Test a global config variable to see if it points to an existing path.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The config path, used by get_config</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if the variable exists and points to a file; exits otherwise with 1.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if the variable exists and points to a file; exits otherwise with 1.</li>
             </ul>
         
         
@@ -574,9 +607,9 @@ Then call this function from inside `on_pre_config`, e.g.<br />
       <h2 id="exit_with_success">exit_with_success()</h2>
     <p class="summary">Echo a success message plus success reasons and exit</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The success message to use.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0.</li>
             </ul>
         
         
@@ -641,54 +674,59 @@ any chance that the return value will be empty.<br />
       <h2 id="get_config_keys">get_config_keys()</h2>
     <p class="summary">Echos eval code for the keys of a configuration associative array.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="get_config_keys_as">get_config_keys_as()</h2>
     <p class="summary">Echo eval code for keys of a configuration associative array using custom var.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="get_config_path">get_config_path()</h2>
     <p class="summary">Echo eval code for paths of a configuration item.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                    </ul>Options: <ul class="function-list__options">
+                  <li>-a: If you are expecting an array</li>
+                            </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="get_config_path_as">get_config_path_as()</h2>
     <p class="summary">Echo eval code for paths of a configuration item using custom var.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                    </ul>Options: <ul class="function-list__options">
+                  <li>-a: If you are expecting an array</li>
+                            </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="get_option">get_option()</h2>
     <p class="summary">Echo the value of a script option, or a default.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The name of the option</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if the option was used; 2 if the default is echoed.</li>
+              <li>$2: A default value if the option was not used.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if the option was used; 2 if the default is echoed.</li>
             </ul>
         
         
       <h2 id="get_title">get_title()</h2>
     <p class="summary">Echo the title as defined in the configuration.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: A default value if no title is defined.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -715,9 +753,9 @@ any chance that the return value will be empty.<br />
       <h2 id="has_option">has_option()</h2>
     <p class="summary">Determine if the script was called with a given option.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The option to check for.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if the option was used; 1 if not.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if the option was used; 1 if not.</li>
             </ul>
         
         
@@ -736,9 +774,9 @@ you must still set up the commands in the config file as usual.</code></pre>
       <h2 id="list_add_item">list_add_item()</h2>
     <p class="summary">Add an item to the list.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to add as a list item.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         <pre><code>echo_list__array</code></pre>
@@ -766,13 +804,7 @@ you must still set up the commands in the config file as usual.</code></pre>
 The following variables are generated for:<br />
 @code<br />
   my_func -ab --tree=life do re<br />
-@endcode<br />
-- parse_args__args=(do re)<br />
-- parse_args__options=(a b tree)<br />
-- parse_args__options__a=true<br />
-- parse_args__options__b=true<br />
-- parse_args__options__tree=life<br />
-- parse_args__options_passthru=&quot;-a -b -tree=life&quot;</code></pre>
+@endcode</code></pre>
         
       <h2 id="path_extension">path_extension()</h2>
     <p class="summary">Return the extension of a file.</p>
@@ -793,27 +825,28 @@ The following variables are generated for:<br />
       <h2 id="string_lower">string_lower()</h2>
     <p class="summary">Echo the lowercase version of a string.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to convert to lowercase.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="string_repeat">string_repeat()</h2>
     <p class="summary">Repeat a string N times.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to repeat.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+              <li>$2: The number of repetitions.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="string_split">string_split()</h2>
     <p class="summary">Split a string by a delimiter.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The delimiter string.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if .</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if .</li>
             </ul>
         
         <pre><code>string_split__string<br />
@@ -826,18 +859,18 @@ string_split__array<br />
       <h2 id="string_upper">string_upper()</h2>
     <p class="summary">Echo the uppercase version of a string.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The string to convert to uppercase.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
       <h2 id="succeed_because">succeed_because()</h2>
     <p class="summary">Add a success reason to be shown on exit.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The success reason.</li>
-                  </ul><ul class="function-list__return"><li>Returns 1 if the message is empty; 0 otherwise.</li>
+                          </ul><ul class="function-list__return"><li>Returns 1 if the message is empty; 0 otherwise.</li>
             </ul>
         
         
@@ -859,9 +892,9 @@ string_split__array<br />
       <h2 id="table_set_header">table_set_header()</h2>
     <p class="summary">Set the column headers for a table.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$@: Each argument is the column header value.</li>
-                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
         
@@ -883,9 +916,9 @@ string_split__array<br />
       <h2 id="translate">translate()</h2>
     <p class="summary">Echo the translation of a message id into $CLOUDY_LANGUAGE.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The untranslated message.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 if translated; 2 if not translated.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if translated; 2 if not translated.</li>
             </ul>
         
         
@@ -917,27 +950,27 @@ string_split__array<br />
       <h2 id="write_log_alert">write_log_alert()</h2>
     <p class="summary">Writes a log message using the alert level.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$@: Any number of strings to write to the log.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success or 1 if the log cannot be written to.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success or 1 if the log cannot be written to.</li>
             </ul>
         
         
       <h2 id="write_log_critical">write_log_critical()</h2>
     <p class="summary">Write to the log with level critical.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The message to write.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="write_log_debug">write_log_debug()</h2>
     <p class="summary">Write to the log with level debug.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The message to write.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
@@ -955,36 +988,36 @@ string_split__array<br />
       <h2 id="write_log_error">write_log_error()</h2>
     <p class="summary">Write to the log with level error.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The message to write.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="write_log_info">write_log_info()</h2>
     <p class="summary">Write to the log with level info.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The message to write.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="write_log_notice">write_log_notice()</h2>
     <p class="summary">Write to the log with level notice.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The message to write.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
       <h2 id="write_log_warning">write_log_warning()</h2>
     <p class="summary">Write to the log with level warning.</p>
     
-          <ul class="function-list__arguments">
+          Arguments: <ul class="function-list__arguments">
               <li>$1: The message to write.</li>
-                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
         
@@ -1003,7 +1036,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 11:44:16 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 12:35:48 -0700</p>
   </div>
 </footer>
 

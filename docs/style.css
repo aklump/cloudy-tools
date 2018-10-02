@@ -473,7 +473,11 @@ a,
 .function-list__arguments {
   font-weight: bold; }
 
+.function-list__options {
+  font-weight: bold; }
+
 .function-list__return {
+  font-style: italic;
   font-weight: bold; }
 
 /*# sourceMappingURL=style.css.map */

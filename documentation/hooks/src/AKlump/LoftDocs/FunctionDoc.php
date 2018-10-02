@@ -11,6 +11,8 @@ class FunctionDoc {
 
   protected $name;
 
+  protected $options = [];
+
   protected $arguments = [];
 
   protected $description = [];
@@ -52,9 +54,23 @@ class FunctionDoc {
         $func->setSummary($line);
         $next_line_is_summary = FALSE;
       }
-      elseif (substr($line, 0, 1) === '$') {
-        preg_match("/(.+?)\s*\-\s*(.+)/", $line, $matches);
-        $func->addArgument(trim($matches[1], '$'), $matches[2]);
+      elseif (in_array(substr($line, 0, 1), ['$', '-'])) {
+        $sublines = explode(PHP_EOL, $line);
+        foreach ($sublines as $subline) {
+          switch (substr($subline, 0, 1)) {
+            case '$':
+              preg_match("/(.+?)\s*\-\s*(.+)/", ltrim($subline, '$'), $matches);
+              $matches += [NULL, NULL, NULL];
+              $func->addArgument($matches[1], $matches[2]);
+              break;
+
+            case '-':
+              preg_match("/(.+?)\s*\-\s*(.+)/", ltrim($subline, '-'), $matches);
+              $matches += [NULL, NULL, NULL];
+              $func->addOption($matches[1], $matches[2]);
+              break;
+          }
+        }
       }
       elseif (preg_match("/^Return.+/", $line)) {
         $func->setReturn($line);
@@ -125,8 +141,21 @@ class FunctionDoc {
    * @return array
    *   Lorem.
    */
-  public function getArgs($default = NULL) {
+  public function getArgs($default = []) {
     return !is_null($this->arguments) ? $this->arguments : $default;
+  }
+
+  /**
+   * Return any defined options.
+   *
+   * @param mixed $default
+   *   Optional, a default value other than null.
+   *
+   * @return array
+   *   Lorem.
+   */
+  public function getOptions($default = []) {
+    return !is_null($this->options) ? $this->options : $default;
   }
 
   /**
@@ -139,7 +168,15 @@ class FunctionDoc {
    *   Lorem.
    */
   public function addArgument($name, $description) {
+    $name = "\$$name";
     $this->arguments[$name] = $description;
+
+    return $this;
+  }
+
+  public function addOption($name, $description) {
+    $name = strlen($name) === 1 ? "-$name" : "--$name";
+    $this->options[$name] = $description;
 
     return $this;
   }

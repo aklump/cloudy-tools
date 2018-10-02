@@ -30,6 +30,20 @@
 <p>Cloudy scripts should include function documentation per <a href="http://tomdoc.org">TomDoc</a> syntax.</p>
 
 <p>Documentation can be extracted using <a href="https://github.com/tests-always-included/tomdoc.sh">tomdoc.sh</a></p>
+
+<p>Here is an example docblock.</p>
+
+<pre><code># Prompt for a Y or N confirmation.
+#
+# $1 - The confirmation message
+# --caution - Use when answering Y requires caution.
+# --danger - Use when answering Y is a dangerous thing.
+#
+# Returns 0 if the user answers Y; 1 if not.
+function confirm() {
+    local message="$1"
+    ...
+</code></pre>
 </section>
 
 <div class="search__results">
@@ -44,7 +58,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 11:44:18 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 12:35:50 -0700</p>
   </div>
 </footer>
 
