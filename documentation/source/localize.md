@@ -1,5 +1,6 @@
 # Localization/Translation
 
+Note: this is not available until after the configuration has been bootstrapped.
 
 ## Translate or reword
 
