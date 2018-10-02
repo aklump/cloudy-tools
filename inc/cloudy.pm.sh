@@ -78,9 +78,9 @@ function _cloudypm_load_package_info() {
         # Use the git clone to determine the version based on the latest tag.
         local stash=$(tempdir)
         (cd $stash && git clone "$cloudypm___clone_from" repo >/dev/null 2>&1)
-        cloudypm___version=$(cd "$stash/repo" && echo $(git describe --abbrev=0 --tags))
+        cloudypm___version=$(cd "$stash/repo" && echo $(git describe --abbrev=0 --tags 2>/dev/null))
         if [[ ! "$cloudypm___version" ]]; then
-            cloudypm__version="dev-$(cd "$stash/repo" && echo $(git rev-parse --abbrev-ref HEAD))"
+            cloudypm___version="dev-$(cd "$stash/repo" && echo $(git rev-parse --abbrev-ref HEAD))"
         fi
         rm -rf $stash && echo >> $cached_info && echo "cloudypm___version=\"$cloudypm___version\"" >> $cached_info || return 1
         return 0
