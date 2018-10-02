@@ -126,6 +126,9 @@ function _cloudypm_update_package() {
     _cloudypm_update_lock_file $package
     _cloudypm_update_package__new_version=$cloudypm___version
 
+    ## Now update cloudy
+    (cd "$WDIR/opt/cloudy/" && cloudy update -fy > /dev/null) && succeed_because "cloudy/cloudy was also updated."
+
     has_failed ? return 1 : return 0
 }
 
