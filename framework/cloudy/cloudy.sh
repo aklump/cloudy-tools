@@ -90,27 +90,22 @@ function validate_input() {
     return 0
 }
 
-##
- # Parses arguments into options, args and option values.
- #
- # @code
- #   function my_func{) {
- #     parse_args @$
- #     ...
- # @endcode
- #
- # The following variables are generated for:
- # @code
- #   my_func -ab --tree=life do re
- # @endcode
- #
- # - parse_args__args=(do re)
- # - parse_args__options=(a b tree)
- # - parse_args__options__a=true
- # - parse_args__options__b=true
- # - parse_args__options__tree=life
- # - parse_args__options_passthru="-a -b -tree=life"
- #
+# Parses arguments into options, args and option values.
+#
+# Use this in your my_func function: parse_args "$@"
+#
+# The following variables are generated for:
+# @code
+#   my_func -ab --tree=life do re
+# @endcode
+#
+# - parse_args__args=(do re)
+# - parse_args__options=(a b tree)
+# - parse_args__options__a=true
+# - parse_args__options__b=true
+# - parse_args__options__tree=life
+# - parse_args__options_passthru="-a -b -tree=life"
+#
 function parse_args() {
     local name
     local value
@@ -255,15 +250,19 @@ function array_has_value() {
     return 1
 }
 
-##
- # Join a stack into an array with delimiter.
- #
- # @code
- #  string_split__string="do<br />re<br />mi"
- #  string_split '<br />' && local words=("${string_split__array}")
- # @endcode
- #
- #
+# Split a string by a delimiter.
+#
+# string_split__string
+# string_split__array
+#
+# @code
+#  string_split__string="do<br />re<br />mi"
+#  string_split '<br />' && local words=("${string_split__array}")
+# @endcode
+#
+# $1 - The delimiter string.
+#
+# Returns 0 if .
 function string_split() {
     local delimiter="$1"
 
@@ -275,9 +274,13 @@ function string_split() {
     fi
 }
 
-##
- # Join a stack into an array with delimiter.
- #
+# Echo a string, which is an array joined by a substring.
+#
+# array_join__array
+#
+# $1 - The string to use to glue the pieces together with.
+#
+# Returns 0 if all goes well; 1 on failure.
 function array_join() {
     local glue="$1"
 
@@ -287,22 +290,26 @@ function array_join() {
     return 0
 }
 
-##
- # Alphabetically sort a stack.
- #
+# Mutate an array sorting alphabetically.
+#
+# array_sort__array
+#
+# Returns nothing.
 function array_sort() {
     local IFS=$'\n'
     array_sort__array=($(sort <<< "${array_sort__array[*]}"))
 }
 
-##
- # Sort and mutate an array based on length of values.
- #
- # @code
- #  array_sort_by_item_length__array=("september" "five" "three" "on")
- #  array_sort_by_item_length
- # @endcode
- #
+# Mutate an array sorting by the length of each item, short ot long
+#
+# array_sort__array
+#
+# @code
+#  array_sort_by_item_length__array=("september" "five" "three" "on")
+#  array_sort_by_item_length
+# @endcode
+#
+# Returns 0 on success; 1 on failure.
 function array_sort_by_item_length() {
     local sorted
     local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
@@ -312,9 +319,9 @@ function array_sort_by_item_length() {
     return $result
 }
 
-##
- # Determine if there are any arguments for the script "command".
- #
+# Determine if there are any arguments for the script "command".
+#
+# Returns 0 if the command has any arguments; 1 if not.
 function has_command_args() {
     [ ${#CLOUDY_ARGS[@]} -gt 1 ] && return 0
     return 1
@@ -384,12 +391,22 @@ function get_config_as() {
     _cloudy_get_config "$config_path" "$default_value" --as="$custom_var_name" $parse_args__options_passthru
 }
 
+# Echos eval code for the keys of a configuration associative array.
+#
+# $1 - The path to the config item, e.g. "files.private"
+#
+# Returns 0 on success.
 function get_config_keys() {
     local config_key_path="$1"
 
     _cloudy_get_config -a --keys "$config_key_path"
 }
 
+# Echo eval code for keys of a configuration associative array using custom var.
+#
+# $1 - The path to the config item, e.g. "files.private"
+#
+# Returns 0 on success.
 function get_config_keys_as() {
     local custom_var_name=$1
     local config_key_path=$2
@@ -400,9 +417,12 @@ function get_config_keys_as() {
     _cloudy_get_config -a --keys "$config_key_path" "" --as="$custom_var_name"
 }
 
-##
- # Return configuration value or values as full path(s) relative to $ROOT.
- #
+# Echo eval code for paths of a configuration item.
+#
+# $1 - The path to the config item, e.g. "files.private"
+# -a - If you are expecting an array
+#
+# Returns 0 on success.
 function get_config_path() {
     local config_key_path=$1
     local default_value=$2
@@ -413,6 +433,12 @@ function get_config_path() {
     _cloudy_get_config "$config_key_path" "$default_value" --mutator=_cloudy_realpath $parse_args__options_passthru
 }
 
+# Echo eval code for paths of a configuration item using custom var.
+#
+# $1 - The path to the config item, e.g. "files.private"
+# -a - If you are expecting an array
+#
+# Returns 0 on success.
 function get_config_path_as() {
     local custom_var_name=$1
     local config_key_path=$2
@@ -425,9 +451,11 @@ function get_config_path_as() {
     _cloudy_get_config "$config_key_path" "$default_value"  --as="$custom_var_name" --mutator=_cloudy_realpath $parse_args__options_passthru
 }
 
-##
- # Translate a message id into $CLOUDY_LANGUAGE.
- #
+# Echo the translation of a message id into $CLOUDY_LANGUAGE.
+#
+# $1 - The untranslated message.
+#
+# Returns 0 if translated; 2 if not translated.
 function translate() {
     local untranslated_message="$1"
 
@@ -470,62 +498,113 @@ function confirm() {
     done
 }
 
-##
- # Echo a string in red.
- #
+# Echo a string with white text.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
+function echo_white() {
+    _cloudy_echo_color -c=37 "$1"
+}
+
+# Echo a string with red text.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
 function echo_red() {
-    _cloudy_echo_color 1 "$1";
+    _cloudy_echo_color -c=31 "$1"
 }
 
-##
- # Echo a string in green.
- #
+# Echo a string with a red background.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
+function echo_red_highlight() {
+    _cloudy_echo_color -b=41 -c=37 "$1"
+}
+
+# Echo a string with green text.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
 function echo_green() {
-    _cloudy_echo_color 2 "$1";
+    _cloudy_echo_color -c=32 "$1"
 }
 
-##
- # Echo a string in yellow.
- #
+# Echo a string with yellow text.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
 function echo_yellow() {
-    _cloudy_echo_color 3 "$1";
+    _cloudy_echo_color -i=0 -c=33 "$1"
 }
 
-##
- # Echo a string in blue.
- #
+# Echo a string with a yellow background.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
+function echo_yellow_highlight() {
+    _cloudy_echo_color -b=103 -c=90 "$1"
+}
+
+# Echo a string with blue text.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
 function echo_blue() {
-    _cloudy_echo_color 4 "$1";
+    _cloudy_echo_color -i=0 -c=34 "$1"
 }
 
-##
- # Print out a headline for a section of user output.
- #
+# Echo a title string.
+#
+# $1 - The title string.
+#
+# Returns nothing.
 function echo_title() {
     local headline="$1"
     [[ ! "$headline" ]] && return 1
     echo && echo "🔶  $(string_upper "${headline}")" && echo
 }
 
-##
- # Print out a headline for a section of user output.
- #
+# Echo a heading string.
+#
+# $1 - The heading string.
+#
+# Returns nothing.
 function echo_heading() {
     local headline="$1"
     [[ ! "$headline" ]] && return 1
     echo "🔸  ${headline}"
 }
 
+# Remove all items from the list.
+#
+# Returns nothing
 function list_clear() {
     echo_list__array=()
 }
 
+# Add an item to the list.
+#
+# echo_list__array
+#
+# $1 - The string to add as a list item.
+#
+# Returns nothing.
 function list_add_item() {
     local item="$1"
     echo_list__array=("${echo_list__array[@]}" "$item")
-    return 0
 }
 
+# Detect if the list has any items.
+#
+# Returns 0 if the list has at least one item.
 function list_has_items() {
     [ ${#echo_list__array[@]} -gt 0 ]
 }
@@ -551,33 +630,33 @@ function echo_list() {
  # @param $echo_list__array
  #
 function echo_red_list() {
-    _cloudy_echo_list 1 1
+    _cloudy_echo_list 31 31
 }
 
 ##
  # @param $echo_list__array
  #
 function echo_green_list() {
-    _cloudy_echo_list 2 2
+    _cloudy_echo_list 32 32
 }
 
 ##
  # @param $echo_list__array
  #
 function echo_yellow_list() {
-    _cloudy_echo_list 3 3
+    _cloudy_echo_list 33 33
 }
 
 ##
  # @param $echo_list__array
  #
 function echo_blue_list() {
-    _cloudy_echo_list 4 4
+    _cloudy_echo_list 34 34
 }
 
-##
- # Return the elapsed time in seconds since the beginning of the script.
- #
+# Echo the elapsed time in seconds since the beginning of the script.
+#
+# Returns nothing.
 function echo_elapsed() {
     echo $SECONDS
 }
@@ -691,7 +770,9 @@ function exit_with_cache_clear() {
     exit_with_success "Caches are clear."
 }
 
-
+# Echo the help screen and exit.
+#
+# Return 0 on success; 1 otherwise.
 function exit_with_help() {
     local help_command=$(_cloudy_get_master_command "$1")
 
@@ -707,6 +788,11 @@ function exit_with_help() {
     exit_with_success "Use \"help <command>\" for specific info"
 }
 
+# Echo a success message plus success reasons and exit
+#
+# $1 - The success message to use.
+#
+# Returns 0.
 function exit_with_success() {
     local message=$1
     _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS")"
@@ -727,19 +813,28 @@ function warn_because() {
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
-##
- # Add a success message to be shown on exit.
- #
+# Add a success reason to be shown on exit.
+#
+# $1 - The success reason.
+#
+# Returns 1 if the message is empty; 0 otherwise.
 function succeed_because() {
     local message=$1
+
     [[ "$message" ]] || return 1
     message=$(_cloudy_message "$message")
     CLOUDY_EXIT_STATUS=0
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
 }
 
+# Test a global config variable to see if it points to an existing path.
+#
+# $1 - The config path, used by get_config
+#
+# Returns 0 if the variable exists and points to a file; exits otherwise with 1.
 function exit_with_failure_if_config_is_not_path() {
     local config_path="$1"
+
     parse_args $@
     if [[ "$parse_args__options__status" ]]; then
       CLOUDY_EXIT_STATUS=$parse_args__options__status
@@ -846,6 +941,9 @@ function fail_because() {
     fi
 }
 
+# Determine if any failure reasons have been defined yet.
+#
+# Returns 0 if one or more failure messages are present; 1 if not.
 function has_failed() {
     [ $CLOUDY_EXIT_STATUS -gt 0 ] && return 0
     return 1
@@ -974,12 +1072,22 @@ function tempdir() {
     mktemp -d 2>/dev/null || mktemp -d -t 'temp'
 }
 
+# Echo the uppercase version of a string.
+#
+# $1 - The string to convert to uppercase.
+#
+# Returns nothing.
 function string_upper() {
     local string="$1"
 
     echo "$string" | tr [a-z] [A-Z]
 }
 
+# Echo the lowercase version of a string.
+#
+# $1 - The string to convert to lowercase.
+#
+# Returns nothing.
 function string_lower() {
     local string="$1"
 
@@ -1052,16 +1160,31 @@ function write_log_alert() {
     _cloudy_write_log ${args[@]}
 }
 
+# Write to the log with level critical.
+#
+# $1 - The message to write.
+#
+# Returns 0 on success.
 function write_log_critical() {
     local args=("critical" "$@")
     _cloudy_write_log ${args[@]}
 }
 
+# Write to the log with level error.
+#
+# $1 - The message to write.
+#
+# Returns 0 on success.
 function write_log_error() {
     local args=("error" "$@")
     _cloudy_write_log ${args[@]}
 }
 
+# Write to the log with level warning.
+#
+# $1 - The message to write.
+#
+# Returns 0 on success.
 function write_log_warning() {
     local args=("warning" "$@")
     _cloudy_write_log ${args[@]}
@@ -1077,16 +1200,31 @@ function write_log_dev_warning() {
     _cloudy_write_log "${args[@]}  This should only be the case for development/debugging."
 }
 
+# Write to the log with level notice.
+#
+# $1 - The message to write.
+#
+# Returns 0 on success.
 function write_log_notice() {
     local args=("notice" "$@")
     _cloudy_write_log ${args[@]}
 }
 
+# Write to the log with level info.
+#
+# $1 - The message to write.
+#
+# Returns 0 on success.
 function write_log_info() {
     local args=("info" "$@")
     _cloudy_write_log ${args[@]}
 }
 
+# Write to the log with level debug.
+#
+# $1 - The message to write.
+#
+# Returns 0 on success.
 function write_log_debug() {
     local args=("debug" "$@")
     _cloudy_write_log ${args[@]}

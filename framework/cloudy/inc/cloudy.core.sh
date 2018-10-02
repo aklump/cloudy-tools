@@ -302,16 +302,34 @@ function _cloudy_message() {
     echo ${default%.}${suffix} && return 2
 }
 
+# Echo using color
+#
+# $1 - The message to echo.
+# -i - The intensity 0 dark, 1 light.
+# -c - The ANSI color value, e.g. 30-37, 39 and 90-97
+# -b - The background color value. 40-47, 49 and 100-107
+# -n - The color to return to; defaults to 0
+#
+# @link https://misc.flogisoft.com/bash/tip_colors_and_formatting
+#
+# Returns 0 if .
 function _cloudy_echo_color() {
-    local color=$1
-    local message=$2
-    local bg=$3
+    parse_args "$@"
 
-    if [[ "$bg" ]]; then
-        echo "$(tput setaf $color)$(tput setab $bg)$message$(tput sgr0)"
-    else
-        echo "$(tput setaf $color)$message$(tput sgr0)"
-    fi
+    local message=${parse_args__args[0]}
+    local intensity=${parse_args__options__intensity:-1}
+    local color=$parse_args__options__c
+    local bg=$parse_args__options__b
+    local next_color=${parse_args__options__n:-0}
+
+    echo -e "\033[${intensity};${color};${bg}m$message\033[${next_color}m"
+}
+
+# Echo a demonstration of the ANSI color rainbow.
+#
+# Returns nothing.
+function _cloudy_echo_ansi_rainbow() {
+    for (( i = 30; i < 38; i++ )); do echo -e "\033[0;"$i"m Normal: (0;$i); \033[1;"$i"m Light: (1;$i)"; done
 }
 
 function _cloudy_echo_credits() {
@@ -323,30 +341,30 @@ function _cloudy_echo_credits() {
  #
 function _cloudy_echo_list() {
     local line_item
-    local color_items=$1
-    local color_bullets=$2
+    local items_color=$1
+    local bullets_color=$2
     local bullet
     local item
     for i in "${echo_list__array[@]}"; do
         bullet="$LI"
-        if [[ "$color_bullets" ]]; then
-            bullet=$(_cloudy_echo_color $color_bullets "$LI")
+        if [[ "$bullets_color" ]]; then
+            bullet=$(_cloudy_echo_color -c=$bullets_color "$LI")
         fi
         item="$line_item"
-        if [[ "$color_items" ]]; then
-            item=$(_cloudy_echo_color $color_items "$line_item")
+        if [[ "$items_color" ]]; then
+            item=$(_cloudy_echo_color -c=$items_color "$line_item")
         fi
         [[ "$line_item" ]] && echo "$bullet $item"
         line_item="$i"
     done
 
     bullet="$LIL"
-    if [[ "$color_bullets" ]]; then
-        bullet=$(_cloudy_echo_color $color_bullets "$LIL")
+    if [[ "$bullets_color" ]]; then
+        bullet=$(_cloudy_echo_color -c=$bullets_color "$LIL")
     fi
     item="$line_item"
-    if [[ "$color_items" ]]; then
-        item=$(_cloudy_echo_color $color_items "$line_item")
+    if [[ "$items_color" ]]; then
+        item=$(_cloudy_echo_color -c=$items_color "$line_item")
     fi
     [[ "$line_item" ]] && echo "$bullet $item"
 }
