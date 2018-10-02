@@ -45,39 +45,54 @@
       <a href="#echo_key_value">echo_key_value</a>
       <a href="#echo_list">echo_list</a>
       <a href="#echo_red">echo_red</a>
+      <a href="#echo_red_highlight">echo_red_highlight</a>
       <a href="#echo_red_list">echo_red_list</a>
       <a href="#echo_slim_table">echo_slim_table</a>
       <a href="#echo_table">echo_table</a>
       <a href="#echo_title">echo_title</a>
+      <a href="#echo_white">echo_white</a>
       <a href="#echo_yellow">echo_yellow</a>
+      <a href="#echo_yellow_highlight">echo_yellow_highlight</a>
       <a href="#echo_yellow_list">echo_yellow_list</a>
       <a href="#event_dispatch">event_dispatch</a>
       <a href="#event_listen">event_listen</a>
       <a href="#exit_with_cache_clear">exit_with_cache_clear</a>
       <a href="#exit_with_failure">exit_with_failure</a>
+      <a href="#exit_with_failure_if_config_is_not_path">exit_with_failure_if_config_is_not_path</a>
       <a href="#exit_with_failure_if_empty_config">exit_with_failure_if_empty_config</a>
+      <a href="#exit_with_help">exit_with_help</a>
       <a href="#exit_with_install">exit_with_install</a>
+      <a href="#exit_with_success">exit_with_success</a>
       <a href="#fail">fail</a>
       <a href="#fail_because">fail_because</a>
       <a href="#get_command">get_command</a>
       <a href="#get_command_arg">get_command_arg</a>
       <a href="#get_config">get_config</a>
       <a href="#get_config_as">get_config_as</a>
+      <a href="#get_config_keys">get_config_keys</a>
+      <a href="#get_config_keys_as">get_config_keys_as</a>
       <a href="#get_config_path">get_config_path</a>
+      <a href="#get_config_path_as">get_config_path_as</a>
       <a href="#get_option">get_option</a>
       <a href="#get_title">get_title</a>
       <a href="#get_version">get_version</a>
       <a href="#has_command">has_command</a>
       <a href="#has_command_args">has_command_args</a>
+      <a href="#has_failed">has_failed</a>
       <a href="#has_option">has_option</a>
       <a href="#has_options">has_options</a>
       <a href="#implement_cloudy_basic">implement_cloudy_basic</a>
+      <a href="#list_add_item">list_add_item</a>
+      <a href="#list_clear">list_clear</a>
+      <a href="#list_has_items">list_has_items</a>
       <a href="#parse_args">parse_args</a>
       <a href="#path_extension">path_extension</a>
       <a href="#path_filename">path_filename</a>
       <a href="#path_relative_to_root">path_relative_to_root</a>
+      <a href="#string_lower">string_lower</a>
       <a href="#string_repeat">string_repeat</a>
       <a href="#string_split">string_split</a>
+      <a href="#string_upper">string_upper</a>
       <a href="#succeed_because">succeed_because</a>
       <a href="#table_add_row">table_add_row</a>
       <a href="#table_clear">table_clear</a>
@@ -93,8 +108,14 @@
       <a href="#warn_because">warn_because</a>
       <a href="#write_log">write_log</a>
       <a href="#write_log_alert">write_log_alert</a>
+      <a href="#write_log_critical">write_log_critical</a>
+      <a href="#write_log_debug">write_log_debug</a>
       <a href="#write_log_dev_warning">write_log_dev_warning</a>
       <a href="#write_log_emergency">write_log_emergency</a>
+      <a href="#write_log_error">write_log_error</a>
+      <a href="#write_log_info">write_log_info</a>
+      <a href="#write_log_notice">write_log_notice</a>
+      <a href="#write_log_warning">write_log_warning</a>
   </div>
 
 <h2>Cloudy Test Functions</h2>
@@ -142,20 +163,27 @@ You must provide your array as $array_has_value__array like so:<br />
 @endcode</code></pre>
         
       <h2 id="array_join">array_join()</h2>
-    <p class="summary">Join a stack into an array with delimiter.</p>
+    <p class="summary">Echo a string, which is an array joined by a substring.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The string to use to glue the pieces together with.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if all goes well; 1 on failure.</li>
+            </ul>
         
+        <pre><code>array_join__array</code></pre>
         
       <h2 id="array_sort">array_sort()</h2>
-    <p class="summary">Alphabetically sort a stack.</p>
+    <p class="summary">Mutate an array sorting alphabetically.</p>
     
         
+        <pre><code>array_sort__array</code></pre>
         
       <h2 id="array_sort_by_item_length">array_sort_by_item_length()</h2>
-    <p class="summary">Sort and mutate an array based on length of values.</p>
+    <p class="summary">Mutate an array sorting by the length of each item, short ot long</p>
     
         
-        <pre><code>@code<br />
+        <pre><code>array_sort__array<br />
+@code<br />
  array_sort_by_item_length__array=(&quot;september&quot; &quot;five&quot; &quot;three&quot; &quot;on&quot;)<br />
  array_sort_by_item_length<br />
 @endcode</code></pre>
@@ -354,8 +382,12 @@ You must provide your array as $array_has_value__array like so:<br />
         
         
       <h2 id="echo_blue">echo_blue()</h2>
-    <p class="summary">Echo a string in blue.</p>
+    <p class="summary">Echo a string with blue text.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
         
         
       <h2 id="echo_blue_list">echo_blue_list()</h2>
@@ -364,13 +396,17 @@ You must provide your array as $array_has_value__array like so:<br />
         
         
       <h2 id="echo_elapsed">echo_elapsed()</h2>
-    <p class="summary">Return the elapsed time in seconds since the beginning of the script.</p>
+    <p class="summary">Echo the elapsed time in seconds since the beginning of the script.</p>
     
         
         
       <h2 id="echo_green">echo_green()</h2>
-    <p class="summary">Echo a string in green.</p>
+    <p class="summary">Echo a string with green text.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
         
         
       <h2 id="echo_green_list">echo_green_list()</h2>
@@ -379,8 +415,12 @@ You must provide your array as $array_has_value__array like so:<br />
         
         
       <h2 id="echo_heading">echo_heading()</h2>
-    <p class="summary">Print out a headline for a section of user output.</p>
+    <p class="summary">Echo a heading string.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The heading string.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
         
         
       <h2 id="echo_key_value">echo_key_value()</h2>
@@ -405,8 +445,21 @@ You must add items to your list first:<br />
 @see echo_list__array=(&quot;${some_array_to_echo[@]}&quot;)</code></pre>
         
       <h2 id="echo_red">echo_red()</h2>
-    <p class="summary">Echo a string in red.</p>
+    <p class="summary">Echo a string with red text.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="echo_red_highlight">echo_red_highlight()</h2>
+    <p class="summary">Echo a string with a red background.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
         
         
       <h2 id="echo_red_list">echo_red_list()</h2>
@@ -425,13 +478,39 @@ You must add items to your list first:<br />
         
         
       <h2 id="echo_title">echo_title()</h2>
-    <p class="summary">Print out a headline for a section of user output.</p>
+    <p class="summary">Echo a title string.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The title string.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="echo_white">echo_white()</h2>
+    <p class="summary">Echo a string with white text.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
         
         
       <h2 id="echo_yellow">echo_yellow()</h2>
-    <p class="summary">Echo a string in yellow.</p>
+    <p class="summary">Echo a string with yellow text.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="echo_yellow_highlight">echo_yellow_highlight()</h2>
+    <p class="summary">Echo a string with a yellow background.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The string to echo.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
         
         
       <h2 id="echo_yellow_list">echo_yellow_list()</h2>
@@ -460,6 +539,15 @@ You must add items to your list first:<br />
     
         
         
+      <h2 id="exit_with_failure_if_config_is_not_path">exit_with_failure_if_config_is_not_path()</h2>
+    <p class="summary">Test a global config variable to see if it points to an existing path.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The config path, used by get_config</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if the variable exists and points to a file; exits otherwise with 1.</li>
+            </ul>
+        
+        
       <h2 id="exit_with_failure_if_empty_config">exit_with_failure_if_empty_config()</h2>
     <p class="summary">Checks for a non-empty variable in memory or exist with failure.</p>
     
@@ -470,6 +558,11 @@ You must add items to your list first:<br />
 @option as=name<br />
   If the configuration has been renamed, send the memory var name --as=varname.</code></pre>
         
+      <h2 id="exit_with_help">exit_with_help()</h2>
+    <p class="summary">Echo the help screen and exit.</p>
+    
+        
+        
       <h2 id="exit_with_install">exit_with_install()</h2>
     <p class="summary">Performs a standard &#039;install&#039; command and exists.</p>
     
@@ -477,6 +570,15 @@ You must add items to your list first:<br />
         <pre><code>You must set up and install command in your core config file.<br />
 Then call this function from inside `on_pre_config`, e.g.<br />
 [[ &quot;$(get_command)&quot; == &quot;install&quot; ]] &amp;&amp; exit_with_install</code></pre>
+        
+      <h2 id="exit_with_success">exit_with_success()</h2>
+    <p class="summary">Echo a success message plus success reasons and exit</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The success message to use.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0.</li>
+            </ul>
+        
         
       <h2 id="exit_with_test_results">exit_with_test_results()</h2>
     <p class="summary">Echo test results and exit.</p>
@@ -536,9 +638,40 @@ any chance that the return value will be empty.<br />
   eval $(get_config_as &#039;title&#039; -a &#039;path.to.some.array&#039; )<br />
 @code</code></pre>
         
-      <h2 id="get_config_path">get_config_path()</h2>
-    <p class="summary">Return configuration value or values as full path(s) relative to $ROOT.</p>
+      <h2 id="get_config_keys">get_config_keys()</h2>
+    <p class="summary">Echos eval code for the keys of a configuration associative array.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="get_config_keys_as">get_config_keys_as()</h2>
+    <p class="summary">Echo eval code for keys of a configuration associative array using custom var.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="get_config_path">get_config_path()</h2>
+    <p class="summary">Echo eval code for paths of a configuration item.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="get_config_path_as">get_config_path_as()</h2>
+    <p class="summary">Echo eval code for paths of a configuration item using custom var.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
         
         
       <h2 id="get_option">get_option()</h2>
@@ -574,6 +707,11 @@ any chance that the return value will be empty.<br />
     
         
         
+      <h2 id="has_failed">has_failed()</h2>
+    <p class="summary">Determine if any failure reasons have been defined yet.</p>
+    
+        
+        
       <h2 id="has_option">has_option()</h2>
     <p class="summary">Determine if the script was called with a given option.</p>
     
@@ -595,6 +733,26 @@ any chance that the return value will be empty.<br />
         <pre><code>An optional set of commands for all scripts.  This is just the handlers,<br />
 you must still set up the commands in the config file as usual.</code></pre>
         
+      <h2 id="list_add_item">list_add_item()</h2>
+    <p class="summary">Add an item to the list.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The string to add as a list item.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        <pre><code>echo_list__array</code></pre>
+        
+      <h2 id="list_clear">list_clear()</h2>
+    <p class="summary">Remove all items from the list.</p>
+    
+        
+        
+      <h2 id="list_has_items">list_has_items()</h2>
+    <p class="summary">Detect if the list has any items.</p>
+    
+        
+        
       <h2 id="mark_test_skipped">mark_test_skipped()</h2>
     <p class="summary">Mark a single test as skipped</p>
     
@@ -604,11 +762,7 @@ you must still set up the commands in the config file as usual.</code></pre>
     <p class="summary">Parses arguments into options, args and option values.</p>
     
         
-        <pre><code>@code<br />
-  function my_func{) {<br />
-    parse_args @$<br />
-    ...<br />
-@endcode<br />
+        <pre><code>Use this in your my_func function: parse_args &quot;$@&quot;<br />
 The following variables are generated for:<br />
 @code<br />
   my_func -ab --tree=life do re<br />
@@ -636,6 +790,15 @@ The following variables are generated for:<br />
         
         <pre><code>If the path begins with / it is unchanged.</code></pre>
         
+      <h2 id="string_lower">string_lower()</h2>
+    <p class="summary">Echo the lowercase version of a string.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The string to convert to lowercase.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
       <h2 id="string_repeat">string_repeat()</h2>
     <p class="summary">Repeat a string N times.</p>
     
@@ -646,17 +809,36 @@ The following variables are generated for:<br />
         
         
       <h2 id="string_split">string_split()</h2>
-    <p class="summary">Join a stack into an array with delimiter.</p>
+    <p class="summary">Split a string by a delimiter.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The delimiter string.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if .</li>
+            </ul>
         
-        <pre><code>@code<br />
+        <pre><code>string_split__string<br />
+string_split__array<br />
+@code<br />
  string_split__string=&quot;do&lt;br /&gt;re&lt;br /&gt;mi&quot;<br />
  string_split &#039;&lt;br /&gt;&#039; &amp;&amp; local words=(&quot;${string_split__array}&quot;)<br />
 @endcode</code></pre>
         
-      <h2 id="succeed_because">succeed_because()</h2>
-    <p class="summary">Add a success message to be shown on exit.</p>
+      <h2 id="string_upper">string_upper()</h2>
+    <p class="summary">Echo the uppercase version of a string.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The string to convert to uppercase.</li>
+                  </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        
+      <h2 id="succeed_because">succeed_because()</h2>
+    <p class="summary">Add a success reason to be shown on exit.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The success reason.</li>
+                  </ul><ul class="function-list__return"><li>Returns 1 if the message is empty; 0 otherwise.</li>
+            </ul>
         
         
       <h2 id="table_add_row">table_add_row()</h2>
@@ -699,8 +881,12 @@ The following variables are generated for:<br />
         
         
       <h2 id="translate">translate()</h2>
-    <p class="summary">Translate a message id into $CLOUDY_LANGUAGE.</p>
+    <p class="summary">Echo the translation of a message id into $CLOUDY_LANGUAGE.</p>
     
+          <ul class="function-list__arguments">
+              <li>$1: The untranslated message.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 if translated; 2 if not translated.</li>
+            </ul>
         
         
       <h2 id="url_add_cache_buster">url_add_cache_buster()</h2>
@@ -737,6 +923,24 @@ The following variables are generated for:<br />
             </ul>
         
         
+      <h2 id="write_log_critical">write_log_critical()</h2>
+    <p class="summary">Write to the log with level critical.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The message to write.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="write_log_debug">write_log_debug()</h2>
+    <p class="summary">Write to the log with level debug.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The message to write.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
       <h2 id="write_log_dev_warning">write_log_dev_warning()</h2>
     <p class="summary">Log states that should only be thus during development or debugging.</p>
     
@@ -746,6 +950,42 @@ The following variables are generated for:<br />
       <h2 id="write_log_emergency">write_log_emergency()</h2>
     <p class="summary">@link https://www.php-fig.org/psr/psr-3/</p>
     
+        
+        
+      <h2 id="write_log_error">write_log_error()</h2>
+    <p class="summary">Write to the log with level error.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The message to write.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="write_log_info">write_log_info()</h2>
+    <p class="summary">Write to the log with level info.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The message to write.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="write_log_notice">write_log_notice()</h2>
+    <p class="summary">Write to the log with level notice.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The message to write.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
+        
+        
+      <h2 id="write_log_warning">write_log_warning()</h2>
+    <p class="summary">Write to the log with level warning.</p>
+    
+          <ul class="function-list__arguments">
+              <li>$1: The message to write.</li>
+                  </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
+            </ul>
         
         
   </div>
@@ -763,7 +1003,7 @@ The following variables are generated for:<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Mon, 01 Oct 2018 18:23:03 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 11:44:16 -0700</p>
   </div>
 </footer>
 
