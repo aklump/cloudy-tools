@@ -45,20 +45,6 @@ function validate_cloudy_instance_or_exit_with_failure() {
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/framework/cloudy/cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
 # End Cloudy Bootstrap
 
-#_cloudy_echo_tput_rainbow
-
-echo_red "This is red".
-echo_white "This is white".
-echo_yellow "This is yellow".
-echo_blue "This is blue".
-echo_green "This is green".
-
-echo_yellow_highlight "This is yellow H".
-echo_red_highlight "This is red H".
-echo_warning "This is warning".
-echo_error "This is error".
-
-throw ";$0;$FUNCNAME;$LINENO"
 # Input validation
 validate_input || exit_with_failure "Input validation failed."
 
