@@ -329,7 +329,7 @@ function _cloudy_echo_color() {
         echo -n $(tput setab $bg)
     fi
     echo -n $(tput setaf $color)
-    echo -n ${message}
+    echo -n "${message}"
     echo -n $(tput sgr0)
     echo
 }
@@ -353,19 +353,22 @@ function _cloudy_echo_credits() {
  # Echo a list of items with bullets in color
  #
 function _cloudy_echo_list() {
+    parse_args "$@"
+
     local line_item
     local items_color=$1
     local bullets_color=$2
+    local intensity=${parse_args__options__i:-1}
     local bullet
     local item
     for i in "${echo_list__array[@]}"; do
         bullet="$LI"
         if [[ "$bullets_color" ]]; then
-            bullet=$(_cloudy_echo_color -c=$bullets_color "$LI")
+            bullet=$(_cloudy_echo_color -c=$bullets_color -i=$intensity "$LI")
         fi
         item="$line_item"
         if [[ "$items_color" ]]; then
-            item=$(_cloudy_echo_color -c=$items_color "$line_item")
+            item=$(_cloudy_echo_color -c=$items_color -i=$intensity "$line_item")
         fi
         [[ "$line_item" ]] && echo "$bullet $item"
         line_item="$i"
@@ -373,11 +376,11 @@ function _cloudy_echo_list() {
 
     bullet="$LIL"
     if [[ "$bullets_color" ]]; then
-        bullet=$(_cloudy_echo_color -c=$bullets_color "$LIL")
+        bullet=$(_cloudy_echo_color -c=$bullets_color -i=$intensity "$LIL")
     fi
     item="$line_item"
     if [[ "$items_color" ]]; then
-        item=$(_cloudy_echo_color -c=$items_color "$line_item")
+        item=$(_cloudy_echo_color -c=$items_color -i=$intensity "$line_item")
     fi
     [[ "$line_item" ]] && echo "$bullet $item"
 }

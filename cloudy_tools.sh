@@ -70,7 +70,7 @@ case $command in
         source "$ROOT/inc/cloudy.pm.sh"
         echo_title "Package Installer"
         package=$(get_command_arg 0)
-        confirm "Install $(echo_green $package) in $WDIR?" || exit_with_failure "User cancelled."
+        confirm --caution "Install $package in $WDIR?" || exit_with_failure "User cancelled."
         _cloudypm_install_package $package
         has_failed && exit_with_failure "Could not install \"$package\"."
         exit_with_success_elapsed "$package was installed."
@@ -105,7 +105,7 @@ case $command in
         has_option "dry_run" && exit_with_success "This was a dry run; nothing was changed."
 
         # Ask if they want to update.
-        ! has_option 'y' && ! confirm "Do you want to update now?" && exit_with_failure "Update cancelled"
+        ! has_option 'y' && ! confirm --caution "Do you want to update now?" && exit_with_failure "Update cancelled"
 
         rsync_framework || exit_with_failure "An error occurred while updating this Cloudy framework."
         write_version_file
@@ -136,7 +136,7 @@ case $command in
         # Protect an existing script by that name.
         [ -e "$basename" ] && ! has_option "force" && fail_because "$basename already exists. Use --force, -f to proceed."
 
-        ! has_option 'y' && ! confirm "Create $script_filename in the current directory?" && exit_with_failure "Nothing accomplished."
+        ! has_option 'y' && ! confirm --caution "Create $script_filename in the current directory?" && exit_with_failure "Nothing accomplished."
 
         if ! has_failed; then
             rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."

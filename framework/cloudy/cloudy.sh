@@ -17,8 +17,8 @@ function confirm() {
     while true; do
         read -r -n 1 -p "$message " REPLY
         case $REPLY in
-            [yY]) echo ; return 0 ;;
-            [nN]) echo ; return 1 ;;
+            [yY]) echo; echo; return 0 ;;
+            [nN]) echo; echo; return 1 ;;
             *) printf " \033[31m %s \n\033[0m" "invalid input"
         esac
     done
@@ -513,7 +513,7 @@ function echo_white() {
 #
 # Returns nothing.
 function echo_red() {
-    _cloudy_echo_color -c=31 "$1" -i=1
+    _cloudy_echo_color -c=31 "$1"
 }
 
 # Echo a string with a red background.
@@ -655,21 +655,21 @@ function echo_red_list() {
  # @param $echo_list__array
  #
 function echo_green_list() {
-    _cloudy_echo_list 32 32
+    _cloudy_echo_list 32 32 -i=0
 }
 
 ##
  # @param $echo_list__array
  #
 function echo_yellow_list() {
-    _cloudy_echo_list 33 33
+    _cloudy_echo_list 33 33 i=0
 }
 
 ##
  # @param $echo_list__array
  #
 function echo_blue_list() {
-    _cloudy_echo_list 34 34
+    _cloudy_echo_list 34 34 -i=0
 }
 
 # Echo the elapsed time in seconds since the beginning of the script.
