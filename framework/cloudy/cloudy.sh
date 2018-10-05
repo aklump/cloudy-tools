@@ -933,6 +933,29 @@ function exit_with_failure() {
     _cloudy_exit
 }
 
+# Test if a program is installed on the system.
+#
+# $1 - The name of the program to check for.
+#
+# Returns 0 if installed; 1 otherwise.
+function is_installed() {
+    local command=$1
+
+    get_installed $command > /dev/null
+    return $?
+}
+
+# Echo the path to an installed program.
+#
+# $1 - The name of the program you need.
+#
+# Returns 0 if .
+function get_installed() {
+    local command=$1
+
+    command -v $command 2>/dev/null
+}
+
 ##
  # Set the exit status to fail with no message.  Does not stop execution.
  #
