@@ -23,6 +23,8 @@ function testCloudyExitWithFailureExitsWithNonZero() {
     assert_same 1 $?
     (exit_with_failure --status=4 >/dev/null 2>&1)
     assert_same 4 $?
+    local message=$(exit_with_failure --status=2 "stop drop roll")
+    assert_reg_exp "stop drop roll" "$message"
 }
 
 function testGetVersionIsNotEmpty() {
