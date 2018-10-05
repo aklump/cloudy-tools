@@ -158,17 +158,17 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v5.7.7",
-        "version_normalized": "5.7.7.0",
+        "version": "v5.7.8",
+        "version_normalized": "5.7.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
-            "reference": "72e125b25d3f7aabbf4b2ef68590db7637b8223c"
+            "reference": "9532d673de305b0c0028c0ce60c8952b807d7bc3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/contracts/zipball/72e125b25d3f7aabbf4b2ef68590db7637b8223c",
-            "reference": "72e125b25d3f7aabbf4b2ef68590db7637b8223c",
+            "url": "https://api.github.com/repos/illuminate/contracts/zipball/9532d673de305b0c0028c0ce60c8952b807d7bc3",
+            "reference": "9532d673de305b0c0028c0ce60c8952b807d7bc3",
             "shasum": ""
         },
         "require": {
@@ -176,7 +176,7 @@
             "psr/container": "^1.0",
             "psr/simple-cache": "^1.0"
         },
-        "time": "2018-09-27T14:15:29+00:00",
+        "time": "2018-10-03T14:04:39+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -204,17 +204,17 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.7.7",
-        "version_normalized": "5.7.7.0",
+        "version": "v5.7.8",
+        "version_normalized": "5.7.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "d01c9ac04dee022ff3cd931e60e989a0d950812a"
+            "reference": "c7583db6703a36b7fa76254073046e0a920ed276"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/d01c9ac04dee022ff3cd931e60e989a0d950812a",
-            "reference": "d01c9ac04dee022ff3cd931e60e989a0d950812a",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/c7583db6703a36b7fa76254073046e0a920ed276",
+            "reference": "c7583db6703a36b7fa76254073046e0a920ed276",
             "shasum": ""
         },
         "require": {
@@ -234,7 +234,7 @@
             "symfony/process": "Required to use the composer class (^4.1).",
             "symfony/var-dumper": "Required to use the dd function (^4.1)."
         },
-        "time": "2018-10-01T13:13:54+00:00",
+        "time": "2018-10-04T13:27:30+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -654,17 +654,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v4.1.5",
-        "version_normalized": "4.1.5.0",
+        "version": "v4.1.6",
+        "version_normalized": "4.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "6e49130ddf150b7bfe9e34edb2f3f698aa1aa43b"
+            "reference": "9f0b61e339160a466ebcde167a6c5521c810e304"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/6e49130ddf150b7bfe9e34edb2f3f698aa1aa43b",
-            "reference": "6e49130ddf150b7bfe9e34edb2f3f698aa1aa43b",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/9f0b61e339160a466ebcde167a6c5521c810e304",
+            "reference": "9f0b61e339160a466ebcde167a6c5521c810e304",
             "shasum": ""
         },
         "require": {
@@ -690,7 +690,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2018-09-21T12:49:42+00:00",
+        "time": "2018-10-02T16:36:10+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -725,17 +725,17 @@
     },
     {
         "name": "symfony/yaml",
-        "version": "v3.4.16",
-        "version_normalized": "3.4.16.0",
+        "version": "v3.4.17",
+        "version_normalized": "3.4.17.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",
-            "reference": "61973ecda60e9f3561e929e19c07d4878b960fc1"
+            "reference": "640b6c27fed4066d64b64d5903a86043f4a4de7f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/yaml/zipball/61973ecda60e9f3561e929e19c07d4878b960fc1",
-            "reference": "61973ecda60e9f3561e929e19c07d4878b960fc1",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/640b6c27fed4066d64b64d5903a86043f4a4de7f",
+            "reference": "640b6c27fed4066d64b64d5903a86043f4a4de7f",
             "shasum": ""
         },
         "require": {
@@ -751,7 +751,7 @@
         "suggest": {
             "symfony/console": "For validating YAML files using the lint command"
         },
-        "time": "2018-09-24T08:15:45+00:00",
+        "time": "2018-10-02T16:33:53+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

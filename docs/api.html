@@ -63,7 +63,7 @@
       <a href="#exit_with_failure_if_config_is_not_path">exit_with_failure_if_config_is_not_path</a>
       <a href="#exit_with_failure_if_empty_config">exit_with_failure_if_empty_config</a>
       <a href="#exit_with_help">exit_with_help</a>
-      <a href="#exit_with_install">exit_with_install</a>
+      <a href="#exit_with_init">exit_with_init</a>
       <a href="#exit_with_success">exit_with_success</a>
       <a href="#fail">fail</a>
       <a href="#fail_because">fail_because</a>
@@ -75,6 +75,7 @@
       <a href="#get_config_keys_as">get_config_keys_as</a>
       <a href="#get_config_path">get_config_path</a>
       <a href="#get_config_path_as">get_config_path_as</a>
+      <a href="#get_installed">get_installed</a>
       <a href="#get_option">get_option</a>
       <a href="#get_title">get_title</a>
       <a href="#get_version">get_version</a>
@@ -84,6 +85,7 @@
       <a href="#has_option">has_option</a>
       <a href="#has_options">has_options</a>
       <a href="#implement_cloudy_basic">implement_cloudy_basic</a>
+      <a href="#is_installed">is_installed</a>
       <a href="#list_add_item">list_add_item</a>
       <a href="#list_clear">list_clear</a>
       <a href="#list_has_items">list_has_items</a>
@@ -596,19 +598,19 @@ You must add items to your list first:<br />
     
         
         
-      <h2 id="exit_with_install">exit_with_install()</h2>
-    <p class="summary">Performs a standard &#039;install&#039; command and exists.</p>
+      <h2 id="exit_with_init">exit_with_init()</h2>
+    <p class="summary">Performs an initialization (setup default config, etc.)</p>
     
         
-        <pre><code>You must set up an install command in your core config file.<br />
+        <pre><code>You must set up an init command in your core config file.<br />
 Then call this function from inside `on_pre_config`, e.g.<br />
-[[ &quot;$(get_command)&quot; == &quot;install&quot; ]] &amp;&amp; exit_with_install<br />
+[[ &quot;$(get_command)&quot; == &quot;init&quot; ]] &amp;&amp; exit_with_init<br />
 The translation service is not yet bootstrapped in on_pre_config, so if you<br />
 want to alter the strings printed you can do something like this:<br />
 if [[ &quot;$(get_command)&quot; == &quot;init&quot; ]]; then<br />
     CLOUDY_FAILED=&quot;Initialization failed.&quot;<br />
     CLOUDY_SUCCESS=&quot;Initialization complete.&quot;<br />
-    exit_with_install<br />
+    exit_with_init<br />
 fi</code></pre>
         
       <h2 id="exit_with_success">exit_with_success()</h2>
@@ -718,6 +720,15 @@ any chance that the return value will be empty.<br />
             </ul>
         
         
+      <h2 id="get_installed">get_installed()</h2>
+    <p class="summary">Echo the path to an installed program.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The name of the program you need.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if .</li>
+            </ul>
+        
+        
       <h2 id="get_option">get_option()</h2>
     <p class="summary">Echo the value of a script option, or a default.</p>
     
@@ -777,6 +788,15 @@ any chance that the return value will be empty.<br />
         
         <pre><code>An optional set of commands for all scripts.  This is just the handlers,<br />
 you must still set up the commands in the config file as usual.</code></pre>
+        
+      <h2 id="is_installed">is_installed()</h2>
+    <p class="summary">Test if a program is installed on the system.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The name of the program to check for.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if installed; 1 otherwise.</li>
+            </ul>
+        
         
       <h2 id="list_add_item">list_add_item()</h2>
     <p class="summary">Add an item to the list.</p>
@@ -1043,7 +1063,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 15:13:58 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Fri, 05 Oct 2018 11:46:35 -0700</p>
   </div>
 </footer>
 

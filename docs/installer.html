@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>The Install API</title>
+  <title>The Initialize API</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -22,29 +22,29 @@
   </form>
 </div>
 
-  <h1>The Install API</h1>
+  <h1>The Initialize API</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
 
-<p>If you want you may hook into the Cloudy install api, which normalizes the work of installing configuration files on and instance of your Cloudy Package.</p>
+<p>If you want you may hook into the Cloudy initialize api, which normalizes the work of initializing configuration files for an instance of your Cloudy Package.</p>
 
 <ol>
-<li>Create a folder <em>install</em> and place all files needed during installation.</li>
-<li>Create a file <em>install/cloudypm.files_map.txt</em> and define where the files go.  See below.</li>
+<li>Create a folder <em>init/</em> and place all files needed during initializeation.</li>
+<li>Create a file <em>init/cloudypm.files_map.txt</em> and define where the files go.  See below.</li>
 </ol>
 
 <h2>The files map</h2>
 
-<p>This is a text file that tells what files install where.  Basically two columns, separated by a space.  The first column lists filenames in <em>install</em>.  The second column are filenames (not directories) relative to $ROOT, or absolute.</p>
+<p>This is a text file that tells what files go where.  Basically two columns, separated by a space.  The first column lists filenames in <em>init/</em>.  The second column are filenames (not directories) relative to <code>$ROOT</code>, or absolute.</p>
 
-<p>The contents of the files map must have at least one line, e.g.</p>
+<p>The contents of the files map must have at least the following line; however column two dirname may be different.  The point is the asterix must be there.</p>
 
 <pre><code>* ../../../bin/config/*
 </code></pre>
 
 <ul>
-<li>The <code>*</code> represents all filenames in <em>install</em>.</li>
+<li>The <code>*</code> represents all filenames in <em>init/</em>.</li>
 </ul>
 
 <p>But let's say you want one of the files to go elsewhere.  The contents of <em>cloudypm.files_map.txt</em> might look like this:</p>
@@ -53,9 +53,9 @@
 _perms.custom.sh ../../../bin/_perms.custom.sh
 </code></pre>
 
-<p>In this case <code>*</code> represents all files except for <em>&#95;perms.custom.sh</em>.  They are installed as before, however <em>&#95;perms.custom.sh</em> is installed at <em>$ROOT/../../../bin/&#95;perms.custom.sh</em>.</p>
+<p>In this case <code>*</code> represents all files except for <em>&#95;perms.custom.sh</em>.  They are initializeed as before, however <em>&#95;perms.custom.sh</em> is initializeed at <em>$ROOT/../../../bin/&#95;perms.custom.sh</em>.</p>
 
-<p>Remember you must indicate filenames, not directories.  And, you can rename the file by indicating a different filename in column two.</p>
+<p>Remember you must indicate filenames, not directories.  Also, you may rename the file by indicating a different filename in column two.</p>
 
 <p>Finally let's say you want to skip over a file completely; do not include a destination for it, and it will be ignored, like this</p>
 
@@ -66,7 +66,7 @@ ignored_file.txt
 
 <h2>Special Handling for files named <em>gitignore</em></h2>
 
-<p>If you create <em>install/gitignore</em> (no leading dot), it will be copied to <em>../../../opt/.gitignore</em>.  (This is the recommended location by Cloudy Package Manager.)  <strong>However, it will be merged with an existing .gitignore file, which already exists at that location.</strong>  Do not make an entry in <em>cloudypm.files_map.txt</em>.</p>
+<p>If you create <em>init/gitignore</em> (no leading dot), it will be copied to <em>../../../opt/.gitignore</em>.  (This is the recommended location by Cloudy Package Manager.)  <strong>However, it will be merged with an existing .gitignore file, which already exists at that location.</strong>  Do not make an entry in <em>cloudypm.files_map.txt</em>.</p>
 </section>
 
 <div class="search__results">
@@ -81,7 +81,7 @@ ignored_file.txt
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Tue, 02 Oct 2018 15:14:00 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Fri, 05 Oct 2018 11:46:38 -0700</p>
   </div>
 </footer>
 
