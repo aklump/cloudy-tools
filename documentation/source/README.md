@@ -4,7 +4,7 @@
 
 ## Summary
 
-A lightweight BASH framework, which uses YAML or JSON for your script's configuration and provides a unit testing framework.
+A BASH framework, which uses YAML or JSON for your script's configuration and provides a unit testing framework.
 
 Cloudy Boosts the following features:
 

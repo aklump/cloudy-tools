@@ -1,5 +1,7 @@
 # Cloudy Packages
 
+Cloudy packages are modular scripts that are meant to share a single cloudy instance across all of them.  There is a defined directory structure that must be followed for this to work.
+
 ## Create a package info file
 
     name: aklump/perms
