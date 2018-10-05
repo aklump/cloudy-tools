@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+function testPathRelatiaveToConfigBase() {
+
+    local path="some/tree.md"
+    assert_same "$ROOT/$path" $(path_relative_to_config_base $path)
+
+    path="/$path"
+    assert_same "$path" $(path_relative_to_config_base $path)
+}
+
+function testPathRelatiaveToRoot() {
+
+    local path="some/tree.md"
+    assert_same "$ROOT/$path" $(path_relative_to_root $path)
+
+    path="/$path"
+    assert_same "$path" $(path_relative_to_root $path)
+}
 
 function testCloudyExitWithFailureExitsWithNonZero() {
     (exit_with_failure >/dev/null 2>&1)
@@ -406,15 +423,6 @@ function testPathExtension() {
 function testPathFilename() {
     assert_same 'config' $(path_filename 'config.json')
     assert_same 'config' $(path_filename 'do/re/mi/config.json')
-}
-
-function testPathRelatiaveToRoot() {
-
-    local path="some/tree.md"
-    assert_same "$ROOT/$path" $(path_relative_to_root $path)
-
-    path="/$path"
-    assert_same "$path" $(path_relative_to_root $path)
 }
 
 function testHasCommandWorks() {

@@ -1069,6 +1069,21 @@ function event_listen() {
 #
 
 ##
+ # Echo a path relative to config_path_base.
+ #
+ # If the path begins with / it is unchanged.
+ #
+function path_relative_to_config_base() {
+    local path=$1
+
+    local config_path_base=${cloudy_config___config_path_base}
+    [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
+    config_path_base=${config_path_base%/}
+    [[ "${path:0:1}" != '/' ]] && path="$config_path_base/$path"
+    echo $path
+}
+
+##
  # Expand a relative path using $ROOT as base.
  #
  # If the path begins with / it is unchanged.
