@@ -6,7 +6,7 @@
     clone_from: https://github.com/aklump/website-perms
     entry_script: perms.sh
     entry_symlink: perms
-    on_install: install
+    on_install: init
     on_update: update
 
 1. Create a file, convention names it _cloudypm.yml_.
