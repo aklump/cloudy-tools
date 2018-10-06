@@ -20,7 +20,8 @@ The following functions available with: <code>source
 <h2>Functions In Depth By Name</h2>
 <div class="function-list">
   {% for function in functions %}
-    <h2 id="{{ function.name }}">{{ function.name }}()</h2>
+    <a name="{{ function.name }}"></a>
+    <h2>{{ function.name }}()</h2>
     <p class="summary">{{ function.summary }}</p>
     
     {% if function.args %}
