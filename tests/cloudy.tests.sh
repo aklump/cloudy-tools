@@ -1,5 +1,36 @@
 #!/usr/bin/env bash
 
+
+function testGetConfigForScalarReturnsAsExpected() {
+
+    # Assert default is returned for non-existent.
+    assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
+
+    assert_equals "declare -- tests_associative_array_do=\"alpha\"" "$(get_config "tests.associative_array.do")"
+    assert_equals "declare -- tests_string=\"Adam ate apples at Andrew's abode.\"" "$(get_config "tests.string")"
+
+    # With an indexed array key as last
+    assert_equals "declare -- tests_user_images_tags_0=\"literature\"" "$(get_config "tests.user.images.tags.0")"
+    assert_equals "declare -- tests_user_images_tags_1=\"nature\"" "$(get_config "tests.user.images.tags.1")"
+    assert_equals "declare -- tests_user_images_tags_2=\"space\"" "$(get_config "tests.user.images.tags.2")"
+    assert_equals "declare -- tests_user_images_tags_3=\"religion\"" "$(get_config "tests.user.images.tags.3")"
+}
+
+function testPathMtimeWorks() {
+    local file="$ROOT/tests/stubs/alpha.txt"
+    local mtime
+    mtime=$(path_mtime $file)
+    assert_exit_status 0
+    assert_not_empty $mtime
+    assert_less_than $(timestamp) $mtime
+
+    local file="$ROOT/tests/stubs/totally-bogux.txt"
+    local mtime
+    mtime=$(path_mtime $file)
+    assert_exit_status 1
+    assert_empty "$mtime"
+}
+
 function testPathRelatiaveToConfigBase() {
 
     local path="some/tree.md"
@@ -531,20 +562,6 @@ function testGetConfigAsReturnsIndexedArray() {
     assert_same "declare -a tags='([0]=\"literature\" [1]=\"nature\" [2]=\"space\" [3]=\"religion\")'" "$(get_config_as -a "tags" "tests.user.images.tags")"
 
     assert_same "declare -a september='([0]=\"alpha\" [1]=\"bravo\" [2]=\"charlie\")'" "$(get_config_as -a 'september' "tests.indexed_array")"
-}
-
-function testGetConfigForScalarReturnsAsExpected() {
-    assert_equals "declare -- tests_associative_array_do=\"alpha\"" "$(get_config "tests.associative_array.do")"
-    assert_equals "declare -- tests_string=\"Adam ate apples at Andrew's abode.\"" "$(get_config "tests.string")"
-
-    # Assert default is returned for non-existent.
-    assert_equals "declare -- my_bogus_config_key=\"Default\"" "$(get_config "my.bogus.config.key" "Default value.")"
-
-    # With an indexed array key as last
-    assert_equals "declare -- tests_user_images_tags_0=\"literature\"" "$(get_config "tests.user.images.tags.0")"
-    assert_equals "declare -- tests_user_images_tags_1=\"nature\"" "$(get_config "tests.user.images.tags.1")"
-    assert_equals "declare -- tests_user_images_tags_2=\"space\"" "$(get_config "tests.user.images.tags.2")"
-    assert_equals "declare -- tests_user_images_tags_3=\"religion\"" "$(get_config "tests.user.images.tags.3")"
 }
 
 function testGetConfigAsForScalarReturnsAsExpected() {

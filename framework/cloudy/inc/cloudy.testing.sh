@@ -109,7 +109,7 @@ function assert_empty() {
 # Returns 0 if assertion is true; 1 otherwise.
 function assert_not_empty() {
     local actual_value="$1"
-    local custom_message="${3:-Value should not be empty}"
+    local custom_message="${2:-Value should not be empty}"
 
     let CLOUDY_ASSERTION_COUNT=(CLOUDY_ASSERTION_COUNT + 1)
     [ ${#actual_value} -gt 0 ] && return 0
