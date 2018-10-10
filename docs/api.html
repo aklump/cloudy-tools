@@ -92,6 +92,7 @@
       <a href="#parse_args">parse_args</a>
       <a href="#path_extension">path_extension</a>
       <a href="#path_filename">path_filename</a>
+      <a href="#path_mtime">path_mtime</a>
       <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
       <a href="#path_relative_to_root">path_relative_to_root</a>
       <a href="#string_lower">string_lower</a>
@@ -137,7 +138,9 @@
       <a href="#assert_false">assert_false</a>
       <a href="#assert_file_exists">assert_file_exists</a>
       <a href="#assert_file_not_exists">assert_file_not_exists</a>
+      <a href="#assert_greater_than">assert_greater_than</a>
       <a href="#assert_internal_type">assert_internal_type</a>
+      <a href="#assert_less_than">assert_less_than</a>
       <a href="#assert_not_contains">assert_not_contains</a>
       <a href="#assert_not_empty">assert_not_empty</a>
       <a href="#assert_not_equals">assert_not_equals</a>
@@ -285,6 +288,17 @@ You must provide your array as $array_has_value__array like so:<br />
             </ul>
         
         
+      <a name="assert_greater_than"></a>
+    <h2>assert_greater_than()</h2>
+    <p class="summary">Asset one number is greater than another.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The target value.</li>
+              <li>$2: The number than should be greater than the target.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if  $2 is &gt; $1</li>
+            </ul>
+        
+        
       <a name="assert_internal_type"></a>
     <h2>assert_internal_type()</h2>
     <p class="summary">Assert that an global variable is of a given type.</p>
@@ -293,6 +307,17 @@ You must provide your array as $array_has_value__array like so:<br />
               <li>$1: The expected type.</li>
               <li>$2: The name of a global variable.</li>
                           </ul><ul class="function-list__return"><li>Returns 0 if assertion is true; 1 otherwise.</li>
+            </ul>
+        
+        
+      <a name="assert_less_than"></a>
+    <h2>assert_less_than()</h2>
+    <p class="summary">Asset one number is less than another.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The target value.</li>
+              <li>$2: The number than should be less than the target.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if  $2 is &lt; $1</li>
             </ul>
         
         
@@ -927,6 +952,16 @@ The following variables are generated for:<br />
     
         
         
+      <a name="path_mtime"></a>
+    <h2>path_mtime()</h2>
+    <p class="summary">Echo the last modified time of a file.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The path to the the file.</li>
+                          </ul><ul class="function-list__return"><li>Returns 1 if the time cannot be determined.</li>
+            </ul>
+        
+        
       <a name="path_relative_to_config_base"></a>
     <h2>path_relative_to_config_base()</h2>
     <p class="summary">Echo a path relative to config_path_base.</p>
@@ -1182,7 +1217,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.8 &bull; Last Updated: Fri, 05 Oct 2018 18:15:56 -0700</p>
+    <p class="legaleeze center">Version: 1.0.8 &bull; Last Updated: Tue, 09 Oct 2018 20:25:34 -0700</p>
   </div>
 </footer>
 
