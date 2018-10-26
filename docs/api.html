@@ -96,6 +96,7 @@
       <a href="#path_mtime">path_mtime</a>
       <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
       <a href="#path_relative_to_root">path_relative_to_root</a>
+      <a href="#path_resolve">path_resolve</a>
       <a href="#string_lower">string_lower</a>
       <a href="#string_repeat">string_repeat</a>
       <a href="#string_split">string_split</a>
@@ -988,6 +989,17 @@ The following variables are generated for:<br />
         
         <pre><code>If the path begins with / it is unchanged.</code></pre>
         
+      <a name="path_resolve"></a>
+    <h2>path_resolve()</h2>
+    <p class="summary">Resolve a path to an absolute link; if already absolute, do nothing.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The direname to use if $2 is not absolute</li>
+              <li>$2: The path to make absolute if not starting with /</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing</li>
+            </ul>
+        
+        
       <a name="string_lower"></a>
     <h2>string_lower()</h2>
     <p class="summary">Echo the lowercase version of a string.</p>
@@ -1237,7 +1249,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.11 &bull; Last Updated: Fri, 26 Oct 2018 08:18:35 -0700</p>
+    <p class="legaleeze center">Version: 1.0.12 &bull; Last Updated: Fri, 26 Oct 2018 10:12:04 -0700</p>
   </div>
 </footer>
 
