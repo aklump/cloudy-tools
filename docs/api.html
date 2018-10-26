@@ -65,6 +65,7 @@
       <a href="#exit_with_help">exit_with_help</a>
       <a href="#exit_with_init">exit_with_init</a>
       <a href="#exit_with_success">exit_with_success</a>
+      <a href="#exit_with_success_elapsed">exit_with_success_elapsed</a>
       <a href="#fail">fail</a>
       <a href="#fail_because">fail_because</a>
       <a href="#get_command">get_command</a>
@@ -106,6 +107,7 @@
       <a href="#table_set_header">table_set_header</a>
       <a href="#tempdir">tempdir</a>
       <a href="#throw">throw</a>
+      <a href="#time_local">time_local</a>
       <a href="#timestamp">timestamp</a>
       <a href="#translate">translate</a>
       <a href="#url_add_cache_buster">url_add_cache_buster</a>
@@ -702,6 +704,16 @@ fi</code></pre>
             </ul>
         
         
+      <a name="exit_with_success_elapsed"></a>
+    <h2>exit_with_success_elapsed()</h2>
+    <p class="summary">Echo a success message (with elapsed time) plus success reasons and exit</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The success message to use.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0.</li>
+            </ul>
+        
+        
       <a name="exit_with_test_results"></a>
     <h2>exit_with_test_results()</h2>
     <p class="summary">Echo test results and exit.</p>
@@ -1073,6 +1085,14 @@ string_split__array<br />
     
         
         
+      <a name="time_local"></a>
+    <h2>time_local()</h2>
+    <p class="summary">Echo the current local time as hours/minutes with optional seconds.</p>
+    
+        
+        <pre><code>options -<br />
+  -s - Include the seconds</code></pre>
+        
       <a name="timestamp"></a>
     <h2>timestamp()</h2>
     <p class="summary">Echo the current unix timestamp.</p>
@@ -1217,7 +1237,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.9 &bull; Last Updated: Tue, 09 Oct 2018 20:32:24 -0700</p>
+    <p class="legaleeze center">Version: 1.0.9 &bull; Last Updated: Thu, 25 Oct 2018 20:26:54 -0700</p>
   </div>
 </footer>
 
