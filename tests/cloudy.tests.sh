@@ -31,6 +31,11 @@ function testPathMtimeWorks() {
     assert_empty "$mtime"
 }
 
+function testPathIsAbsolute() {
+    path_is_absolute "/do/re"; assert_exit_status 0
+    path_is_absolute "do/re"; assert_exit_status 1
+}
+
 function testPathResolve() {
     local dir="/some/great/path/"
     local path="tree.md"

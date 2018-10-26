@@ -1147,6 +1147,18 @@ function path_resolve() {
     echo $path
 }
 
+# Determine if a path is absolute (begins with /) or not.
+#
+# $1 - The filepath to check
+#
+# Returns 0 if absolute; 1 otherwise.
+function path_is_absolute() {
+    local path="$1"
+
+    [[ "${path:0:1}" == '/' ]]
+}
+
+
 # Echo the last modified time of a file.
 #
 # $1 - The path to the the file.
