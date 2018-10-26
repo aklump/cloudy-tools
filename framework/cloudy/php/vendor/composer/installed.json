@@ -49,25 +49,26 @@
     },
     {
         "name": "aklump/loft-lib",
-        "version": "1.0.9",
-        "version_normalized": "1.0.9.0",
+        "version": "1.0.12",
+        "version_normalized": "1.0.12.0",
         "source": {
             "type": "git",
             "url": "https://github.com/aklump/loft-lib.git",
-            "reference": "62af84b3fabe751bd632376d8cae1cfa384c5e08"
+            "reference": "2f041796d0d8cc0b66bf197f931cb08a760ca9bf"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/aklump/loft-lib/zipball/62af84b3fabe751bd632376d8cae1cfa384c5e08",
-            "reference": "62af84b3fabe751bd632376d8cae1cfa384c5e08",
+            "url": "https://api.github.com/repos/aklump/loft-lib/zipball/2f041796d0d8cc0b66bf197f931cb08a760ca9bf",
+            "reference": "2f041796d0d8cc0b66bf197f931cb08a760ca9bf",
             "shasum": ""
         },
         "require": {
+            "aklump/data": "^0.0.28",
             "illuminate/support": "^5.4",
             "php": ">=5.6",
             "ralouphie/mimey": "^2.0"
         },
-        "time": "2018-09-15T01:42:20+00:00",
+        "time": "2018-10-12T04:20:04+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -158,8 +159,8 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v5.7.9",
-        "version_normalized": "5.7.9.0",
+        "version": "v5.7.11",
+        "version_normalized": "5.7.11.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
@@ -204,17 +205,17 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v5.7.9",
-        "version_normalized": "5.7.9.0",
+        "version": "v5.7.11",
+        "version_normalized": "5.7.11.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
-            "reference": "ea95697233b06650382eb0f5798be22b4e520dea"
+            "reference": "45bfc0cd080c51946f61c04e324c2b4c6df58a9d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/support/zipball/ea95697233b06650382eb0f5798be22b4e520dea",
-            "reference": "ea95697233b06650382eb0f5798be22b4e520dea",
+            "url": "https://api.github.com/repos/illuminate/support/zipball/45bfc0cd080c51946f61c04e324c2b4c6df58a9d",
+            "reference": "45bfc0cd080c51946f61c04e324c2b4c6df58a9d",
             "shasum": ""
         },
         "require": {
@@ -234,7 +235,7 @@
             "symfony/process": "Required to use the composer class (^4.1).",
             "symfony/var-dumper": "Required to use the dd function (^4.1)."
         },
-        "time": "2018-10-07T15:51:39+00:00",
+        "time": "2018-10-22T17:36:06+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
