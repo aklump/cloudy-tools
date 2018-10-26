@@ -323,6 +323,11 @@ function testValidateCommandWorksForMasterCommandsAndAliases() {
     _cloudy_validate_command "cc" ;assert_exit_status 0
 }
 
+function testTimeLocal() {
+    assert_same "$(date +%H:%M)" "$(time_local)"
+    assert_same "$(date +%H:%M:%S)" "$(time_local -s)"
+}
+
 function testTimestamp() {
     assert_same "$(date +%s)" "$(timestamp)"
 }

@@ -61,7 +61,22 @@ function get_version() {
 #
 # Returns nothing.
 function timestamp() {
-    echo $(date +%s)
+    date +%s
+}
+
+# Echo the current local time as hours/minutes with optional seconds.
+#
+# options -
+#   -s - Include the seconds
+#
+# Returns nothing.
+function time_local() {
+    parse_args "$@"
+    if [[ "$parse_args__options__s" ]]; then
+        date +%H:%M:%S
+    else
+        date +%H:%M
+    fi
 }
 
 # Return the current datatime in ISO8601 in UTC.
@@ -69,13 +84,13 @@ function timestamp() {
 # options -
 #   -c - Remove hyphens and colons for use in a filename
 #
-# Returns 0 if .
+# Returns nothing.
 function date8601() {
     parse_args "$@"
     if [[ "$parse_args__options__c" ]]; then
-        echo $(date -u +%Y%m%dT%H%M%S)
+        date -u +%Y%m%dT%H%M%S
     else
-        echo $(date -u +%Y-%m-%dT%H:%M:%S)
+        date -u +%Y-%m-%dT%H:%M:%S
     fi
     return 0
 }
@@ -823,9 +838,21 @@ function exit_with_success() {
     _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS")"
 }
 
+# Echo a success message (with elapsed time) plus success reasons and exit
+#
+# $1 - The success message to use.
+#
+# Returns 0.
 function exit_with_success_elapsed() {
     local message=$1
-    _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $SECONDS seconds.")"
+    local duration=$SECONDS
+    local elapsed="$duration seconds"
+
+    if [ $duration -gt 600 ]; then
+        let duration=(duration / 60)
+        elapsed="$duration minutes"
+    fi
+    _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $elapsed.")"
 }
 
 ##
