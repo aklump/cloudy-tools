@@ -57,6 +57,23 @@ installation_info_filepath="$WDIR/cloudy/version.sh"
 command=$(get_command)
 case $command in
 
+    "pm-clear-cache")
+        cache_dir="${CLOUDY_ROOT}/cache/cpm"
+        [[ ! "${CLOUDY_ROOT}" ]] && exit_with_failure "Invalid cache directory ${cache_dir}"
+        event_dispatch "pm_clear_cache" "$cache_dir" || exit_with_failure "Clearing pm caches failed."
+        if dir_has_files "$cache_dir"; then
+            clear=$(rm -rv "$cache_dir/"*)
+            status=$?
+            [ $status -eq 0 ] || exit_with_failure "Could not remove all cached pm files in $cache_dir"
+            file_list=($clear)
+            for i in "${file_list[@]}"; do
+               succeed_because "$(echo_green "$(basename $i)")"
+            done
+            exit_with_success "Local Cloudy package info has been flushed."
+        fi
+        exit_with_success "Cloudy package info will be fetched from the remote registry when needed."
+        ;;
+
     "pm-update")
         source "$ROOT/inc/cloudy.pm.sh"
         echo_title "Package Updater"

@@ -4,6 +4,9 @@ additional_config:
   - cloudy_tools.additional.yml
 default_command: help
 commands:
+  pm-clear-cache:
+    help: 'Flush locally cached package info and refresh from remote registry.'
+    aliases: [pmcc, pmclearcache]
   pm-install:
     help: 'Install a Cloudy package from the Cloudy Package Registry.'
     aliases: [pmi, pminstall]

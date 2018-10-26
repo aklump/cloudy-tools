@@ -24,11 +24,11 @@ function confirm() {
     done
 }
 
-# Determine if a given directory has any files in it.
+# Determine if a given directory has any non-hidden files or directories.
 #
 # $1 - The path to a directory to check
 #
-# Returns 0 if the path contains non-hidden files or 1 if not.
+# Returns 0 if the path contains non-hidden files directories; 1 if not.
 function dir_has_files() {
     local path_to_dir="$1"
 
@@ -796,10 +796,23 @@ function exit_with_init() {
  #
 function exit_with_cache_clear() {
     local cloudy_dir="${1:-$CLOUDY_ROOT}"
+    [[ ! "${cloudy_dir}" ]] && exit_with_failure "Invalid cache directory ${cloudy_dir}"
     event_dispatch "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
     if dir_has_files "$cloudy_dir/cache"; then
+
+        # We should not delete cpm on general cache clear.
+        if [ -d "$cloudy_dir/cache/cpm" ]; then
+            stash=$(tempdir)
+            mv "$cloudy_dir/cache/cpm" "$stash/cpm"
+        fi
+
         clear=$(rm -rv "$cloudy_dir/cache/"*)
         status=$?
+
+        if [[ "$stash" ]]; then
+            mv "$stash/cpm" "$cloudy_dir/cache/cpm"
+        fi
+
         [ $status -eq 0 ] || exit_with_failure "Could not remove all cached files in $cloudy_dir"
         file_list=($clear)
         for i in "${file_list[@]}"; do
