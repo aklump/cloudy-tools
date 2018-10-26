@@ -31,6 +31,15 @@ function testPathMtimeWorks() {
     assert_empty "$mtime"
 }
 
+function testPathResolve() {
+    local dir="/some/great/path/"
+    local path="tree.md"
+    assert_same "/some/great/path/tree.md" $(path_resolve $dir $path)
+
+    path="/$path"
+    assert_same "$path" $(path_resolve $dir $path)
+}
+
 function testPathRelatiaveToConfigBase() {
 
     local path="some/tree.md"

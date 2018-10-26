@@ -1114,13 +1114,12 @@ function event_listen() {
  # If the path begins with / it is unchanged.
  #
 function path_relative_to_config_base() {
-    local path=$1
+    local path="$1"
 
     local config_path_base=${cloudy_config___config_path_base}
     [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
     config_path_base=${config_path_base%/}
-    [[ "${path:0:1}" != '/' ]] && path="$config_path_base/$path"
-    echo $path
+    path_resolve "$config_path_base" "$path"
 }
 
 ##
@@ -1129,8 +1128,22 @@ function path_relative_to_config_base() {
  # If the path begins with / it is unchanged.
  #
 function path_relative_to_root() {
-    local path=$1
-    [[ "${path:0:1}" != '/' ]] && path="$ROOT/$path"
+    local path="$1"
+
+    path_resolve "$ROOT" "$path"
+}
+
+# Resolve a path to an absolute link; if already absolute, do nothing.
+#
+# $1 - The direname to use if $2 is not absolute
+# $2 - The path to make absolute if not starting with /
+#
+# Returns nothing
+function path_resolve() {
+    local dirname="${1%/}"
+    local path="$2"
+
+    [[ "${path:0:1}" != '/' ]] && path="$dirname/$path"
     echo $path
 }
 
