@@ -31,11 +31,11 @@
 
 <p>Configuration files are YAML or JSON.  They are connected to your script in one, two, or three ways.</p>
 
-<p>The main configuration file is required and is hardcoded in your script as <code>$CONFIG</code>.</p>
-
-<p>Within that file, you may indicate additional configuration files using the key <code>additional_config</code>.</p>
-
-<p>Finally, configuration files may be provided dynamically at run time listening to the event <code>compile_config</code>.</p>
+<ol>
+<li>The main configuration file is required and is hardcoded in your script as <code>$CONFIG</code>.</li>
+<li>Within that file, you may indicate additional configuration files using the key <code>additional_config</code>.</li>
+<li>Finally, configuration files may be provided dynamically at run time listening to the event <code>compile_config</code>.</li>
+</ol>
 
 <p>If configuration values conflict, those that came later will take prescendence; note: arrays will be merged.</p>
 
@@ -110,7 +110,7 @@
     - png
 </code></pre>
 
-<p>Let's see what $(get_config -a 'user.images.tags') returns us:</p>
+<p>Let's see what <code>$(get_config -a 'user.images.tags')</code> returns us:</p>
 
 <p>When the config key points to an array <code>get_config</code> echos a string ready for <code>eval</code>, which generates a nice set of BASH vars containing the values of <code>perms</code>, e.g.,</p>
 
@@ -229,7 +229,7 @@ writeable_directories=($_config_values[@]})
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.17 &bull; Last Updated: Tue, 30 Oct 2018 07:49:03 -0700</p>
+    <p class="legaleeze center">Version: 1.0.18 &bull; Last Updated: Tue, 30 Oct 2018 09:54:07 -0700</p>
   </div>
 </footer>
 
