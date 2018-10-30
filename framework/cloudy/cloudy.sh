@@ -729,7 +729,15 @@ function implement_cloudy_basic() {
 #
 # You must set up an init command in your core config file.
 # Then call this function from inside `on_pre_config`, e.g.
-# [[ "$(get_command)" == "init" ]] && exit_with_init
+# [[ "$(get_command)" == "init" ]] && handle_init
+# ...do your extra work here...
+# exit_with...
+#
+#
+# You should only call this function if you need to do something additional in
+# your init step, where you don't want to exit.  If not, you should use
+# exit_with_init, instead.
+#
 # The translation service is not yet bootstrapped in on_pre_config, so if you
 # want to alter the strings printed you can do something like this:
 # if [[ "$(get_command)" == "init" ]]; then
@@ -738,8 +746,8 @@ function implement_cloudy_basic() {
 #     exit_with_init
 # fi
 #
-# Returns nothing.
-function exit_with_init() {
+# Returns 1 if the init fails, 0 otherwise.
+function handle_init() {
     local path_to_files_map="$ROOT/init/cloudypm.files_map.txt"
     [ -f "$path_to_files_map" ] || fail_because "Missing required initialization file: $path_to_files_map."
 
@@ -785,7 +793,26 @@ function exit_with_init() {
             fi
         done
     fi
-    has_failed && exit_with_failure "${CLOUDY_FAILED:-Initialization failed.}"
+    has_failed && return 1
+    return 0
+}
+
+# Performs an initialization (setup default config, etc.) and exits.
+#
+# You must set up an init command in your core config file.
+# Then call this function from inside `on_pre_config`, e.g.
+# [[ "$(get_command)" == "init" ]] && exit_with_init
+# The translation service is not yet bootstrapped in on_pre_config, so if you
+# want to alter the strings printed you can do something like this:
+# if [[ "$(get_command)" == "init" ]]; then
+#     CLOUDY_FAILED="Initialization failed."
+#     CLOUDY_SUCCESS="Initialization complete."
+#     exit_with_init
+# fi
+#
+# Returns nothing.
+function exit_with_init() {
+    handle_init || exit_with_failure "${CLOUDY_FAILED:-Initialization failed.}"
     exit_with_success "${CLOUDY_SUCCESS:-Initialization complete.}"
 }
 
