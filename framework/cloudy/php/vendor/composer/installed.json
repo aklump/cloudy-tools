@@ -49,17 +49,17 @@
     },
     {
         "name": "aklump/loft-lib",
-        "version": "1.0.12",
-        "version_normalized": "1.0.12.0",
+        "version": "1.0.13",
+        "version_normalized": "1.0.13.0",
         "source": {
             "type": "git",
             "url": "https://github.com/aklump/loft-lib.git",
-            "reference": "2f041796d0d8cc0b66bf197f931cb08a760ca9bf"
+            "reference": "709321b618f06a7e7f6e32dd4982e1c7f1af6de0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/aklump/loft-lib/zipball/2f041796d0d8cc0b66bf197f931cb08a760ca9bf",
-            "reference": "2f041796d0d8cc0b66bf197f931cb08a760ca9bf",
+            "url": "https://api.github.com/repos/aklump/loft-lib/zipball/709321b618f06a7e7f6e32dd4982e1c7f1af6de0",
+            "reference": "709321b618f06a7e7f6e32dd4982e1c7f1af6de0",
             "shasum": ""
         },
         "require": {
@@ -68,7 +68,7 @@
             "php": ">=5.6",
             "ralouphie/mimey": "^2.0"
         },
-        "time": "2018-10-12T04:20:04+00:00",
+        "time": "2018-10-30T16:47:59+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
