@@ -1186,7 +1186,10 @@ function path_resolve() {
     local path="$2"
 
     [[ "${path:0:1}" != '/' ]] && path="$dirname/$path"
-    echo $path
+    [ ! -e $path ] && echo $path && return
+
+    # If it exists, we will echo the real path.
+    echo "$(cd $(dirname $path) && pwd)/$(basename $path)"
 }
 
 # Determine if a path is absolute (begins with /) or not.

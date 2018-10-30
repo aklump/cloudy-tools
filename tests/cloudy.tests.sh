@@ -36,6 +36,11 @@ function testPathIsAbsolute() {
     path_is_absolute "do/re"; assert_exit_status 1
 }
 
+function testPathResolveEchosRealpath() {
+    assert_same "$ROOT/tests" $(path_resolve "$ROOT" "tests/stubs/../../tests")
+    assert_same "$ROOT/bogus/stubs/../../tests" $(path_resolve "$ROOT" "bogus/stubs/../../tests")
+}
+
 function testPathResolve() {
     local dir="/some/great/path/"
     local path="tree.md"
