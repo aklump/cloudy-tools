@@ -106,6 +106,10 @@ function _cloudypm_update_package() {
     local package_destination_dir="$WDIR/opt/$package"
     ! [ -d "$package_destination_dir" ] && fail_because "Package is not installed; try pm-install $package" && return 1
 
+    ## First, update Cloudy.
+    (cd "$WDIR/opt/cloudy/" && cloudy update -fy > /dev/null) && succeed_because "cloudy/cloudy was also updated."
+
+    ## Now update package.
     _cloudypm_update_package__new_version=''
     _cloudypm_load_and_validate_package $package|| return 1
     echo_heading "Package located, updating..."
@@ -125,9 +129,6 @@ function _cloudypm_update_package() {
     fi
     _cloudypm_update_lock_file $package
     _cloudypm_update_package__new_version=$cloudypm___version
-
-    ## Now update cloudy
-    (cd "$WDIR/opt/cloudy/" && cloudy update -fy > /dev/null) && succeed_because "cloudy/cloudy was also updated."
 
     has_failed ? return 1 : return 0
 }
