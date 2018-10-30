@@ -80,6 +80,7 @@
       <a href="#get_option">get_option</a>
       <a href="#get_title">get_title</a>
       <a href="#get_version">get_version</a>
+      <a href="#handle_init">handle_init</a>
       <a href="#has_command">has_command</a>
       <a href="#has_command_args">has_command_args</a>
       <a href="#has_failed">has_failed</a>
@@ -682,7 +683,7 @@ You must add items to your list first:<br />
         
       <a name="exit_with_init"></a>
     <h2>exit_with_init()</h2>
-    <p class="summary">Performs an initialization (setup default config, etc.)</p>
+    <p class="summary">Performs an initialization (setup default config, etc.) and exits.</p>
     
         
         <pre><code>You must set up an init command in your core config file.<br />
@@ -861,6 +862,27 @@ any chance that the return value will be empty.<br />
     <p class="summary">Echos the version of the script.</p>
     
         
+        
+      <a name="handle_init"></a>
+    <h2>handle_init()</h2>
+    <p class="summary">Performs an initialization (setup default config, etc.)</p>
+    
+        
+        <pre><code>You must set up an init command in your core config file.<br />
+Then call this function from inside `on_pre_config`, e.g.<br />
+[[ &quot;$(get_command)&quot; == &quot;init&quot; ]] &amp;&amp; handle_init<br />
+...do your extra work here...<br />
+exit_with...<br />
+You should only call this function if you need to do something additional in<br />
+your init step, where you don&#039;t want to exit.  If not, you should use<br />
+exit_with_init, instead.<br />
+The translation service is not yet bootstrapped in on_pre_config, so if you<br />
+want to alter the strings printed you can do something like this:<br />
+if [[ &quot;$(get_command)&quot; == &quot;init&quot; ]]; then<br />
+    CLOUDY_FAILED=&quot;Initialization failed.&quot;<br />
+    CLOUDY_SUCCESS=&quot;Initialization complete.&quot;<br />
+    exit_with_init<br />
+fi</code></pre>
         
       <a name="has_command"></a>
     <h2>has_command()</h2>
@@ -1260,7 +1282,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.13 &bull; Last Updated: Fri, 26 Oct 2018 10:57:57 -0700</p>
+    <p class="legaleeze center">Version: 1.0.14 &bull; Last Updated: Mon, 29 Oct 2018 17:32:06 -0700</p>
   </div>
 </footer>
 
