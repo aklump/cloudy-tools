@@ -24,6 +24,21 @@ function confirm() {
     done
 }
 
+# Prompt the user to read a message and press any key to continue.
+#
+# $1 - The message to show the user.
+#
+# Returns nothing
+function wait_for_any_key() {
+    local message="$1"
+
+    parse_args "$@"
+    local message="${parse_args__args}; press any key to continue..."
+    [[ "$parse_args__options__caution" ]] && message=$(echo_warning "$message")
+    [[ "$parse_args__options__danger" ]] && message=$(echo_error "$message")
+    read -r -n 1 -p "$message "
+}
+
 # Determine if a given directory has any non-hidden files or directories.
 #
 # $1 - The path to a directory to check
