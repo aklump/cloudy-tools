@@ -27,8 +27,10 @@ try {
     ],
   ];
   $data += load_configuration_data($filepath_to_config_file);
-  $additional_config = $g->get($data, 'additional_config', []);
-  $merge_config = array_merge($additional_config, $runtime);
+  $merge_config = $runtime;
+  if ($additional_config = $g->get($data, 'additional_config', [])) {
+    $merge_config = array_merge($additional_config, $runtime);
+  }
   foreach ($merge_config as $basename) {
     $path = strpos($basename, '/') !== 0 ? ROOT . "/$basename" : $basename;
     $additional_data = load_configuration_data($path);
