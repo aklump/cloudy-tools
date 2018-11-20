@@ -41,7 +41,16 @@
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while ...
 </code></pre></li>
-<li><p>To see the available events look at <em>framework/cloudy.events.sh</em>.</p></li>
+<li><p>To see the available events recursively search codebase for <code>event_dispatch "</code>.</p></li>
+</ul>
+
+<h2>Cloudy Core Events</h2>
+
+<ul>
+<li>pre_config</li>
+<li>compile_config</li>
+<li>boot</li>
+<li>clear_cache</li>
 </ul>
 
 <h2>on_boot</h2>
@@ -97,7 +106,7 @@ event_listen "boot" "here_we_go"
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.18 &bull; Last Updated: Tue, 30 Oct 2018 09:54:08 -0700</p>
+    <p class="legaleeze center">Version: 1.0.19 &bull; Last Updated: Tue, 20 Nov 2018 11:33:23 -0800</p>
   </div>
 </footer>
 

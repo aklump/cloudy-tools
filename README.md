@@ -21,7 +21,7 @@ After installing Cloudy, to write a new script called _thunder.sh_ ...
 
 1. `cd` to the directory where you want the script to be created.
 1. Type `cloudy new thunder.sh` and the necessary files/directories will be created in the current directory.
-1. Open _thunder.sh_ and write your code.
+1. Open _thunder.sh_, enable logging, and write your code.
 1. Open _thunder.yml_ and add some configuration.
 1. To learn about the options to use with `new` type `cloudy help new`.
 1. Refer to [the documentation](https://aklump.github.io/cloudy/README.html) for to learn more.
