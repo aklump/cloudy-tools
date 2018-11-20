@@ -1,5 +1,48 @@
 #!/usr/bin/env bash
 
+function testArrayMapExitsWith!WhenArrayNotDefined() {
+    function array_map__callback() {
+        echo "<h1>$1</h1>"
+    }
+    unset examples
+    array_map examples; assert_exit_status 1
+}
+
+function testArrayMapEchosNothingWhenNoCallbackDefined() {
+    declare -a local examples=("do re me" "fa so");
+    unset array_map__callback
+    assert_empty "$(array_map examples)"
+}
+
+function testArrayMapExitsWith1WhenNoCallbackDefined() {
+    declare -a local examples=("do re me" "fa so");
+    unset array_map__callback
+    array_map examples; assert_exit_status 1
+}
+
+function testArrayMapWorksForTwoItems() {
+    function array_map__callback() {
+        echo "<h1>$1</h1>"
+    }
+    declare -a local titles=("The Hobbit" "Charlottes Web");
+    eval $(array_map titles)
+    assert_exit_status 0
+    assert_same "<h1>The Hobbit</h1>" "${titles[0]}"
+    assert_same "<h1>Charlottes Web</h1>" "${titles[1]}"
+    assert_count 2 titles
+}
+
+function testFunctionExists() {
+    function_exists bogus; assert_exit_status 1
+
+    function not_so_bogus() {
+        return 0
+    }
+    function_exists not_so_bogus; assert_exit_status 0
+
+    unset not_so_bogus
+    function_exists not_so_bogus; assert_exit_status 1
+}
 
 function testGetConfigForScalarReturnsAsExpected() {
 

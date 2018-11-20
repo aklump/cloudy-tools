@@ -304,6 +304,52 @@ function array_has_value() {
     return 1
 }
 
+# Apply a callback to every item in an array and echo new array eval statement.
+#
+# array_map__callback
+#
+# The array_map__callback has to be re-defined for each call of array_map and receives the value of an array item as
+# it's argument.  The example here expects that user_patterns is an array, already defined.  The array user_patterns is
+# mutated by the eval statement at the end.
+#
+# @code
+#   function array_map__callback() {
+#       echo "<h1>$1</h1>"
+#   }
+#   declare -a titles=("The Hobbit" "Charlottes Web");
+#   eval $(array_map titles)
+# @endcode
+#
+# $1 - string The name of the defined array.
+#
+# Returns nothing.
+function array_map() {
+    local array_name=$1
+
+    local -a stash=()
+    local subject
+    function_exists array_map__callback || return 1
+    eval subject=(\"\${$array_name[@]}\")
+    [[ ${#subject[@]} -eq 0 ]] && return 1
+    for item in "${subject[@]}" ; do
+        stash=("${stash[@]}" "\"$(array_map__callback "$item")\"")
+    done
+    echo "$array_name=(${stash[@]})"
+}
+
+# Determine if a function has been defined.
+#
+# $1 - string The name of the function to check.
+#
+# Returns 0 if defined; 1 otherwise.
+function function_exists() {
+    local function_name=$1
+
+    local type=$(eval type $function_name 2>/dev/null)
+    [[ "$type" =~ "function" ]] && return 0
+    return 1
+}
+
 # Split a string by a delimiter.
 #
 # string_split__string
