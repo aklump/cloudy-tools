@@ -30,6 +30,7 @@
 <div class="function-index">
       <a href="#array_has_value">array_has_value</a>
       <a href="#array_join">array_join</a>
+      <a href="#array_map">array_map</a>
       <a href="#array_sort">array_sort</a>
       <a href="#array_sort_by_item_length">array_sort_by_item_length</a>
       <a href="#confirm">confirm</a>
@@ -68,6 +69,7 @@
       <a href="#exit_with_success_elapsed">exit_with_success_elapsed</a>
       <a href="#fail">fail</a>
       <a href="#fail_because">fail_because</a>
+      <a href="#function_exists">function_exists</a>
       <a href="#get_command">get_command</a>
       <a href="#get_command_arg">get_command_arg</a>
       <a href="#get_config">get_config</a>
@@ -187,6 +189,27 @@ You must provide your array as $array_has_value__array like so:<br />
             </ul>
         
         <pre><code>array_join__array</code></pre>
+        
+      <a name="array_map"></a>
+    <h2>array_map()</h2>
+    <p class="summary">Apply a callback to every item in an array and echo new array eval statement.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string The name of the defined array.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        <pre><code>array_map__callback<br />
+The array_map__callback has to be re-defined for each call of array_map and receives the value of an array item as<br />
+it&#039;s argument.  The example here expects that user_patterns is an array, already defined.  The array user_patterns is<br />
+mutated by the eval statement at the end.<br />
+@code<br />
+  function array_map__callback {<br />
+      echo &quot;&lt;h1&gt;$1&lt;/h1&gt;&quot;<br />
+  }<br />
+  declare -a titles=(&quot;The Hobbit&quot; &quot;Charlottes Web&quot;);<br />
+  eval $(array_map titles)<br />
+@endcode</code></pre>
         
       <a name="array_sort"></a>
     <h2>array_sort()</h2>
@@ -737,6 +760,16 @@ fi</code></pre>
     <h2>fail_because()</h2>
     <p class="summary">Add a failure message to be shown on exit.</p>
     
+        
+        
+      <a name="function_exists"></a>
+    <h2>function_exists()</h2>
+    <p class="summary">Determine if a function has been defined.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string The name of the function to check.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if defined; 1 otherwise.</li>
+            </ul>
         
         
       <a name="get_command"></a>
@@ -1293,7 +1326,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.19 &bull; Last Updated: Tue, 20 Nov 2018 11:33:21 -0800</p>
+    <p class="legaleeze center">Version: 1.0.20 &bull; Last Updated: Tue, 20 Nov 2018 13:12:48 -0800</p>
   </div>
 </footer>
 
