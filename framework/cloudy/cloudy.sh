@@ -313,7 +313,7 @@ function array_has_value() {
 # mutated by the eval statement at the end.
 #
 # @code
-#   function array_map__callback() {
+#   function array_map__callback {
 #       echo "<h1>$1</h1>"
 #   }
 #   declare -a titles=("The Hobbit" "Charlottes Web");
