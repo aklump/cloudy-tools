@@ -13,7 +13,14 @@
         # Begin Cloudy Bootstrap
         s="${BASH_SOURCE[0]}";while ...
 
-* To see the available events look at _framework/cloudy.events.sh_.
+* To see the available events recursively search codebase for `event_dispatch "`.
+
+## Cloudy Core Events
+
+* pre_config
+* compile_config
+* boot
+* clear_cache
 
 ## on_boot
 

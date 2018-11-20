@@ -1110,6 +1110,7 @@ function event_dispatch() {
         return
     fi
     event_dispatch__event=$event_id
+    write_log_info "Dispatching event: $event_id"
 
     shift
     local args
