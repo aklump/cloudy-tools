@@ -1,4 +1,69 @@
 #!/usr/bin/env bash
+function testWarnBecauseWithoutArgumentsExitsWith1() {
+    warn_because; assert_exit_status 1
+}
+
+function testWarnBecauseWithTwoArgumentsUsesThemBoth() {
+    local result=$(warn_because charlie delta && echo ${CLOUDY_SUCCESSES[@]})
+    assert_reg_exp "charlie" "$result"
+    assert_reg_exp "deltas" "$result"
+}
+
+function _testSucceedBecauseCausesExitToBeZero() {
+    (fail_because "bla" && succeed_because "blu" && _cloudy_exit >/dev/null 2>&1)
+    assert_exit_status 0
+}
+
+function testSucceedBecauseWithoutArgumentsExitsWith1() {
+    succeed_because; assert_exit_status 1
+}
+
+function testSucceedBecauseWithoutArgumentsSetsExitStatus() {
+    $(CLOUDY_EXIT_STATUS=1; succeed_because; _cloudy_exit >/dev/null 2>&1)
+    assert_exit_status 0
+}
+
+function testSucceedBecauseWithTwoArgumentsUsesThemBoth() {
+    local result=$(succeed_because alpha bravo && echo ${CLOUDY_SUCCESSES[@]})
+    assert_same "alpha bravo" "$result"
+}
+
+function testFailBecauseCausesExitToBeNonZero() {
+    CLOUDY_EXIT_STATUS=3
+    (succeed_because "blu" && fail_because "bla" && _cloudy_exit >/dev/null 2>&1)
+    assert_exit_status 1
+}
+
+function testFailBecauseWithoutArgumentsExitsWith1() {
+    fail_because; assert_exit_status 1
+}
+
+function testFailBecauseWithoutArgumentsSetsExitStatus() {
+    $(CLOUDY_EXIT_STATUS=0; fail_because; _cloudy_exit >/dev/null 2>&1)
+    assert_exit_status 1
+}
+
+function testFailBecauseWithTwoArgumentsUsesThemBoth() {
+    local result=$(fail_because foo bar && echo ${CLOUDY_FAILURES[@]})
+    assert_same "foo bar" "$result"
+}
+
+function testCloudyExitExitsBasedOnCloudyExitStatusVar() {
+    (_cloudy_exit)
+    assert_exit_status 0
+
+    CLOUDY_EXIT_STATUS=1
+    (_cloudy_exit)
+    assert_exit_status 1
+
+    CLOUDY_EXIT_STATUS=0
+    (_cloudy_exit)
+    assert_exit_status 0
+
+    CLOUDY_EXIT_STATUS=2
+    (_cloudy_exit)
+    assert_exit_status 2
+}
 
 function testArrayMapExitsWith!WhenArrayNotDefined() {
     function array_map__callback() {
@@ -228,16 +293,6 @@ function testUrlAddCacheBuster() {
 
     url=$(url_add_cache_buster "site.com?t=1234")
     assert_reg_exp "site\.com\?t=1234&[0-9]+$" "$url"
-}
-
-function testSucceedBecauseCausesExitToBeZero() {
-    (fail_because "bla" && succeed_because "blu" && _cloudy_exit >/dev/null 2>&1)
-    assert_same 0 $?
-}
-
-function testFailBecauseCausesExitToBeNonZero() {
-    (succeed_because "blu" && fail_because "bla" && _cloudy_exit >/dev/null 2>&1)
-    assert_same 1 $?
 }
 
 function testCloudyExitWithSuccessExitsWithZero() {

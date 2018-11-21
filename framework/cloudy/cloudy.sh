@@ -964,28 +964,46 @@ function exit_with_success_elapsed() {
     _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $elapsed.")"
 }
 
-##
- # Add a warning message to be shown on exit.
- #
+# Add a warning message to be shown on success exit; not shown on failure exits.
+#
+# $1 - string The warning message.
+# $2 - string A default value if $1 is empty.
+#
+# @code
+#   warn_because "$reason" "Some default if $reason is empty"
+# @endcode
+#
+# @todo Should this show if a failure exit?
+#
+# Returns 1 if both $message and $default are empty; 0 if successful.
 function warn_because() {
-    local message=$1
-    [[ "$message" ]] || return 1
-    message=$(echo_yellow "$(_cloudy_message "$message")")
-    [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
+    local message="$1"
+    local default="$2"
+
+
+    [[ "$message" ]] || [[ "$default" ]] || return 1
+    [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$(echo_yellow "$message")")
+    [[ "$default" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$(echo_yellow "$default")")
 }
 
 # Add a success reason to be shown on exit.
 #
-# $1 - The success reason.
+# $1 - string The reason for the success.
+# $2 - string A default value if $1 is empty.
 #
-# Returns 1 if the message is empty; 0 otherwise.
+# @code
+#   succeed_because "$reason" "Some default if $reason is empty"
+# @endcode
+#
+# Returns 1 if both $message and $default are empty; 0 if successful.
 function succeed_because() {
-    local message=$1
+    local message="$1"
+    local default="$2"
 
-    [[ "$message" ]] || return 1
-    message=$(_cloudy_message "$message")
     CLOUDY_EXIT_STATUS=0
+    [[ "$message" ]] || [[ "$default" ]] || return 1
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
+    [[ "$default" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$default")
 }
 
 # Test a global config variable to see if it points to an existing path.
@@ -1112,15 +1130,21 @@ function fail() {
 # Add a failure message to be shown on exit.
 #
 # $1 - string The reason for the failure.
+# $2 - string A default value if $1 is empty.
 #
-# Returns nothing.
+# @code
+#   fail_because "$reason" "Some default if $reason is empty"
+# @endcode
+#
+# Returns 1 if both $message and $default are empty. O otherwise.
 function fail_because() {
     local message="$1"
+    local default="$2"
 
     fail $@
-    if [[ "$message" ]]; then
-        CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
-    fi
+    [[ "$message" ]] || [[ "$default" ]] || return 1
+    [[ "$message" ]] && CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
+    [[ "$default" ]] && CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$default")
 }
 
 # Determine if any failure reasons have been defined yet.
