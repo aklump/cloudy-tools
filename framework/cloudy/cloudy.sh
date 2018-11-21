@@ -1109,11 +1109,14 @@ function fail() {
     CLOUDY_EXIT_STATUS=1 && return 0
 }
 
-##
- # Add a failure message to be shown on exit.
- #
+# Add a failure message to be shown on exit.
+#
+# $1 - string The reason for the failure.
+#
+# Returns nothing.
 function fail_because() {
-    local message=$1
+    local message="$1"
+
     fail $@
     if [[ "$message" ]]; then
         CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
