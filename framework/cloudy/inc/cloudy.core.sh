@@ -720,6 +720,7 @@ function _cloudy_validate_command_arguments() {
         eval $(get_config_as "required" "commands.$command.arguments.$key.required")
         entered_value=$(eval "echo \${CLOUDY_ARGS[$index]}")
         [[ "$required" == true ]] && [[ ! "$entered_value" ]] && fail_because "Please provide <$key>." && status=1
+        let index++
     done
 
     return $status
