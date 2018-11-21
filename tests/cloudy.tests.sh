@@ -128,6 +128,21 @@ function testGetTitleIsNotEmpty() {
     assert_not_empty $(get_title)
 }
 
+function testTempdirUsesExistingDirectoryPerArgument() {
+    local dir=$(tempdir "com.apple.aklump.cloudy"); assert_exit_status 0
+    assert_not_empty $dir
+    assert_file_exists $dir
+    assert_same "com.apple.aklump.cloudy" "$(basename $dir)"
+
+    # Call again and see what happens.
+    local dir2=$(tempdir "com.apple.aklump.cloudy"); assert_exit_status 0
+    assert_not_empty $dir2
+    assert_file_exists $dir2
+    assert_same "com.apple.aklump.cloudy" "$(basename $dir2)"
+
+    assert_same "$dir" "$dir2"
+}
+
 function testTempdirCreatesExistingDirectory() {
     local dir=$(tempdir); assert_exit_status 0
     assert_not_empty $dir

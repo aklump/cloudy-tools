@@ -1300,11 +1300,20 @@ if [ $? -gt 0 ]; then
     }
 fi
 
-##
- # Create and echo a new temp directory.
- #
+# Create a new temporary directory
+#
+# $1 - string An optional directory name to use.
+#
+# Returns 0 if successful
 function tempdir() {
-    mktemp -d 2>/dev/null || mktemp -d -t 'temp'
+    local basename=${1}
+
+    local path=$(mktemp -d 2>/dev/null || mktemp -d -t 'temp')
+    [[ ! "$basename" ]] && echo $path && return 1
+    local final="$(dirname $path)/$basename"
+    [[ -d $final ]] && ! rmdir $path && return 1
+    [[ ! -d $final ]] && ! mv $path $final && return 1
+    echo $final && return 0
 }
 
 # Echo the uppercase version of a string.
