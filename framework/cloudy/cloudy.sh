@@ -428,19 +428,27 @@ function has_command_args() {
 }
 
 ##
- # Return a operation argument by zero-based index key.
+
  #
- # As an example see the following code:
- # @code
- #   ./script.sh action blue apple
- #   get_command --> "action"
- #   get_command_arg 0 --> "blue"
- #   get_command_arg 1 --> "apple"
- # @endcode
- #
+
+
+# Return a operation argument by zero-based index key.
+#
+# $1 - int The index of the argument
+# $2 - mixed Optional, default value.
+#
+# As an example see the following code:
+# @code
+#   ./script.sh action blue apple
+#   get_command --> "action"
+#   get_command_arg 0 --> "blue"
+#   get_command_arg 1 --> "apple"
+# @endcode
+# Returns 0 if found, 2 if using the default.
 function get_command_arg() {
     local index=$1
-    local default="$2"
+    local default="${2}"
+
     let index=(index + 1)
     [ ${#CLOUDY_ARGS[@]} -gt $index ] && echo  ${CLOUDY_ARGS[$index]} && return 0
     echo $default && return 2
