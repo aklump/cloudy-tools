@@ -1300,9 +1300,13 @@ if [ $? -gt 0 ]; then
     }
 fi
 
-# Create a new temporary directory
+# Echo a temporary directory filepath.
 #
-# $1 - string An optional directory name to use.
+# $1 - string An optional directory name to use.  If you do not provide this
+# then a new temporary directory is created each time you call this.  If you
+# do provide this and call tempdir more than once, the same directory will be
+# returned each time--a shared directory within the system's temporary
+# filesystem with the name passed as $1.
 #
 # Returns 0 if successful
 function tempdir() {
