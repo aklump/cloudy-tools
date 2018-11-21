@@ -390,8 +390,9 @@ function create_test_sandbox() {
     SANDBOX_CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}")
     SANDBOX_CLOUDY_EXIT_STATUS=$CLOUDY_EXIT_STATUS
 
-    declare -a CLOUDY_FAILURES=()
-    declare -a CLOUDY_SUCCESSES=()
+    # Create an empty set which may be populated during this test.
+    CLOUDY_FAILURES=()
+    CLOUDY_SUCCESSES=()
     CLOUDY_EXIT_STATUS=0
 }
 
@@ -401,10 +402,14 @@ function create_test_sandbox() {
 #
 # Returns nothing.
 function delete_test_sandbox() {
-    unset SANDBOX_IS_SET
     CLOUDY_FAILURES=("${SANDBOX_CLOUDY_FAILURES[@]}")
     CLOUDY_SUCCESSES=("${SANDBOX_CLOUDY_SUCCESSES[@]}")
     CLOUDY_EXIT_STATUS=$SANDBOX_CLOUDY_EXIT_STATUS
+
+    unset SANDBOX_IS_SET
+    unset SANDBOX_CLOUDY_FAILURES
+    unset SANDBOX_CLOUDY_SUCCESSES
+    unset SANDBOX_CLOUDY_EXIT_STATUS
 }
 
 function _cloudy_assert_failed() {

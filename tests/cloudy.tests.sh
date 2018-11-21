@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
+
 function testWarnBecauseWithoutArgumentsExitsWith1() {
     warn_because; assert_exit_status 1
-}
-
-function testWarnBecauseWithTwoArgumentsUsesThemBoth() {
-    local result=$(warn_because charlie delta && echo ${CLOUDY_SUCCESSES[@]})
-    assert_reg_exp "charlie" "$result"
-    assert_reg_exp "deltas" "$result"
 }
 
 function _testSucceedBecauseCausesExitToBeZero() {
@@ -16,6 +11,12 @@ function _testSucceedBecauseCausesExitToBeZero() {
 
 function testSucceedBecauseWithoutArgumentsExitsWith1() {
     succeed_because; assert_exit_status 1
+}
+
+function testWarnBecauseWithTwoArgumentsUsesThemBoth() {
+    local result=$(warn_because charlie delta && echo ${CLOUDY_SUCCESSES[@]})
+    assert_reg_exp "charlie" "$result"
+    assert_reg_exp "delta" "$result"
 }
 
 function testSucceedBecauseWithoutArgumentsSetsExitStatus() {

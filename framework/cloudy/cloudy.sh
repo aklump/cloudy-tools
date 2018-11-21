@@ -980,7 +980,6 @@ function warn_because() {
     local message="$1"
     local default="$2"
 
-
     [[ "$message" ]] || [[ "$default" ]] || return 1
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$(echo_yellow "$message")")
     [[ "$default" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$(echo_yellow "$default")")
