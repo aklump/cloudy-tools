@@ -279,9 +279,10 @@ function _cloudy_get_config() {
     echo ${code%;} && return 0
 }
 
-
-
 function _cloudy_exit() {
+    event_dispatch "exit" $CLOUDY_EXIT_STATUS
+    [[ "$CLOUDY_EXIT_STATUS" -eq 0 ]] && write_log_info "Exit status is: $CLOUDY_EXIT_STATUS"
+    [[ "$CLOUDY_EXIT_STATUS" -ne 0 ]] && write_log_notice "Exit status is: $CLOUDY_EXIT_STATUS"
     exit $CLOUDY_EXIT_STATUS
 }
 

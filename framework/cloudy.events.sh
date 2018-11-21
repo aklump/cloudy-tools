@@ -51,3 +51,10 @@ function on_compile_config() {
     echo "$config_dir/config2.yml"
     echo "$config_dir/config3.yml"
 }
+
+# Fires on exit.
+#
+# $1 - int The exit status of the app.
+function on_exit() {
+    local exit_status=$1
+}

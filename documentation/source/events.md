@@ -31,7 +31,7 @@ If you define this function before the bootstrap it will be called once the mini
 
 Imagine a custom event like showing info.  Let's call the event `show_info`.  You Cloudy script will fire or trigger the event with a line like this:
 
-    event_trigger "show_info" "do" "re" "mi"
+    event_dispatch "show_info" "do" "re" "mi"
     local trigger_result=$?
     
 How might another script respond to this event?
