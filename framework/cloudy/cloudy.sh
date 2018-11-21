@@ -1302,11 +1302,13 @@ fi
 
 # Echo a temporary directory filepath.
 #
-# $1 - string An optional directory name to use.  If you do not provide this
-# then a new temporary directory is created each time you call this.  If you
-# do provide this and call tempdir more than once, the same directory will be
-# returned each time--a shared directory within the system's temporary
-# filesystem with the name passed as $1.
+# If you do not provide $1 then a new temporary directory is created each time
+# you call tempdir.  If you do provide $1 and call tempdir more than once with
+# the same value for $1, the same directory will be returned each time--a
+# shared directory within the system's temporary filesystem with the name
+# passed as $1.
+#
+# $1 - string An optional directory name to use.
 #
 # Returns 0 if successful
 function tempdir() {
