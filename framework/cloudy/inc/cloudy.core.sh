@@ -99,7 +99,7 @@ function _cloudy_has_config_changed() {
 
 function _cloudy_get_file_mtime() {
     local filepath=$1
-    echo $(php -r "echo filemtime('$filepath');")
+    [[ -e $filepath ]] && echo $(php -r "echo filemtime('$filepath');")
 }
 
 ##
