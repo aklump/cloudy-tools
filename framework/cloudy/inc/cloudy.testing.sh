@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+declare -a STASHED_CLOUDY_FAILURES=()
+declare -a STASHED_CLOUDY_SUCCESSES=()
+STASHED_CLOUDY_EXIT_STATUS=0
+
+# Determine if code is being run from inside a test.
+#
+# Returns 0 if inside test; 1 if not.
+function is_being_tested() {
+    [[ "$CLOUDY_IN_TEST" ]] && return 0
+    return 1
+}
+
 # Perform all tests in a file.
 #
 # $1 - The path to a test file.
@@ -41,7 +53,9 @@ function do_tests_in() {
         else
             let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
             [ "$(type -t 'setup_before_test')" = "function" ] && setup_before_test
+            CLOUDY_IN_TEST=true
             $CLOUDY_ACTIVE_TEST
+            unset CLOUDY_IN_TEST
             [ "$(type -t 'teardown_after_test')" = "function" ] && teardown_after_test
         fi
     done
@@ -359,4 +373,30 @@ function assert_reg_exp() {
     local string="$2"
 
     [[ "$string" =~ $pattern ]] || _cloudy_assert_failed "$string" "Does not match regular expression \"$pattern\""
+}
+
+# Suspend normal operation of the exit system in order to test it.
+#
+# @see resume_exit_handler
+#
+# Returns nothing.
+function suspend_exit_handler() {
+    STASHED_CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}")
+    STASHED_CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}")
+    STASHED_CLOUDY_EXIT_STATUS=$CLOUDY_EXIT_STATUS
+
+    declare -a CLOUDY_FAILURES=()
+    declare -a CLOUDY_SUCCESSES=()
+    CLOUDY_EXIT_STATUS=0
+}
+
+# Resume normal operation of the exit system.
+#
+# @see suspend_exit_handler
+#
+# Returns nothing.
+function resume_exit_handler() {
+    CLOUDY_FAILURES=("${STASHED_CLOUDY_FAILURES[@]}")
+    CLOUDY_SUCCESSES=("${STASHED_CLOUDY_SUCCESSES[@]}")
+    CLOUDY_EXIT_STATUS=$STASHED_CLOUDY_EXIT_STATUS
 }
