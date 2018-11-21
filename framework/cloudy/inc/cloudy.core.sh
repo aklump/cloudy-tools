@@ -562,24 +562,6 @@ function _cloudy_debug_helper() {
     echo && echo "$(tput setaf $fg)$(tput setab $bg) $sidebar $(tput smso) "$message" $(tput sgr0)" && echo
 }
 
-function _cloudy_assert_failed() {
-    local actual=$1
-    local reason="$(echo "$2")"
-
-    [ ${#actual} -eq 0 ] && actual='""'
-    actual="$(echo_yellow "$actual")"
-    [[ $# -gt 2 ]] && expected="$(echo_green "$3")"
-
-    let CLOUDY_FAILED_ASSERTION_COUNT=(CLOUDY_FAILED_ASSERTION_COUNT + 1)
-    [[ "$CLOUDY_ACTIVE_TEST" ]] && fail_because "Failed test: $CLOUDY_ACTIVE_TEST in $(basename $CLOUDY_ACTIVE_TESTFILE)" && CLOUDY_ACTIVE_TEST=''
-
-    local because="$actual $reason"
-    [[ $# -gt 2 ]] && because="$because expected $expected"
-    fail_because "$because"
-
-    return 1
-}
-
 function _cloudy_write_log() {
     [[ "$LOGFILE" ]] || return
     local level="$1"

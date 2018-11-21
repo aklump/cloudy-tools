@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-declare -a STASHED_CLOUDY_FAILURES=()
-declare -a STASHED_CLOUDY_SUCCESSES=()
-STASHED_CLOUDY_EXIT_STATUS=0
+declare -a SANDBOX_CLOUDY_FAILURES=()
+declare -a SANDBOX_CLOUDY_SUCCESSES=()
+SANDBOX_CLOUDY_EXIT_STATUS=0
 
 # Determine if code is being run from inside a test.
 #
 # Returns 0 if inside test; 1 if not.
 function is_being_tested() {
-    [[ "$CLOUDY_IN_TEST" ]] && return 0
+    [[ "$SANDBOX_IS_SET" ]] && return 0
     return 1
 }
 
@@ -53,9 +53,9 @@ function do_tests_in() {
         else
             let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
             [ "$(type -t 'setup_before_test')" = "function" ] && setup_before_test
-            CLOUDY_IN_TEST=true
+            create_test_sandbox
             $CLOUDY_ACTIVE_TEST
-            unset CLOUDY_IN_TEST
+            delete_test_sandbox
             [ "$(type -t 'teardown_after_test')" = "function" ] && teardown_after_test
         fi
     done
@@ -375,28 +375,72 @@ function assert_reg_exp() {
     [[ "$string" =~ $pattern ]] || _cloudy_assert_failed "$string" "Does not match regular expression \"$pattern\""
 }
 
-# Suspend normal operation of the exit system in order to test it.
+# Create a sandbox for testing.
 #
-# @see resume_exit_handler
+# Some global variables need to be stashed during testing, such as those
+# to do with the exit system.
+#
+# @see delete_test_sandbox
 #
 # Returns nothing.
-function suspend_exit_handler() {
-    STASHED_CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}")
-    STASHED_CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}")
-    STASHED_CLOUDY_EXIT_STATUS=$CLOUDY_EXIT_STATUS
+function create_test_sandbox() {
+    SANDBOX_IS_SET=true
+
+    SANDBOX_CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}")
+    SANDBOX_CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}")
+    SANDBOX_CLOUDY_EXIT_STATUS=$CLOUDY_EXIT_STATUS
 
     declare -a CLOUDY_FAILURES=()
     declare -a CLOUDY_SUCCESSES=()
     CLOUDY_EXIT_STATUS=0
 }
 
-# Resume normal operation of the exit system.
+# Remove the sandboxed variables.
 #
-# @see suspend_exit_handler
+# @see create_test_sandbox
 #
 # Returns nothing.
-function resume_exit_handler() {
-    CLOUDY_FAILURES=("${STASHED_CLOUDY_FAILURES[@]}")
-    CLOUDY_SUCCESSES=("${STASHED_CLOUDY_SUCCESSES[@]}")
-    CLOUDY_EXIT_STATUS=$STASHED_CLOUDY_EXIT_STATUS
+function delete_test_sandbox() {
+    unset SANDBOX_IS_SET
+    CLOUDY_FAILURES=("${SANDBOX_CLOUDY_FAILURES[@]}")
+    CLOUDY_SUCCESSES=("${SANDBOX_CLOUDY_SUCCESSES[@]}")
+    CLOUDY_EXIT_STATUS=$SANDBOX_CLOUDY_EXIT_STATUS
+}
+
+function _cloudy_assert_failed() {
+    local actual=$1
+    local reason="$(echo "$2")"
+
+    [ ${#actual} -eq 0 ] && actual='""'
+    actual="$(echo_yellow "$actual")"
+    [[ $# -gt 2 ]] && expected="$(echo_green "$3")"
+
+    let CLOUDY_FAILED_ASSERTION_COUNT=(CLOUDY_FAILED_ASSERTION_COUNT + 1)
+    [[ "$CLOUDY_ACTIVE_TEST" ]] && test_fail_because "Failed test: $CLOUDY_ACTIVE_TEST in $(basename $CLOUDY_ACTIVE_TESTFILE)" && CLOUDY_ACTIVE_TEST=''
+
+    local because="$actual $reason"
+    [[ $# -gt 2 ]] && because="$because expected $expected"
+    test_fail_because "$because"
+
+    return 1
+}
+
+# Add a failure message to be shown on exit.
+#
+# $1 - string The reason for the failure.
+# $2 - string A default value if $1 is empty.
+#
+# @code
+#   test_fail_because "$reason" "Some default if $reason is empty"
+# @endcode
+#
+# Returns 1 if both $message and $default are empty.
+function test_fail_because() {
+    local message="$1"
+    local default="$2"
+
+    SANDBOX_CLOUDY_EXIT_STATUS=1
+    [[ ! "$message" ]] && [[ ! "$default" ]] && return 1
+    [[ "$message" ]] && SANDBOX_CLOUDY_FAILURES=("${SANDBOX_CLOUDY_FAILURES[@]}" "$message")
+    [[ "$default" ]] && SANDBOX_CLOUDY_FAILURES=("${SANDBOX_CLOUDY_FAILURES[@]}" "$default")
 }
