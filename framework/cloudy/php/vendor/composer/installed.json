@@ -334,17 +334,17 @@
     },
     {
         "name": "nesbot/carbon",
-        "version": "1.35.1",
-        "version_normalized": "1.35.1.0",
+        "version": "1.36.0",
+        "version_normalized": "1.36.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/briannesbitt/Carbon.git",
-            "reference": "5c05a2be472b22f63291d192410df9f0e0de3b19"
+            "reference": "f5e9fa283fa389ffa49e58391a02f063dcdd1815"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/5c05a2be472b22f63291d192410df9f0e0de3b19",
-            "reference": "5c05a2be472b22f63291d192410df9f0e0de3b19",
+            "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/f5e9fa283fa389ffa49e58391a02f063dcdd1815",
+            "reference": "f5e9fa283fa389ffa49e58391a02f063dcdd1815",
             "shasum": ""
         },
         "require": {
@@ -358,7 +358,7 @@
             "friendsofphp/php-cs-fixer": "Needed for the `composer phpcs` command. Allow to automatically fix code style.",
             "phpstan/phpstan": "Needed for the `composer phpstan` command. Allow to detect potential errors."
         },
-        "time": "2018-11-14T21:55:58+00:00",
+        "time": "2018-11-16T11:47:11+00:00",
         "type": "library",
         "extra": {
             "laravel": {

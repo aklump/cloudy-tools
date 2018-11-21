@@ -156,9 +156,13 @@
       <a href="#assert_reg_exp">assert_reg_exp</a>
       <a href="#assert_same">assert_same</a>
       <a href="#assert_true">assert_true</a>
+      <a href="#create_test_sandbox">create_test_sandbox</a>
+      <a href="#delete_test_sandbox">delete_test_sandbox</a>
       <a href="#do_tests_in">do_tests_in</a>
       <a href="#exit_with_test_results">exit_with_test_results</a>
+      <a href="#is_being_tested">is_being_tested</a>
       <a href="#mark_test_skipped">mark_test_skipped</a>
+      <a href="#test_fail_because">test_fail_because</a>
   </div>
 
 <h2>Functions In Depth By Name</h2>
@@ -440,6 +444,15 @@ mutated by the eval statement at the end.<br />
             </ul>
         
         
+      <a name="create_test_sandbox"></a>
+    <h2>create_test_sandbox()</h2>
+    <p class="summary">Create a sandbox for testing.</p>
+    
+        
+        <pre><code>Some global variables need to be stashed during testing, such as those<br />
+to do with the exit system.<br />
+@see delete_test_sandbox</code></pre>
+        
       <a name="date8601"></a>
     <h2>date8601()</h2>
     <p class="summary">Return the current datatime in ISO8601 in UTC.</p>
@@ -457,6 +470,13 @@ mutated by the eval statement at the end.<br />
 @code<br />
   debug &quot;Some message to show|$0|$FUNCNAME|$LINENO&quot;<br />
 @endcode</code></pre>
+        
+      <a name="delete_test_sandbox"></a>
+    <h2>delete_test_sandbox()</h2>
+    <p class="summary">Remove the sandboxed variables.</p>
+    
+        
+        <pre><code>@see create_test_sandbox</code></pre>
         
       <a name="dir_has_files"></a>
     <h2>dir_has_files()</h2>
@@ -760,7 +780,15 @@ fi</code></pre>
     <h2>fail_because()</h2>
     <p class="summary">Add a failure message to be shown on exit.</p>
     
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string The reason for the failure.</li>
+              <li>$2: string A default value if $1 is empty.</li>
+                          </ul><ul class="function-list__return"><li>Returns 1 if both $message and $default are empty. O otherwise.</li>
+            </ul>
         
+        <pre><code>@code<br />
+  fail_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;<br />
+@endcode</code></pre>
         
       <a name="function_exists"></a>
     <h2>function_exists()</h2>
@@ -782,6 +810,10 @@ fi</code></pre>
     <h2>get_command_arg()</h2>
     <p class="summary">Return a operation argument by zero-based index key.</p>
     
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: int The index of the argument</li>
+              <li>$2: mixed Optional, default value.</li>
+                        </ul>
         
         <pre><code>As an example see the following code:<br />
 @code<br />
@@ -789,7 +821,8 @@ fi</code></pre>
   get_command --&gt; &quot;action&quot;<br />
   get_command_arg 0 --&gt; &quot;blue&quot;<br />
   get_command_arg 1 --&gt; &quot;apple&quot;<br />
-@endcode</code></pre>
+@endcode<br />
+Returns 0 if found, 2 if using the default.</code></pre>
         
       <a name="get_config"></a>
     <h2>get_config()</h2>
@@ -960,6 +993,12 @@ fi</code></pre>
         <pre><code>An optional set of commands for all scripts.  This is just the handlers,<br />
 you must still set up the commands in the config file as usual.</code></pre>
         
+      <a name="is_being_tested"></a>
+    <h2>is_being_tested()</h2>
+    <p class="summary">Determine if code is being run from inside a test.</p>
+    
+        
+        
       <a name="is_installed"></a>
     <h2>is_installed()</h2>
     <p class="summary">Test if a program is installed on the system.</p>
@@ -1119,10 +1158,14 @@ string_split__array<br />
     <p class="summary">Add a success reason to be shown on exit.</p>
     
           Arguments: <ul class="function-list__arguments">
-              <li>$1: The success reason.</li>
-                          </ul><ul class="function-list__return"><li>Returns 1 if the message is empty; 0 otherwise.</li>
+              <li>$1: string The reason for the success.</li>
+              <li>$2: string A default value if $1 is empty.</li>
+                          </ul><ul class="function-list__return"><li>Returns 1 if both $message and $default are empty; 0 if successful.</li>
             </ul>
         
+        <pre><code>@code<br />
+  succeed_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;<br />
+@endcode</code></pre>
         
       <a name="table_add_row"></a>
     <h2>table_add_row()</h2>
@@ -1154,9 +1197,32 @@ string_split__array<br />
         
       <a name="tempdir"></a>
     <h2>tempdir()</h2>
-    <p class="summary">Create and echo a new temp directory.</p>
+    <p class="summary">Echo a temporary directory filepath.</p>
     
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string An optional directory name to use.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if successful</li>
+            </ul>
         
+        <pre><code>If you do not provide $1 then a new temporary directory is created each time<br />
+you call tempdir.  If you do provide $1 and call tempdir more than once with<br />
+the same value for $1, the same directory will be returned each time--a<br />
+shared directory within the system&#039;s temporary filesystem with the name<br />
+passed as $1.</code></pre>
+        
+      <a name="test_fail_because"></a>
+    <h2>test_fail_because()</h2>
+    <p class="summary">Add a failure message to be shown on exit.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string The reason for the failure.</li>
+              <li>$2: string A default value if $1 is empty.</li>
+                          </ul><ul class="function-list__return"><li>Returns 1 if both $message and $default are empty.</li>
+            </ul>
+        
+        <pre><code>@code<br />
+  test_fail_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;<br />
+@endcode</code></pre>
         
       <a name="throw"></a>
     <h2>throw()</h2>
@@ -1218,9 +1284,18 @@ string_split__array<br />
         
       <a name="warn_because"></a>
     <h2>warn_because()</h2>
-    <p class="summary">Add a warning message to be shown on exit.</p>
+    <p class="summary">Add a warning message to be shown on success exit; not shown on failure exits.</p>
     
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string The warning message.</li>
+              <li>$2: string A default value if $1 is empty.</li>
+                          </ul><ul class="function-list__return"><li>Returns 1 if both $message and $default are empty; 0 if successful.</li>
+            </ul>
         
+        <pre><code>@code<br />
+  warn_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;<br />
+@endcode<br />
+@todo Should this show if a failure exit?</code></pre>
         
       <a name="write_log"></a>
     <h2>write_log()</h2>
@@ -1326,7 +1401,7 @@ string_split__array<br />
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.20 &bull; Last Updated: Tue, 20 Nov 2018 13:12:48 -0800</p>
+    <p class="legaleeze center">Version: 1.0.20 &bull; Last Updated: Wed, 21 Nov 2018 14:11:18 -0800</p>
   </div>
 </footer>
 

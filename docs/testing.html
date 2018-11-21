@@ -30,9 +30,14 @@
 <p>Cloudy offers a simple unit testing framework based on PhpUnit.  To see how you might implement unit tests, refer to the following files</p>
 
 <ul>
-<li><em>cloudy_installer.sh</em> and find how the command <code>tests</code> is handled.</li>
-<li><em>cloudy_installer.tests.sh</em> to see how the tests themselves are written.</li>
-<li><em>cloudy.sh</em> for a list of assertions.</li>
+<li><em>cloudy_tools.sh</em> and find how the command <code>tests</code> is handled in <code>on_boot</code>.</li>
+<li><em>tests/cloudy.tests.sh</em> to see how the tests themselves are written.</li>
+<li><em>framework/cloudy/inc/cloudy.testing.sh</em> for a list of assertions.</li>
+<li>It is optional to add the command to your <em>config.yml</em> file.  It's not functionally necessary, but you might do it for documentation purposes.</li>
+<li><p>To check if code is being run from inside a test you can use <code>is_being_tested</code>, e.g.:</p>
+
+<pre><code>is_being_tested &amp;&amp; ...
+</code></pre></li>
 </ul>
 
 <h2>Setup</h2>
@@ -75,7 +80,7 @@ teardown_after_test
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.20 &bull; Last Updated: Tue, 20 Nov 2018 13:12:52 -0800</p>
+    <p class="legaleeze center">Version: 1.0.20 &bull; Last Updated: Wed, 21 Nov 2018 14:11:24 -0800</p>
   </div>
 </footer>
 
