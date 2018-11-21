@@ -17,8 +17,8 @@ function confirm() {
     while true; do
         read -r -n 1 -p "$message " REPLY
         case $REPLY in
-            [yY]) echo; echo; return 0 ;;
-            [nN]) echo; echo; return 1 ;;
+            [yY]) echo; return 0 ;;
+            [nN]) echo; return 1 ;;
             *) printf " \033[31m %s \n\033[0m" "invalid input"
         esac
     done
