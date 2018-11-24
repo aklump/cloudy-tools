@@ -947,6 +947,13 @@ function exit_with_success() {
     _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS")"
 }
 
+# Exit without echoing anything with a 0 status code.
+#
+# Returns nothing.
+function exit_with_success_code_only() {
+    CLOUDY_EXIT_STATUS=0 && _cloudy_exit
+}
+
 # Echo a success message (with elapsed time) plus success reasons and exit
 #
 # $1 - The success message to use.
@@ -1082,6 +1089,27 @@ function exit_with_failure() {
     fi
 
     echo
+
+    _cloudy_exit
+}
+
+# Exit without echoing anything with a non-success code.
+#
+# @option --status=N Optional, set the exit status, a number > 0
+#
+# Returns nothing.
+function exit_with_failure_code_only() {
+    parse_args "$@"
+
+    [[ $CLOUDY_EXIT_STATUS -lt 2 ]] && CLOUDY_EXIT_STATUS=1
+    CLOUDY_EXIT_STATUS=${parse_args__options__status:-$CLOUDY_EXIT_STATUS}
+
+    ## Write out the failure messages if any.
+    if [ ${#CLOUDY_FAILURES[@]} -gt 0 ]; then
+        for i in "${CLOUDY_FAILURES[@]}"; do
+           write_log_error "Failed because: $i"
+        done
+    fi
 
     _cloudy_exit
 }

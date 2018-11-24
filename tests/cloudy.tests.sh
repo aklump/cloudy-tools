@@ -168,13 +168,23 @@ function testPathRelatiaveToConfigBase() {
     assert_same "$path" $(path_relative_to_config_base $path)
 }
 
-function testPathRelatiaveToRoot() {
-
+function testPathRelativeToRoot() {
     local path="some/tree.md"
     assert_same "$ROOT/$path" $(path_relative_to_root $path)
 
     path="/$path"
     assert_same "$path" $(path_relative_to_root $path)
+}
+
+function testExitWithFailureCodeWithStatusOnlyEchosNothingReturnsStatus() {
+    $(exit_with_failure_code_only --status=2)
+    assert_same 2 $?
+}
+
+function testExitWithFailureCodeOnlyEchosNothingReturns1() {
+    $(exit_with_failure_code_only)
+    assert_same 1 $?
+    assert_empty $(exit_with_failure_code_only)
 }
 
 function testCloudyExitWithFailureExitsWithNonZero() {
@@ -294,6 +304,11 @@ function testUrlAddCacheBuster() {
 
     url=$(url_add_cache_buster "site.com?t=1234")
     assert_reg_exp "site\.com\?t=1234&[0-9]+$" "$url"
+}
+
+function testExitWithSuccessCodeOnlyEchosNothing() {
+    assert_empty $(exit_with_success_code_only)
+    assert_same 0 $?
 }
 
 function testCloudyExitWithSuccessExitsWithZero() {
