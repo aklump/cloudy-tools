@@ -61,11 +61,13 @@
       <a href="#event_listen">event_listen</a>
       <a href="#exit_with_cache_clear">exit_with_cache_clear</a>
       <a href="#exit_with_failure">exit_with_failure</a>
+      <a href="#exit_with_failure_code_only">exit_with_failure_code_only</a>
       <a href="#exit_with_failure_if_config_is_not_path">exit_with_failure_if_config_is_not_path</a>
       <a href="#exit_with_failure_if_empty_config">exit_with_failure_if_empty_config</a>
       <a href="#exit_with_help">exit_with_help</a>
       <a href="#exit_with_init">exit_with_init</a>
       <a href="#exit_with_success">exit_with_success</a>
+      <a href="#exit_with_success_code_only">exit_with_success_code_only</a>
       <a href="#exit_with_success_elapsed">exit_with_success_elapsed</a>
       <a href="#fail">fail</a>
       <a href="#fail_because">fail_because</a>
@@ -698,6 +700,13 @@ You must add items to your list first:<br />
     
         
         
+      <a name="exit_with_failure_code_only"></a>
+    <h2>exit_with_failure_code_only()</h2>
+    <p class="summary">Exit without echoing anything with a non-success code.</p>
+    
+        
+        <pre><code>@option --status=N Optional, set the exit status, a number &gt; 0</code></pre>
+        
       <a name="exit_with_failure_if_config_is_not_path"></a>
     <h2>exit_with_failure_if_config_is_not_path()</h2>
     <p class="summary">Test a global config variable to see if it points to an existing path.</p>
@@ -749,6 +758,12 @@ fi</code></pre>
               <li>$1: The success message to use.</li>
                           </ul><ul class="function-list__return"><li>Returns 0.</li>
             </ul>
+        
+        
+      <a name="exit_with_success_code_only"></a>
+    <h2>exit_with_success_code_only()</h2>
+    <p class="summary">Exit without echoing anything with a 0 status code.</p>
+    
         
         
       <a name="exit_with_success_elapsed"></a>
@@ -1401,7 +1416,7 @@ passed as $1.</code></pre>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.20 &bull; Last Updated: Wed, 21 Nov 2018 14:11:18 -0800</p>
+    <p class="legaleeze center">Version: 1.0.21 &bull; Last Updated: Sat, 24 Nov 2018 14:22:51 -0800</p>
   </div>
 </footer>
 
