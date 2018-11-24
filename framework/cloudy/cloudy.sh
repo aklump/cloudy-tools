@@ -129,7 +129,7 @@ function validate_input() {
     for name in "${CLOUDY_OPTIONS[@]}"; do
        array_has_value__array=(${_cloudy_get_valid_operations_by_command__array[@]})
        array_has_value $name || fail_because "Invalid option: $name"
-       eval "value=\"\$CLOUDY_OPTION__$(string_upper $name)\""
+       eval "value=\"\$CLOUDY_OPTION__$(string_upper ${name//-/_})\""
 
        # Assert the provided value matches schema.
        eval $(_cloudy_validate_input_against_schema "commands.$command.options.$name" "$name" "$value")
@@ -166,7 +166,7 @@ function parse_args() {
 
     # Purge any previous values.
     for name in "${parse_args__options[@]}"; do
-        eval "unset parse_args__options__${name}"
+        eval "unset parse_args__options__${name//-/_}"
     done
     parse_args__options=()
     parse_args__args=()
@@ -198,7 +198,7 @@ function parse_args() {
             fi
             for name in "${options[@]}"; do
                 parse_args__options=("${parse_args__options[@]}" "$name")
-                eval "parse_args__options__${name}=true"
+                eval "parse_args__options__${name//-/_}=true"
                 parse_args__options_passthru="$parse_args__options_passthru -${name}"
             done
         fi
@@ -273,7 +273,7 @@ function get_option() {
     local param=$1
     local default=$2
 
-    local var_name="\$CLOUDY_OPTION__$(string_upper $1)"
+    local var_name="\$CLOUDY_OPTION__$(string_upper ${1//-/_})"
     local value=$(eval "echo $var_name")
     [[ "$value" ]] && echo "$value" && return 0
     echo "$default" && return 2
