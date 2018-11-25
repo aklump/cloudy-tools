@@ -9,7 +9,7 @@
 CONFIG="cloudy_tools.yml";
 
 # Uncomment this line to enable file logging.
-LOGFILE="cloudy_tools.log"
+#LOGFILE="cloudy_tools.log"
 
 function on_boot() {
     # Run the test command before the bootstrap to avoid conflicts.
