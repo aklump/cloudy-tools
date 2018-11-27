@@ -990,6 +990,7 @@ function warn_because() {
     [[ "$message" ]] || [[ "$default" ]] || return 1
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$(echo_yellow "$message")")
     [[ "$default" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$(echo_yellow "$default")")
+    return 0
 }
 
 # Add a success reason to be shown on exit.
@@ -1010,6 +1011,7 @@ function succeed_because() {
     [[ "$message" ]] || [[ "$default" ]] || return 1
     [[ "$message" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$message")
     [[ "$default" ]] && CLOUDY_SUCCESSES=("${CLOUDY_SUCCESSES[@]}" "$default")
+    return 0
 }
 
 # Test a global config variable to see if it points to an existing path.
@@ -1163,7 +1165,7 @@ function fail() {
 #   fail_because "$reason" "Some default if $reason is empty"
 # @endcode
 #
-# Returns 1 if both $message and $default are empty. O otherwise.
+# Returns 1 if both $message and $default are empty. 0 otherwise.
 function fail_because() {
     local message="$1"
     local default="$2"
@@ -1172,6 +1174,7 @@ function fail_because() {
     [[ "$message" ]] || [[ "$default" ]] || return 1
     [[ "$message" ]] && CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$message")
     [[ "$default" ]] && CLOUDY_FAILURES=("${CLOUDY_FAILURES[@]}" "$default")
+    return 0
 }
 
 # Determine if any failure reasons have been defined yet.
