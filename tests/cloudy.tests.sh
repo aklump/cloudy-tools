@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+function testWarnBecauseReturns0() {
+    warn_because "bla"; assert_exit_status 0
+}
+
+function testFailBecauseReturns0() {
+    fail_because "bla"; assert_exit_status 0
+}
+
+function testSucceedBecauseReturns0() {
+    succeed_because "bla"; assert_exit_status 0
+}
+
 function testWarnBecauseWithoutArgumentsExitsWith1() {
     warn_because; assert_exit_status 1
 }
