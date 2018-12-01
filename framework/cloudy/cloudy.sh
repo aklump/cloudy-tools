@@ -1425,7 +1425,7 @@ function debug() {
 function echo_key_value() {
     local key=$1
     local value=$2
-    echo "$(tput setaf 0)$(tput setab 7) $key $(tput smso) "$value" $(tput sgr0)"
+    echo "$(tty -s && tput setaf 0)$(tty -s && tput setab 7) $key $(tty -s && tput smso) "$value" $(tty -s && tput sgr0)"
 }
 
 # Echo an exception message and exit.

@@ -322,14 +322,14 @@ function _cloudy_echo_color() {
     # tput is more portable so we use that and convert to it's colors.
     # https://linux.101hacks.com/ps1-examples/prompt-color-using-tput/
     let color-=30
-    [ $intensity -eq 1 ] && echo -n $(tput bold)
+    [[ $intensity -eq 1 ]] && echo -n $(tty -s && tput bold)
     if [[ "$bg" ]]; then
         let bg-=40
-        echo -n $(tput setab $bg)
+        echo -n $(tty -s && tput setab $bg)
     fi
-    echo -n $(tput setaf $color)
+    echo -n $(tty -s && tput setaf $color)
     echo -n "${message}"
-    echo -n $(tput sgr0)
+    echo -n $(tty -s && tput sgr0)
     echo
 }
 
@@ -341,7 +341,7 @@ function _cloudy_echo_ansi_rainbow() {
 }
 
 function _cloudy_echo_tput_rainbow() {
-    for c in {0..255}; do tput setaf $c; tput setaf $c | cat -v; echo =$c; done
+    for c in {0..255}; do tty -s && tput setaf $c; tty -s && tput setaf $c | cat -v; echo =$c; done
 }
 
 function _cloudy_echo_credits() {
@@ -559,7 +559,7 @@ function _cloudy_debug_helper() {
     [[ "$funcname" ]] && sidebar="$funcname in $sidebar"
     [[ "$lineno" ]] && sidebar="$sidebar on line $lineno"
     [[ "$sidebar" ]] || sidebar="$default"
-    echo && echo "$(tput setaf $fg)$(tput setab $bg) $sidebar $(tput smso) "$message" $(tput sgr0)" && echo
+    echo && echo "$(tty -s && tput setaf $fg)$(tty -s && tput setab $bg) $sidebar $(tty -s && tput smso) "$message" $(tty -s && tput sgr0)" && echo
 }
 
 function _cloudy_write_log() {
