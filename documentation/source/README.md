@@ -63,5 +63,9 @@ Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariab
 | `$WDIR` | The working directory when script was initiated. |
 | `$LOGFILE` | Absolute path to a log file, if enabled. |
 
-* Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).
 * Determine your version of BASH with `echo $BASH_VERSION`
+
+## Learn More
+
+* Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).
+* Checkout [The Bash Guide](https://guide.bash.academy/) by Maarten Billemont.
