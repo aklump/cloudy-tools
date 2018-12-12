@@ -184,7 +184,7 @@ function _cloudy_get_config() {
     # Determine what type of array.
     if [[ "$var_type" == "array" ]]; then
         eval "local var_keys=("\${$cached_var_name_keys[@]}")"
-        if [[ "${var_keys[0]}" == 0 ]] || [[ "${var_keys[0]}" == "" ]]; then
+        if [[ "${var_keys[0]}" == 0 ]] || [[ -z "${var_keys[0]}" ]]; then
             var_type="indexed_array"
         else
             var_type="associative_array"

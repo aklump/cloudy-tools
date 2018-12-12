@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function testFailBecauseWithOneArgumentAndStatusDoesntPrintStatus() {
+    fail_because "bla" --status=3
+    assert_same 3 "$CLOUDY_EXIT_STATUS"
+    assert_same "bla" "${CLOUDY_FAILURES[0]}"
+    assert_empty "${CLOUDY_FAILURES[1]}"
+}
+
 function testWarnBecauseReturns0() {
     warn_because "bla"; assert_exit_status 0
 }
