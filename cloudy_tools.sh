@@ -87,7 +87,7 @@ case $command in
         source "$ROOT/inc/cloudy.pm.sh"
         echo_title "Package Installer"
         package=$(get_command_arg 0)
-        confirm --caution "Install $package in $WDIR?" || exit_with_failure "User cancelled."
+        ! has_option 'yes' && ! confirm --caution "Install $package in $WDIR?" && exit_with_failure "User cancelled."
         _cloudypm_install_package $package
         has_failed && exit_with_failure "Could not install \"$package\"."
         exit_with_success_elapsed "$package was installed."
