@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 
+
+function testGetConfigPathAsOnIndexedArrayMakesAllElementsRealPaths() {
+    eval $(get_config_path_as "fish" -a 'tests.paths_indexed')
+    assert_same "/an/absolute/bogus/path" ${fish[4]}
+    assert_same "$ROOT/tests/stubs/bogus.md" ${fish[3]}
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${fish[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${fish[1]}
+    assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${fish[2]}
+    assert_same "$(realpath $HOME/.trash)" ${fish[5]}
+    assert_same 6 ${#fish[@]}
+}
+
+function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
+    eval $(get_config_path -a 'tests.paths_indexed')
+    assert_same "/an/absolute/bogus/path" ${tests_paths_indexed[4]}
+    assert_same "$ROOT/tests/stubs/bogus.md" ${tests_paths_indexed[3]}
+    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_indexed[0]}
+    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_indexed[1]}
+    assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${tests_paths_indexed[2]}
+    assert_same "$(realpath $HOME/.trash)" ${tests_paths_indexed[5]}
+    assert_same 6 ${#tests_paths_indexed[@]}
+}
+
 function testFailBecauseWithOneArgumentAndStatusDoesntPrintStatus() {
     fail_because "bla" --status=3
     assert_same 3 "$CLOUDY_EXIT_STATUS"
@@ -343,6 +366,9 @@ function testGetConfigPathUsingAssociateArrayReturnsRealPaths() {
     assert_not_internal_type "array" "tests_paths_associative_alpha"
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_associative_alpha}
 
+    assert_not_internal_type "array" "tests_paths_associative_trash"
+    assert_same "$(realpath $HOME/.trash)" ${tests_paths_associative_trash}
+
     assert_internal_type "array" "tests_paths_associative_all"
     assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_associative_all[0]}
     assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_associative_all[1]}
@@ -399,26 +425,6 @@ function testArraySplitWorksWithSpaces() {
     assert_count 2 'string_split__array'
     assert_same "my my" "${string_split__array[0]}"
     assert_same "this is good" "${string_split__array[1]}"
-}
-
-function testGetConfigPathAsOnIndexedArrayMakesAllElementsRealPaths() {
-    eval $(get_config_path_as "fish" -a 'tests.paths_indexed')
-    assert_same "/an/absolute/bogus/path" ${fish[4]}
-    assert_same "$ROOT/tests/stubs/bogus.md" ${fish[3]}
-    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${fish[0]}
-    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${fish[1]}
-    assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${fish[2]}
-    assert_same 5 ${#fish[@]}
-}
-
-function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
-    eval $(get_config_path -a 'tests.paths_indexed')
-    assert_same "/an/absolute/bogus/path" ${tests_paths_indexed[4]}
-    assert_same "$ROOT/tests/stubs/bogus.md" ${tests_paths_indexed[3]}
-    assert_same "$(realpath $ROOT/tests/stubs/alpha.txt)" ${tests_paths_indexed[0]}
-    assert_same "$(realpath $ROOT/tests/stubs/bravo.txt)" ${tests_paths_indexed[1]}
-    assert_same "$(realpath $ROOT/tests/stubs/charlie.md)" ${tests_paths_indexed[2]}
-    assert_same 5 ${#tests_paths_indexed[@]}
 }
 
 function testGetConfigPathAsUsingGlobWorksAsExpected() {

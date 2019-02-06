@@ -217,6 +217,9 @@ function _cloudy_get_config() {
             if [[ "$mutator" == "_cloudy_realpath" ]]; then
                 local path=$(eval "echo \$${cached_var_name}___${key}")
 
+                # Replace ~ with the actual home page
+                path=$(echo ${path/\~/"$HOME"})
+
                 # On first pass we will try to expand globbed filenames, which will
                 # cause file_list to be longer than var_value.
                 file_list=()
@@ -259,6 +262,9 @@ function _cloudy_get_config() {
             # cause file_list to be longer than var_value.
             file_list=()
             for path in "${var_value[@]}"; do
+
+                # Replace ~ with the actual home page
+                path=$(echo ${path/\~/"$HOME"})
 
                 # Make relative to $ROOT.
                 [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}
