@@ -713,7 +713,7 @@ abstract class Dataset implements DatasetInterface {
 
   protected static function getAllAliases($alias) {
     $schema = static::getSchema();
-    if (!array_key_exists($alias, $schema)) {
+    if (!static::ignoreKey($alias) && !array_key_exists($alias, $schema)) {
       throw new \InvalidArgumentException("\"$alias\" is not a valid schema key.");
     }
 
