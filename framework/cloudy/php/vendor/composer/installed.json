@@ -49,17 +49,17 @@
     },
     {
         "name": "aklump/loft-lib",
-        "version": "1.0.18",
-        "version_normalized": "1.0.18.0",
+        "version": "1.0.19",
+        "version_normalized": "1.0.19.0",
         "source": {
             "type": "git",
             "url": "https://github.com/aklump/loft-lib.git",
-            "reference": "b2f5eceb4257e02a0b9fba49194a34f2ae4ac391"
+            "reference": "bc85fcf352b4475472147ff7f8c5da42abc66ea5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/aklump/loft-lib/zipball/b2f5eceb4257e02a0b9fba49194a34f2ae4ac391",
-            "reference": "b2f5eceb4257e02a0b9fba49194a34f2ae4ac391",
+            "url": "https://api.github.com/repos/aklump/loft-lib/zipball/bc85fcf352b4475472147ff7f8c5da42abc66ea5",
+            "reference": "bc85fcf352b4475472147ff7f8c5da42abc66ea5",
             "shasum": ""
         },
         "require": {
@@ -68,7 +68,7 @@
             "php": ">=5.6",
             "ralouphie/mimey": "~2.0"
         },
-        "time": "2019-01-24T04:25:02+00:00",
+        "time": "2019-02-04T17:56:57+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -483,17 +483,17 @@
     },
     {
         "name": "symfony/yaml",
-        "version": "v3.4.21",
-        "version_normalized": "3.4.21.0",
+        "version": "v3.4.22",
+        "version_normalized": "3.4.22.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",
-            "reference": "554a59a1ccbaac238a89b19c8e551a556fd0e2ea"
+            "reference": "ba11776e9e6c15ad5759a07bffb15899bac75c2d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/yaml/zipball/554a59a1ccbaac238a89b19c8e551a556fd0e2ea",
-            "reference": "554a59a1ccbaac238a89b19c8e551a556fd0e2ea",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/ba11776e9e6c15ad5759a07bffb15899bac75c2d",
+            "reference": "ba11776e9e6c15ad5759a07bffb15899bac75c2d",
             "shasum": ""
         },
         "require": {
@@ -509,7 +509,7 @@
         "suggest": {
             "symfony/console": "For validating YAML files using the lint command"
         },
-        "time": "2019-01-01T13:45:19+00:00",
+        "time": "2019-01-16T10:59:17+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
