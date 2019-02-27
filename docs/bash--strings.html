@@ -2,17 +2,17 @@
 
 <html>
 <head>
-  <title>Arrays</title>
+  <title>String Manipulation</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page--arrays">
+<body class="page--bash--strings">
 <header>
   <div class="pager">
-  <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
+  <a href="bash--arrays.html" class="prev bash--arrays">&laquo;Arrays</a>
   <a href="index.html" class="index">Index</a>
-  <a href="development.html" class="next development">Development Tools&raquo;</a>
+  <a href="README.html" class="next readme">Cloudy&raquo;</a>
 </div>
 </header>
 
@@ -22,27 +22,28 @@
   </form>
 </div>
 
-  <h1>Arrays</h1>
+  <h1>String Manipulation</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
-<section>
+<section><section>
 
-<h2>How to copy an array</h2>
+<p>Taken from <a href="https://www.tldp.org/LDP/abs/html/string-manipulation.html">Advanced Bash-Scripting Guide: Chapter 10. Manipulating Variables</a></p>
 
-<pre><code>new_array=("${old_array[@]}")
+<h2>Trim the dot from right side of string</h2>
+
+<pre><code>${string%.}
 </code></pre>
 
-<p>This comes in to play after array-based functions like <code>string_split</code></p>
+<h2>Trim the dot from left side of string</h2>
 
-<pre><code>string_split__string="do&lt;br /&gt;re&lt;br /&gt;mi"
-string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
+<pre><code>${string#.}
 </code></pre>
 
-<h2>How to copy and array with dynamic name</h2>
+<h2>Get string length</h2>
 
-<pre><code>eval copy=(\"\${$master[@]}\")
+<pre><code>${#string}
 </code></pre>
-</section>
+</section></section>
 
 <div class="search__results">
   <div id="tipue_search_content"></div>
@@ -50,13 +51,13 @@ string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
 
 <footer>
   <div class="pager">
-  <a href="arguments.html" class="prev arguments">&laquo;This script &quot;arguments&quot;</a>
+  <a href="bash--arrays.html" class="prev bash--arrays">&laquo;Arrays</a>
   <a href="index.html" class="index">Index</a>
-  <a href="development.html" class="next development">Development Tools&raquo;</a>
+  <a href="README.html" class="next readme">Cloudy&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.29 &bull; Last Updated: Tue, 05 Feb 2019 19:46:37 -0800</p>
+    <p class="legaleeze center">Version: 1.0.30 &bull; Last Updated: Tue, 26 Feb 2019 17:17:39 -0800</p>
   </div>
 </footer>
 

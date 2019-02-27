@@ -1,37 +1,36 @@
 {
-    "chapters": [],
+    "title": "Cloudy",
+    "chapters": [
+        {
+            "id": "qs",
+            "title": "Quick Start"
+        },
+        {
+            "id": "bash",
+            "title": "Bash"
+        }
+    ],
     "sections": [
         {
-            "id": "readme",
-            "sort": -100
+            "id": "readme"
         },
         {
-            "id": "configuration",
-            "sort": -90
+            "id": "configuration"
         },
         {
-            "id": "conventions",
-            "sort": -80
+            "id": "conventions"
         },
         {
-            "id": "api",
-            "sort": -70
+            "id": "api"
         },
         {
-            "id": "testing",
-            "sort": -60
+            "id": "testing"
         },
         {
-            "id": "packages",
-            "sort": -50
+            "id": "packages"
         },
         {
-            "id": "writing-scripts",
-            "sort": -40
-        },
-        {
-            "id": "events",
-            "sort": -30
+            "id": "events"
         }
     ],
     "settings": {
