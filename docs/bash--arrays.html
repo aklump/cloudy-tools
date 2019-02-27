@@ -2,17 +2,17 @@
 
 <html>
 <head>
-  <title>String Manipulation</title>
+  <title>Arrays</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page--strings">
+<body class="page--bash--arrays">
 <header>
   <div class="pager">
-  <a href="options.html" class="prev options">&laquo;The script &quot;options&quot;</a>
+  <a href="qs--writing-scripts.html" class="prev qs--writing-scripts">&laquo;Writing Your First Cloudy Script</a>
   <a href="index.html" class="index">Index</a>
-  <a href="tables.html" class="next tables">Tables (Tabular Output)&raquo;</a>
+  <a href="bash--strings.html" class="next bash--strings">String Manipulation&raquo;</a>
 </div>
 </header>
 
@@ -22,28 +22,27 @@
   </form>
 </div>
 
-  <h1>String Manipulation</h1>
+  <h1>Arrays</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
-<section>
+<section><section>
 
-<p>Taken from <a href="https://www.tldp.org/LDP/abs/html/string-manipulation.html">Advanced Bash-Scripting Guide: Chapter 10. Manipulating Variables</a></p>
+<h2>How to copy an array</h2>
 
-<h2>Trim the dot from right side of string</h2>
-
-<pre><code>${string%.}
+<pre><code>new_array=("${old_array[@]}")
 </code></pre>
 
-<h2>Trim the dot from left side of string</h2>
+<p>This comes in to play after array-based functions like <code>string_split</code></p>
 
-<pre><code>${string#.}
+<pre><code>string_split__string="do&lt;br /&gt;re&lt;br /&gt;mi"
+string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
 </code></pre>
 
-<h2>Get string length</h2>
+<h2>How to copy and array with dynamic name</h2>
 
-<pre><code>${#string}
+<pre><code>eval copy=(\"\${$master[@]}\")
 </code></pre>
-</section>
+</section></section>
 
 <div class="search__results">
   <div id="tipue_search_content"></div>
@@ -51,13 +50,13 @@
 
 <footer>
   <div class="pager">
-  <a href="options.html" class="prev options">&laquo;The script &quot;options&quot;</a>
+  <a href="qs--writing-scripts.html" class="prev qs--writing-scripts">&laquo;Writing Your First Cloudy Script</a>
   <a href="index.html" class="index">Index</a>
-  <a href="tables.html" class="next tables">Tables (Tabular Output)&raquo;</a>
+  <a href="bash--strings.html" class="next bash--strings">String Manipulation&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.29 &bull; Last Updated: Tue, 05 Feb 2019 19:46:41 -0800</p>
+    <p class="legaleeze center">Version: 1.0.30 &bull; Last Updated: Tue, 26 Feb 2019 17:17:38 -0800</p>
   </div>
 </footer>
 
