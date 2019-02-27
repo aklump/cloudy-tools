@@ -1,4 +1,4 @@
-# The script "options"
+# The Script "Options"
 
 Options are arguments passed to the script that begin with a single `-` or double `-`.  Here are some examples:
 

@@ -90,10 +90,9 @@ If the config key points to an indexed array, e.g., ....
 
 ### Non-Scalars Keys
 
-In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with `get_config`.  Our example will echo a string like this: `declare -a config_keys=("_default" "help" "new")`
+In a more complex configuration like the following, you might want to get the array keys, in this case all the "operations"; do so with `get_config`.  Our example will echo a string like this: `declare -a config_keys=("help" "new")`
 
-    operations:
-      _default: help
+    commands:
       help:
         help: Display this help screen
       new:
