@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Handling PHP Versions</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--handling-php-versions">
+<header>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="localize.html" class="next localize">Localization/Translation&raquo;</a>
+</div>
+</header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>Handling PHP Versions</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><section>
+
+<p>In some cases you may want your script to be able to accept different PHP versions.  Here is a strategy to achieve this.  Place this early in your controller script.  In this example the application is called <em>Loft Deploy</em> and it uses <code>$loft_deploy_php</code> when running it's php processes.</p>
+
+<pre><code># Determine the version of php to use based on:
+# 1. The option --php
+# 2. ENV var LOFT_DEPLOY_PHP
+# 3. the system 'php'
+loft_deploy_php="php"
+if [[ "$LOFT_DEPLOY_PHP" ]]; then
+    loft_deploy_php="$LOFT_DEPLOY_PHP"
+fi
+[[ ! -x "$loft_deploy_php" ]] &amp;&amp; fail_because "$loft_deploy_php is not a path to a valid PHP executable" &amp;&amp; exit_with_failure
+</code></pre>
+
+<p>You would instruct users to define <code>$LOFT_DEPLOY_PHP</code> in <em>.bashrc</em> or pass it in the CLI arguments, e.g. <code>export LOFT_DEPLOY_PHP=/Applications/MAMP/bin/php/php7.1.12/bin/php;...</code>.</p>
+</section></section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="localize.html" class="next localize">Localization/Translation&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0.31 &bull; Last Updated: Sun, 05 May 2019 18:48:49 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+
