@@ -818,11 +818,8 @@ if [ ! -f "$CACHED_CONFIG_FILEPATH" ]; then
         exit_with_failure "Cannot create cached config filepath."
     else
         source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
-        eval $(get_config -a "additional_config")
-        config_files=("$CONFIG")
-        for file in "${additional_config[@]}"; do
-           [[ "$file" ]] && [ -f "$ROOT/$file" ] && config_files=("${config_files[@]}" "$ROOT/$file")
-        done
+        eval $(get_config_path -a "additional_config")
+        config_files=("$CONFIG" "${additional_config[@]}")
         [ ${#compile_config__runtime_files[@]} -gt 0 ] && config_files=("${config_files[@]}" "${compile_config__runtime_files[@]}")
         echo -n >  $CACHED_CONFIG_MTIME_FILEPATH
         for file in "${config_files[@]}"; do
