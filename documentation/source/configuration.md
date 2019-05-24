@@ -19,7 +19,7 @@ In the header of your script you will find `$CONFIG`, this is for the base confi
         CONFIG=script.example.yml
         
 1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname your_cloudy_script.sh)`
-1. You may add additional configuration files by adding something like following in the YAML of the base configuration file.  Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides.
+1. You may add additional configuration files by adding something like following in the YAML of the base configuration file.  Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides.  Additional configuration files are optional and will only be included if they exist.
 
         additional_config:
           - _install.local.yml
