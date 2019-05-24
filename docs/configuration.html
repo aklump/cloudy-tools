@@ -50,7 +50,7 @@
 
 <ol>
 <li>Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., <code>$(dirname your_cloudy_script.sh)</code></li>
-<li><p>You may add additional configuration files by adding something like following in the YAML of the base configuration file.  Notice the use of <code>~</code> to reference the user's home directory; this is a nice way to allow per-user configuration overrides.</p>
+<li><p>You may add additional configuration files by adding something like following in the YAML of the base configuration file.  Notice the use of <code>~</code> to reference the user's home directory; this is a nice way to allow per-user configuration overrides.  Additional configuration files are optional and will only be included if they exist.</p>
 
 <pre><code>additional_config:
   - _install.local.yml
@@ -229,7 +229,7 @@ writeable_directories=($_config_values[@]})
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.31 &bull; Last Updated: Sun, 05 May 2019 18:48:47 -0700</p>
+    <p class="legaleeze center">Version: 1.0.32 &bull; Last Updated: Thu, 23 May 2019 17:26:02 -0700</p>
   </div>
 </footer>
 
