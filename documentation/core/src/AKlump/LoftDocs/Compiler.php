@@ -6,7 +6,7 @@ use AKlump\Data\Data;
 use AKlump\LoftLib\Storage\FilePath;
 
 /**
- * Provide compiling functionality
+ * Provide compiling functionality.
  */
 class Compiler {
 
@@ -52,7 +52,6 @@ class Compiler {
    *   The basename of the source file.
    * @param string $contents
    *   The file contents.
-   *    *
    *
    * @return \AKlump\LoftLib\Storage\FilePath
    *   The source file
@@ -128,6 +127,27 @@ class Compiler {
   }
 
   /**
+   * Return a source file.
+   *
+   * First tries to get a processed source file, then falls back to the
+   * un-processed source files.
+   *
+   * @param string $basename
+   *   The basename.
+   *
+   * @return \AKlump\LoftLib\Storage\FilePath
+   *   The source filepath instance.
+   */
+  public function getSource($basename) {
+    $file = $this->pathToDynamicSourceFiles->to($basename);
+    if (!$file->exists()) {
+      $file = $this->pathToStaticSourceFiles->to($basename);
+    }
+
+    return $file;
+  }
+
+  /**
    * Return all source files from a directory.
    *
    * @param string $path_to_dir
@@ -176,7 +196,7 @@ class Compiler {
   /**
    * Detect if a filename points to a markdown file.
    *
-   * @param  string $path
+   * @param string $path
    *
    * @return bool
    */
@@ -243,6 +263,178 @@ class Compiler {
     }
 
     return $variables;
+  }
+
+  /**
+   * Return data for all sections.
+   *
+   * @return array
+   *   An array of section data, keyed by id.
+   */
+  public function getSectionsById() {
+    $ids = [];
+    $outline = $this->pathToOutline->load()->getJson(TRUE);
+    if (empty($outline['sections'])) {
+      return $ids;
+    }
+
+    return array_combine(array_map(function ($section) {
+      return $section['id'];
+    }, $outline['sections']), $outline['sections']);
+  }
+
+  /**
+   * Replace links to other pages on the site with actual filenames.
+   *
+   * This should run on HTML markup.
+   *
+   * Internal links--what this looks for--look like this (quotes included).
+   *
+   *    "@page2:part4"
+   *
+   * ...where "page2" is a page id and "part4" is the id of an html header.  It
+   * will get replaced with something like...
+   *
+   *    "page-two-filename.html#part4"
+   *
+   * The counterpart, or target to the above link would look like this, on a
+   * page with an id of "page2".  The following:
+   *
+   *    <h3>:part4
+   *
+   * ... gets replaced with:
+   *
+   *    <h3 id="part4">
+   *
+   * @param string $contents
+   *   The HTML file contents.
+   *
+   * @return string
+   *   The HTML file contents with actual links to filenames.
+   */
+  public function processInternalLinks($contents, $extension = 'html') {
+    $ids = $this->getSectionsById();
+
+    foreach (array_keys($ids) as $id) {
+      $contents = preg_replace_callback('/"@(' . preg_quote($id) . ')(?:\:([^\s]+))?"/', function ($matches) use ($ids, $extension) {
+        $matches += [NULL, NULL, NULL];
+        if (($section = $ids[$matches[1]])) {
+          return '"' . rtrim($section['file'] . '.' . $extension . '#' . $matches[2], '#') . '"';
+        }
+        else {
+          throw new \RuntimeException("Invalid iternal link: \"$matches[1]\".");
+        }
+      }, $contents);
+
+      // Replace the section header ids.
+      $regex = '/<(h\d)(.*)>\:([^\s]+)\s*/i';
+      $replacement = '<$1$2 id="$3">';
+      $contents = preg_replace($regex, $replacement, $contents);
+    }
+
+    // Check for unhandled links and throw an exception.
+    preg_match_all('/"@([^\s]+)(?:\:([^\s]+))?"/', $contents, $matches, PREG_SET_ORDER);
+    if (count($matches)) {
+      throw new \RuntimeException("Invalid link id(s): " . implode(', ', array_map(function ($found) {
+          return $found[1];
+        }, $matches)));
+    }
+
+    return $contents;
+  }
+
+  /**
+   * Return all files in a directory.
+   *
+   * @param $path_to_directory
+   *
+   * @return \AKlump\LoftLib\Component\Storage\FilePath|\AKlump\LoftLib\Component\Storage\FilePathCollection|null
+   */
+  public function getFilesInDirectory($path_to_directory, $filename_match_regex = NULL) {
+    return FilePath::create($path_to_directory)
+      ->children($filename_match_regex);
+  }
+
+  /**
+   * Create markdown from source code.
+   *
+   * This should be used when you want to add source code to your
+   * documentation.  Write the code as a native file and then use this method
+   * to pull that file into the documentation build.  This allows certain
+   * meta-comments that allows you to add a page title, markdown, break your
+   * code block into sections, etc.  Read on for more info.
+   *
+   * The following comments take on special meaning when parsed by this method,
+   * sprinkle these in your source code file and the generated markdown can be
+   * spruced up and made easier to read.  Experiment with their usage to see
+   * how they work, but they should be self-explanatory.
+   * - '// @loftDocs.title(Lorem Ipsum)' - Set the page title
+   * - '// @loftDocs.markdown(## Lorem Subtitle)' - Add markdown
+   * - '// @loftDocs.break' - Split the <pre> tag at that point.
+   *
+   * Here is code that could be the contents of a hook file showing how to
+   * generate pages from test classes:
+   *
+   * @code
+   * $example_files = $compiler->getFilesInDirectory(__DIR__ .
+   *   '/../../tests/src/', '/Test\.php$/');
+   *
+   * foreach ($example_files as $example_file) {
+   *   $markup = $compiler->createMarkdownFromSourceCodeFile($example_file);
+   *   $compiler->addSourceFile($example_file->getFilename() . '.md', $markup);
+   * }
+   * @endcode
+   *
+   * @param \AKlump\LoftLib\Storage\FilePath $code_file
+   *   The filepath to the source code.
+   * @param bool $with_header
+   *   True, the frontmatter and page title will be prepended to the source
+   *   code.  Set this to false to omit this.
+   *
+   * @return string
+   *   Contents ready to be saved using ::addSourceFile() or ::addInclude().
+   */
+  public function createMarkdownFromSourceCodeFile(FilePath $code_file, $with_header = TRUE) {
+    $code = $code_file->load()->get();
+
+    // Extract the title.
+    $title = $code_file->getFilename();
+    if (preg_match('#\/\/\s*@loftDocs.title\((.+)\)\s*#', $code, $matches)) {
+      $title = trim($matches[1]);
+      $code = str_replace($matches[0], '', $code);
+    }
+    // Extract the id.
+    $id = str_replace(' ', '_', strtolower($code_file->getFilename()));
+    if (preg_match('#\/\/\s*@loftDocs.id\((.+)\)#', $code, $matches)) {
+      $id = $matches[1];
+      $code = str_replace($matches[0], '', $code);
+    }
+
+    // Fix the php open tag.
+    $code = str_replace('<?php', '&lt;?php', $code);
+
+    // Split code at breaks.
+    $sections = explode('// @loftDocs.break', $code);
+    $sections = array_map(function ($item) {
+      return preg_replace('#\n*\/\/\s*@loftDocs.markdown\((.+)\)\n+#', "</pre>\n\\1\n<pre>", $item);
+    }, $sections);
+
+    $code = '<pre>' . implode("</pre>\n---\n<pre>", array_map('trim', $sections)) . '</pre>';
+    $code = str_replace('<pre></pre>', '', $code);
+
+    // Create the page in the index.
+    $lines = [];
+    if ($with_header) {
+      $lines[] = '---';
+      $lines[] = 'id: ' . $id;
+      $lines[] = 'title: ' . $title;
+      $lines[] = '---';
+      $lines[] = '# ' . $title;
+      $lines[] = NULL;
+    }
+    $lines[] = $code;
+
+    return implode(PHP_EOL, $lines);
   }
 
 }

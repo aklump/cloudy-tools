@@ -146,7 +146,11 @@ function load_config() {
 
     if [[ "$docs_help_ini" ]]; then
       # Convert this to $docs_outline_auto
-      $docs_php "$CORE/includes/ini_to_json.php" "$docs_help_ini" "$docs_source_path" "$docs_source_path/$docs_outline_auto"
+      result=($docs_php "$CORE/includes/ini_to_json.php" "$docs_help_ini" "$docs_source_path" "$docs_source_path/$docs_outline_auto")
+      if [[ $? -ne 0 ]]; then
+        echo_red "$result" && exit
+      fi
+      echo $result
       docs_outline_file="$docs_cache_dir/$docs_outline_auto"
 
       echo "`tty -s && tput setaf 3`You are using the older .ini version of the configutation; consider changing to outline.json, a template has been created for you as '$docs_outline_auto'.  See README for more info.`tty -s && tput op`"
@@ -162,6 +166,13 @@ function load_config() {
   #
   # put anything that comes AFTER parsing config file below this line
   #
+
+  # Override vars from the CLI
+  if [[ $(get_option "website") ]]; then
+    docs_website_dir="$(get_option "website")"
+  fi
+
+  docs_website_dir=$(path_resolve "$docs_root_dir" "$docs_website_dir")
 
   # Determine which is our tpl dir
   if test -e "$PWD/tpl"; then
@@ -230,10 +241,10 @@ function do_hook_file() {
   elif [[ "$type" ]]; then
     case $type in
     php)
-      $docs_php "$CORE/includes/do_php_hook.php" "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_root_dir/$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source" "$outline_file"
+      $docs_php "$CORE/includes/do_php_hook.php" "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source" "$outline_file"
        ;;
     bash)
-      $docs_bash "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_root_dir/$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source" "$outline_file"
+      $docs_bash "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source" "$outline_file"
        ;;
     esac
 
@@ -263,8 +274,11 @@ function do_pre_hooks() {
     # Generate an outline from the file structure.
     if [[ ! "$docs_outline_file" ]]; then
         # Create $docs_outline_auto from the file contents
-        $docs_php "$CORE/includes/files_to_json.inc" "$docs_source_path" "$docs_cache_dir/source" "$docs_cache_dir/$docs_outline_auto" "$docs_source_dir/$docs_outline_merge"
-
+        result=$($docs_php "$CORE/includes/files_to_json.inc" "$docs_source_path" "$docs_cache_dir/source" "$docs_cache_dir/$docs_outline_auto" "$docs_source_dir/$docs_outline_merge")
+        if [[ $? -ne 0 ]]; then
+          echo_red "$result" && exit
+        fi
+        echo $result
         docs_outline_file="$docs_cache_dir/$docs_outline_auto"
     fi
 
@@ -395,5 +409,42 @@ function ensure_pattern_directory() {
     if [[ "${path:0:1}" != '/' ]]; then
         path="$docs_root_dir/$path"
     fi
-    [ -e "$path" ] || rsync -a "$CORE/install/patterns/$install_dir/" "$path"
+    [[ -e "$path" ]] || rsync -a "$CORE/install/patterns/$install_dir/" "$path"
+}
+
+
+function has_option() {
+  for var in "${user_cli_options[@]}"; do
+    if [[ "$var" =~ $1 ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+function get_option() {
+  for var in "${user_cli_options[@]}"; do
+    if [[ "$var" =~ ^(.*)\=(.*) ]] && [ ${BASH_REMATCH[1]} == $1 ]; then
+      echo ${BASH_REMATCH[2]}
+      return
+    fi
+  done
+  echo $2
+}
+
+# Resolve a path to an absolute link; if already absolute, do nothing.
+#
+# $1 - The dirname to use if $2 is not absolute
+# $2 - The path to make absolute if not starting with /
+#
+# Returns nothing
+function path_resolve() {
+    local dirname="${1%/}"
+    local path="$2"
+
+    [[ "${path:0:1}" != '/' ]] && path="$dirname/$path"
+    [ ! -e $path ] && echo $path && return
+
+    # If it exists, we will echo the real path.
+    echo "$(cd $(dirname $path) && pwd)/$(basename $path)"
 }

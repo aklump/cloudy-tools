@@ -10,29 +10,6 @@
             "title": "Bash"
         }
     ],
-    "sections": [
-        {
-            "id": "readme"
-        },
-        {
-            "id": "configuration"
-        },
-        {
-            "id": "conventions"
-        },
-        {
-            "id": "api"
-        },
-        {
-            "id": "testing"
-        },
-        {
-            "id": "packages"
-        },
-        {
-            "id": "events"
-        }
-    ],
     "settings": {
         "search": "tipuesearch"
     }

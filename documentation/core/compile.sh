@@ -10,6 +10,16 @@ CORE="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 source $CORE/functions.sh
 process_start=$(date +%s)
 
+# Load in our user CLI options so we can use: has_option and get_option.
+# This is shim for Cloudy forthcoming.
+declare -a user_cli_options=();
+for arg in "$@"; do
+  if [[ "$arg" =~ ^--(.*) ]]; then
+    user_cli_options=("${user_cli_options[@]}" "${BASH_REMATCH[1]}")
+  fi
+done
+
+
 # Pull in config vars
 installing=0
 load_config
@@ -95,8 +105,10 @@ files=("${generated[@]}" "${files[@]}")
 # Copy over files in the tmp directory, but compile anything with a .md
 # extension as it goes over; this is our baseline html that we will further
 # process for the intended audience.
+echo -n "Processing files"
 for file in ${files[@]}; do
   if [ -f "$file" ]; then
+    echo -n "."
     basename=${file##*/}
     extension=".${file##*.}"
     filename="${basename%%.*}"
@@ -109,9 +121,16 @@ for file in ${files[@]}; do
     # Process markdown files, markdown.php will handle the twig processing if the suffix is $docs_twig_preprocess_extension.
     if [ "$extension" == "$docs_partial_extension" ]; then
         if [ "$docs_partial_extension" == "$docs_markdown_extension" ]; then
-            $docs_php "$CORE/markdown.php" "$file" "$docs_tmp_dir" "$docs_source_path" "$docs_twig_preprocess_extension" "$docs_cache_dir/source:$docs_tmp_dir:$docs_source_path" "$CORE/cache/source" "$CORE/cache/outline.auto.json"
+            markdown_result=$($docs_php "$CORE/markdown.php" "$file" "$docs_tmp_dir" "$docs_source_path" "$docs_twig_preprocess_extension" "$docs_cache_dir/source:$docs_tmp_dir:$docs_source_path" "$CORE/cache/source" "$CORE/cache/outline.auto.json" "$docs_markdown_extension")
+            if [[ $? -ne 0 ]]; then
+              echo $markdown_result;
+              exit 1;
+            fi
         else
-            $docs_php "$CORE/includes/cp_no_frontmatter.php" $file $docs_tmp_dir/$filename.html
+            cp_result=$($docs_php "$CORE/includes/cp_no_frontmatter.php" "$file" "$docs_tmp_dir/$filename.html" "$docs_source_path" "$CORE/cache/source" "$CORE/cache/outline.auto.json")
+            if [[ $? -ne 0 ]]; then
+              echo $cp_result
+            fi
         fi
 
     # CSS files pass through to the website and html dir
@@ -152,7 +171,7 @@ for file in ${files[@]}; do
       _check_file "$docs_website_dir/$basename"
     fi
 
-  elif [ -d "$file" ]; then
+  elif [[ -d "$file" ]]; then
     basename=${file##*/}
     echo "Copying directory $basename..."
     if ! is_disabled "drupal"; then
@@ -166,11 +185,15 @@ for file in ${files[@]}; do
     fi
   fi
 done
+echo ''
+
 
 # Iterate over all html files and implement theme; then iterate over all html
 # files and send to drupal and website
+echo -n "Converting to HTML"
 for file in "$docs_tmp_dir"/*.html; do
-  if [ -f "$file" ]; then
+  if [[ -f "$file" ]]; then
+    echo -n "."
     basename=${file##*/}
     basename=$(echo $basename | sed 's/\.html$//g')
     html_file="$basename.html"
@@ -214,6 +237,7 @@ for file in $docs_tpl_dir/*.css; do
     _check_file "$docs_website_dir/$basename"
   fi
 done
+echo ''
 
 # Drupal likes to have a README.txt file in the module root directory; this
 # little step facilitates that need. It also supports other README type
@@ -233,7 +257,10 @@ if [ "$docs_README" ]; then
             _check_file "$output"
         fi
     elif echo "$readme_file" | grep -q $docs_markdown_extension$; then
-        $docs_php "$CORE/includes/cp_no_frontmatter.php" "$docs_source_dir/$readme_file" "$output"
+        cp_result=$($docs_php "$CORE/includes/cp_no_frontmatter.php" "$docs_source_dir/$readme_file" "$output" "$docs_source_path" "$CORE/cache/source" "$CORE/cache/outline.auto.json")
+        if [[ $? -ne 0 ]]; then
+          echo $cp_result
+        fi
         _check_file "$output"
     fi
 
@@ -255,16 +282,20 @@ if [ "$docs_CHANGELOG" ]; then
             _check_file "$output"
         fi
     elif echo "$changelog_file" | grep -q $docs_markdown_extension$; then
-        $docs_php "$CORE/includes/cp_no_frontmatter.php" "$docs_source_dir/$changelog_file" "$output"
+        cp_result=$($docs_php "$CORE/includes/cp_no_frontmatter.php" "$docs_source_dir/$changelog_file" "$output" "$docs_source_path" "$CORE/cache/source" "$CORE/cache/outline.auto.json")
+        if [[ $? -ne 0 ]]; then
+          echo $cp_result
+        fi
         _check_file "$output"
     fi
   done
 fi
 
+echo ''
 do_plugin_handler $docs_plugins_tpl post
 
 # Provide search support
-$docs_php "$CORE/includes/search.inc" "$docs_outline_file" "$CORE" "$docs_root_dir" "$docs_root_dir/$docs_website_dir" "$docs_root_dir/$docs_source_dir"
+$docs_php "$CORE/includes/search.inc" "$docs_outline_file" "$CORE" "$docs_root_dir" "$docs_website_dir" "$docs_root_dir/$docs_source_dir"
 
 # Cleanup dirs that are not enabled or were temp.
 for var in "${dirs_to_delete[@]}"; do
