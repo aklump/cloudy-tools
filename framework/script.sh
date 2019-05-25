@@ -11,7 +11,7 @@ CONFIG="__CONFIG";
 # Uncomment this line to enable file logging.
 #LOGFILE="__FILENAME.log"
 
-# TODO: Event handlers and other functions go here or source another file.
+# TODO: Event handlers and other functions go here or register one or more includes in "additional_bootstrap".
 
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/cloudy/cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
