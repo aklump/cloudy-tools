@@ -2,3 +2,4 @@ aklump/perms https://raw.githubusercontent.com/aklump/website-perms/master/cloud
 aklump/install https://raw.githubusercontent.com/aklump/website-install/master/cloudypm.yml
 aklump/link_checker https://raw.githubusercontent.com/aklump/link_checker/master/cloudypm.yml
 aklump/post_commit https://raw.githubusercontent.com/aklump/post_commit/master/cloudypm.yml
+aklump/htaccess https://raw.githubusercontent.com/aklump/website-htaccess/master/cloudypm.yml
