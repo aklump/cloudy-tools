@@ -3,3 +3,4 @@ aklump/install https://raw.githubusercontent.com/aklump/website-install/master/c
 aklump/link_checker https://raw.githubusercontent.com/aklump/link_checker/master/cloudypm.yml
 aklump/post_commit https://raw.githubusercontent.com/aklump/post_commit/master/cloudypm.yml
 aklump/htaccess https://raw.githubusercontent.com/aklump/website-htaccess/master/cloudypm.yml
+aklump/backup https://raw.githubusercontent.com/aklump/website_backup/master/cloudypm.yml
