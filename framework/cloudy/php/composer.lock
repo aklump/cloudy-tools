@@ -54,16 +54,16 @@
         },
         {
             "name": "aklump/loft-lib",
-            "version": "1.0.20",
+            "version": "1.0.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aklump/loft-lib.git",
-                "reference": "0a8fe496595e520ff19ec99b2e9a977a141a9834"
+                "reference": "e3d8e56fca6492af6ffa54eb97bcb02074eaee6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aklump/loft-lib/zipball/0a8fe496595e520ff19ec99b2e9a977a141a9834",
-                "reference": "0a8fe496595e520ff19ec99b2e9a977a141a9834",
+                "url": "https://api.github.com/repos/aklump/loft-lib/zipball/e3d8e56fca6492af6ffa54eb97bcb02074eaee6f",
+                "reference": "e3d8e56fca6492af6ffa54eb97bcb02074eaee6f",
                 "shasum": ""
             },
             "require": {
@@ -71,6 +71,9 @@
                 "illuminate/support": "5.4.36",
                 "php": ">=5.6",
                 "ralouphie/mimey": "~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6"
             },
             "type": "library",
             "autoload": {
@@ -89,7 +92,7 @@
                 }
             ],
             "description": "Core utilities provided by In the Loft Studios",
-            "time": "2019-02-23T02:16:04+00:00"
+            "time": "2019-06-19T18:02:23+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -472,7 +475,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.4.27",
+            "version": "v3.4.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
