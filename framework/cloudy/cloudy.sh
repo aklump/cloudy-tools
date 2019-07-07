@@ -1042,7 +1042,6 @@ function exit_with_failure_if_config_is_not_path() {
         variable="$parse_args__options__as"
     fi
 
-    local code=$(echo_blue "eval \$(get_config_path \"$variable\")")
     local config_name=$(echo_blue "$config_path")
     local config_value="$(eval "echo \$$variable")"
 
@@ -1055,7 +1054,7 @@ function exit_with_failure_if_config_is_not_path() {
 }
 
 ##
- # Checks for a non-empty variable in memory or exist with failure.
+ # Checks for a non-empty variable in memory or exit with failure.
  #
  # Asks the user to add to their configuration filepath.
  #
@@ -1065,19 +1064,32 @@ function exit_with_failure_if_config_is_not_path() {
  #   If the configuration has been renamed, send the memory var name --as=varname.
  #
 function exit_with_failure_if_empty_config() {
+    local variable=$1
+
     parse_args "$@"
     if [[ "$parse_args__options__status" ]]; then
       CLOUDY_EXIT_STATUS=$parse_args__options__status
     fi
-    local variable=${1//./_}
+
+    local code
+    local value
+    local error
+
     if [[ "$parse_args__options__as" ]]; then
-        variable="$parse_args__options__as"
+      code="eval \$(get_config_as \"$parse_args__options__as\" \"$variable\")"
+      error="\"$variable\" as \"$parse_args__options__as\""
+      value="$(eval "echo \$$parse_args__options__as")"
+    else
+      code="eval \$(get_config \"$variable\")"
+      error="\"$variable\""
+      value="$(eval "echo \$${variable//./_}")"
     fi
 
-    local code=$(echo_blue "eval \$(get_config_path \"$variable\")")
-    local config_name=$(echo_blue "$variable")
+    if [[ ! "$value" ]]; then
+      write_log_error "Missing configuration value.  Trying to use $error. Has it been set in config? Is it being read into memory? e.g. $code"
+      exit_with_failure "Failed due to missing configuration; please add \"$variable\"."
+    fi
 
-    [[ ! "$(eval "echo \$$variable")" ]] && exit_with_failure "Failed due to missing configuration; please add $config_name $(echo_red "to your configuration in $CONFIG.  Also, make sure it is being read into memory with") $code"
     return 0
 }
 
