@@ -1,5 +1,32 @@
 #!/usr/bin/env bash
 
+function testYamlSetAndGetWorkAsExpected() {
+  yaml_set $'echo: eggplant\nfoxtrot: fig'
+  assert_same $'echo: eggplant\nfoxtrot: fig' "$(yaml_get)"
+  assert_same "{\"echo\":\"eggplant\",\"foxtrot\":\"fig\"}" "$(yaml_get_json)"
+}
+
+function testYamlAddLineOnNoContentWorksCorrectly() {
+  yaml_clear
+  yaml_add_line "delta: daikon"
+  assert_same $'delta: daikon' "$(yaml_get)"
+  assert_same "{\"delta\":\"daikon\"}" "$(yaml_get_json)"
+}
+
+function testYamlAddLineAppendsToExistingContent() {
+  yaml_set $'alpha: apple\nbravo: banana'
+  yaml_add_line "charlie: carrot"
+  assert_same $'alpha: apple\nbravo: banana\ncharlie: carrot' "$(yaml_get)"
+  assert_same "{\"alpha\":\"apple\",\"bravo\":\"banana\",\"charlie\":\"carrot\"}" "$(yaml_get_json)"
+}
+
+function testYamlClearEmptiesTheYamlValues() {
+  yaml_set $'alpha: apple\nbravo: banana'
+  yaml_clear
+  yaml_add_line "charlie: carrot"
+  assert_same $'charlie: carrot' "$(yaml_get)"
+  assert_same "{\"charlie\":\"carrot\"}" "$(yaml_get_json)"
+}
 
 function testGetConfigPathAsOnIndexedArrayMakesAllElementsRealPaths() {
     eval $(get_config_path_as "fish" -a 'tests.paths_indexed')

@@ -43,6 +43,26 @@ function array_sort_by_item_length() {
 }
 
 /**
+ * Convert a YAML string to a JSON string.
+ *
+ * @return string
+ *   The valid YAML string.
+ *
+ * @throws \RuntimeException
+ *   If the YAML cannot be parsed.
+ */
+function yaml_to_json($yaml) {
+  if (empty($yaml)) {
+    return '{}';
+  }
+  elseif (!($data = Yaml::parse($yaml))) {
+    throw new \RuntimeException("Unable to parse invalid YAML string.");
+  }
+
+  return json_encode($data);
+}
+
+/**
  * Load a configuration file into memory.
  *
  * @param $filepath

@@ -438,11 +438,6 @@ function has_command_args() {
     return 1
 }
 
-##
-
- #
-
-
 # Return a operation argument by zero-based index key.
 #
 # $1 - int The index of the argument
@@ -1636,6 +1631,64 @@ function echo_slim_table() {
 # Returns nothing.
 function echo_table() {
     _cloudy_echo_aligned_columns --lpad=1 --top="-" --lborder="|" --mborder="|" --rborder="|"
+}
+
+# Empties the YAML string from earlier builds, making ready anew.
+#
+# Returns 0.
+function yaml_clear() {
+  yaml_content=''
+  return 0
+}
+
+# Add a line to our YAML data.
+#
+# $1 - string
+#   A complete line with proper indents.
+#
+# Returns 0.
+function yaml_add_line() {
+  local line="$1"
+
+  if [[ ! "$yaml_content" ]]; then
+    yaml_content=$(printf '%s\n' "$line")
+  else
+    yaml_content=$(printf '%s\n' "$yaml_content" "$line")
+  fi
+
+  return 0
+}
+
+yaml_content=''
+# Sets the value of the YAML string.
+#
+# You can use this to convert YAML to JSON:
+#   yaml_set "$yaml"
+#   json=$(yaml_get_json)
+#
+# $1 - string
+#   The YAML value to set.
+#
+# Returns 0
+function yaml_set() {
+  yaml_content="$1"
+  return 0
+}
+
+# Echos the YAML string as YAML.
+#
+# Returns 0
+function yaml_get() {
+  echo "$yaml_content"
+}
+
+# Echos the YAML string as JSON.
+#
+# Returns 0
+function yaml_get_json() {
+  local yaml="$1"
+
+  echo $(php "$CLOUDY_ROOT/php/helpers.php" "yaml_to_json" "$yaml_content")
 }
 
 #
