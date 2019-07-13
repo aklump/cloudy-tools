@@ -127,6 +127,11 @@
       <a href="#write_log_info">write_log_info</a>
       <a href="#write_log_notice">write_log_notice</a>
       <a href="#write_log_warning">write_log_warning</a>
+      <a href="#yaml_add_line">yaml_add_line</a>
+      <a href="#yaml_clear">yaml_clear</a>
+      <a href="#yaml_get">yaml_get</a>
+      <a href="#yaml_get_json">yaml_get_json</a>
+      <a href="#yaml_set">yaml_set</a>
   </div>
 
 <h2>Cloudy Test Functions</h2>
@@ -714,7 +719,7 @@ You must add items to your list first:<br />
         
       <a name="exit_with_failure_if_empty_config"></a>
     <h2>exit_with_failure_if_empty_config()</h2>
-    <p class="summary">Checks for a non-empty variable in memory or exist with failure.</p>
+    <p class="summary">Checks for a non-empty variable in memory or exit with failure.</p>
     
         
         <pre><code>Asks the user to add to their configuration filepath.<br />
@@ -1216,9 +1221,10 @@ string_split__array<br />
         
         <pre><code>If you do not provide $1 then a new temporary directory is created each time<br />
 you call tempdir.  If you do provide $1 and call tempdir more than once with<br />
-the same value for $1, the same directory will be returned each time--a<br />
-shared directory within the system&#039;s temporary filesystem with the name<br />
-passed as $1.</code></pre>
+the same value for $1, the same directory will be returned each time--a shared<br />
+directory within the system&#039;s temporary filesystem with the name passed as $1.<br />
+It is a common pattern to pass $CLOUDY_NAME as the argument as this will<br />
+create a folder based on the name of your script.</code></pre>
         
       <a name="test_fail_because"></a>
     <h2>test_fail_because()</h2>
@@ -1396,6 +1402,47 @@ passed as $1.</code></pre>
             </ul>
         
         
+      <a name="yaml_add_line"></a>
+    <h2>yaml_add_line()</h2>
+    <p class="summary">Add a line to our YAML data.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string</li>
+                          </ul><ul class="function-list__return"><li>Returns 0.</li>
+            </ul>
+        
+        
+      <a name="yaml_clear"></a>
+    <h2>yaml_clear()</h2>
+    <p class="summary">Empties the YAML string from earlier builds, making ready anew.</p>
+    
+        
+        
+      <a name="yaml_get"></a>
+    <h2>yaml_get()</h2>
+    <p class="summary">Echos the YAML string as YAML.</p>
+    
+        
+        
+      <a name="yaml_get_json"></a>
+    <h2>yaml_get_json()</h2>
+    <p class="summary">Echos the YAML string as JSON.</p>
+    
+        
+        
+      <a name="yaml_set"></a>
+    <h2>yaml_set()</h2>
+    <p class="summary">Sets the value of the YAML string.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string</li>
+                          </ul><ul class="function-list__return"><li>Returns 0</li>
+            </ul>
+        
+        <pre><code>You can use this to convert YAML to JSON:<br />
+  yaml_set &quot;$yaml&quot;<br />
+  json=$(yaml_get_json)</code></pre>
+        
   </div>
 </section></section>
 
@@ -1406,7 +1453,7 @@ passed as $1.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0.35 &bull; Last Updated: Sat, 06 Jul 2019 21:13:44 -0700</p>
+    <p class="legaleeze center">Version: 1.0.36 &bull; Last Updated: Sat, 13 Jul 2019 13:25:54 -0700</p>
   </div>
 </footer>
 
