@@ -57,6 +57,7 @@ Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariab
 
 | varname | description |
 |----------|----------|
+| `$CLOUDY_NAME` | Machine name of your script.  |
 | `$ROOT` | The directory containing your script. |
 | `$SCRIPT` | Absolute path to your script.  |
 | `$CONFIG` | Absolute path to the base config file. |
