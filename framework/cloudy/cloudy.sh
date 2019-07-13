@@ -1387,9 +1387,10 @@ fi
 #
 # If you do not provide $1 then a new temporary directory is created each time
 # you call tempdir.  If you do provide $1 and call tempdir more than once with
-# the same value for $1, the same directory will be returned each time--a
-# shared directory within the system's temporary filesystem with the name
-# passed as $1.
+# the same value for $1, the same directory will be returned each time--a shared
+# directory within the system's temporary filesystem with the name passed as $1.
+# It is a common pattern to pass $CLOUDY_NAME as the argument as this will
+# create a folder based on the name of your script.
 #
 # $1 - string An optional directory name to use.
 #
@@ -1642,4 +1643,4 @@ function echo_table() {
 #
 
 # Begin Cloudy Core Bootstrap
-SCRIPT="$s";ROOT="$r";WDIR="$PWD";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;CLOUDY_ROOT="$(cd -P "$(dirname "$s")" && pwd)";source "$CLOUDY_ROOT/inc/cloudy.core.sh" || exit_with_failure "Missing cloudy/inc/cloudy.core.sh"
+SCRIPT="$s";CLOUDY_NAME="$(path_filename $SCRIPT)";ROOT="$r";WDIR="$PWD";s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;CLOUDY_ROOT="$(cd -P "$(dirname "$s")" && pwd)";source "$CLOUDY_ROOT/inc/cloudy.core.sh" || exit_with_failure "Missing cloudy/inc/cloudy.core.sh"
