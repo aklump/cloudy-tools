@@ -15,33 +15,37 @@ use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 
 require_once __DIR__ . '/bootstrap.php';
-$filepath_to_schema_file = $argv[2];
-$filepath_to_config_file = $argv[3];
-$skip_config_validation = $g->get($argv, 4, FALSE) === 'true';
-$runtime = array_filter(explode("\n", trim($g->get($argv, 5, ''))));
+$filepath_to_schema_file = $argv[1];
+$filepath_to_config_file = getenv('CONFIG');
+$skip_config_validation = $g->get($argv, 2, FALSE) === 'true';
+$runtime = array_filter(explode("\n", trim($g->get($argv, 3, ''))));
 try {
   $data = [
     '__cloudy' => [
+      'CLOUDY_NAME' => getenv('CLOUDY_NAME'),
       'ROOT' => ROOT,
-      'CLOUDY_ROOT' => CLOUDY_ROOT,
+      'SCRIPT' => realpath(getenv('SCRIPT')),
+      'CONFIG' => $filepath_to_config_file,
+      'WDIR' => getenv('WDIR'),
+      'LOGFILE' => getenv('LOGFILE'),
     ],
   ];
   $data += load_configuration_data($filepath_to_config_file);
-  $merge_config = $runtime;
-  if ($additional_config = $g->get($data, 'additional_config', [])) {
-    $merge_config = array_merge($additional_config, $runtime);
-  }
-  foreach ($merge_config as $path) {
-    $path = preg_replace('/^~\//', $_SERVER['HOME'] . '/', $path);
-    $path = strpos($path, '/') !== 0 ? ROOT . "/$path" : $path;
-    try {
-      $additional_data = load_configuration_data($path);
-      $data = merge_config($data, $additional_data);
-    }
-    catch (\Exception $exception) {
-      // Purposefully left blank because we will allow missing additional
-      // configuration files.  This will happen if the app allows for a home
-      // directory config file, this should be optional and not throw an error.
+  $_config_path_base = $data['config_path_base'] ?? '';
+  $merge_config = array_filter(array_merge($runtime, $g->get($data, 'additional_config', [])));
+  foreach ($merge_config as $path_or_glob) {
+    $paths = _cloudy_realpath($path_or_glob);
+    foreach ($paths as $path) {
+      try {
+        $additional_data = load_configuration_data($path);
+        $data = merge_config($data, $additional_data);
+      }
+      catch (\Exception $exception) {
+        // Purposefully left blank because we will allow missing additional
+        // configuration files.  This will happen if the app allows for a home
+        // directory config file, this should be optional and not throw an
+        // error.
+      }
     }
   }
 
@@ -61,7 +65,7 @@ try {
     throw new $class("Configuration syntax error in \"" . basename($filepath_to_config_file) . '": ' . $exception->getMessage());
   }
 
-  echo json_encode($data);
+  echo json_encode($data, JSON_UNESCAPED_SLASHES);
   exit(0);
 }
 catch (\Exception $exception) {

@@ -5,7 +5,7 @@
 Configuration files are YAML or JSON.  They are connected to your script in one, two, or three ways.
 
 1. The main configuration file is required and is hardcoded in your script as `$CONFIG`.
-1. Within that file, you may indicate additional configuration files using the key `additional_config`.
+1. Within that file, you may indicate additional configuration files using the key `additional_config`, which defines an array.  Be aware that these paths are relative to `config_path_base`, see below for more info.
 1. Finally, configuration files may be provided dynamically at run time listening to the event `compile_config`.
 
 If configuration values conflict, those that came later will take prescendence; note: arrays will be merged.
