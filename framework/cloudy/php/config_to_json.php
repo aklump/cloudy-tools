@@ -31,8 +31,11 @@ try {
     ],
   ];
   $data += load_configuration_data($filepath_to_config_file);
-  $_config_path_base = $data['config_path_base'] ?? '';
-  $merge_config = array_filter(array_merge($runtime, $g->get($data, 'additional_config', [])));
+  $_config_path_base = isset($data['config_path_base']) ? $data['config_path_base'] : '';
+  $merge_config = $runtime;
+  if ($additional_config = $g->get($data, 'additional_config', [])) {
+    $merge_config = array_merge($additional_config, $runtime);
+  }
   foreach ($merge_config as $path_or_glob) {
     $paths = _cloudy_realpath($path_or_glob);
     foreach ($paths as $path) {
