@@ -931,6 +931,11 @@ function exit_with_cache_clear() {
 function exit_with_help() {
     local help_command=$(_cloudy_get_master_command "$1")
 
+    ## Print out the version string only.
+    if has_option "version"; then
+      echo $(get_version) && exit_with_success_code_only
+    fi
+
     # Focused help_command, show info about single command.
     if [[ "$help_command" ]]; then
         _cloudy_validate_command $help_command || exit_with_failure "No help for that!"

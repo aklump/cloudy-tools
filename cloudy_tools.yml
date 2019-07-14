@@ -20,6 +20,10 @@ commands:
     help: 'Install cloudy core only, in the current directory.  This is similar to "new" but it doesn''t create the script and configuration files.'
   help:
     help: 'Show this help screen.'
+    options:
+      version:
+        help: "Display the current version"
+        type: boolean
   clear-cache:
     aliases: [clearcache, cc]
     help: 'Clear the Cloudy Tools caches.'
