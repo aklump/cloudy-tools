@@ -10,6 +10,9 @@ function _cloudypm_install_package() {
 
     ! [[ "$package" ]] && fail_because "Missing package name, e.g. \"aklump/perms\"." && return 1
 
+    # Make sure cloudy/cloudy is up-to-date.
+    ! _cloudypm_update_cloudy && fail_because "Failed to update cloudy/cloudy." && return 1
+
     _cloudypm_load_and_validate_package $package|| return 1
     echo_heading "Package located, installing..."
 
