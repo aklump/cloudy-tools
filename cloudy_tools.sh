@@ -78,9 +78,10 @@ case $command in
         source "$ROOT/inc/cloudy.pm.sh"
         echo_title "Package Updater"
         package=$(get_command_arg 0)
-        _cloudypm_update_package $package
-        has_failed && exit_with_failure "Could not update \"$package\"."
-        exit_with_success_elapsed "$package was updated to version $_cloudypm_update_package__new_version."
+        _cloudypm_update_package "$package" || fail
+        has_failed && [[ "$package" ]] && exit_with_failure "Could not update \"$package\"."
+        has_failed && exit_with_failure "Nothing updated."
+        exit_with_success_elapsed "Update process complete."
         ;;
 
     "pm-install")
@@ -177,10 +178,10 @@ case $command in
 
             # Convert YAML config files to JSON, if necessary.
             if has_option "json"; then
-                echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudy_config.schema.json" "script.yml") > ${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
+                echo $(php $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "script.yml") > ${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
                 [ $? -eq 0 ] && rm script.yml
 
-                echo $(php $CLOUDY_ROOT/php/config_to_json.php "$ROOT" "$CLOUDY_ROOT/cloudy_config.schema.json" "$WDIR/script.example.yml") > script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
+                echo $(php $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "$WDIR/script.example.yml") > script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
                 [ $? -eq 0 ] && rm script.example.yml
             else
                 mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."

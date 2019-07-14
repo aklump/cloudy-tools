@@ -804,7 +804,7 @@ _cloudy_auto_purge_config
 # Generate the cached configuration file.
 if [[ ! -f "$CACHED_CONFIG_JSON_FILEPATH" ]]; then
     # Normalize the config file to JSON.
-    CLOUDY_CONFIG_JSON="$(php "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudy_config.schema.json" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
+    CLOUDY_CONFIG_JSON="$(php "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
     json_result=$?
     [[ "$CLOUDY_CONFIG_JSON" ]] || exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
     [[ $json_result -ne 0 ]] && exit_with_failure "$CLOUDY_CONFIG_JSON"
