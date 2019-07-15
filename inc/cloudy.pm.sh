@@ -29,7 +29,6 @@ function _cloudypm_install_package() {
 
     [ -d "$package_destination_dir" ] && fail_because "Package already installed." && return 1
 
-
     # Install the package
     [ ! -d "$(dirname $package_destination_dir)" ] && mkdir -p $(dirname $package_destination_dir)
     (cd $(dirname $package_destination_dir) && git clone "$cloudypm___clone_from" "$package_basename" >/dev/null 2>&1 && rm -rf $package_destination_dir/.git) && echo_green "$LI Downloaded package version $cloudypm___version."
@@ -68,13 +67,13 @@ function _cloudypm_load_package_info() {
 
     # Download YAML and convert to cached BASH.
     if [[ ! -f "$cached_info" ]]; then
-        local cache_info_yml=${cached_info/.sh/.yml}
+        local path_to_package_yml=${cached_info/.sh/.yml}
         url=$(url_add_cache_buster "$url")
-        curl -o "$cache_info_yml" --create-dirs "$url" >/dev/null 2>&1 || fail_because "Cannot download $url"
-        json=$(php "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudypm_info.schema.json" "$cache_info_yml")
-        write_log_debug "$json"
+        curl -o "$path_to_package_yml" --create-dirs "$url" >/dev/null 2>&1 || fail_because "Cannot download $url"
+        json=$(php "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudypm_info.schema.json" "$path_to_package_yml")
         json_result=$?
-        rm $cache_info_yml
+        write_log_debug "$json"
+        rm $path_to_package_yml
         [[ $json_result -gt 0 ]] && fail_because "Cannot convert package info to JSON." && return 1
         php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "cloudypm" "$json" > "$cached_info"
         source $cached_info || return 1
@@ -115,11 +114,18 @@ function _cloudypm_update_cloudy() {
   return 0
 }
 
+# Update one or more packages.
+#
+# $1 - string
+#   Optional. The package name, e.g. aklump/perms.  If omitted the option to
+#   update all packages.
+#
+# Returns 0 if successful.
 function _cloudypm_update_package() {
     local package="$1"
 
     # If package is not given, then they might want to update all
-    ! [[ "$package" ]] && ! confirm --caution "Update all installed packages?" && fail_because "For single package update include the package name, e.g. \"aklump/perms\"." && return 1
+    ! [[ "$package" ]] && ! has_option yes && ! confirm --caution "Update all installed packages?" && fail_because "For single package update include the package name, e.g. \"aklump/perms\"." && return 1
 
     # Updating cloudy/cloudy or cloudy is a different process.
     if [[ "$package" == "cloudy" ]] || [[ "$package" == "cloudy/cloudy" ]]; then
@@ -127,35 +133,46 @@ function _cloudypm_update_package() {
       return 0
     fi
 
-    # Proceed with single package.
-    local package_destination_dir="$WDIR/opt/$package"
-    ! [[ -d "$package_destination_dir" ]] && fail_because "Package is not installed; try pm-install $package" && return 1
+    declare -a packages=()
+    if ! [[ "$package" ]]; then
+      _cloudypm_get_installed_packages
+      packages=("${_cloudypm_get_installed_packages__array[@]}")
+    else
+      packages=("$package");
+    fi
 
     # Make sure cloudy/cloudy is up-to-date.
     ! _cloudypm_update_cloudy && fail_because "Failed to update cloudy/cloudy." && return 2
 
-    ## Now update package.
-    _cloudypm_load_and_validate_package $package|| return 1
-    echo_heading "Package located, updating..."
-    local package_destination_dir="$WDIR/opt/$package"
-    local package_basename=$(basename $package_destination_dir)
-    local stash=$(tempdir)
+    for package in "${packages[@]}"; do
 
-    (cd "$stash" && git clone "$cloudypm___clone_from" repo)
-    [[ $? -ne 0 ]] && fail_because "Could not download new version." && return 1
-    echo_heading "New version downloaded."
-    rsync -a --delete --exclude=.git* "$stash/repo/" "$package_destination_dir/" || return 1
-    [[ "$stash" ]] && [[ -d "$stash" ]] && rm -rf "$stash"
-    [[ $? -ne 0 ]] && fail_because "Could not replace current version." && return 1
-    echo_heading "Local package replaced."
+      # Proceed with single package.
+      local package_destination_dir="$WDIR/opt/$package"
+      ! [[ -d "$package_destination_dir" ]] && fail_because "Package is not installed; try pm-install $package" && return 1
 
-    if [[ "$cloudypm___on_update" ]]; then
-        [[ "$cloudypm___symlink" ]] || cloudypm___symlink="$(path_filename $cloudypm___entry_script)"
-        local symlink="$WDIR/bin/$cloudypm___symlink"
-        cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_update" || fail_because "The command $cloudypm___on_update failed."
-    fi
-    _cloudypm_update_lock_file $package
-    succeed_because "$package is at version $cloudypm___version."
+      ## Now update package.
+      _cloudypm_load_and_validate_package $package|| return 1
+      echo_heading "$(echo_green "Package \"$package\" located.")"
+      local package_destination_dir="$WDIR/opt/$package"
+      local package_basename=$(basename $package_destination_dir)
+      local stash=$(tempdir)
+
+      (cd "$stash" && git clone "$cloudypm___clone_from" repo)
+      [[ $? -ne 0 ]] && fail_because "Could not download new version." && return 1
+      echo_heading "New version downloaded."
+      rsync -a --delete --exclude=.git* "$stash/repo/" "$package_destination_dir/" || return 1
+      [[ "$stash" ]] && [[ -d "$stash" ]] && rm -rf "$stash"
+      [[ $? -ne 0 ]] && fail_because "Could not replace current version." && return 1
+      echo_heading "Local package replaced."
+
+      if [[ "$cloudypm___on_update" ]]; then
+          [[ "$cloudypm___symlink" ]] || cloudypm___symlink="$(path_filename $cloudypm___entry_script)"
+          local symlink="$WDIR/bin/$cloudypm___symlink"
+          cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_update" || fail_because "The command $cloudypm___on_update failed."
+      fi
+      _cloudypm_update_lock_file $package
+      succeed_because "$package is at version $cloudypm___version."
+    done
 
     has_failed && return 1
     return 0
@@ -174,4 +191,23 @@ function _cloudypm_update_lock_file() {
     else
         echo "$replace" >> $lockfile
     fi
+}
+_cloudypm_get_installed_packages__array=()
+# Read the installed packages from cloudypm.lock
+#
+# Sets the value of _cloudypm_get_installed_packages__array
+#
+# Returns 0 if successful. 1 if not.
+function _cloudypm_get_installed_packages() {
+  local lockfile="$WDIR/cloudypm.lock"
+
+  ! [[ -f "$lockfile" ]] && fail_because "Installed packages are detemined by cloudypm.lock; file does not exist in $WDIR" && return 1
+
+  declare -a array=('value1' 'value2');
+  while read -r string_split__string || [[ -n "$line" ]]; do
+    string_split ':'
+    _cloudypm_get_installed_packages__array=("${_cloudypm_get_installed_packages__array[@]}" "${string_split__array[0]}")
+  done < $lockfile
+
+  return 0
 }
