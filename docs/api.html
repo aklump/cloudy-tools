@@ -98,6 +98,7 @@
       <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
       <a href="#path_relative_to_root">path_relative_to_root</a>
       <a href="#path_resolve">path_resolve</a>
+      <a href="#path_unresolve">path_unresolve</a>
       <a href="#string_lower">string_lower</a>
       <a href="#string_repeat">string_repeat</a>
       <a href="#string_split">string_split</a>
@@ -895,6 +896,7 @@ any chance that the return value will be empty.<br />
                             </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
+        <pre><code>Relative paths are made absolute using $APP_ROOT.</code></pre>
         
       <a name="get_config_path_as"></a>
     <h2>get_config_path_as()</h2>
@@ -907,6 +909,7 @@ any chance that the return value will be empty.<br />
                             </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
             </ul>
         
+        <pre><code>Relative paths are made absolute using $APP_ROOT.</code></pre>
         
       <a name="get_installed"></a>
     <h2>get_installed()</h2>
@@ -1115,10 +1118,20 @@ The following variables are generated for:<br />
     <p class="summary">Resolve a path to an absolute link; if already absolute, do nothing.</p>
     
           Arguments: <ul class="function-list__arguments">
-              <li>$1: The direname to use if $2 is not absolute</li>
+              <li>$1: The dirname to use if $2 is not absolute</li>
               <li>$2: The path to make absolute if not starting with /</li>
                           </ul><ul class="function-list__return"><li>Returns nothing</li>
             </ul>
+        
+        
+      <a name="path_unresolve"></a>
+    <h2>path_unresolve()</h2>
+    <p class="summary">Echo a relative path by removing a leading directory(ies).</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The dirname to remove from the left of $2</li>
+              <li>$2: The path to make relative by removing $1, if possible.</li>
+                        </ul>
         
         
       <a name="string_lower"></a>
@@ -1453,7 +1466,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.1.1 &bull; Last Updated: Mon, 15 Jul 2019 10:40:59 -0700</p>
+    <p class="legaleeze center">Version: 1.1.2 &bull; Last Updated: Wed, 18 Sep 2019 20:25:41 -0700</p>
   </div>
 </footer>
 
