@@ -59,6 +59,7 @@ Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariab
 |----------|----------|
 | `$CLOUDY_NAME` | Machine name of your script.  |
 | `$ROOT` | The directory containing your script. |
+| `$APP_ROOT` | All relative configuration files use this as base.  [Learn more](@app_root) |
 | `$SCRIPT` | Absolute path to your script.  |
 | `$CONFIG` | Absolute path to the base config file. |
 | `$WDIR` | The working directory when script was initiated. |
