@@ -1334,6 +1334,19 @@ function path_resolve() {
     echo "$(cd $(dirname $path) && pwd)/$(basename $path)"
 }
 
+
+# Echo a relative path by removing a leading directory(ies).
+#
+# $1 - The dirname to remove from the left of $2
+# $2 - The path to make relative by removing $1, if possible.
+#
+function path_unresolve() {
+  local dirname="${1%/}"
+  local path="$2"
+
+  echo ${path#$dirname/}
+}
+
 # Determine if a path is absolute (begins with /) or not.
 #
 # $1 - The filepath to check
