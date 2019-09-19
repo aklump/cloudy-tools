@@ -533,6 +533,8 @@ function get_config_keys_as() {
 
 # Echo eval code for paths of a configuration item.
 #
+# Relative paths are made absolute using $APP_ROOT.
+#
 # $1 - The path to the config item, e.g. "files.private"
 # -a - If you are expecting an array
 #
@@ -548,6 +550,8 @@ function get_config_path() {
 }
 
 # Echo eval code for paths of a configuration item using custom var.
+#
+# Relative paths are made absolute using $APP_ROOT.
 #
 # $1 - The path to the config item, e.g. "files.private"
 # -a - If you are expecting an array
@@ -1315,7 +1319,7 @@ function path_relative_to_root() {
 
 # Resolve a path to an absolute link; if already absolute, do nothing.
 #
-# $1 - The direname to use if $2 is not absolute
+# $1 - The dirname to use if $2 is not absolute
 # $2 - The path to make absolute if not starting with /
 #
 # Returns nothing

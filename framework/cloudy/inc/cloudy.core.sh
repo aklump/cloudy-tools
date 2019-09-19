@@ -156,7 +156,7 @@ function _cloudy_get_config() {
     local file_list
     local config_path_base=${cloudy_config___config_path_base}
 
-    # Determine if we have an absolute relative path base or, if not prepent $ROOT.
+    # Determine if we have an absolute relative path base or, if not prepend $ROOT.
     [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
 
     # Remove trailing / for proper path construction.
@@ -852,6 +852,10 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 #
 # End caching setup
 #
+
+eval $(get_config config_path_base)
+APP_ROOT="$(realpath $ROOT/$config_path_base)"
+
 eval $(get_config -a additional_bootstrap)
 if [[ "$additional_bootstrap" != null ]]; then
     for include in "${additional_bootstrap[@]}"; do
