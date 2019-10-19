@@ -94,6 +94,7 @@
       <a href="#parse_args">parse_args</a>
       <a href="#path_extension">path_extension</a>
       <a href="#path_filename">path_filename</a>
+      <a href="#path_filesize">path_filesize</a>
       <a href="#path_is_absolute">path_is_absolute</a>
       <a href="#path_mtime">path_mtime</a>
       <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
@@ -914,7 +915,8 @@ any chance that the return value will be empty.<br />
     <p class="summary">Echo eval code for paths of a configuration item using custom var.</p>
     
           Arguments: <ul class="function-list__arguments">
-              <li>$1: The path to the config item, e.g. &quot;files.private&quot;</li>
+              <li>$1: The variable name to assign the value to.</li>
+              <li>$2: The path to the config item, e.g. &quot;files.private&quot;</li>
                     </ul>Options: <ul class="function-list__options">
                   <li>-a: If you are expecting an array</li>
                             </ul><ul class="function-list__return"><li>Returns 0 on success.</li>
@@ -1088,6 +1090,15 @@ The following variables are generated for:<br />
     <h2>path_filename()</h2>
     <p class="summary">Return the basename less the extension.</p>
     
+        
+        
+      <a name="path_filesize"></a>
+    <h2>path_filesize()</h2>
+    <p class="summary">Echo the size of a file.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The path to the file.</li>
+                        </ul>
         
         
       <a name="path_is_absolute"></a>
@@ -1477,7 +1488,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.1.4 &bull; Last Updated: Sat, 19 Oct 2019 11:45:36 -0700</p>
+    <p class="legaleeze center">Version: 1.1.5 &bull; Last Updated: Sat, 19 Oct 2019 14:06:47 -0700</p>
   </div>
 </footer>
 
