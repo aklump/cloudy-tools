@@ -5,3 +5,4 @@ aklump/post_commit https://raw.githubusercontent.com/aklump/post_commit/master/c
 aklump/htaccess https://raw.githubusercontent.com/aklump/website-htaccess/master/cloudypm.yml
 aklump/website_backup https://raw.githubusercontent.com/aklump/website_backup/master/cloudypm.yml
 aklump/website_benchmark https://raw.githubusercontent.com/aklump/website_benchmark/master/cloudypm.yml
+aklump/tm_ignore https://raw.githubusercontent.com/aklump/tm_ignore/master/cloudypm.yml
