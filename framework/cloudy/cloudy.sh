@@ -646,6 +646,15 @@ function echo_green() {
     _cloudy_echo_color 32 "$1" 0
 }
 
+# Echo a string with a green background.
+#
+# $1 - The string to echo.
+#
+# Returns nothing.
+function echo_green_highlight() {
+  _cloudy_echo_color 37 "$1" 1 42
+}
+
 # Echo a string with yellow text.
 #
 # $1 - The string to echo.
