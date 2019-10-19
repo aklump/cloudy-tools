@@ -553,7 +553,8 @@ function get_config_path() {
 #
 # Relative paths are made absolute using $APP_ROOT.
 #
-# $1 - The path to the config item, e.g. "files.private"
+# $1 - The variable name to assign the value to.
+# $2 - The path to the config item, e.g. "files.private"
 # -a - If you are expecting an array
 #
 # Returns 0 on success.
