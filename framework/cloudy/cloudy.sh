@@ -1368,6 +1368,14 @@ function path_is_absolute() {
     [[ "${path:0:1}" == '/' ]]
 }
 
+# Echo the size of a file.
+#
+# $1 - The path to the file.
+function path_filesize() {
+  local path="$1"
+
+  echo $(du -hs "$path" | cut -f1)
+}
 
 # Echo the last modified time of a file.
 #
