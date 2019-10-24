@@ -654,8 +654,15 @@ function testStringLower() {
     assert_same 'json' $(string_lower 'json')
 }
 
+function testPathExtensionOnDirectory() {
+    assert_same '' $(path_extension 'config')
+    assert_same '' $(path_extension '/foo/bar/config')
+}
+
 function testPathExtension() {
     assert_same 'json' $(path_extension 'config.json')
+    assert_same 'json' $(path_extension '/foo/bar/config.json')
+    assert_same 'twig' $(path_extension 'config.html.twig')
 }
 
 function testPathFilename() {

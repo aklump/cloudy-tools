@@ -1405,7 +1405,11 @@ function path_filename() {
 function path_extension() {
     local path=$1
 
-    echo "${path##*.}"
+    local extension="${path##*.}"
+    if [[ "$extension" == "$path" ]]; then
+      extension=""
+    fi
+    echo "$extension"
 }
 
 ##
