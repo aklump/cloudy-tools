@@ -164,7 +164,9 @@ function get_config_cache_id() {
 function _cloudy_realpath($path) {
   global $_config_path_base;
 
-  $path = preg_replace('/^~\//', $_SERVER['HOME'] . '/', $path);
+  if (!empty($_SERVER['HOME'])) {
+    $path = preg_replace('/^~\//', rtrim($_SERVER['HOME'], '/') . '/', $path);
+  }
   if (!empty($path) && substr($path, 0, 1) !== '/') {
     $path = ROOT . '/' . "$_config_path_base/$path";
   }
