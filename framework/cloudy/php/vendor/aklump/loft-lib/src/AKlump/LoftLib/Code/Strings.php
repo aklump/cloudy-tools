@@ -236,5 +236,24 @@ class Strings {
     return substr($text, 0, $wordSplit) . $breakChar . substr($text, $wordSplit + 1);
   }
 
+  /**
+   * Removes characters from right so that the $text ends with sentence stop.
+   *
+   * You can use this after truncating a paragraph to make sure that the
+   * truncated version ends in a sentence stop.
+   *
+   * @param string $text
+   *   The string that may be trimmed if it doesn't end with a sentence stop.
+   *
+   * @return string
+   *   The possible truncated string.  It  will end in a sentence stop.
+   *
+   * @code
+   *   $string = Strings::endsWithSentence(substr($string, 400));
+   * @endcode
+   */
+  public static function endsWithSentence($text) {
+    return preg_replace('/[^.?!"]+$/', '', $text);
+  }
 
 }
