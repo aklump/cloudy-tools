@@ -63,6 +63,22 @@ function get_title() {
     echo $title
 }
 
+##
+ # Echo the md5 hash of a string.
+ #
+ # $1 = string The string to hash
+ #
+ # Returns 0 if the string was able to be hashed.
+ #
+function md5_string() {
+  local string="$1"
+
+  type md5sum >/dev/null 2>&1; [ $? -eq 0 ] && printf '%s' "$string" | md5sum | cut -d ' ' -f 1 && return 0
+  type md5 >/dev/null 2>&1; [ $? -eq 0 ] && printf '%s' "$string" | md5 | cut -d ' ' -f 1 && return 0
+
+  return 1
+}
+
 # Echos the version of the script.
 #
 # Returns nothing.

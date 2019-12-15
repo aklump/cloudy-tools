@@ -39,6 +39,11 @@ function testGetConfigPathAsOnIndexedArrayMakesAllElementsRealPaths() {
     assert_same 6 ${#fish[@]}
 }
 
+function testHashReturnsExpectedValues() {
+  assert_same 'acbd18db4cc2f85cedef654fccc4a4d8' $(md5_string foo)
+  assert_same '5594685ef95d3606cdbbc232a18acaee' $(md5_string 'some thing that is hashed')
+}
+
 function testGetConfigPathOnIndexedArrayMakesAllElementsRealPaths() {
     eval $(get_config_path -a 'tests.paths_indexed')
     assert_same "/an/absolute/bogus/path" ${tests_paths_indexed[4]}
