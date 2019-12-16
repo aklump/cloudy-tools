@@ -32,8 +32,13 @@ function _cloudypm_install_package() {
   [ -d "$package_destination_dir" ] && fail_because "Package already installed." && return 1
 
   # Install the package
-  [ ! -d "$(dirname $package_destination_dir)" ] && mkdir -p $(dirname $package_destination_dir)
-  (cd $(dirname $package_destination_dir) && git clone "$cloudypm___clone_from" "$package_basename" >/dev/null 2>&1 && rm -rf $package_destination_dir/.git) && echo_green "$LI Downloaded package version $cloudypm___version."
+  [ -d "$(dirname $package_destination_dir)" ] || mkdir -p $(dirname $package_destination_dir)
+  (cd $(dirname $package_destination_dir) && git clone "$cloudypm___clone_from" "$package_basename" >/dev/null 2>&1 && rm -rf $package_destination_dir/.git || return 1)
+  if [[ $? -ne 0 ]]; then
+    fail_because "Could not clone from the repository: \"$cloudypm___clone_from\""
+    return 1
+  fi
+  echo_green "$LI Downloaded package version $cloudypm___version." || return 1
 
   # Manage the bin/symlink.
   ! [ -d "$bin" ] && mkdir "$bin" && echo_green "$LI Created directory \"$(basename bin)\"."
@@ -78,7 +83,13 @@ function _cloudypm_load_package_info() {
     rm $path_to_package_yml
     [[ $json_result -gt 0 ]] && fail_because "Cannot convert package info to JSON." && return 1
     php "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "cloudypm" "$json" >"$cached_info"
+
     source $cached_info || return 1
+    # Normalize our hashed variable names.
+    cloudypm___clone_from="$cloudypm_bebdf4963b4dd965c9a50d4faf58f084"
+    cloudypm___entry_script="$cloudypm_6e9e981740ebcd37a52fbe482ef0f0cd"
+    cloudypm___on_install="$cloudypm_60309d823ad5930e786e13f37c339c46"
+    cloudypm___symlink="$cloudypm_a978acc8a7ae15f49f58f3495f0d85ba"
 
     # Use the git clone to determine the version based on the latest tag.
     local stash=$(tempdir)
@@ -91,7 +102,12 @@ function _cloudypm_load_package_info() {
     return 0
   fi
 
-  source $cached_info
+  source $cached_info || return 1
+  # Normalize our hashed variable names.
+  cloudypm___clone_from="$cloudypm_bebdf4963b4dd965c9a50d4faf58f084"
+  cloudypm___entry_script="$cloudypm_6e9e981740ebcd37a52fbe482ef0f0cd"
+  cloudypm___on_install="$cloudypm_60309d823ad5930e786e13f37c339c46"
+  cloudypm___symlink="$cloudypm_a978acc8a7ae15f49f58f3495f0d85ba"
 }
 
 function _cloudypm_load_and_validate_package() {

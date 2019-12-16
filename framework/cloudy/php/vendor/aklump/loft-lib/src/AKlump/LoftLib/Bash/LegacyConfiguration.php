@@ -4,26 +4,25 @@ namespace AKlump\LoftLib\Bash;
 
 /**
  * A class to handle variables in BASH.
+ *
+ * @deprecated Will be removed in 2.0.  Use \AKlump\LoftLib\Bash\Configuration
+ *   instead.
  */
-class Configuration {
+class LegacyConfiguration {
 
-  protected $namespace;
+  const VAR_NAME_PREFIX = '';
 
-  protected $separator;
+  const SEPARATOR = '___';
 
-  /**
-   * Configuration constructor.
-   *
-   * @param string $namespace
-   *   The plain text namespace for all variable names, it must begin with a
-   *   letter, e.g. 'cloudy_config'.
-   * @param string $separator
-   *   The char(s) to use to join the config paths elements, e.g. '.', where
-   *   the config path that is hashed will be 'foo.bar.baz'.
-   */
-  public function __construct($namespace, $separator = '.') {
-    $this->namespace = $namespace;
-    $this->separator = $separator;
+  public function __construct($var_name_prefix = NULL, $separator = NULL) {
+    $this->varNamePrefix = static::VAR_NAME_PREFIX;
+    $this->separator = $this->varNamePrefix;
+    if (!is_null($var_name_prefix)) {
+      $this->varNamePrefix = $var_name_prefix;
+    }
+    if (!is_null($separator)) {
+      $this->separator = $separator;
+    }
   }
 
   /**
@@ -43,22 +42,22 @@ class Configuration {
 
     // Setup defaults.
     $context += ['parents' => [], 'stack' => []];
-    list($comment, $var_name) = $this->getVarName($this->namespace, $context['parents']);
+    $var_name = $this->getVarName($context['parents'], $this->varNamePrefix);
 
     // Define the reason for stopping recursion and return.
     if (!is_array($value)) {
-      $context['stack'][] = $this->getVarEvalCode($var_name, $value, $comment);
+      $context['stack'][] = $this->getVarEvalCode($var_name, $value);
 
       return $context['stack'];
     }
 
     // Generate the keys.
-    list(, $keys_var_name) = $this->getVarName($this->namespace . '_keys', $context['parents']);
+    $keys_var_name = $this->getVarName($context['parents'], $this->varNamePrefix . '_keys');
 
     if (is_numeric(key($value))) {
-      $context['stack'][] = $this->getVarEvalCode($var_name, array_values($value), $comment);
+      $context['stack'][] = $this->getVarEvalCode($var_name, array_values($value));
     }
-    $context['stack'][] = $this->getVarEvalCode($keys_var_name, array_keys($value), '--keys ' . $comment);
+    $context['stack'][] = $this->getVarEvalCode($keys_var_name, array_keys($value));
 
     // Otherwise recurse.
     foreach ($value as $k => $v) {
@@ -73,25 +72,26 @@ class Configuration {
   /**
    * Generate a BASH variable name.
    *
-   * @param string $prefix
-   *   A plaintext string to to preceed the hash.
-   *   e.g., "cloudy_config", "cloudy_config_keys".
-   * @param array $variable_name_parts
-   *   An array of strings that indicate the parent/child configuration path of
-   *   nested arrays, ['foo', 'bar', 'baz'] where the path is 'foo.bar.baz'.
+   * @param array $parents
+   *   Usually this is $context['parents'].
+   * @param string ...
+   *   Additional elements to merge into the key.
    *
    * @return string
-   *   A hashed varible name that can be used by BASH.
+   *   A stack key variable name.
    */
-  private function getVarName($prefix, array $variable_name_parts) {
-    if (!preg_match('/^[a-z]/i', $prefix)) {
-      throw new \InvalidArgumentException("Prefix must begin with a letter.");
+  private function getVarName(array $parents, $prefix = '') {
+    $args = func_get_args();
+    $components = array_shift($args);
+    $prefix = array_shift($args);
+    if ($prefix) {
+      array_unshift($components, $prefix);
+    }
+    if (count($args)) {
+      $components = array_merge($components, $args);
     }
 
-    return [
-      ($path = implode($this->separator, $variable_name_parts)),
-      $path ? $prefix . '_' . md5($path) : $prefix,
-    ];
+    return ltrim(implode('___', $components));
   }
 
   /**
@@ -130,13 +130,12 @@ class Configuration {
    *   The bash variable name to use.
    * @param mixed $value
    *   The value of the variable.
-   * @param string $comment
-   *   A comment to proceed the eval code with.
    *
    * @return string
    *   Code to be used by BASH eval.
    */
-  public function getVarEvalCode($var_name, $value, $comment = '') {
+  public function getVarEvalCode($var_name, $value) {
+    $var_name = str_replace('-', '_', $var_name);
     if (is_array($value)) {
       array_walk($value, function (&$value) {
         $value = static::typecast($value);
@@ -151,20 +150,12 @@ class Configuration {
       $open = substr($value[0], 0, 1) === '"' ? '' : '"';
       $close = substr($value[count($value) - 1], -1) === '"' ? '' : '"';
 
-      $return = "declare -a $var_name=($open" . implode(' ', $value) . $close . ")";
-    }
-    else {
-
-      $value = static::typecast($value);
-
-      $return = $var_name . '=' . $this->quoteValue($value);
+      return "declare -a $var_name=($open" . implode(' ', $value) . $close . ")";
     }
 
-    if ($comment) {
-      $return = '# ' . trim($comment) . PHP_EOL . $return;
-    }
+    $value = static::typecast($value);
 
-    return $return;
+    return $var_name . '=' . $this->quoteValue($value);
   }
 
   /**
