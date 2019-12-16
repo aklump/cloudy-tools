@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2019-12-16
+### Added
+- md5_string function
+  
+### Changed
+* Changed internal variable names, which should not affect your scripts.
+    * `CLOUDY_OPTION__*` are now hashed variable names.
+    * Configuration cached variable names now use hashes rather than plain config keys.
+
+### Fixed
+* Config variable problems with special characters.  
+
 ## [1.1.0] - 2019-07-13
   
 ### Fixed
