@@ -40,7 +40,7 @@ function _cloudy_bootstrap() {
         for alias in ${aliases[@]}; do
            if ! has_option $alias; then
                CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$alias")
-               eval "CLOUDY_OPTION__$(string_upper $alias)=\"$value\""
+               eval "CLOUDY_OPTION__$(md5_string $alias)=\"$value\""
            fi
         done
     done
@@ -54,7 +54,7 @@ function _cloudy_bootstrap() {
             if has_option $alias && ! has_option $master_option; then
                 value=$(get_option "$alias")
                 CLOUDY_OPTIONS=("${CLOUDY_OPTIONS[@]}" "$master_option")
-                eval "CLOUDY_OPTION__$(string_upper ${master_option//-/_})=\"$value\""
+                eval "CLOUDY_OPTION__$(md5_string $master_option)=\"$value\""
             fi
         done
     done
@@ -770,7 +770,7 @@ parse_args "$@"
 declare -a CLOUDY_ARGS=("${parse_args__args[@]}")
 declare -a CLOUDY_OPTIONS=("${parse_args__options[@]}")
 for option in "${CLOUDY_OPTIONS[@]}"; do
-    eval "CLOUDY_OPTION__$(string_upper ${option//-/_})=\"\$parse_args__options__${option//-/_}\""
+    eval "CLOUDY_OPTION__$(md5_string $option)=\"\$parse_args__options__${option//-/_}\""
 done
 
 # Define shared variables

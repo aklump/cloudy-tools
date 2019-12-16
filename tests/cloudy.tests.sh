@@ -709,8 +709,8 @@ function testGetCommandArgWorksAsExpected() {
 
 function testHasOptionGetOptionWorkAsExpected() {
     declare -a CLOUDY_OPTIONS=('name' 'force');
-    CLOUDY_OPTION__NAME="alpha.md"
-    CLOUDY_OPTION__FORCE=true
+    CLOUDY_OPTION__b068931cc450442b63f5b3d276ea4297="alpha.md"
+    CLOUDY_OPTION__ae254d63f2381cc183c11594873793e0=true
 
     assert_exit_status 0 $(has_option 'name')
     assert_exit_status 0 $(has_option 'force')
