@@ -1326,7 +1326,7 @@ function event_listen() {
 function path_relative_to_config_base() {
     local path="$1"
 
-    local config_path_base=${cloudy_config___22b41169ff3731365de5e8293e01c831}
+    local config_path_base=${cloudy_config_22b41169ff3731365de5e8293e01c831}
     [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
     config_path_base=${config_path_base%/}
     path_resolve "$config_path_base" "$path"

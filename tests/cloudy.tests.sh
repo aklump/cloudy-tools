@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+function testGetConfigPathWorksWithConfigPathBase() {
+
+  # Stash our actual global var and set a test case.
+  local stash="$cloudy_config_22b41169ff3731365de5e8293e01c831"
+  cloudy_config_22b41169ff3731365de5e8293e01c831="/foo/bar/baz"
+
+  eval $(get_config_path_as 'path' 'tests.paths_associative.alpha')
+  assert_same '/foo/bar/baz/tests/stubs/alpha.txt' "${path[0]}"
+
+  # Unstash the actual global var.
+  cloudy_config_22b41169ff3731365de5e8293e01c831="$stash"
+}
+
 function testYamlSetAndGetWorkAsExpected() {
   yaml_set $'echo: eggplant\nfoxtrot: fig'
   assert_same $'echo: eggplant\nfoxtrot: fig' "$(yaml_get)"

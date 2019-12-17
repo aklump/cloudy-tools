@@ -154,7 +154,7 @@ function _cloudy_get_config() {
     local cached_var_name
     local cached_var_name_keys
     local file_list
-    local config_path_base=${cloudy_config___22b41169ff3731365de5e8293e01c831}
+    local config_path_base=${cloudy_config_22b41169ff3731365de5e8293e01c831}
 
     # Determine if we have an absolute relative path base or, if not prepend $ROOT.
     [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
