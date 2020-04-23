@@ -748,7 +748,7 @@ function list_has_items() {
 }
 
 ##
- # Echo an array as a bulletted list.
+ # Echo an array as a bulleted list (does not clear list)
  #
  # @param $echo_list__array
  #
@@ -756,6 +756,7 @@ function list_has_items() {
  # @code
  #   list_add_item "List item"
  #   echo_list
+ #   list_clear
  # @endcode
  #
  # @see echo_list__array=("${some_array_to_echo[@]}")
