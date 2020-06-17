@@ -793,11 +793,38 @@ function echo_blue_list() {
     _cloudy_echo_list 34 34 -i=0
 }
 
-# Echo the elapsed time in seconds since the beginning of the script.
+# Echo the elapsed time since the beginning of the script.
 #
 # Returns nothing.
 function echo_elapsed() {
-    echo $SECONDS
+  if [[ $SECONDS -lt 61 ]]; then
+    printf "%d sec\n" $SECONDS
+  elif [[ $SECONDS -lt 3601 ]]; then
+    ((m=($SECONDS%3600)/60))
+    ((s=$SECONDS%60))
+    printf "%d min %d sec\n" $m $s
+  else
+    ((h=$SECONDS/3600))
+    ((m=($SECONDS%3600)/60))
+    ((s=$SECONDS%60))
+
+    hword="hours"
+    if [[ $h -eq 1 ]]; then
+      hword="hour"
+    fi
+
+    mword="minutes"
+    if [[ $m -eq 1 ]]; then
+      mword="minute"
+    fi
+
+    sword="seconds"
+    if [[ $m -eq 1 ]]; then
+      sword="second"
+    fi
+
+    printf "%d %s %d %s %d %s\n" $h $hword $m $mword $s $sword
+  fi
 }
 
 #
@@ -1004,13 +1031,8 @@ function exit_with_success_code_only() {
 function exit_with_success_elapsed() {
     local message=$1
     local duration=$SECONDS
-    local elapsed="$duration seconds"
 
-    if [ $duration -gt 600 ]; then
-        let duration=(duration / 60)
-        elapsed="$duration minutes"
-    fi
-    _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $elapsed.")"
+    _cloudy_exit_with_success "$(_cloudy_message "$message" "$CLOUDY_SUCCESS" " in $(echo_elapsed).")"
 }
 
 # Add a warning message to be shown on success exit; not shown on failure exits.
