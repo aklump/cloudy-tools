@@ -753,6 +753,14 @@ function testHasCommandArgsWorks() {
   assert_exit_status 0
 }
 
+function testGetCommandArgsWorksAsExpected() {
+  declare -a CLOUDY_ARGS=()
+  assert_empty $(get_command_args)
+
+  declare -a CLOUDY_ARGS=('COMMAND' 'name' 'force')
+  assert_same 'name force' "$(get_command_args)"
+}
+
 function testGetCommandArgWorksAsExpected() {
   declare -a CLOUDY_ARGS=()
   assert_empty $(get_command_arg 0)

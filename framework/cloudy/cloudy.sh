@@ -476,6 +476,19 @@ function get_command_arg() {
     echo $default && return 2
 }
 
+# Echo all command arguments
+#
+# If options are mixed in they will be stripped out, that is to say, if the
+# script was called like this "script.sh do -f re -h mi", this function will
+# echo "do re mi"
+#
+# Returns 0
+function get_command_args() {
+  local command_args=("${CLOUDY_ARGS[@]:1}")
+
+  echo "${command_args[@]}" && return 0
+}
+
 ##
  # Get a config path assignment.
  #
