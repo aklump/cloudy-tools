@@ -384,7 +384,7 @@ function function_exists() {
 #
 # @code
 #  string_split__string="do<br />re<br />mi"
-#  string_split '<br />' && local words=("${string_split__array}")
+#  string_split '<br />' && local words=("${string_split__array[@]}")
 # @endcode
 #
 # $1 - The delimiter string.

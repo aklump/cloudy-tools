@@ -482,6 +482,17 @@ function testUrlHostWorks() {
   assert_same "www.abc.com" $(url_host "https://www.abc.com/do/re/me")
 }
 
+function testArraySplitWorksPerDocblockExample() {
+ string_split__string="do<br />re<br />mi"
+ string_split '<br />' && local words=("${string_split__array[@]}")
+  assert_exit_status 0
+
+  assert_count 3 'words'
+  assert_same "do" "${words[0]}"
+  assert_same "re" "${words[1]}"
+  assert_same "mi" "${words[2]}"
+}
+
 function testArraySplitWorksWithSpaces() {
   string_split__string="my my;this is good"
   string_split ';'
