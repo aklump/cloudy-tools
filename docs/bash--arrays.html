@@ -37,6 +37,19 @@ string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
 
 <pre><code>eval copy=(\"\${$master[@]}\")
 </code></pre>
+
+<h2>How to shift</h2>
+
+<pre><code class="bash">$ a=(a b c d e)
+$ a=("${a[@]:1}")
+$ echo "${a[@]}"
+b c d e
+</code></pre>
+
+<h2>How to pop</h2>
+
+<pre><code class="bash">a=("${a[@]:0:${#a[@]} - 1}" 
+</code></pre>
 </section></section>
 
 <div class="search__results">
@@ -46,7 +59,7 @@ string_split '&lt;br /&gt;' &amp;&amp; local words=("${string_split__array}")
 <footer>
   <div class="pager"><a href="qs--writing-scripts.html" class="prev qs--writing-scripts">&laquo;Writing Your First Cloudy Script</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="bash--strings.html" class="next bash--strings">String Manipulation&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.3 &bull; Last Updated: Fri, 07 Aug 2020 12:21:25 -0700</p>
+    <p class="legaleeze center">Version: 1.2.3 &bull; Last Updated: Sun, 17 Jan 2021 20:29:01 -0800</p>
   </div>
 </footer>
 
