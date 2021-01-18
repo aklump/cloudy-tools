@@ -12,3 +12,18 @@ This comes in to play after array-based functions like `string_split`
 ## How to copy and array with dynamic name
 
     eval copy=(\"\${$master[@]}\")
+
+## How to shift
+
+```bash
+$ a=(a b c d e)
+$ a=("${a[@]:1}")
+$ echo "${a[@]}"
+b c d e
+```
+
+## How to pop
+
+```bash
+a=("${a[@]:0:${#a[@]} - 1}" 
+```
