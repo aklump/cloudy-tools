@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Php and Cloudy</title>
+  <title>PHP and Cloudy</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -17,7 +17,7 @@
   </form>
 </div>
 
-  <h1>Php and Cloudy</h1>
+  <h1>PHP and Cloudy</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section><section>
@@ -43,6 +43,15 @@
 
 <pre><code class="bash"> export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"; ./cloudy_tools.sh tests
 </code></pre>
+
+<h2>Using PHP in Your Cloudy Project</h2>
+
+<ul>
+<li>Always execute PHP with the following syntax--using <code>$CLOUDY_PHP</code>, never calling <code>php</code> directly:</li>
+</ul>
+
+<pre><code class="php">output=$("$CLOUDY_PHP" "/my/php/script/foo.php")
+</code></pre>
 </section></section>
 
 <div class="search__results">
@@ -52,7 +61,7 @@
 <footer>
   <div class="pager"><a href="logging.html" class="prev logging">&laquo;Logging to File</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="version.html" class="next version">Script Version&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.4 &bull; Last Updated: Tue, 09 Feb 2021 13:47:05 -0800</p>
+    <p class="legaleeze center">Version: 1.2.5 &bull; Last Updated: Tue, 09 Feb 2021 14:26:06 -0800</p>
   </div>
 </footer>
 
