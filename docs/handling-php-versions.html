@@ -2,14 +2,14 @@
 
 <html>
 <head>
-  <title>Handling PHP Versions</title>
+  <title>Php and Cloudy</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
 <body class="page--handling-php-versions">
 <header>
-  <div class="pager"><a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="localize.html" class="next localize">Localization/Translation&raquo;</a></div></header>
+  <div class="pager"><a href="logging.html" class="prev logging">&laquo;Logging to File</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="version.html" class="next version">Script Version&raquo;</a></div></header>
 
   <div class="search__wrapper">
   <form action="search--results.html">
@@ -17,25 +17,32 @@
   </form>
 </div>
 
-  <h1>Handling PHP Versions</h1>
+  <h1>Php and Cloudy</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section><section>
 
-<p>In some cases you may want your script to be able to accept different PHP versions.  Here is a strategy to achieve this.  Place this early in your controller script.  In this example the application is called <em>Loft Deploy</em> and it uses <code>$loft_deploy_php</code> when running it's php processes.</p>
+<p>Cloudy makes heavy use of PHP and in so doing gets the PHP executable using <code>command -v php</code>.  If this is insufficient you may provide the PHP executable in <a href="https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/">the environment variable</a> <code>CLOUDY_PHP</code>.</p>
 
-<pre><code># Determine the version of php to use based on:
-# 1. The option --php
-# 2. ENV var LOFT_DEPLOY_PHP
-# 3. the system 'php'
-loft_deploy_php="php"
-if [[ "$LOFT_DEPLOY_PHP" ]]; then
-    loft_deploy_php="$LOFT_DEPLOY_PHP"
-fi
-[[ ! -x "$loft_deploy_php" ]] &amp;&amp; fail_because "$loft_deploy_php is not a path to a valid PHP executable" &amp;&amp; exit_with_failure
+<p>From <a href="https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/">that same article</a>:</p>
+
+<blockquote>
+  <p>To create environment variables for your own use, add them to the bottom of your <em>.bashrc</em> file. If you want to have the environment variables available to remote sessions, such as SSH connections, you’ll need to add them to your <em>.bash_profile</em> file, as well.</p>
+</blockquote>
+
+<h2>.bashrc and .bash_profile Example</h2>
+
+<p>Add the following line to one or both of these files as appropriate to your case.</p>
+
+<pre><code class="bash">export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"
 </code></pre>
 
-<p>You would instruct users to define <code>$LOFT_DEPLOY_PHP</code> in <em>.bashrc</em> or pass it in the CLI arguments, e.g. <code>export LOFT_DEPLOY_PHP=/Applications/MAMP/bin/php/php7.1.12/bin/php;...</code>.</p>
+<h2>CLI Example</h2>
+
+<p>Coincidentally, if you tun the following, the test will actually fail, as it asserts that <code>$CLOUDY_PHP</code> is set to the default PHP binary, which it will not be in this case.</p>
+
+<pre><code class="bash"> export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"; ./cloudy_tools.sh tests
+</code></pre>
 </section></section>
 
 <div class="search__results">
@@ -43,9 +50,9 @@ fi
 </div>
 
 <footer>
-  <div class="pager"><a href="error-handling.html" class="prev error-handling">&laquo;Exit Status</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="localize.html" class="next localize">Localization/Translation&raquo;</a></div>  
+  <div class="pager"><a href="logging.html" class="prev logging">&laquo;Logging to File</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="version.html" class="next version">Script Version&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.3 &bull; Last Updated: Sun, 17 Jan 2021 20:29:04 -0800</p>
+    <p class="legaleeze center">Version: 1.2.4 &bull; Last Updated: Tue, 09 Feb 2021 13:47:05 -0800</p>
   </div>
 </footer>
 
