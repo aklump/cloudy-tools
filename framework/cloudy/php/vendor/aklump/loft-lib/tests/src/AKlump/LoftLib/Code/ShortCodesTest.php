@@ -6,6 +6,48 @@ use AKlump\LoftLib\Testing\PhpUnitTestCase;
 
 class ShortCodesTest extends PhpUnitTestCase {
 
+  public function testAbleToGetSomeElementsIfAnotherFailsAttributeParsing() {
+    $base = 'lorem [foo id="1"]ipsum[/foo] dolar [bar] sit [ãka wakã] amet';
+    $elements = ShortCodes::getElements($base);
+
+    $this->assertCount(2, $elements);
+    $this->assertSame('foo', $elements[0]['name']);
+    $this->assertSame(1, $elements[0]['attributes']['id']);
+
+    $this->assertSame('bar', $elements[1]['name']);
+    $this->assertEmpty($elements[1]['attributes']);
+  }
+
+  public function testAttributesCanHandleNBSPCharacter() {
+    $base = 'indigenous[see_footnote id="1"] peoples,';
+    $elements = ShortCodes::getElements($base);
+    $this->assertCount(1, $elements);
+    $this->assertSame('see_footnote', $elements[0]['name']);
+    $this->assertSame(1, $elements[0]['attributes']['id']);
+  }
+
+  public function testPrepareCallsInTheOrderOfCallbacksNotPresentation() {
+    $prepare_callbacks = [
+      'bravo' => function ($base) {
+        return $base . '.bravo';
+      },
+      'alpha' => function ($base) {
+        return $base . '.alpha';
+      },
+    ];
+    $this->assertSame('[alpha][bravo].bravo.alpha', ShortCodes::prepare('[alpha][bravo]', $prepare_callbacks));
+  }
+
+  public function testPrepareOnlyCallsWhenShortCodePresent() {
+    $prepare_callbacks = [
+      'caption' => function ($base) {
+        return trim($base);
+      },
+    ];
+    $this->assertSame('', ShortCodes::prepare('', $prepare_callbacks));
+    $this->assertSame('[caption]', ShortCodes::prepare(' [caption] ', $prepare_callbacks));
+  }
+
   /**
    * The WordPress API states "The shortcode parser uses a single pass on the
    * post content. This means that if the $content parameter of a shortcode
@@ -126,6 +168,9 @@ class ShortCodesTest extends PhpUnitTestCase {
     ];
     $subject = 'Fusce vel sapien quis orci feugiat accumsan vel sit amet massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc varius turpis vel placerat eleifend. Vivamus tempus enim quam, sit amet porta libero efficitur ac. Maecenas ultricies, felis id vulputate consectetur, [anchor layout="right" color="red"]ligula ligula tempor augue, et feugiat sapien ante sit amet dui. Morbi ullamcorper justo nec purus cursus ullamcorper. Sed semper dictum tellus, vel varius metus pellentesque eu. Ut interdum tristique finibus. In pharetra nibh a malesuada dignissim. Etiam a interdum orci. Maecenas ultricies porttitor [person type="leader" age="44"]Aaron[/person]neque. Quisque sit amet tincidunt nulla, ut aliquam mauris. Pellentesque ut efficitur eros. Aenean vestibulum aliquet odio, quis pellentesque mauris congue id. Aenean vitae turpis id sapien sollicitudin blandit.';
 
+    $this->assertSame($control, ShortCodes::getElements($subject));
+
+    // Call a second time to ensure the static cache works.
     $this->assertSame($control, ShortCodes::getElements($subject));
   }
 
