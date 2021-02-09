@@ -1,4 +1,4 @@
-# Php and Cloudy
+# PHP and Cloudy
 
 Cloudy makes heavy use of PHP and in so doing gets the PHP executable using `command -v php`.  If this is insufficient you may provide the PHP executable in [the environment variable](https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/) `CLOUDY_PHP`.
 
@@ -18,4 +18,12 @@ Coincidentally, if you tun the following, the test will actually fail, as it ass
 
 ```bash
  export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"; ./cloudy_tools.sh tests
+```
+
+## Using PHP in Your Cloudy Project
+
+* Always execute PHP with the following syntax--using `$CLOUDY_PHP`, never calling `php` directly:
+
+```php
+output=$("$CLOUDY_PHP" "/my/php/script/foo.php")
 ```

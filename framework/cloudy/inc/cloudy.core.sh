@@ -10,10 +10,16 @@ function _cloudy_define_cloudy_vars() {
   LIL="└──"
   LI2="│   $LI"
   LIL2="│   $LIL"
+}
 
+function _cloudy_bootstrap_php() {
   if [[ ! "$CLOUDY_PHP" ]]; then
     CLOUDY_PHP="$(command -v php)"
   fi
+  [[ ! -x "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) is not executable" && return 1
+  local php_version=$("$CLOUDY_PHP" -v | head -1 | grep -E "PHP ([0-9.]+)")
+  [[ ! "$php_version" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) does not appear to be a PHP binary; $CLOUDY_PHP -v failed to display PHP version" && return 1
+  return 0
 }
 
 function _cloudy_bootstrap_translations() {
@@ -767,6 +773,7 @@ function _cloudy_validate_input_against_schema() {
 #
 # Begin Core Controller Section.
 #
+_cloudy_bootstrap_php || exit_with_failure "Invalid PHP"
 
 # Expand some vars from our controlling script.
 export CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
