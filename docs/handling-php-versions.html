@@ -52,6 +52,17 @@
 
 <pre><code class="php">output=$("$CLOUDY_PHP" "/my/php/script/foo.php")
 </code></pre>
+
+<h3>Scoping <code>$CLOUDY_PHP</code> to Only Your App</h3>
+
+<p>It may be desired in your cloudy-built app to expose a different variable other than <code>$CLOUDY_PHP</code>, e.g. <code>$LOFT_DEPLOY_PHP</code>.  Here's how to do that with an <a href="events.html">event handler</a>.  In this case the Cloudy-built app is called "Loft Deploy".</p>
+
+<pre><code class="bash">function on_pre_config() {
+  if [[ "$LOFT_DEPLOY_PHP" ]]; then
+    CLOUDY_PHP="$LOFT_DEPLOY_PHP"
+  fi
+}
+</code></pre>
 </section></section>
 
 <div class="search__results">
@@ -61,7 +72,7 @@
 <footer>
   <div class="pager"><a href="logging.html" class="prev logging">&laquo;Logging to File</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="version.html" class="next version">Script Version&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.5 &bull; Last Updated: Tue, 09 Feb 2021 14:26:06 -0800</p>
+    <p class="legaleeze center">Version: 1.2.6 &bull; Last Updated: Tue, 09 Feb 2021 14:37:36 -0800</p>
   </div>
 </footer>
 
