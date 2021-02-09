@@ -27,3 +27,15 @@ Coincidentally, if you tun the following, the test will actually fail, as it ass
 ```php
 output=$("$CLOUDY_PHP" "/my/php/script/foo.php")
 ```
+
+### Scoping `$CLOUDY_PHP` to Only Your App
+
+It may be desired in your cloudy-built app to expose a different variable other than `$CLOUDY_PHP`, e.g. `$LOFT_DEPLOY_PHP`.  Here's how to do that with an [event handler](@events).  In this case the Cloudy-built app is called "Loft Deploy".
+
+```bash
+function on_pre_config() {
+  if [[ "$LOFT_DEPLOY_PHP" ]]; then
+    CLOUDY_PHP="$LOFT_DEPLOY_PHP"
+  fi
+}
+```

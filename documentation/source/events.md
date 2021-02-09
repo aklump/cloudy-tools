@@ -1,3 +1,6 @@
+---
+id: events
+---
 # Events (Hooks)
 
 * Event handlers are functions that must be defined before the Cloudy bootstrap.
