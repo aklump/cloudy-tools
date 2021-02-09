@@ -1,15 +1,21 @@
-# Handling PHP Versions
+# Php and Cloudy
 
-In some cases you may want your script to be able to accept different PHP versions.  Here is a strategy to achieve this.  Place this early in your controller script.  In this example the application is called _Loft Deploy_ and it uses `$loft_deploy_php` when running it's php processes.
-    
-    # Determine the version of php to use based on:
-    # 1. The option --php
-    # 2. ENV var LOFT_DEPLOY_PHP
-    # 3. the system 'php'
-    loft_deploy_php="php"
-    if [[ "$LOFT_DEPLOY_PHP" ]]; then
-        loft_deploy_php="$LOFT_DEPLOY_PHP"
-    fi
-    [[ ! -x "$loft_deploy_php" ]] && fail_because "$loft_deploy_php is not a path to a valid PHP executable" && exit_with_failure
+Cloudy makes heavy use of PHP and in so doing gets the PHP executable using `command -v php`.  If this is insufficient you may provide the PHP executable in [the environment variable](https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/) `CLOUDY_PHP`.
 
-You would instruct users to define `$LOFT_DEPLOY_PHP` in _.bashrc_ or pass it in the CLI arguments, e.g. `export LOFT_DEPLOY_PHP=/Applications/MAMP/bin/php/php7.1.12/bin/php;...`.
+From [that same article](https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/):
+> To create environment variables for your own use, add them to the bottom of your _.bashrc_ file. If you want to have the environment variables available to remote sessions, such as SSH connections, you’ll need to add them to your _.bash_profile_ file, as well.
+
+## .bashrc and .bash_profile Example
+
+Add the following line to one or both of these files as appropriate to your case.
+
+```bash
+export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"
+```
+
+## CLI Example
+Coincidentally, if you tun the following, the test will actually fail, as it asserts that `$CLOUDY_PHP` is set to the default PHP binary, which it will not be in this case.
+
+```bash
+ export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"; ./cloudy_tools.sh tests
+```

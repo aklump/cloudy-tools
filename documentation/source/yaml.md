@@ -26,6 +26,6 @@ There are some helper functions to facilitate JSON and YAML data manipulation.  
     # easier PHP consumption.  helpers.php will process the raw json and add
     # some values to it and echo augmented JSON string which we can then do
     # something with...
-    processed_json=$(php "$ROOT/helpers.php" "$(yaml_get_json)") || fail_because "Could not process raw results."
+    processed_json=$("$CLOUDY_PHP" "$ROOT/helpers.php" "$(yaml_get_json)") || fail_because "Could not process raw results."
     
     ...

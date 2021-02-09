@@ -186,10 +186,10 @@ case $command in
 
     # Convert YAML config files to JSON, if necessary.
     if has_option "json"; then
-      echo $(php $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "script.yml") >${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
+      echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "script.yml") >${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
       [ $? -eq 0 ] && rm script.yml
 
-      echo $(php $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "$WDIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
+      echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "$WDIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
       [ $? -eq 0 ] && rm script.example.yml
     else
       mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."

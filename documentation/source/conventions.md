@@ -59,7 +59,7 @@ The same naming conventions apply, if the function has to "return" an array, whi
 Beware of a scope issue for functions that use `eval` to set or mutate.  This first example does not work, because `eval` doesn't affect the value of a global variable, even if said variable was already defined outside of the function.  My understanding is that  `eval` creates [local variables by definition](https://stackoverflow.com/questions/40079054/eval-variable-assignment-in-a-bash-function-causes-variable-to-be-local) when called within a function.
 
     function array_sort_by_item_length() {
-        local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+        local eval=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
 
         # note: [ $eval = 'declare -a array_sort_by_item_length__array=("on" "five" "three" "september")' ]
         # Notice the eval code aims to mutate $array_sort_by_item_length__array
@@ -72,7 +72,7 @@ Beware of a scope issue for functions that use `eval` to set or mutate.  This fi
 Here is the fix to make it work:
 
     function array_sort_by_item_length() {
-        local eval=$(php "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+        local eval=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
         
         eval $eval
         

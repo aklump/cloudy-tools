@@ -10,6 +10,10 @@ function _cloudy_define_cloudy_vars() {
   LIL="└──"
   LI2="│   $LI"
   LIL2="│   $LIL"
+
+  if [[ ! "$CLOUDY_PHP" ]]; then
+    CLOUDY_PHP="$(command -v php)"
+  fi
 }
 
 function _cloudy_bootstrap_translations() {
@@ -121,7 +125,7 @@ function _cloudy_has_config_changed() {
 
 function _cloudy_get_file_mtime() {
   local filepath=$1
-  [[ -e $filepath ]] && echo $(php -r "echo filemtime('$filepath');")
+  [[ -e $filepath ]] && echo $("$CLOUDY_PHP" -r "echo filemtime('$filepath');")
 }
 
 ##
@@ -756,7 +760,7 @@ function _cloudy_validate_input_against_schema() {
   local value=$3
 
   local errors
-  echo $(php $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
+  echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
   return $?
 }
 
@@ -806,7 +810,7 @@ fi
 
 event_dispatch "pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
 compile_config__runtime_files=$(event_dispatch "compile_config")
-config_cache_id=$(php $CLOUDY_ROOT/php/helpers.php get_config_cache_id "$ROOT\n$compile_config__runtime_files")
+config_cache_id=$("$CLOUDY_PHP" $CLOUDY_ROOT/php/helpers.php get_config_cache_id "$ROOT\n$compile_config__runtime_files")
 
 # Detect changes in YAML and purge config cache if necessary.
 _cloudy_auto_purge_config
@@ -814,7 +818,7 @@ _cloudy_auto_purge_config
 # Generate the cached configuration file.
 if [[ ! -f "$CACHED_CONFIG_JSON_FILEPATH" ]]; then
   # Normalize the config file to JSON.
-  CLOUDY_CONFIG_JSON="$(php "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
+  CLOUDY_CONFIG_JSON="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
   json_result=$?
   [[ "$CLOUDY_CONFIG_JSON" ]] || exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
   [[ $json_result -ne 0 ]] && exit_with_failure "$CLOUDY_CONFIG_JSON"

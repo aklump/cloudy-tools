@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+function testCloudyPhpIsSetByDefault() {
+  assert_not_empty "$CLOUDY_PHP" "\$CLOUDY_PHP is not empty"
+  assert_same "$CLOUDY_PHP" "$(command -v php)" "\$CLOUDY_PHP is the default php command by default"
+}
+
 function testGetConfigPathWorksWithConfigPathBase() {
 
   # Stash our actual global var and set a test case.
