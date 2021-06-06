@@ -19,7 +19,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'c7b168489be32f55865a67562664e953deada47c',
+    'reference' => 'd0256ab1bbe4babc920514062683ef70a19866c2',
     'name' => '__root__',
   ),
   'versions' => 
@@ -31,7 +31,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'c7b168489be32f55865a67562664e953deada47c',
+      'reference' => 'd0256ab1bbe4babc920514062683ef70a19866c2',
     ),
     'aklump/data' => 
     array (
@@ -44,21 +44,21 @@ private static $installed = array (
     ),
     'aklump/loft-lib' => 
     array (
-      'pretty_version' => '1.1.5',
-      'version' => '1.1.5.0',
+      'pretty_version' => '1.2.0',
+      'version' => '1.2.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2b82e5eb59709398773dd65a6d5dc1bb803ec8ad',
+      'reference' => '13f12023a6c6f2f47594540e77fa597c68f99d22',
     ),
     'doctrine/inflector' => 
     array (
-      'pretty_version' => '1.4.3',
-      'version' => '1.4.3.0',
+      'pretty_version' => '1.4.4',
+      'version' => '1.4.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '4650c8b30c753a76bf44fb2ed00117d6f367490c',
+      'reference' => '4bd5c1cdfcd00e9e2d8c484f79150f67e5d355d9',
     ),
     'illuminate/contracts' => 
     array (
@@ -89,12 +89,12 @@ private static $installed = array (
     ),
     'paragonie/random_compat' => 
     array (
-      'pretty_version' => 'v2.0.19',
-      'version' => '2.0.19.0',
+      'pretty_version' => 'v2.0.20',
+      'version' => '2.0.20.0',
       'aliases' => 
       array (
       ),
-      'reference' => '446fc9faa5c2a9ddf65eb7121c0af7e857295241',
+      'reference' => '0f1f60250fccffeaf5dda91eea1c018aed1adc2a',
     ),
     'ralouphie/mimey' => 
     array (
@@ -107,12 +107,12 @@ private static $installed = array (
     ),
     'symfony/polyfill-ctype' => 
     array (
-      'pretty_version' => 'v1.22.0',
-      'version' => '1.22.0.0',
+      'pretty_version' => 'v1.23.0',
+      'version' => '1.23.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c6c942b1ac76c82448322025e084cadc56048b4e',
+      'reference' => '46cd95797e9df938fdd2b03693b5fca5e64b01ce',
     ),
     'symfony/yaml' => 
     array (
