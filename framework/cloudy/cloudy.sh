@@ -1470,7 +1470,8 @@ function path_extension() {
 type realpath >/dev/null 2>&1
 if [ $? -gt 0 ]; then
     function realpath() {
-         readlink -f -- "$@"
+      # @link https://stackoverflow.com/questions/284662/how-do-you-normalize-a-file-path-in-bash
+      cd "$@"; pwd
     }
 fi
 
