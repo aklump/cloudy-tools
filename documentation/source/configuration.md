@@ -138,6 +138,19 @@ The value of `$webroot` will be an an absolute filepath.
         # or using an absolute path...
         config_path_base: /Users/aklump/config
         
+#### Pro Tip: Prefix Your Paths Array
+
+```shell
+function _get_file_ignore_paths() {
+  
+  # Capture the eval code 
+  local basename=$(get_config_as -a 'filename' 'files.ignore')
+
+  # Echo that eval code after doing a find and replace, which prefixes all array elements with a dynamic path.
+  echo "${basename//]=\"/]=\"$CONFIG_DIR/fetch/$ENV/files/}"
+}
+```
+
 #### Pro Tip
 
 If you put a stack of paths under a single key, like so:
