@@ -1097,24 +1097,29 @@ function succeed_because() {
 #
 # Returns 0 if the variable exists and points to a file; exits otherwise with 1.
 function exit_with_failure_if_config_is_not_path() {
-    local config_path="$1"
+    local alias=$1
+    local config_path=$2
 
     parse_args "$@"
     if [[ "$parse_args__options__status" ]]; then
       CLOUDY_EXIT_STATUS=$parse_args__options__status
     fi
-    local variable=${config_path//./_}
-    if [[ "$parse_args__options__as" ]]; then
-        variable="$parse_args__options__as"
-    fi
 
-    local config_name=$(echo_blue "$config_path")
-    local config_value="$(eval "echo \$$variable")"
+    local config_path=${parse_args__args[0]}
+    local alias=${parse_args__args[0]}
+    if [ ${#parse_args__args[@]} -gt 1 ]; then
+      config_path=${parse_args__args[1]}
+      value="$(eval "echo \$$alias")"
+    else
+      value="$(eval "echo \$${config_path//./_}")"
+    fi
 
     exit_with_failure_if_empty_config $@
 
+    value=$(path_relative_to_config_base $value)
+
     # Make sure it's a path.
-    [ ! -e "$config_value" ] && exit_with_failure "Failed because the path \"$config_value\" , does not exist; defined in configuration as $config_name."
+    [ ! -e "$value" ] && exit_with_failure "Failed because the path \"$value\" , does not exist; defined in configuration as $config_path."
 
     return 0
 }
@@ -1130,7 +1135,8 @@ function exit_with_failure_if_config_is_not_path() {
  #   If the configuration has been renamed, send the memory var name --as=varname.
  #
 function exit_with_failure_if_empty_config() {
-    local variable=$1
+    local alias=$1
+    local config_path=$2
 
     parse_args "$@"
     if [[ "$parse_args__options__status" ]]; then
@@ -1140,20 +1146,23 @@ function exit_with_failure_if_empty_config() {
     local code
     local value
     local error
+    local config_path=${parse_args__args[0]}
+    local alias=${parse_args__args[0]}
 
-    if [[ "$parse_args__options__as" ]]; then
-      code="eval \$(get_config_as \"$parse_args__options__as\" \"$variable\")"
-      error="\"$variable\" as \"$parse_args__options__as\""
-      value="$(eval "echo \$$parse_args__options__as")"
+    if [ ${#parse_args__args[@]} -gt 1 ]; then
+      config_path=${parse_args__args[1]}
+      code="eval \$(get_config_as \"$alias\" \"$config_path\")"
+      error="\"$config_path\" as \"$alias\""
+      value="$(eval "echo \$$alias")"
     else
-      code="eval \$(get_config \"$variable\")"
-      error="\"$variable\""
-      value="$(eval "echo \$${variable//./_}")"
+      code="eval \$(get_config \"$config_path\")"
+      error="\"$config_path\""
+      value="$(eval "echo \$${config_path//./_}")"
     fi
 
     if [[ ! "$value" ]]; then
       write_log_error "Missing configuration value.  Trying to use $error. Has it been set in config? Is it being read into memory? e.g. $code"
-      exit_with_failure "Failed due to missing configuration; please add \"$variable\"."
+      exit_with_failure "Failed due to missing configuration; please add \"$config_path\"."
     fi
 
     return 0
