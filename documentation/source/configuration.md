@@ -140,14 +140,25 @@ The value of `$webroot` will be an an absolute filepath.
         
 #### Pro Tip: Prefix Your Paths Array
 
-```shell
-function _get_file_ignore_paths() {
-  
-  # Capture the eval code 
-  local basename=$(get_config_as -a 'filename' 'files.ignore')
+This example shows how you can get your files array with dynamic prefixes when necessary.
 
-  # Echo that eval code after doing a find and replace, which prefixes all array elements with a dynamic path.
-  echo "${basename//]=\"/]=\"$CONFIG_DIR/fetch/$ENV/files/}"
+```shell
+function _get_ignore_paths() {
+  local snippet=$(get_config_as -a 'ignore_paths' 'pantheon.files.ignore')
+  local find=']="'
+
+  echo "${snippet//$find/$find$CONFIG_DIR/fetch/$ENV/files/}"
+}
+
+function plugin_init() {
+    eval $(_get_ignore_paths)
+
+    for path in "${ignore_paths[@]}"; do
+      if [ ! -f "$path" ]; then
+        touch "$path"
+        succeed_because "Created: $path"
+      fi
+    done
 }
 ```
 
