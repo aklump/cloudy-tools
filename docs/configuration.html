@@ -175,6 +175,29 @@ config_path_base: /Users/aklump/config
 </code></pre></li>
 </ol>
 
+<h4>Pro Tip: Prefix Your Paths Array</h4>
+
+<p>This example shows how you can get your files array with dynamic prefixes when necessary.</p>
+
+<pre><code class="shell">function _get_ignore_paths() {
+  local snippet=$(get_config_as -a 'ignore_paths' 'pantheon.files.ignore')
+  local find=']="'
+
+  echo "${snippet//$find/$find$CONFIG_DIR/fetch/$ENV/files/}"
+}
+
+function plugin_init() {
+    eval $(_get_ignore_paths)
+
+    for path in "${ignore_paths[@]}"; do
+      if [ ! -f "$path" ]; then
+        touch "$path"
+        succeed_because "Created: $path"
+      fi
+    done
+}
+</code></pre>
+
 <h4>Pro Tip</h4>
 
 <p>If you put a stack of paths under a single key, like so:</p>
@@ -219,7 +242,7 @@ writeable_directories=($_config_values[@]})
 <footer>
   <div class="pager"><a href="packages.html" class="prev packages">&laquo;Cloudy Packages</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="development.html" class="next development">Development Tools&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.8 &bull; Last Updated: Sat, 05 Jun 2021 18:26:24 -0700</p>
+    <p class="legaleeze center">Version: 1.2.9 &bull; Last Updated: Sun, 05 Sep 2021 18:13:44 -0700</p>
   </div>
 </footer>
 
