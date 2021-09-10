@@ -50,6 +50,19 @@ b c d e
 
 <pre><code class="bash">a=("${a[@]:0:${#a[@]} - 1}" 
 </code></pre>
+
+<h2>Convert to CSV String</h2>
+
+<pre><code class="shell">declare -a array=('value1' 'value2');
+csv=$(printf "%s," "${array[@]}")
+csv=${csv%,}
+</code></pre>
+
+<h2>Create a Unique Values, Sorted Array</h2>
+
+<pre><code class="shell">declare -a array=('foo' 'bar' 'foo');
+foo=($(echo "$(printf "%s\n" "${array[@]}")" | sort -u))
+</code></pre>
 </section></section>
 
 <div class="search__results">
@@ -59,7 +72,7 @@ b c d e
 <footer>
   <div class="pager"><a href="qs--writing-scripts.html" class="prev qs--writing-scripts">&laquo;Writing Your First Cloudy Script</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="bash--strings.html" class="next bash--strings">String Manipulation&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.10 &bull; Last Updated: Sun, 05 Sep 2021 18:15:37 -0700</p>
+    <p class="legaleeze center">Version: 1.2.11 &bull; Last Updated: Fri, 10 Sep 2021 13:43:30 -0700</p>
   </div>
 </footer>
 
