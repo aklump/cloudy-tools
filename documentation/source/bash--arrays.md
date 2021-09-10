@@ -27,3 +27,18 @@ b c d e
 ```bash
 a=("${a[@]:0:${#a[@]} - 1}" 
 ```
+
+## Convert to CSV String
+
+```shell
+declare -a array=('value1' 'value2');
+csv=$(printf "%s," "${array[@]}")
+csv=${csv%,}
+```
+
+## Create a Unique Values, Sorted Array
+
+```shell
+declare -a array=('foo' 'bar' 'foo');
+foo=($(echo "$(printf "%s\n" "${array[@]}")" | sort -u))
+```
