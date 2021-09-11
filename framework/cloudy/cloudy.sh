@@ -931,8 +931,7 @@ function handle_init() {
             if [[ "$file" == "gitignore" ]]; then
                 destination=$(realpath "$ROOT/../../../opt/.gitignore")
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
-                # todo This will write more than once, so this is not very elegant.  Should figure that out somehow.
-                touch "$destination" && cat "$init_source_dir/$file" >> "$destination" && succeed_because "$destination merged."
+                touch "$destination" && cat "$init_source_dir/$file" >> "$destination" && sort -u "$destination" -o "$destination" && succeed_because "$destination merged."
             elif ! [ -e "$destination" ]; then
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
                 cp "$init_source_dir/$file" "$destination" && succeed_because "$(realpath $destination) created." || fail_because "Could not copy $file."
