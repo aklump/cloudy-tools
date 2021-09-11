@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'cfc3ad09b6912b0b1ee4e09e95816196cb037f4f',
+        'reference' => 'cce8d1ad3ccee2ad7023d772f9de8e3ecb506068',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'cfc3ad09b6912b0b1ee4e09e95816196cb037f4f',
+            'reference' => 'cce8d1ad3ccee2ad7023d772f9de8e3ecb506068',
             'dev_requirement' => false,
         ),
         'aklump/data' => array(
@@ -62,6 +62,15 @@
             'install_path' => __DIR__ . '/../illuminate/support',
             'aliases' => array(),
             'reference' => 'feab1d1495fd6d38970bd6c83586ba2ace8f299a',
+            'dev_requirement' => false,
+        ),
+        'jasny/dotkey' => array(
+            'pretty_version' => 'v1.0.2',
+            'version' => '1.0.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../jasny/dotkey',
+            'aliases' => array(),
+            'reference' => '034a3c30ef07ddb276da51c24ab5500316d35ff2',
             'dev_requirement' => false,
         ),
         'justinrainbow/json-schema' => array(

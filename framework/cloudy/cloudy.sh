@@ -1,5 +1,64 @@
 #!/usr/bin/env bash
 
+# Set a JSON string to be later read by json_get().
+#
+# Call this once to put your json string into memory, then make unlimited calls
+# to json_get_value as necessary.  You may check the return code to ensure JSON syntax
+# is valid.
+#
+# $1 - A JSON string, notice the use of single quotes around it, also you will
+# need to escape single quotes in the JSON body if they exist.
+#
+# @code
+#   json_set '{"foo":{"bar":"baz et al"}}'
+# @endcode
+#
+# Returns 0 if the JSON is valid; 1 otherwise.
+json_content=''
+function json_set() {
+  json_content="$1"
+
+  $CLOUDY_PHP -r "json_decode('$json_content') === null ? exit(1) : exit(0);"
+}
+
+# Load a JSON file to be read by json_get_value.
+#
+# $1 - Path to a valid JSON file
+#
+# Returns 0 if JSON is valid. 1 if not.
+function json_load_file() {
+  local path_to_json="$1"
+
+  json_set "$(cat "$path_to_json")"
+}
+
+# Echo the JSON string as set
+#
+# @code
+#   json="$(json_get)"
+# @endcode
+#
+function json_get() {
+  echo "$json_content"
+}
+
+# Echo a value by dot-path in the set/loaded JSON.
+#
+# If the path is invalid, an empty string is echoed.
+#
+# $1 - The dot path, e.g. 'foo.bar'
+#
+# @code
+#   json_set '{"foo":{"bar":"baz et al"}}'
+#   value="$(json_get_value foo.bar)"
+# @endcode
+#
+function json_get_value() {
+  local path="$1"
+
+  echo $("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_get_value" "$path" "$json_content")
+}
+
 # Prompt for a Y or N confirmation.
 #
 # $1 - The confirmation message

@@ -1,5 +1,47 @@
 #!/usr/bin/env bash
 
+function testJsonLoadFileReturnsCorrectStatusCodes() {
+  local path_to_json="$(tempdir "tests")/.test.json"
+
+  echo '{"foo":{"bar":"baz et al"}}' > "$path_to_json"
+  json_load_file "$path_to_json"
+  assert_exit_status 0
+
+  echo '{"foo":{"bar":"baz' > "$path_to_json"
+  json_load_file "$path_to_json"
+  assert_exit_status 1
+}
+function testJsonLoadFileSetsFileContents() {
+  local path_to_json="$(tempdir "tests")/.test.json"
+  echo '{"foo":{"bar":"baz et al"}}' > "$path_to_json"
+  json_load_file "$path_to_json"
+  assert_same '{"foo":{"bar":"baz et al"}}' "$(json_get)"
+}
+
+function testJsonGetValueReturnsEmptyStringWhenPathNotFound() {
+  json_set '{"foo":{"bar":"baz et al"}}'
+  assert_empty "$(json_get_value bar.foo)"
+}
+
+function testJsonGetValueReturnsValueAtSpecifiedPath() {
+  json_set '{"foo":{"bar":"baz et al"}}'
+  assert_same "baz et al" "$(json_get_value foo.bar)"
+}
+
+function testJsonGetReturnsTheSetValue() {
+  json_set '{"foo":{"bar":"baz et al"}}'
+  assert_same '{"foo":{"bar":"baz et al"}}' "$(json_get)"
+}
+
+function testJsonSetReturns0ForValidJson() {
+  json_set '{"foo":{"bar":"baz"}}'
+  assert_exit_status 0
+}
+function testJsonSetReturns1ForInvalidJson() {
+  json_set '{"foo":{"bar":'
+  assert_exit_status 1
+}
+
 function testCloudyPhpIsSetByDefault() {
   assert_not_empty "$CLOUDY_PHP" "\$CLOUDY_PHP is not empty"
   assert_same "$CLOUDY_PHP" "$(command -v php)" "\$CLOUDY_PHP is the default php command by default"
