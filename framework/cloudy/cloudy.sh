@@ -1527,7 +1527,7 @@ function tempdir() {
 function string_upper() {
     local string="$1"
 
-    echo "$string" | tr [a-z] [A-Z]
+    echo "$string" | tr [:lower:] [:upper:]
 }
 
 # Echo the string with it's first letter in uppercase.
@@ -1538,7 +1538,7 @@ function string_upper() {
 function string_ucfirst() {
     local string="$1"
 
-    echo "$(echo "${string:0:1}" | tr [a-z] [A-Z])${string:1}"
+    echo "$(echo "${string:0:1}" | tr [:lower:] [:upper:])${string:1}"
 }
 
 # Echo the lowercase version of a string.
@@ -1549,7 +1549,7 @@ function string_ucfirst() {
 function string_lower() {
     local string="$1"
 
-    echo "$string" | tr [A-Z] [a-z]
+    echo "$string" | tr [:upper:] [:lower:]
 }
 
 #
