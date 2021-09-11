@@ -715,6 +715,13 @@ function testArrayJoinWorks() {
   assert_same "-h, --help, --name=aaron" "$(array_join ', ')"
 }
 
+function testStringUCFirst() {
+  assert_same 'Json' $(string_ucfirst 'json')
+  assert_same 'JSON' $(string_ucfirst 'JSON')
+  assert_same 'Json string' "$(string_ucfirst 'json string')"
+  assert_same 'JSON STRING' "$(string_ucfirst 'JSON STRING')"
+}
+
 function testStringUpper() {
   assert_same 'JSON' $(string_upper 'json')
   assert_same 'JSON' $(string_upper 'JSON')
