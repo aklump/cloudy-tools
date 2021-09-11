@@ -1028,6 +1028,7 @@ function exit_with_init() {
 function exit_with_cache_clear() {
     local cloudy_dir="${1:-$CLOUDY_ROOT}"
     [[ ! "${cloudy_dir}" ]] && exit_with_failure "Invalid cache directory ${cloudy_dir}"
+    event_dispatch "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
     if dir_has_files "$cloudy_dir/cache"; then
 
         # We should not delete cpm on general cache clear.
@@ -1050,7 +1051,6 @@ function exit_with_cache_clear() {
         done
         exit_with_success "Caches have been cleared."
     fi
-    event_dispatch "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
     exit_with_success "Caches are clear."
 }
 
