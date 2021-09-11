@@ -23,6 +23,7 @@
 <section><section><h2>Cloudy Functions</h2>
 
 <div class="function-index">
+      <a href="#Set a JSON string to be later read by json_get().">Set a JSON string to be later read by json_get().</a>
       <a href="#array_has_value">array_has_value</a>
       <a href="#array_join">array_join</a>
       <a href="#array_map">array_map</a>
@@ -89,6 +90,9 @@
       <a href="#has_options">has_options</a>
       <a href="#implement_cloudy_basic">implement_cloudy_basic</a>
       <a href="#is_installed">is_installed</a>
+      <a href="#json_get">json_get</a>
+      <a href="#json_get_value">json_get_value</a>
+      <a href="#json_load_file">json_load_file</a>
       <a href="#list_add_item">list_add_item</a>
       <a href="#list_clear">list_clear</a>
       <a href="#list_has_items">list_has_items</a>
@@ -176,6 +180,22 @@
 <h2>Functions In Depth By Name</h2>
 
 <div class="function-list">
+      <a name="Set a JSON string to be later read by json_get()."></a>
+    <h2>Set a JSON string to be later read by json_get().()</h2>
+    <p class="summary">Call this once to put your json string into memory, then make unlimited calls
+to json_get_value as necessary.  You may check the return code to ensure JSON syntax
+is valid.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: A JSON string, notice the use of single quotes around it, also you will</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if the JSON is valid; 1 otherwise.</li>
+            </ul>
+        
+        <pre><code>json_content<br />
+@code<br />
+  json_set &#039;{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz et al&quot;}}&#039;<br />
+@endcode</code></pre>
+        
       <a name="array_has_value"></a>
     <h2>array_has_value()</h2>
     <p class="summary">Search $array_has_value__array for a value.</p>
@@ -1053,6 +1073,39 @@ you must still set up the commands in the config file as usual.</code></pre>
             </ul>
         
         
+      <a name="json_get"></a>
+    <h2>json_get()</h2>
+    <p class="summary">Echo the JSON string as set</p>
+    
+        
+        <pre><code>@code<br />
+  json=&quot;$(json_get)&quot;<br />
+@endcode</code></pre>
+        
+      <a name="json_get_value"></a>
+    <h2>json_get_value()</h2>
+    <p class="summary">Echo a value by dot-path in the set/loaded JSON.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The dot path, e.g. &#039;foo.bar&#039;</li>
+                        </ul>
+        
+        <pre><code>If the path is invalid, an empty string is echoed.<br />
+@code<br />
+  json_set &#039;{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz et al&quot;}}&#039;<br />
+  value=&quot;$(json_get_value foo.bar)&quot;<br />
+@endcode</code></pre>
+        
+      <a name="json_load_file"></a>
+    <h2>json_load_file()</h2>
+    <p class="summary">Load a JSON file to be read by json_get_value.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: Path to a valid JSON file</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if JSON is valid. 1 if not.</li>
+            </ul>
+        
+        
       <a name="list_add_item"></a>
     <h2>list_add_item()</h2>
     <p class="summary">Add an item to the list.</p>
@@ -1521,7 +1574,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.2.16 &bull; Last Updated: Sat, 11 Sep 2021 12:21:21 -0700</p>
+    <p class="legaleeze center">Version: 1.3.0 &bull; Last Updated: Sat, 11 Sep 2021 14:00:31 -0700</p>
   </div>
 </footer>
 
