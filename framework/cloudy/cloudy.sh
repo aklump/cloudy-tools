@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# Set a JSON string to be later read by json_get().
+json_content=''
+
+# Set a JSON string to be later read by json_get_value().
 #
 # Call this once to put your json string into memory, then make unlimited calls
 # to json_get_value as necessary.  You may check the return code to ensure JSON syntax
-# is valid.
+# is valid.  If your string contains single quotes, you will need to escape them.
 #
-# $1 - A JSON string, notice the use of single quotes around it, also you will
-# need to escape single quotes in the JSON body if they exist.
+# $1 - A JSON string, wrapped by single quotes.
 #
 # @code
 #   json_set '{"foo":{"bar":"baz et al"}}'
 # @endcode
 #
 # Returns 0 if the JSON is valid; 1 otherwise.
-json_content=''
 function json_set() {
   json_content="$1"
 
@@ -44,7 +44,7 @@ function json_get() {
 
 # Echo a value by dot-path in the set/loaded JSON.
 #
-# If the path is invalid, an empty string is echoed.
+# If the path is invalid, an empty string is echoed.  Be sure to wrap in double quotes to protect values that contain spaces.
 #
 # $1 - The dot path, e.g. 'foo.bar'
 #
