@@ -1479,8 +1479,20 @@ function path_extension() {
 type realpath >/dev/null 2>&1
 if [ $? -gt 0 ]; then
     function realpath() {
-      # @link https://stackoverflow.com/questions/284662/how-do-you-normalize-a-file-path-in-bash
-      cd "$@"; pwd
+      if [ -d "$1" ]; then
+        # @link https://stackoverflow.com/questions/284662/how-do-you-normalize-a-file-path-in-bash
+        cd "$1"; pwd
+        return 0
+      fi
+
+      local parent=$(dirname "$1")
+      if [ -d "$parent" ]; then
+        cd "$parent"; echo "$(pwd)/$(basename $1)"
+        return 0
+      fi
+
+      echo "$1"
+      return 0
     }
 fi
 
