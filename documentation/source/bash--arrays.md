@@ -46,8 +46,8 @@ foo=($(echo "$(printf "%s\n" "${array[@]}")" | sort -u))
 ## Get all directories as an array
 
 ```shell
-  ALL_PLUGINS=()
-  for i in $(cd $PLUGINS_DIR && find . -maxdepth 1 -type d); do
-     [[ "$i" != '.' ]] && ALL_PLUGINS=("${ALL_PLUGINS[@]}" "$(basename "$i")")
+  FILES=()
+  for i in $(cd $DIR && find . -maxdepth 1 -type d -name '*.sql*'); do
+     [[ "$i" != '.' ]] && FILES=("${FILES[@]}" "$(basename "$i")")
   done
 ```
