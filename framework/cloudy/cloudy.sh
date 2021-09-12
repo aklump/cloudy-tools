@@ -744,6 +744,25 @@ function echo_green_highlight() {
   _cloudy_echo_color 37 "$1" 1 42
 }
 
+# Echo a message indicating a passed test result.
+#
+# $1 - The message to print
+#
+function echo_pass() {
+  local message=$1
+  echo "$(echo_green_highlight ' ✔️') $(echo_green "$message")"
+}
+
+# Echo a message indicating a failed test result.
+#
+# $1 - The message to print
+#
+function echo_fail() {
+  local message=$1
+  echo "$(echo_red_highlight ' ✔️') $(echo_red "$message")"
+}
+
+
 # Echo a string with yellow text.
 #
 # $1 - The string to echo.

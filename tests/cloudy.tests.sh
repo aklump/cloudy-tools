@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function testEchoPassEchosNonEmptyValues() {
+  assert_not_empty "$(echo_pass "foo bar")"
+}
+function testEchoFailEchosNonEmptyValues() {
+  assert_not_empty "$(echo_fail "foo bar")"
+}
+
 function testJsonLoadFileReturnsCorrectStatusCodes() {
   local path_to_json="$(tempdir "tests")/.test.json"
 
