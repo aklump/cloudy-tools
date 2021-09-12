@@ -36,12 +36,14 @@
       <a href="#echo_blue_list">echo_blue_list</a>
       <a href="#echo_elapsed">echo_elapsed</a>
       <a href="#echo_error">echo_error</a>
+      <a href="#echo_fail">echo_fail</a>
       <a href="#echo_green">echo_green</a>
       <a href="#echo_green_highlight">echo_green_highlight</a>
       <a href="#echo_green_list">echo_green_list</a>
       <a href="#echo_heading">echo_heading</a>
       <a href="#echo_key_value">echo_key_value</a>
       <a href="#echo_list">echo_list</a>
+      <a href="#echo_pass">echo_pass</a>
       <a href="#echo_red">echo_red</a>
       <a href="#echo_red_highlight">echo_red_highlight</a>
       <a href="#echo_red_list">echo_red_list</a>
@@ -542,6 +544,15 @@ to do with the exit system.<br />
             </ul>
         
         
+      <a name="echo_fail"></a>
+    <h2>echo_fail()</h2>
+    <p class="summary">Echo a message indicating a failed test result.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The message to print</li>
+                        </ul>
+        
+        
       <a name="echo_green"></a>
     <h2>echo_green()</h2>
     <p class="summary">Echo a string with green text.</p>
@@ -601,6 +612,15 @@ You must add items to your list first:<br />
   list_clear<br />
 @endcode<br />
 @see echo_list__array=(&quot;${some_array_to_echo[@]}&quot;)</code></pre>
+        
+      <a name="echo_pass"></a>
+    <h2>echo_pass()</h2>
+    <p class="summary">Echo a message indicating a passed test result.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The message to print</li>
+                        </ul>
+        
         
       <a name="echo_red"></a>
     <h2>echo_red()</h2>
@@ -1574,7 +1594,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.1 &bull; Last Updated: Sat, 11 Sep 2021 14:08:07 -0700</p>
+    <p class="legaleeze center">Version: 1.3.2 &bull; Last Updated: Sat, 11 Sep 2021 19:47:27 -0700</p>
   </div>
 </footer>
 
