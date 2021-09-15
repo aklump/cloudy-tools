@@ -24,6 +24,28 @@
 
 <h2>[Unreleased]</h2>
 
+<h2>[1.3.0] - 2021-09-11</h2>
+
+<h3>Fixed</h3>
+
+<ul>
+<li><em>.gitignore</em> no longer includes duplicate lines when updating a cloudy package.</li>
+</ul>
+
+<h3>Added</h3>
+
+<ul>
+<li><code>json_set</code>, <code>json_load_file</code>, <code>json_get_value</code> and <code>json_get</code> for easily working with JSON.</li>
+<li><code>echo_pass</code> and <code>echo_fail</code> for a consistent in test scenarios.</li>
+<li>A pattern for writing command access to the documentation.</li>
+</ul>
+
+<h3>Deprecated</h3>
+
+<ul>
+<li><code>--as=ALIAS</code> flag has been deprecated in <code>exit_with_failure_if_empty_config</code> and <code>exit_with_failure_if_config_is_not_path</code>. Replace <code>exit_with_failure_if_empty_config "database.host" --as=host</code> with <code>exit_with_failure_if_empty_config "host" "database.host"</code> to switch to the new syntax. This was done to match <code>get_config_as</code> and <code>get_config</code> argument patterns.</li>
+</ul>
+
 <h2>[1.2.0] - 2019-12-16</h2>
 
 <h3>Added</h3>
@@ -53,7 +75,7 @@
 
 <h3>Fixed</h3>
 
-<p>A bug when using <code>additional_config</code> together with <code>config_path_base</code>.  The issue was that <code>additional_config</code> should have been relative to <code>config_path_base</code>, however it was not working correctly.  After you update to 1.1.0 your app will be broken.  To fix this you will need to remove the value of <code>config_path_base</code> from each of the items in <code>additional_config</code>.  As an example, if before this update, your configuration was:</p>
+<p>A bug when using <code>additional_config</code> together with <code>config_path_base</code>. The issue was that <code>additional_config</code> should have been relative to <code>config_path_base</code>, however it was not working correctly. After you update to 1.1.0 your app will be broken. To fix this you will need to remove the value of <code>config_path_base</code> from each of the items in <code>additional_config</code>. As an example, if before this update, your configuration was:</p>
 
 <pre><code>config_path_base: ../../..
 additional_config:
@@ -83,7 +105,7 @@ additional_config:
 <footer>
   <div class="pager"><a href="api.html" class="prev api">&laquo;Cloudy API</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="conventions.html" class="next conventions">Cloudy Conventions&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.2 &bull; Last Updated: Sat, 11 Sep 2021 19:47:26 -0700</p>
+    <p class="legaleeze center">Version: 1.3.3 &bull; Last Updated: Wed, 15 Sep 2021 14:40:34 -0700</p>
   </div>
 </footer>
 

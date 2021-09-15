@@ -750,24 +750,43 @@ You must add items to your list first:<br />
         
       <a name="exit_with_failure_if_config_is_not_path"></a>
     <h2>exit_with_failure_if_config_is_not_path()</h2>
-    <p class="summary">Test a global config variable to see if it points to an existing path.</p>
+    <p class="summary">Checks if a variable has been evaluated into memory and points to an existing path.</p>
     
           Arguments: <ul class="function-list__arguments">
-              <li>$1: The config path, used by get_config</li>
+              <li>$1: The alias.  Or if not aliased, the config path used by `get_config`.</li>
+              <li>$2: (Optional) The config path, if aliased.</li>
                           </ul><ul class="function-list__return"><li>Returns 0 if the variable exists and points to a file; exits otherwise with 1.</li>
             </ul>
         
+        <pre><code>Both of these aliase examples are the same, though the --as is an older syntax<br />
+that has been deprecated.<br />
+@code<br />
+  exit_with_failure_if_empty_config &#039;database.host&#039;<br />
+## Using an alias...<br />
+  exit_with_failure_if_empty_config &#039;host&#039; &#039;database.host&#039;<br />
+## Aliased, deprecated syntax.<br />
+  exit_with_failure_if_empty_config &#039;database.host&#039; --as=host<br />
+@endcode</code></pre>
         
       <a name="exit_with_failure_if_empty_config"></a>
     <h2>exit_with_failure_if_empty_config()</h2>
-    <p class="summary">Checks for a non-empty variable in memory or exit with failure.</p>
+    <p class="summary">Checks if a variable has been evaluated into memory yet or exits with failure.</p>
     
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The alias.  Or if not aliased, the config path used by `get_config`.</li>
+              <li>$2: (Optional) The config path, if aliased.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 if the variable is in memory.</li>
+            </ul>
         
-        <pre><code>Asks the user to add to their configuration filepath.<br />
-@param string<br />
-  This should be the same as passed to get_config, using dot separation.<br />
-@option as=name<br />
-  If the configuration has been renamed, send the memory var name --as=varname.</code></pre>
+        <pre><code>Both of these aliase examples are the same, though the --as is an older syntax<br />
+that has been deprecated.<br />
+@code<br />
+  exit_with_failure_if_empty_config &#039;database.host&#039;<br />
+## Using an alias...<br />
+  exit_with_failure_if_empty_config &#039;host&#039; &#039;database.host&#039;<br />
+## Aliased, deprecated syntax.<br />
+  exit_with_failure_if_empty_config &#039;database.host&#039; --as=host<br />
+@endcode</code></pre>
         
       <a name="exit_with_help"></a>
     <h2>exit_with_help()</h2>
@@ -1594,7 +1613,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.2 &bull; Last Updated: Sat, 11 Sep 2021 19:47:27 -0700</p>
+    <p class="legaleeze center">Version: 1.3.3 &bull; Last Updated: Wed, 15 Sep 2021 14:40:35 -0700</p>
   </div>
 </footer>
 
