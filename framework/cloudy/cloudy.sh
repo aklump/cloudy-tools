@@ -1168,9 +1168,24 @@ function succeed_because() {
     return 0
 }
 
-# Test a global config variable to see if it points to an existing path.
+# Checks if a variable has been evaluated into memory and points to an existing path.
 #
-# $1 - The config path, used by get_config
+# $1 - The alias.  Or if not aliased, the config path used by `get_config`.
+# $2 - (Optional) The config path, if aliased.
+# @option as=name - @deprecated
+#
+# Both of these aliase examples are the same, though the --as is an older syntax
+# that has been deprecated.
+#
+# @code
+#   exit_with_failure_if_empty_config 'database.host'
+#
+#   ## Using an alias...
+#   exit_with_failure_if_empty_config 'host' 'database.host'
+#
+#   ## Aliased, deprecated syntax.
+#   exit_with_failure_if_empty_config 'database.host' --as=host
+# @endcode
 #
 # Returns 0 if the variable exists and points to a file; exits otherwise with 1.
 function exit_with_failure_if_config_is_not_path() {
@@ -1178,14 +1193,23 @@ function exit_with_failure_if_config_is_not_path() {
     local config_path=$2
 
     parse_args "$@"
+    if [ ${#parse_args__args[@]} -eq 1 ]; then
+      alias=''
+      config_path=$1
+      if [[ "$parse_args__options__as" ]]; then
+        alias="$parse_args__options__as"
+        config_path="$1"
+      fi
+    else
+      alias=$1
+      config_path=$2
+    fi
+
     if [[ "$parse_args__options__status" ]]; then
       CLOUDY_EXIT_STATUS=$parse_args__options__status
     fi
 
-    local config_path=${parse_args__args[0]}
-    local alias=${parse_args__args[0]}
-    if [ ${#parse_args__args[@]} -gt 1 ]; then
-      config_path=${parse_args__args[1]}
+    if [[ "$alias" ]]; then
       value="$(eval "echo \$$alias")"
     else
       value="$(eval "echo \$${config_path//./_}")"
@@ -1201,21 +1225,43 @@ function exit_with_failure_if_config_is_not_path() {
     return 0
 }
 
-##
- # Checks for a non-empty variable in memory or exit with failure.
- #
- # Asks the user to add to their configuration filepath.
- #
- # @param string
- #   This should be the same as passed to get_config, using dot separation.
- # @option as=name
- #   If the configuration has been renamed, send the memory var name --as=varname.
- #
+# Checks if a variable has been evaluated into memory yet or exits with failure.
+#
+# $1 - The alias.  Or if not aliased, the config path used by `get_config`.
+# $2 - (Optional) The config path, if aliased.
+# @option as=name - @deprecated
+#
+# Both of these aliase examples are the same, though the --as is an older syntax
+# that has been deprecated.
+#
+# @code
+#   exit_with_failure_if_empty_config 'database.host'
+#
+#   ## Using an alias...
+#   exit_with_failure_if_empty_config 'host' 'database.host'
+#
+#   ## Aliased, deprecated syntax.
+#   exit_with_failure_if_empty_config 'database.host' --as=host
+# @endcode
+#
+# Returns 0 if the variable is in memory.
 function exit_with_failure_if_empty_config() {
     local alias=$1
     local config_path=$2
 
     parse_args "$@"
+    if [ ${#parse_args__args[@]} -eq 1 ]; then
+      alias=''
+      config_path=$1
+      if [[ "$parse_args__options__as" ]]; then
+        alias="$parse_args__options__as"
+        config_path="$1"
+      fi
+    else
+      alias=$1
+      config_path=$2
+    fi
+
     if [[ "$parse_args__options__status" ]]; then
       CLOUDY_EXIT_STATUS=$parse_args__options__status
     fi
@@ -1223,11 +1269,8 @@ function exit_with_failure_if_empty_config() {
     local code
     local value
     local error
-    local config_path=${parse_args__args[0]}
-    local alias=${parse_args__args[0]}
 
-    if [ ${#parse_args__args[@]} -gt 1 ]; then
-      config_path=${parse_args__args[1]}
+    if [[ "$alias" ]]; then
       code="eval \$(get_config_as \"$alias\" \"$config_path\")"
       error="\"$config_path\" as \"$alias\""
       value="$(eval "echo \$$alias")"
