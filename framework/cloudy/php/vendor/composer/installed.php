@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '8585a7c1a39a5db9bebbc7ddc9685571a1d6a8bd',
+        'reference' => '0d2e03119a9a6cc55e2ee690d9684b31dc2fb3d3',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '8585a7c1a39a5db9bebbc7ddc9685571a1d6a8bd',
+            'reference' => '0d2e03119a9a6cc55e2ee690d9684b31dc2fb3d3',
             'dev_requirement' => false,
         ),
         'aklump/data' => array(
