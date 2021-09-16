@@ -460,6 +460,38 @@ function string_split() {
     fi
 }
 
+# Echo $array_csv__array as CSV
+#
+# @option --prose Use comma+space and then the word "all" as the final separator
+# as when writing English prose, e.g. "do, re and mi".
+# @option --wrap Wrap each item with double quotes
+#
+# @code
+#   array_csv__array=('foo bar' 'baz' zulu)
+#   csv=$(array_csv)
+# @endcode
+function array_csv() {
+  local csv
+  local i=0
+  local length=${#array_csv__array[@]}
+  parse_args $@
+  for item in "${array_csv__array[@]}"; do
+    if [[ "$parse_args__options__wrap" ]]; then
+      item='"'$item'"'
+    fi
+    if [[ "$parse_args__options__prose" ]]; then
+      if [ $((i+=1)) -eq $length ]; then
+        csv="$csv and $item"
+      else
+        csv="$csv, $item"
+      fi
+    else
+      csv="$csv,$item"
+    fi
+  done
+  echo ${csv#,}
+}
+
 # Echo a string, which is an array joined by a substring.
 #
 # array_join__array

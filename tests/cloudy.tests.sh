@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function testArrayCsvEchosCorrectly() {
+  declare -a array_csv__array=('do re' mi 'fa so la')
+  assert_same "do re, mi and fa so la" "$(array_csv --prose)"
+  assert_same '"do re","mi","fa so la"' "$(array_csv --wrap)"
+  assert_same "do re,mi,fa so la" "$(array_csv)"
+}
+
 function testEchoPassEchosNonEmptyValues() {
   assert_not_empty "$(echo_pass "foo bar")"
 }
