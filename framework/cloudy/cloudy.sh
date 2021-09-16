@@ -464,7 +464,7 @@ function string_split() {
 #
 # @option --prose Use comma+space and then the word "all" as the final separator
 # as when writing English prose, e.g. "do, re and mi".
-# @option --wrap Wrap each item with double quotes
+# @option --quotes Wrap each item with double quotes
 #
 # @code
 #   array_csv__array=('foo bar' 'baz' zulu)
@@ -476,7 +476,7 @@ function array_csv() {
   local length=${#array_csv__array[@]}
   parse_args $@
   for item in "${array_csv__array[@]}"; do
-    if [[ "$parse_args__options__wrap" ]]; then
+    if [[ "$parse_args__options__quotes" ]]; then
       item='"'$item'"'
     fi
     if [[ "$parse_args__options__prose" ]]; then
