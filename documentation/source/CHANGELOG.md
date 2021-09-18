@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.3.6] - 2021-09-17
+
+### Changed
+
+- Configuration merge algorithm to address deep merge problem.
+
 ## [1.3.0] - 2021-09-11
 
 ### Fixed

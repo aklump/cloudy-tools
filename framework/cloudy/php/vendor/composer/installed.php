@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'acc30579349bd812bcb0140e2a22f3828064b22f',
+        'reference' => '06b033bf86c6b60f823f761d4868c76a635d9ca6',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'acc30579349bd812bcb0140e2a22f3828064b22f',
+            'reference' => '06b033bf86c6b60f823f761d4868c76a635d9ca6',
             'dev_requirement' => false,
         ),
         'aklump/data' => array(
@@ -35,6 +35,15 @@
             'install_path' => __DIR__ . '/../aklump/loft-lib',
             'aliases' => array(),
             'reference' => '7c377c03598b90389c1bc9ff75139eee51584a10',
+            'dev_requirement' => false,
+        ),
+        'ckr/arraymerger' => array(
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ckr/arraymerger',
+            'aliases' => array(),
+            'reference' => 'ac3d3a011088df46574d33bf1fdad2f829ef6ee9',
             'dev_requirement' => false,
         ),
         'doctrine/inflector' => array(
