@@ -122,6 +122,7 @@ class ComposerStaticInit161edfef4d39909e83d990466d457059
         'AKlump\\LoftLib\\Code\\ObjectCacheTrait' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/ObjectCacheTrait.php',
         'AKlump\\LoftLib\\Code\\PersistentSequence' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/PersistentSequence.php',
         'AKlump\\LoftLib\\Code\\ShortCodes' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/ShortCodes.php',
+        'AKlump\\LoftLib\\Code\\ShortCodesInterface' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/ShortCodesInterface.php',
         'AKlump\\LoftLib\\Code\\StandardPhpErrorException' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/StandardPhpErrorException.php',
         'AKlump\\LoftLib\\Code\\Strings' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/Strings.php',
         'AKlump\\LoftLib\\Code\\ThrowableErrorsTrait' => __DIR__ . '/..' . '/aklump/loft-lib/src/AKlump/LoftLib/Code/ThrowableErrorsTrait.php',
