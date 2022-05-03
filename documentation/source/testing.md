@@ -34,3 +34,7 @@ You may use the following as test fixtures, i.e., <https://phpunit.readthedocs.i
 
     setup_before_test
     teardown_after_test
+
+## Unit Testing of Php
+
+A good example of how to setup unit tests for PHP classes can be found in [aklump/website_backup](https://github.com/aklump/website_backup).

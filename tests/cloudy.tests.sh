@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+function testArrayDedupeEchosCorrectly() {
+    declare -a duplicates=("red white" "blue" "red" "blue" "red white")
+    assert_count 5 duplicates
+    eval $(array_dedupe duplicates)
+    assert_count 3 duplicates
+    assert_contains "red white" duplicates
+    assert_contains "red" duplicates
+    assert_contains "blue" duplicates
+}
+
 function testArrayCsvEchosCorrectly() {
   declare -a array_csv__array=('do re' mi 'fa so la')
   assert_same "do re, mi and fa so la" "$(array_csv --prose)"
@@ -617,8 +627,20 @@ function testGetConfigPathAsWorksAsItShould() {
   eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
   assert_same "$CLOUDY_ROOT/cache" $testpath
 }
-
 function testArrayHasValue() {
+  array_has_value__array=('foo bar' 'baz')
+  array_has_value 'foo bar'
+  assert_exit_status 0
+
+  array_has_value 'bar'
+  assert_exit_status 1
+
+  array_has_value 'foo'
+  assert_exit_status 1
+
+  array_has_value 'baz'
+  assert_exit_status 0
+
   array_has_value__array=('value1' 'value2')
   array_has_value 'value2'
   assert_exit_status 0
