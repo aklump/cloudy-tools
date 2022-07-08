@@ -601,6 +601,13 @@ function _cloudy_help_for_single_command() {
 function _cloudy_debug_helper() {
   local sidebar=''
   local IFS=";"
+  local default
+  local fg
+  local bg
+  local message
+  local basename
+  local funcname
+  local lineno
   read default fg bg message basename funcname lineno <<<"$@"
   [[ "$basename" ]] && sidebar="$sidebar${basename##./}"
   [[ "$funcname" ]] && sidebar="$funcname in $sidebar"
