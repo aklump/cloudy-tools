@@ -801,7 +801,7 @@ function echo_green_highlight() {
 #
 function echo_pass() {
   local message=$1
-  echo "$(echo_green_highlight ' ✔️') $(echo_green "$message")"
+  echo "$(echo_green_highlight '[X]') $(echo_green "$message")"
 }
 
 # Echo a message indicating a failed test result.
@@ -810,7 +810,7 @@ function echo_pass() {
 #
 function echo_fail() {
   local message=$1
-  echo "$(echo_red_highlight ' ✔️') $(echo_red "$message")"
+  echo "$(echo_red_highlight '[ ]') $(echo_red "$message")"
 }
 
 
