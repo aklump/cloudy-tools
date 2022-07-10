@@ -15,6 +15,7 @@ function testArrayCsvEchosCorrectly() {
   assert_same "do re, mi and fa so la" "$(array_csv --prose)"
   assert_same '"do re", "mi" and "fa so la"' "$(array_csv --prose --quotes)"
   assert_same '"do re","mi","fa so la"' "$(array_csv --quotes)"
+  assert_same "'do re','mi','fa so la'" "$(array_csv --single-quotes)"
   assert_same "do re,mi,fa so la" "$(array_csv)"
 }
 
