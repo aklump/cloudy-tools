@@ -59,6 +59,37 @@ function json_get_value() {
   echo $("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_get_value" "$path" "$json_content")
 }
 
+# Present a multiple choice selection list to the user.
+#
+# $1 - The message to display
+# $2 - Optional.  Alter the option to display for cancel.
+#
+# Returns 0 and echos the choice if one was selected; returns 1 if cancelled.
+function choose() {
+  parse_args "$@"
+  local message="${parse_args__args[0]}"
+  local cancel_label="${parse_args__args[1]:-NONE}"
+
+  message="${message% }"
+  message="${message%.}"
+  message="$message >"
+
+  if [[ "$parse_args__options__caution" ]]; then
+    PS3="$(echo_warning "$message") "
+  elif [[ "$parse_args__options__danger" ]]; then
+    PS3="$(echo_error "$message") "
+  else
+    PS3="$(echo_green_highlight "$message") "
+  fi
+
+  choose__array=("${choose__array[@]}" "$cancel_label")
+  select option in ${choose__array[@]}; do
+    [[ "$option" != "$cancel_label" ]] && echo "$option" && return 0
+    break;
+  done
+  return 1
+}
+
 # Prompt for a Y or N confirmation.
 #
 # $1 - The confirmation message
@@ -67,12 +98,11 @@ function json_get_value() {
 #
 # Returns 0 if the user answers Y; 1 if not.
 function confirm() {
-    local message="$1"
-
     parse_args "$@"
-    local message="${parse_args__args:-Continue?} [y/n]:"
+    local message="${parse_args__args[0]:-Continue?} [y/n]:"
     [[ "$parse_args__options__caution" ]] && message=$(echo_warning "$message")
     [[ "$parse_args__options__danger" ]] && message=$(echo_error "$message")
+    echo
     while true; do
         read -r -n 1 -p "$message " REPLY
         case $REPLY in
@@ -605,6 +635,8 @@ function get_command_args() {
 
 ##
  # Get a config path assignment.
+ #
+ # You should probably use get_config_as() instead as it's less brittle.
  #
  # @code
  #   eval $(get_config 'path.to.config')
