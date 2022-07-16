@@ -327,6 +327,16 @@ function testPathIsAbsolute() {
   assert_exit_status 1
 }
 
+function testPathUnresolve() {
+  assert_same "/do/re" $(path_unresolve "/foo/bar/" "/do/re")
+  assert_same "/do/re" $(path_unresolve "/foo/bar/" "/do/re/")
+  assert_same "." $(path_unresolve "/path_to_app/" "/path_to_app/")
+  assert_same "files" $(path_unresolve "/path_to_app/" "/path_to_app/files")
+  assert_same "files" $(path_unresolve "/path_to_app" "/path_to_app/files")
+  assert_same "files" $(path_unresolve "/path_to_app" "/path_to_app/files/")
+  assert_same "baz/zulu/alpha/tree.txt" $(path_unresolve "/foo/bar/" "/foo/bar/baz/zulu/alpha/tree.txt")
+}
+
 function testPathResolveEchosRealpath() {
   assert_same "$ROOT/tests" $(path_resolve "$ROOT" "tests/stubs/../../tests")
   assert_same "$ROOT/bogus/stubs/../../tests" $(path_resolve "$ROOT" "bogus/stubs/../../tests")

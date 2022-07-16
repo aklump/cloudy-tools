@@ -1615,17 +1615,24 @@ function path_resolve() {
     echo "$(cd $(dirname $path) && pwd)/$(basename $path)"
 }
 
-
 # Echo a relative path by removing a leading directory(ies).
+#
+# The trailing slash will always be removed.  The relative path is returned
+# without a leading slash.  If it cannot be unresolved, any leading slash will
+# remain.  If the two arguments are the same, '.' will be returned.
 #
 # $1 - The dirname to remove from the left of $2
 # $2 - The path to make relative by removing $1, if possible.
 #
 function path_unresolve() {
   local dirname="${1%/}"
-  local path="$2"
+  local path="${2%/}"
 
-  echo ${path#$dirname/}
+  local relative=${path#"$dirname"}
+  [[ "$relative" == "$path" ]] && echo "$path" && return 0
+  relative=${relative#/}
+  [[ "$relative" ]] && echo "$relative" && return 0
+  echo '.'
 }
 
 # Determine if a path is absolute (begins with /) or not.
