@@ -675,9 +675,11 @@ function _cloudy_echo_aligned_columns() {
   if [ ${#_cloudy_table_col_widths[@]} -gt 1 ]; then
     width=$(($width + ${#rborder}))
   fi
-  line="$(string_repeat "$top" $width)"
 
-  echo "$line"
+  if [[ "$top" ]]; then
+    line="$(string_repeat "$top" $width)"
+    echo "$line"
+  fi
 
   # Deal with header
   if [ ${#_cloudy_table_header[@]} -gt 0 ]; then
