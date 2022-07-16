@@ -86,8 +86,13 @@ When the config key points to an array `get_config` echos a string ready for `ev
     echo $perms_files
     echo $perms_directories
 
-If the config key points to an indexed array, e.g., ....
-
+Here's how to locate a value key.
+```bash
+eval $(get_config_keys_as 'keys' "items")
+for key in "${keys[@]}"; do
+  eval $(get_config_as -a 'label' "items.${key}.label")
+done
+```
 
 ### Non-Scalars Keys
 
@@ -192,3 +197,15 @@ You have one extra step of variable assignment.
 
     eval $(get_config_path "writeable_directories")
     writeable_directories=($_config_values[@]})    
+
+## Detecting Config Changes
+
+The variable `$CLOUDY_CONFIG_HAS_CHANGED` will be set to `true` if the configuration was rebuilt on a given execution.  This happens the first time the script is executed after a cache clear.  Otherwise it's value will be `false`.  The variable is available as early as the `boot` event.
+
+Use this variable to rebuild configuration when necessary:
+
+```shell
+if [[ "$CLOUDY_CONFIG_HAS_CHANGED" == true ]]; then
+  # TODO rebuild my dependent configuration.
+fi  
+```

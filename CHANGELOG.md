@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.3.7] - 2022-05-02
+
+### Added
+
+- `array_dedupe` function
+
+### Fixed
+
+- `assert_contains` and `assert_not_contains` with space-containing values now works.
+
 ## [1.3.6] - 2021-09-17
 
 ### Changed
