@@ -374,7 +374,7 @@ function get_option() {
 # You must provide your array as $array_has_value__array like so:
 # @code
 #   array_has_value__array=("${some_array_to_search[@]}")
-#   array_has "tree" && echo "found tree"
+#   array_has_value "tree" && echo "found tree"
 # @endcode
 #
 function array_has_value() {
@@ -501,8 +501,9 @@ function array_csv() {
     elif [[ "$parse_args__options__single_quotes" ]]; then
       item="'$item'"
     fi
+    [[ ! "$csv" ]] && csv="$item" && continue
     if [[ "$parse_args__options__prose" ]]; then
-      if [ $((i+=1)) -eq $length ]; then
+      if [ $((i+=1)) -eq $((length-1)) ]; then
         csv="$csv and $item"
       else
         csv="$csv, $item"
@@ -511,7 +512,7 @@ function array_csv() {
       csv="$csv,$item"
     fi
   done
-  echo ${csv#,}
+  echo "$csv"
 }
 
 # Echo a string, which is an array joined by a substring.

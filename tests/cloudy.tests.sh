@@ -10,6 +10,12 @@ function testArrayDedupeEchosCorrectly() {
     assert_contains "blue" duplicates
 }
 
+function testArrayCsvFiltersEmpty() {
+  array_csv__array=()
+  array_csv__array=("${array_csv__array[@]}" "files")
+  assert_same "files" "$(array_csv --prose)"
+}
+
 function testArrayCsvEchosCorrectly() {
   declare -a array_csv__array=('do re' mi 'fa so la')
   assert_same "do re, mi and fa so la" "$(array_csv --prose)"
