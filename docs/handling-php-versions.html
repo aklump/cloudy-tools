@@ -22,7 +22,7 @@
 
 <section><section>
 
-<p>Cloudy makes heavy use of PHP and in so doing gets the PHP executable using <code>command -v php</code>.  If this is insufficient you may provide the PHP executable in <a href="https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/">the environment variable</a> <code>CLOUDY_PHP</code>.</p>
+<p>Cloudy makes heavy use of PHP and in so doing gets the PHP executable using <code>command -v php</code>. If this is insufficient you may provide the PHP executable in <a href="https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/">the environment variable</a> <code>CLOUDY_PHP</code>.</p>
 
 <p>From <a href="https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/">that same article</a>:</p>
 
@@ -53,9 +53,16 @@
 <pre><code class="php">output=$("$CLOUDY_PHP" "/my/php/script/foo.php")
 </code></pre>
 
+<h2>Using Configuration in Your PHP</h2>
+
+<ol>
+<li>Add this line just after bootstrap in your app controller <code>export CLOUDY_CONFIG_JSON</code> (or wherever appropriate)</li>
+<li>Decode the environment variable in your PHP script, something like this: <code>$config = json_decode(getenv('CLOUDY_CONFIG_JSON'), TRUE);</code></li>
+</ol>
+
 <h3>Scoping <code>$CLOUDY_PHP</code> to Only Your App</h3>
 
-<p>It may be desired in your cloudy-built app to expose a different variable other than <code>$CLOUDY_PHP</code>, e.g. <code>$LOFT_DEPLOY_PHP</code>.  Here's how to do that with an <a href="events.html">event handler</a>.  In this case the Cloudy-built app is called "Loft Deploy".</p>
+<p>It may be desired in your cloudy-built app to expose a different variable other than <code>$CLOUDY_PHP</code>, e.g. <code>$LOFT_DEPLOY_PHP</code>. Here's how to do that with an <a href="events.html">event handler</a>. In this case the Cloudy-built app is called "Loft Deploy".</p>
 
 <pre><code class="bash">function on_pre_config() {
   if [[ "$LOFT_DEPLOY_PHP" ]]; then
@@ -72,7 +79,7 @@
 <footer>
   <div class="pager"><a href="logging.html" class="prev logging">&laquo;Logging to File</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="version.html" class="next version">Script Version&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.7 &bull; Last Updated: Thu, 17 Mar 2022 12:50:46 -0700</p>
+    <p class="legaleeze center">Version: 1.3.8 &bull; Last Updated: Fri, 15 Jul 2022 22:11:42 -0700</p>
   </div>
 </footer>
 

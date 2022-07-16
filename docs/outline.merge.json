@@ -6,6 +6,10 @@
             "title": "Quick Start"
         },
         {
+            "id": "ex",
+            "title": "Code Examples"
+        },
+        {
             "id": "bash",
             "title": "Bash"
         }

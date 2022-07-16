@@ -23,12 +23,15 @@
 <section><section><h2>Cloudy Functions</h2>
 
 <div class="function-index">
+      <a href="#You should probably use get_config_as() instead as it&#039;s less brittle.">You should probably use get_config_as() instead as it&#039;s less brittle.</a>
       <a href="#array_csv">array_csv</a>
+      <a href="#array_dedupe">array_dedupe</a>
       <a href="#array_has_value">array_has_value</a>
       <a href="#array_join">array_join</a>
       <a href="#array_map">array_map</a>
       <a href="#array_sort">array_sort</a>
       <a href="#array_sort_by_item_length">array_sort_by_item_length</a>
+      <a href="#choose">choose</a>
       <a href="#confirm">confirm</a>
       <a href="#date8601">date8601</a>
       <a href="#debug">debug</a>
@@ -50,6 +53,9 @@
       <a href="#echo_red_list">echo_red_list</a>
       <a href="#echo_slim_table">echo_slim_table</a>
       <a href="#echo_table">echo_table</a>
+      <a href="#echo_task">echo_task</a>
+      <a href="#echo_task_complete">echo_task_complete</a>
+      <a href="#echo_task_failed">echo_task_failed</a>
       <a href="#echo_title">echo_title</a>
       <a href="#echo_warning">echo_warning</a>
       <a href="#echo_white">echo_white</a>
@@ -74,7 +80,6 @@
       <a href="#get_command">get_command</a>
       <a href="#get_command_arg">get_command_arg</a>
       <a href="#get_command_args">get_command_args</a>
-      <a href="#get_config">get_config</a>
       <a href="#get_config_as">get_config_as</a>
       <a href="#get_config_keys">get_config_keys</a>
       <a href="#get_config_keys_as">get_config_keys_as</a>
@@ -183,6 +188,20 @@
 <h2>Functions In Depth By Name</h2>
 
 <div class="function-list">
+      <a name="You should probably use get_config_as() instead as it&#039;s less brittle."></a>
+    <h2>You should probably use get_config_as() instead as it&#039;s less brittle.()</h2>
+    <p class="summary">@code
+  eval $(get_config &#039;path.to.config&#039;)
+@code</p>
+    
+        
+        <pre><code>When requesting an array you must pass -a as the first argument if there&#039;s<br />
+any chance that the return value will be empty.<br />
+@code<br />
+  eval $(get_config &#039;path.to.string&#039; &#039;default_value&#039;)<br />
+  eval $(get_config -a &#039;path.to.array&#039; &#039;default_value&#039;)<br />
+@code</code></pre>
+        
       <a name="array_csv"></a>
     <h2>array_csv()</h2>
     <p class="summary">Echo $array_csv__array as CSV</p>
@@ -190,10 +209,26 @@
         
         <pre><code>@option --prose Use comma+space and then the word &quot;all&quot; as the final separator<br />
 as when writing English prose, e.g. &quot;do, re and mi&quot;.<br />
-@option --quotes Wrap each item with double quotes<br />
+@option --quotes Wrap each item with double quotes.<br />
+@option --single-quotes Wrap each item with single quotes.<br />
 @code<br />
   array_csv__array=(&#039;foo bar&#039; &#039;baz&#039; zulu)<br />
   csv=$(array_csv)<br />
+@endcode</code></pre>
+        
+      <a name="array_dedupe"></a>
+    <h2>array_dedupe()</h2>
+    <p class="summary">Remove duplicate values from an array.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: string The VARIABLE NAME of the defined array.</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        <pre><code>Beware the order of the array will most likely be altered.<br />
+@code<br />
+  declare -a duplicated=(&quot;blue&quot; &quot;red&quot; &quot;blue&quot; &quot;yellow&quot;);<br />
+  eval $(array_dedupe duplicated)<br />
 @endcode</code></pre>
         
       <a name="array_has_value"></a>
@@ -208,7 +243,7 @@ as when writing English prose, e.g. &quot;do, re and mi&quot;.<br />
 You must provide your array as $array_has_value__array like so:<br />
 @code<br />
   array_has_value__array=(&quot;${some_array_to_search[@]}&quot;)<br />
-  array_has &quot;tree&quot; &amp;&amp; echo &quot;found tree&quot;<br />
+  array_has_value &quot;tree&quot; &amp;&amp; echo &quot;found tree&quot;<br />
 @endcode</code></pre>
         
       <a name="array_join"></a>
@@ -227,7 +262,7 @@ You must provide your array as $array_has_value__array like so:<br />
     <p class="summary">Apply a callback to every item in an array and echo new array eval statement.</p>
     
           Arguments: <ul class="function-list__arguments">
-              <li>$1: string The name of the defined array.</li>
+              <li>$1: string The VARIABLE NAME of the defined array.</li>
                           </ul><ul class="function-list__return"><li>Returns nothing.</li>
             </ul>
         
@@ -459,6 +494,17 @@ mutated by the eval statement at the end.<br />
             </ul>
         
         
+      <a name="choose"></a>
+    <h2>choose()</h2>
+    <p class="summary">Present a multiple choice selection list to the user.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The message to display</li>
+              <li>$2: Optional.  Alter the option to display for cancel.</li>
+                          </ul><ul class="function-list__return"><li>Returns 0 and echos the choice if one was selected; returns 1 if cancelled.</li>
+            </ul>
+        
+        
       <a name="confirm"></a>
     <h2>confirm()</h2>
     <p class="summary">Prompt for a Y or N confirmation.</p>
@@ -673,6 +719,35 @@ You must add items to your list first:<br />
     <p class="summary">Echo the table as it&#039;s been defined.</p>
     
         
+        
+      <a name="echo_task"></a>
+    <h2>echo_task()</h2>
+    <p class="summary">Echo a task has started, a.k.a, pending.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: The imperative, e.g., &quot;Download all files&quot;</li>
+                          </ul><ul class="function-list__return"><li>Returns nothing.</li>
+            </ul>
+        
+        <pre><code>This should be followed by echo_task_complete or echo_task_failed.<br />
+@see echo_task_complete<br />
+@see echo_task_failed</code></pre>
+        
+      <a name="echo_task_complete"></a>
+    <h2>echo_task_complete()</h2>
+    <p class="summary">Replace the task pending with success.</p>
+    
+        
+        <pre><code>@see echo_task<br />
+@see echo_task_failed</code></pre>
+        
+      <a name="echo_task_failed"></a>
+    <h2>echo_task_failed()</h2>
+    <p class="summary">Replace the task pending with failure.</p>
+    
+        
+        <pre><code>@see echo_task<br />
+@see echo_task_complete</code></pre>
         
       <a name="echo_title"></a>
     <h2>echo_title()</h2>
@@ -921,21 +996,6 @@ Returns 0 if found, 2 if using the default.</code></pre>
         <pre><code>If options are mixed in they will be stripped out, that is to say, if the<br />
 script was called like this &quot;script.sh do -f re -h mi&quot;, this function will<br />
 echo &quot;do re mi&quot;</code></pre>
-        
-      <a name="get_config"></a>
-    <h2>get_config()</h2>
-    <p class="summary">Get a config path assignment.</p>
-    
-        
-        <pre><code>@code<br />
-  eval $(get_config &#039;path.to.config&#039;)<br />
-@code<br />
-When requesting an array you must pass -a as the first argument if there&#039;s<br />
-any chance that the return value will be empty.<br />
-@code<br />
-  eval $(get_config &#039;path.to.string&#039; &#039;default_value&#039;)<br />
-  eval $(get_config -a &#039;path.to.array&#039; &#039;default_value&#039;)<br />
-@code</code></pre>
         
       <a name="get_config_as"></a>
     <h2>get_config_as()</h2>
@@ -1284,6 +1344,9 @@ The following variables are generated for:<br />
               <li>$2: The path to make relative by removing $1, if possible.</li>
                         </ul>
         
+        <pre><code>The trailing slash will always be removed.  The relative path is returned<br />
+without a leading slash.  If it cannot be unresolved, any leading slash will<br />
+remain.  If the two arguments are the same, &#039;.&#039; will be returned.</code></pre>
         
       <a name="string_lower"></a>
     <h2>string_lower()</h2>
@@ -1627,7 +1690,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.7 &bull; Last Updated: Thu, 17 Mar 2022 12:50:41 -0700</p>
+    <p class="legaleeze center">Version: 1.3.8 &bull; Last Updated: Fri, 15 Jul 2022 22:11:35 -0700</p>
   </div>
 </footer>
 
