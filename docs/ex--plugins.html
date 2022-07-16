@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Single File Plugins Pattern</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--ex--plugins">
+<header>
+  <div class="pager"><a href="ex--functions.html" class="prev ex--functions">&laquo;Functions</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="ex--menus-input.html" class="next ex--menus-input">User Input and Menus&raquo;</a></div></header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>Single File Plugins Pattern</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><section>
+
+<p>Here is a pattern that can be used if you want to allow "plugin" type files, php or bash, to be used by your project:</p>
+
+<p><em>Implementing controller snippet:</em></p>
+
+<pre><code class="shell">call_plugin "$CONFIG_DIR/plugins/$plugin" || exit_with_failure
+</code></pre>
+
+<p><em>Function definition for <code>call_plugin()</code></em></p>
+
+<pre><code class="shell">function call_plugin() {
+  local plugin_path="$1"
+
+  if [[ ! -f "$plugin_path" ]]; then
+    fail_because "$plugin_path does not exist."
+    return 1
+  elif [[ "$(path_extension "$plugin_path")" == "php" ]]; then
+    # TODO It may be more appropriate to be explicite about the arguments.
+    plugin_output=$($CLOUDY_PHP  $@)
+  else
+    plugin_output=$(.  $@)
+  fi
+
+  if [[ $? -ne 0 ]]; then
+    [[ "$plugin_output" ]] &amp;&amp; fail_because "$plugin_output"
+    fail_because "\"$plugin\" has failed."
+    return 1
+  fi
+
+  [[ "$plugin_output" ]] &amp;&amp; succeed_because "$plugin_output"
+  return 0
+}
+</code></pre>
+
+<p><em>The plugin, PHP version:</em></p>
+
+<pre><code class="php">&lt;?php
+$filepath = $argv[1];
+
+$contents = file_get_contents($filepath);
+
+if ('' == $contents) {
+  echo "$filepath is an empty file.";
+  exit(1);
+}
+echo "Contents approved in $filepath";
+</code></pre>
+
+<h2>Notes</h2>
+
+<ul>
+<li>The echo string should not contain any line breaks.</li>
+<li>The plugin must exit with non-zero if it fails.</li>
+<li>When existing non-zero, a default failure message will always be displayed. If the plugin echos a message, this default will appear after the message.</li>
+<li>If the plugin exists with a zero, there is no default message.</li>
+</ul>
+</section></section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager"><a href="ex--functions.html" class="prev ex--functions">&laquo;Functions</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="ex--menus-input.html" class="next ex--menus-input">User Input and Menus&raquo;</a></div>  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.3.8 &bull; Last Updated: Fri, 15 Jul 2022 22:11:42 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

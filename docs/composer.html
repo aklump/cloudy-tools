@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Enabling Installation w/Composer</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--composer">
+<header>
+  <div class="pager"><a href="documenting.html" class="prev documenting">&laquo;Documenting Code</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="events.html" class="next events">Events (Hooks)&raquo;</a></div></header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>Enabling Installation w/Composer</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><section>
+
+<blockquote>
+  <p>This is a WIP page.</p>
+</blockquote>
+
+<ol>
+<li>Add <em>composer.json</em> to your cloudy package.</li>
+<li>Create <em>bin</em> folder</li>
+<li>Create the symlink in <em>bin</em> to the entry script, refer to <em>cloudypm.yml</em></li>
+<li>Add this to <em>composer.json</em> to the <code>bin</code> section</li>
+</ol>
+
+<pre><code class="json">{
+    "bin": [
+        "bin/live_dev_porter",
+        "bin/ldp"
+    ]
+}
+</code></pre>
+
+<ol start="5">
+<li>Add this line to <em>.gitignore</em> to prevent core dependencies <code>/cloudy/vendor/</code></li>
+<li>Except for the <code>vendor</code> line, merge <em>cloudy/.gitignore</em> up, into your package's.</li>
+<li>An your package root type <code>cloudy core</code>.</li>
+<li>Change the path to cloudy in your controller file from <code>to</code>.</li>
+<li>Move all <code>require</code> from <em>cloudy/composer.json</em> to your package.</li>
+<li>Delete <em>cloudy/composer.</em></li>
+<li>Edit <em>cloudy/php/bootstrap.php</em> autoload to <code>require_once __DIR__ . '/../../vendor/autoload.php';</code></li>
+<li><code>composer require aklump/live-dev-porter:@dev</code></li>
+</ol>
+</section></section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager"><a href="documenting.html" class="prev documenting">&laquo;Documenting Code</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="events.html" class="next events">Events (Hooks)&raquo;</a></div>  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.3.8 &bull; Last Updated: Fri, 15 Jul 2022 22:11:38 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

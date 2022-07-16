@@ -9,7 +9,7 @@
 
 <body class="page--configuration">
 <header>
-  <div class="pager"><a href="route-access.html" class="prev route-access">&laquo;Command Access</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="development.html" class="next development">Development Tools&raquo;</a></div></header>
+  <div class="pager"><a href="packages.html" class="prev packages">&laquo;Cloudy Packages</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="development.html" class="next development">Development Tools&raquo;</a></div></header>
 
   <div class="search__wrapper">
   <form action="search--results.html">
@@ -117,7 +117,13 @@ echo $perms_files
 echo $perms_directories
 </code></pre>
 
-<p>If the config key points to an indexed array, e.g., ....</p>
+<p>Here's how to locate a value key.</p>
+
+<pre><code class="bash">eval $(get_config_keys_as 'keys' "items")
+for key in "${keys[@]}"; do
+  eval $(get_config_as -a 'label' "items.${key}.label")
+done
+</code></pre>
 
 <h3>Non-Scalars Keys</h3>
 
@@ -233,6 +239,17 @@ $files_public
 <pre><code>eval $(get_config_path "writeable_directories")
 writeable_directories=($_config_values[@]})    
 </code></pre>
+
+<h2>Detecting Config Changes</h2>
+
+<p>The variable <code>$CLOUDY_CONFIG_HAS_CHANGED</code> will be set to <code>true</code> if the configuration was rebuilt on a given execution.  This happens the first time the script is executed after a cache clear.  Otherwise it's value will be <code>false</code>.  The variable is available as early as the <code>boot</code> event.</p>
+
+<p>Use this variable to rebuild configuration when necessary:</p>
+
+<pre><code class="shell">if [[ "$CLOUDY_CONFIG_HAS_CHANGED" == true ]]; then
+  # TODO rebuild my dependent configuration.
+fi  
+</code></pre>
 </section></section>
 
 <div class="search__results">
@@ -240,9 +257,9 @@ writeable_directories=($_config_values[@]})
 </div>
 
 <footer>
-  <div class="pager"><a href="route-access.html" class="prev route-access">&laquo;Command Access</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="development.html" class="next development">Development Tools&raquo;</a></div>  
+  <div class="pager"><a href="packages.html" class="prev packages">&laquo;Cloudy Packages</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="development.html" class="next development">Development Tools&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.3.7 &bull; Last Updated: Thu, 17 Mar 2022 12:50:44 -0700</p>
+    <p class="legaleeze center">Version: 1.3.8 &bull; Last Updated: Fri, 15 Jul 2022 22:11:38 -0700</p>
   </div>
 </footer>
 

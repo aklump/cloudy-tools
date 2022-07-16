@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Functions</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--ex--functions">
+<header>
+  <div class="pager"><a href="ex--route-access.html" class="prev ex--route-access">&laquo;Command Access</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="ex--plugins.html" class="next ex--plugins">Single File Plugins Pattern&raquo;</a></div></header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>Functions</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><section>
+
+<h2>Using Functions to Create Variable Values</h2>
+
+<p>Follow this pattern for best results.</p>
+
+<pre><code class="bash">function lorem_echo_color() {
+  local is_colorblind="$1"
+
+  [[ "$is_colorblind" == true ]] &amp;&amp; echo "Observer is colorblind." &amp;&amp; return 1
+  echo "blue" &amp;&amp; return 0
+}
+</code></pre>
+
+<h3>Acting Only When a Variable Is Set</h3>
+
+<pre><code class="bash">if color=$(lorem_echo_color); then
+  echo "The color has been set to: $color"
+fi
+</code></pre>
+
+<h3>Failing When a Variable Cannot Be Set</h3>
+
+<pre><code class="bash">function parent_caller() {
+  local color
+  ! color=$(lorem_echo_color) &amp;&amp; fail_because "$color" &amp;&amp; return 1
+}
+
+# In this example `lorem_echo_color` is not being called from inside a parent function.
+! color=$(lorem_echo_color) &amp;&amp; fail_because "$color" &amp;&amp; exit_with_failure
+</code></pre>
+
+<h3>Assigning Default Values Instead of Failing</h3>
+
+<pre><code class="bash"># Use this pattern for an empty or default value
+color=$(lorem_echo_color) || color=''
+color=$(lorem_echo_color) || color='some default'
+</code></pre>
+
+<p>Points to take note of:</p>
+
+<ul>
+<li>Do not put <code>fail_because</code> inside of functions that echo their results. The message will get lost due due to the subshell aspect.</li>
+<li>Instead echo the message to be passed into <code>fail_because</code> by the caller.</li>
+<li>In parent functions, do not use <code>local</code> on the same line as the <code>color=</code> assignment or this will cause the <code>return 1</code> to be lost.</li>
+<li>Sometimes you will want a default value rather than to process a failure, use the second example in that case.</li>
+</ul>
+</section></section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager"><a href="ex--route-access.html" class="prev ex--route-access">&laquo;Command Access</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="ex--plugins.html" class="next ex--plugins">Single File Plugins Pattern&raquo;</a></div>  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.3.8 &bull; Last Updated: Fri, 15 Jul 2022 22:11:41 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+
