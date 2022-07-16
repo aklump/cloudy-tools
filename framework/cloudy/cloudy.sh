@@ -816,6 +816,41 @@ function echo_fail() {
   echo "$(echo_red_highlight '[ ]') $(echo_red "$message")"
 }
 
+# Echo a task has started, a.k.a, pending.
+#
+# This should be followed by echo_task_complete or echo_task_failed.
+#
+# $1 - The imperative, e.g., "Download all files"
+#
+# Returns nothing.
+#
+# @see echo_task_complete
+# @see echo_task_failed
+function echo_task() {
+  echo_task__task="$1"
+  echo "$(echo_blue '[ ]') $(echo_blue "$echo_task__task")"
+}
+
+# Replace the task pending with success.
+#
+# Returns nothing.
+#
+# @see echo_task
+# @see echo_task_failed
+function echo_task_complete() {
+  echo -n "$(tput cuu1)" && echo_pass "$echo_task__task"
+}
+
+# Replace the task pending with failure.
+#
+# Returns nothing.
+#
+# @see echo_task
+# @see echo_task_complete
+function echo_task_failed() {
+  echo -n "$(tput cuu1)" && echo_fail "$echo_task__task"
+}
+
 
 # Echo a string with yellow text.
 #
