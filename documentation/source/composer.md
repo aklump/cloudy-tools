@@ -14,7 +14,14 @@
     ]
 }
 ```
-5. Add this line to _.gitignore_ to prevent core dependencies `/cloudy/vendor/`
+5. Add the following to _.gitignore_ to prevent core dependencies:
+    ```
+    /cloudy/.gitignore
+    /cloudy/cache/
+    /cloudy/php/composer*
+    /cloudy/php/vendor/
+    /cloudy/php/vendor/*
+    ```
 6. Except for the `vendor` line, merge _cloudy/.gitignore_ up, into your package's.
 7. An your package root type `cloudy core`.
 8. Change the path to cloudy in your controller file from `` to ``.
