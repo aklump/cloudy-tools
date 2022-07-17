@@ -31,8 +31,6 @@ if (empty($autoload_path)) {
   throw new \RuntimeException('Failed to autoload Cloudy core dependencies.');
 }
 
-$g = new Data();
-
 /**
  * Sort an array by the length of it's values.
  *
