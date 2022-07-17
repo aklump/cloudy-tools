@@ -2,10 +2,11 @@
 
 > This is a WIP page.
 
-1. Add _composer.json_ to your cloudy package.
+1. Add _composer.json_ to your application root.
 2. Create _bin_ folder
 3. Create the symlink in _bin_ to the entry script, refer to _cloudypm.yml_
 4. Add this to _composer.json_ to the `bin` section
+
 ```json
 {
     "bin": [
@@ -14,6 +15,7 @@
     ]
 }
 ```
+
 5. Add the following to _.gitignore_ to prevent core dependencies:
     ```
     /cloudy/.gitignore
@@ -28,4 +30,11 @@
 9. Move all `require` from _cloudy/composer.json_ to your package.
 10. Delete _cloudy/composer._
 11. Edit _cloudy/php/bootstrap.php_ autoload to `require_once __DIR__ . '/../../vendor/autoload.php';`
-12. `composer require aklump/live-dev-porter:@dev` 
+12. `composer require aklump/live-dev-porter:@dev`
+13. Add this to your cloudy script, and point to your app's autoload.
+
+   ```php
+   # Define an alternative location for the Composer autoloader relative to this
+   # script.  See documentation on using with composer.
+   COMPOSER_AUTOLOAD="./vendor/autoload.php"
+   ```
