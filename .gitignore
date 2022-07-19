@@ -1,2 +1,2 @@
 /.idea
-/framework/cloudy/php/vendor/composer/tmp*
+/framework/cloudy/vendor/composer/tmp*

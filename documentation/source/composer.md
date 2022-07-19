@@ -2,32 +2,47 @@
 
 > This is a WIP page.
 
-1. Add _composer.json_ to your application root.
-2. Create _bin_ folder
-3. Create the symlink in _bin_ to the entry script, refer to _cloudypm.yml_
-4. Add this to _composer.json_ to the `bin` section
+
+## Move Dependencies Into Your Application
+
+This assumes you have already initiazed Composer for your app.
+
+1. Install cloudy in the root of your app with `cloudy core`
+2. Add the following to your root _composer.json_
+```json
+{
+  "repositories": [
+    {
+      "type": "path",
+      "url": "cloudy/"
+    }
+  ]
+}
+```
+1. `composer require aklump/cloudy`
+3. SCM ignore the following cloudy-managed Composer dependencies:
+    ```
+    /cloudy/.gitignore
+    /cloudy/cache/
+    /cloudy/composer*
+    /cloudy/vendor/
+    /cloudy/vendor/*
+    ```
+4. Except for the `vendor` line, merge _cloudy/.gitignore_ up, into your package's.
+6. Make sure your bootstrap code section matches that of _cloudy/framework/script.sh_
+
+## Setup Symlinks
+
+1. Add this to _composer.json_ to the `bin` section
 
 ```json
 {
     "bin": [
-        "bin/live_dev_porter",
         "bin/ldp"
     ]
 }
 ```
+2. Create _bin_ folder
+3. Create the symlink in _bin_ to the entry script, refer to _cloudypm.yml_
 
-5. Add the following to _.gitignore_ to prevent core dependencies:
-    ```
-    /cloudy/.gitignore
-    /cloudy/cache/
-    /cloudy/php/composer*
-    /cloudy/php/vendor/
-    /cloudy/php/vendor/*
-    ```
-6. Except for the `vendor` line, merge _cloudy/.gitignore_ up, into your package's.
-7. An your package root type `cloudy core`.
-8. Change the path to cloudy in your controller file from `` to ``.
-9. Move all `require` from _cloudy/composer.json_ to your package.
-10. Delete _cloudy/composer._
-11. Edit _cloudy/php/bootstrap.php_ autoload to `require_once __DIR__ . '/../../vendor/autoload.php';`
 12. `composer require aklump/live-dev-porter:@dev`

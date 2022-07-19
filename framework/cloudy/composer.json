@@ -1,4 +1,8 @@
 {
+    "name": "aklump/cloudy",
+    "description": "A BASH framework, which uses YAML or JSON for your script's configuration and provides a unit testing framework.",
+    "license": "BSD-3-Clause",
+    "version": "1.4.0",
     "require": {
         "symfony/yaml": "^3.4|^4|^5",
         "justinrainbow/json-schema": "^5.2",

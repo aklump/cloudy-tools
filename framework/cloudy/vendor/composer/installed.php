@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
+        'pretty_version' => '0.0.0',
+        'version' => '0.0.0.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b4965faa9b5ba227c19577e57d2e5e0f96923d2a',
-        'name' => '__root__',
+        'reference' => NULL,
+        'name' => 'aklump/cloudy',
         'dev' => true,
     ),
     'versions' => array(
-        '__root__' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+        'aklump/cloudy' => array(
+            'pretty_version' => '0.0.0',
+            'version' => '0.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b4965faa9b5ba227c19577e57d2e5e0f96923d2a',
+            'reference' => NULL,
             'dev_requirement' => false,
         ),
         'aklump/data' => array(
