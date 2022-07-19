@@ -861,7 +861,18 @@ function echo_fail() {
 # @see echo_task_failed
 function echo_task() {
   echo_task__task="$1"
+  tput civis && tput sc
   echo "$(echo_blue '[ ]') $(echo_blue "$echo_task__task")"
+}
+
+# Call this to erase the last "echo_task".
+#
+# You may want to do this if the task was aborted and neight completed nor
+# failed.  It will erase the task instead of marking a result.
+#
+# Returns nothing.
+function clear_task() {
+  tput rc && tput sc && echo && tput rc && tput cnorm
 }
 
 # Replace the task pending with success.
@@ -871,7 +882,7 @@ function echo_task() {
 # @see echo_task
 # @see echo_task_failed
 function echo_task_complete() {
-  echo -n "$(tput cuu1)" && echo_pass "$echo_task__task"
+  tput rc && echo_pass "$echo_task__task" && tput cnorm
 }
 
 # Replace the task pending with failure.
@@ -881,7 +892,7 @@ function echo_task_complete() {
 # @see echo_task
 # @see echo_task_complete
 function echo_task_failed() {
-  echo -n "$(tput cuu1)" && echo_fail "$echo_task__task"
+  tput rc && echo_fail "$echo_task__task" && tput cnorm
 }
 
 
