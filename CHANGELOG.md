@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 2022-07-19
+
+### Added
+
+- Added functions `echo_task`, `clear_task`, `echo_task_completed`, `echo_task_failed`, `choose`
+- Configurable Composer vendor direct using `$COMPOSER_VENDOR`
+- Added `$CLOUDY_CONFIG_HAS_CHANGED` which will be `true` if the configuration was rebuilt during boot.
+- Other small improvements and bug fixes.
+
+### Changed
+
+- Moved Composer vendor directory from _framework/cloudy/php/vendor_ to _framework/cloudy/vendor_.
+
 ## [1.3.7] - 2022-05-02
 
 ### Added
