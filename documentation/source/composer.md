@@ -31,10 +31,3 @@
 10. Delete _cloudy/composer._
 11. Edit _cloudy/php/bootstrap.php_ autoload to `require_once __DIR__ . '/../../vendor/autoload.php';`
 12. `composer require aklump/live-dev-porter:@dev`
-13. Add this to your cloudy script, and point to your app's autoload.
-
-   ```php
-   # Define an alternative location for the Composer autoloader relative to this
-   # script.  See documentation on using with composer.
-   COMPOSER_AUTOLOAD="./vendor/autoload.php"
-   ```
