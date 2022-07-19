@@ -26,35 +26,54 @@
   <p>This is a WIP page.</p>
 </blockquote>
 
+<h2>Move Dependencies Into Your Application</h2>
+
+<p>This assumes you have already initiazed Composer for your app.</p>
+
 <ol>
-<li>Add <em>composer.json</em> to your application root.</li>
-<li>Create <em>bin</em> folder</li>
-<li>Create the symlink in <em>bin</em> to the entry script, refer to <em>cloudypm.yml</em></li>
+<li>Install cloudy in the root of your app with <code>cloudy core</code></li>
+<li>Add the following to your root <em>composer.json</em></li>
+</ol>
+
+<pre><code class="json">{
+  "repositories": [
+    {
+      "type": "path",
+      "url": "cloudy/"
+    }
+  ]
+}
+</code></pre>
+
+<ol>
+<li><code>composer require aklump/cloudy</code></li>
+<li>SCM ignore the following cloudy-managed Composer dependencies:
+<code>/cloudy/.gitignore
+/cloudy/cache/
+/cloudy/composer*
+/cloudy/vendor/
+/cloudy/vendor/*</code></li>
+<li>Except for the <code>vendor</code> line, merge <em>cloudy/.gitignore</em> up, into your package's.</li>
+<li>Make sure your bootstrap code section matches that of <em>cloudy/framework/script.sh</em></li>
+</ol>
+
+<h2>Setup Symlinks</h2>
+
+<ol>
 <li>Add this to <em>composer.json</em> to the <code>bin</code> section</li>
 </ol>
 
 <pre><code class="json">{
     "bin": [
-        "bin/live_dev_porter",
         "bin/ldp"
     ]
 }
 </code></pre>
 
-<ol start="5">
-<li>Add the following to <em>.gitignore</em> to prevent core dependencies:
-<code>/cloudy/.gitignore
-/cloudy/cache/
-/cloudy/php/composer*
-/cloudy/php/vendor/
-/cloudy/php/vendor/*</code></li>
-<li>Except for the <code>vendor</code> line, merge <em>cloudy/.gitignore</em> up, into your package's.</li>
-<li>An your package root type <code>cloudy core</code>.</li>
-<li>Change the path to cloudy in your controller file from <code>to</code>.</li>
-<li>Move all <code>require</code> from <em>cloudy/composer.json</em> to your package.</li>
-<li>Delete <em>cloudy/composer.</em></li>
-<li>Edit <em>cloudy/php/bootstrap.php</em> autoload to <code>require_once __DIR__ . '/../../vendor/autoload.php';</code></li>
-<li><code>composer require aklump/live-dev-porter:@dev</code></li>
+<ol start="2">
+<li>Create <em>bin</em> folder</li>
+<li><p>Create the symlink in <em>bin</em> to the entry script, refer to <em>cloudypm.yml</em></p></li>
+<li><p><code>composer require aklump/live-dev-porter:@dev</code></p></li>
 </ol>
 </section></section>
 
@@ -65,7 +84,7 @@
 <footer>
   <div class="pager"><a href="documenting.html" class="prev documenting">&laquo;Documenting Code</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="events.html" class="next events">Events (Hooks)&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.4.0 &bull; Last Updated: Tue, 19 Jul 2022 14:28:42 -0700</p>
+    <p class="legaleeze center">Version: 1.4.1 &bull; Last Updated: Tue, 19 Jul 2022 16:16:37 -0700</p>
   </div>
 </footer>
 
