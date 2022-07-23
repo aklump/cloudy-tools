@@ -1,5 +1,27 @@
 # Functions
 
+## Correct Way to Pass Function Arguments
+
+> Notice the double quotes below `"$@"`  Without these any quoted arguments containing spaces will not be properly passed along.
+
+```shell
+function env_on_import_db() {
+  call_plugin mysql import_db "$@"
+}
+```
+
+Or shift the first argument and pass the rest:
+
+```shell
+function remote_ssh_by_environment() {
+  local environment_id="$1"
+
+  eval $(get_config_as env_auth "environments.$environment_id.ssh")
+  [[ "$env_auth" ]] || return 1
+  echo ssh -t -o BatchMode=yes "$env_auth" "${@:2}"
+}
+```
+
 ## Using Functions to Create Variable Values
 
 Follow this pattern for best results.
