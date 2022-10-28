@@ -546,7 +546,18 @@ function testGetConfigPathOnNullReturnsArray() {
   assert_count 0 "tests_empty_array"
 }
 
+function testTableSetColumnWidths() {
+  table_clear
+  table_add_row "foo" "bar" "baz"
+  table_set_column_widths 10 6
+  local output
+  output="$(echo_slim_table)"
+  assert_same 36 ${#output}
+  assert_same " foo           : bar       : baz    " "$output"
+}
+
 function testTableAddRowTableHasRowsTableClearWorKAsExpected() {
+  table_clear
   table_add_row "alpha"
   table_add_row "bravo"
   assert_count 2 "_cloudy_table_rows"
@@ -560,6 +571,7 @@ function testTableAddRowTableHasRowsTableClearWorKAsExpected() {
 }
 
 function testListAddItemAndListClearWorkAsExpected() {
+  list_clear
   list_add_item "alpha"
   list_add_item "bravo"
   assert_count 2 "echo_list__array"

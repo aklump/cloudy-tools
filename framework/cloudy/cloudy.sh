@@ -1999,6 +1999,19 @@ function table_set_header() {
     done
 }
 
+# Manually set the column widths
+#
+# A number for each column.  You should call this after adding all rows.
+#
+# Returns nothing.
+function table_set_column_widths() {
+  local i=0
+  for width in "$@"; do
+    _cloudy_table_col_widths[$i]=$width
+    let i++
+  done
+}
+
 # Clear all rows from the table definition.
 #
 # Returns nothing.
