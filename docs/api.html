@@ -114,6 +114,7 @@
       <a href="#path_is_absolute">path_is_absolute</a>
       <a href="#path_mtime">path_mtime</a>
       <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
+      <a href="#path_relative_to_pwd">path_relative_to_pwd</a>
       <a href="#path_relative_to_root">path_relative_to_root</a>
       <a href="#path_resolve">path_resolve</a>
       <a href="#path_unresolve">path_unresolve</a>
@@ -126,6 +127,7 @@
       <a href="#table_add_row">table_add_row</a>
       <a href="#table_clear">table_clear</a>
       <a href="#table_has_rows">table_has_rows</a>
+      <a href="#table_set_column_widths">table_set_column_widths</a>
       <a href="#table_set_header">table_set_header</a>
       <a href="#tempdir">tempdir</a>
       <a href="#throw">throw</a>
@@ -1337,6 +1339,15 @@ The following variables are generated for:<br />
         
         <pre><code>If the path begins with / it is unchanged.</code></pre>
         
+      <a name="path_relative_to_pwd"></a>
+    <h2>path_relative_to_pwd()</h2>
+    <p class="summary">Make $1 relative if it&#039;s inside $PWD.</p>
+    
+          Arguments: <ul class="function-list__arguments">
+              <li>$1: An absolute filepath.  $PWD will be replaced by ./ if possible.</li>
+                        </ul>
+        
+        
       <a name="path_relative_to_root"></a>
     <h2>path_relative_to_root()</h2>
     <p class="summary">Expand a relative path using $ROOT as base.</p>
@@ -1456,6 +1467,13 @@ string_split__array<br />
     <p class="summary">Determine if the table definition has any rows.</p>
     
         
+        
+      <a name="table_set_column_widths"></a>
+    <h2>table_set_column_widths()</h2>
+    <p class="summary">Manually set the column widths</p>
+    
+        
+        <pre><code>A number for each column.  You should call this after adding all rows.</code></pre>
         
       <a name="table_set_header"></a>
     <h2>table_set_header()</h2>
@@ -1710,7 +1728,7 @@ create a folder based on the name of your script.</code></pre>
 <footer>
   <div class="pager"><a href="README.html" class="prev README">&laquo;Cloudy</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="CHANGELOG.html" class="next changelog">Cloudy Changelog&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.4.6 &bull; Last Updated: Tue, 26 Jul 2022 15:20:26 -0700</p>
+    <p class="legaleeze center">Version: 1.4.7 &bull; Last Updated: Thu, 27 Oct 2022 21:19:18 -0700</p>
   </div>
 </footer>
 
