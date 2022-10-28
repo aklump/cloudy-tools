@@ -351,6 +351,11 @@ function testPathResolve() {
   assert_same "$path" $(path_resolve $dir $path)
 }
 
+function testPathRelativeToPwd() {
+  assert_same "./foo/bar" $(path_relative_to_pwd "$PWD/foo/bar")
+  assert_same "." $(path_relative_to_pwd "$PWD")
+}
+
 function testPathRelatiaveToConfigBase() {
 
   local path="some/tree.md"

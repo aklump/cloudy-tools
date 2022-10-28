@@ -1658,6 +1658,22 @@ function path_relative_to_root() {
     path_resolve "$ROOT" "$path"
 }
 
+# Make $1 relative if it's inside $PWD.
+#
+# $1 - An absolute filepath.  $PWD will be replaced by ./ if possible.
+#
+function path_relative_to_pwd() {
+  local path="$1"
+
+  relative=$(path_unresolve "$PWD" "$path")
+  if [[ "$relative" != "$path" ]]; then
+    if [[ "$relative" != '.' ]]; then
+      relative="./$relative"
+    fi
+  fi
+  echo "$relative"
+}
+
 # Resolve a path to an absolute link; if already absolute, do nothing.
 #
 # $1 - The dirname to use if $2 is not absolute
