@@ -8,10 +8,11 @@
 # Define the configuration file relative to this script.
 CONFIG="script.example.yml";
 
-# Define an alternative location for the Composer vendor directory relative to
-# this script.  See documentation on installing Cloudy using composer.  This is
-# generally not necessary.
-#COMPOSER_VENDOR="./foo/bar/vendor"
+# You may want to define an alternative location for the Composer vendor
+# directory relative to this script.  See documentation on installing Cloudy
+# using composer.  This is a step you will probably take if you are using Cloudy
+# inside of a PHP application that uses other Composer dependencies.
+#COMPOSER_VENDOR="../vendor"
 
 # Uncomment this line to enable file logging.
 LOGFILE="script.example.log"

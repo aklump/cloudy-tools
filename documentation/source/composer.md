@@ -2,34 +2,18 @@
 
 > This is a WIP page.
 
+When using Cloudy with a PHP application managed by Composer, you may follow this guide so that the Cloudy dependencies are handled as well. This is probably an easier road to travel since your dependencies are all in one place.
 
-## Move Dependencies Into Your Application
+1. Create your cloudy script (`foo.sh`) in the desired location of your application, e.g. `cloudy new foo.sh`. (See also `cloudy core`.)
+2. Open _foo.sh_ and add the path to your application's vendor directory as `COMPOSER_VENDOR`; see _script.example.sh_ for code example.
+3. Add a repository reference to Cloudy in your application's _composer.json_.
+4. Tell your app you want to require Cloudy: `composer require aklump/cloudy`
+5. Ignore the following in your app's root _.gitignore_, adjusting paths as appropriate:
 
-This assumes you have already initiazed Composer for your app.
-
-1. Install cloudy in the root of your app with `cloudy core`
-2. Add the following to your root _composer.json_
-```json
-{
-  "repositories": [
-    {
-      "type": "path",
-      "url": "cloudy/"
-    }
-  ]
-}
-```
-1. `composer require aklump/cloudy`
-3. SCM ignore the following cloudy-managed Composer dependencies:
-    ```
-    /cloudy/.gitignore
-    /cloudy/cache/
-    /cloudy/composer*
-    /cloudy/vendor/
-    /cloudy/vendor/*
-    ```
-4. Except for the `vendor` line, merge _cloudy/.gitignore_ up, into your package's.
-6. Make sure your bootstrap code section matches that of _cloudy/framework/script.sh_
+   ```gitignore
+   /cloudy/vendor/
+   /cloudy/composer.lock
+   ```
 
 ## Setup Symlinks
 
@@ -37,11 +21,12 @@ This assumes you have already initiazed Composer for your app.
 
 ```json
 {
-    "bin": [
-        "bin/ldp"
-    ]
+  "bin": [
+    "bin/ldp"
+  ]
 }
 ```
+
 2. Create _bin_ folder
 3. Create the symlink in _bin_ to the entry script, refer to _cloudypm.yml_
 
