@@ -26,35 +26,18 @@
   <p>This is a WIP page.</p>
 </blockquote>
 
-<h2>Move Dependencies Into Your Application</h2>
-
-<p>This assumes you have already initiazed Composer for your app.</p>
+<p>When using Cloudy with a PHP application managed by Composer, you may follow this guide so that the Cloudy dependencies are handled as well. This is probably an easier road to travel since your dependencies are all in one place.</p>
 
 <ol>
-<li>Install cloudy in the root of your app with <code>cloudy core</code></li>
-<li>Add the following to your root <em>composer.json</em></li>
-</ol>
+<li>Create your cloudy script (<code>foo.sh</code>) in the desired location of your application, e.g. <code>cloudy new foo.sh</code>. (See also <code>cloudy core</code>.)</li>
+<li>Open <em>foo.sh</em> and add the path to your application's vendor directory as <code>COMPOSER_VENDOR</code>; see <em>script.example.sh</em> for code example.</li>
+<li>Add a repository reference to Cloudy in your application's <em>composer.json</em>.</li>
+<li>Tell your app you want to require Cloudy: <code>composer require aklump/cloudy</code></li>
+<li><p>Ignore the following in your app's root <em>.gitignore</em>, adjusting paths as appropriate:</p>
 
-<pre><code class="json">{
-  "repositories": [
-    {
-      "type": "path",
-      "url": "cloudy/"
-    }
-  ]
-}
-</code></pre>
-
-<ol>
-<li><code>composer require aklump/cloudy</code></li>
-<li>SCM ignore the following cloudy-managed Composer dependencies:
-<code>/cloudy/.gitignore
-/cloudy/cache/
-/cloudy/composer*
-/cloudy/vendor/
-/cloudy/vendor/*</code></li>
-<li>Except for the <code>vendor</code> line, merge <em>cloudy/.gitignore</em> up, into your package's.</li>
-<li>Make sure your bootstrap code section matches that of <em>cloudy/framework/script.sh</em></li>
+<pre><code class="gitignore">/cloudy/vendor/
+/cloudy/composer.lock
+</code></pre></li>
 </ol>
 
 <h2>Setup Symlinks</h2>
@@ -64,9 +47,9 @@
 </ol>
 
 <pre><code class="json">{
-    "bin": [
-        "bin/ldp"
-    ]
+  "bin": [
+    "bin/ldp"
+  ]
 }
 </code></pre>
 
@@ -84,7 +67,7 @@
 <footer>
   <div class="pager"><a href="documenting.html" class="prev documenting">&laquo;Documenting Code</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="events.html" class="next events">Events (Hooks)&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.4.7 &bull; Last Updated: Thu, 27 Oct 2022 21:19:21 -0700</p>
+    <p class="legaleeze center">Version: 1.4.8 &bull; Last Updated: Wed, 30 Nov 2022 19:34:15 -0800</p>
   </div>
 </footer>
 
