@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.4.9] - 2022-12-07
+
+### Fixed
+
+- If you see an error like "line 833: cd: ... cloudy/framework/cloudy: No such file or directory", try adding `COMPOSER_VENDOR=""` to the top of your script file, e.g. _framework/script.sh_.
+
 ## [1.4.0] - 2022-07-19
 
 ### Added
