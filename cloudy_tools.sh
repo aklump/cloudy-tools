@@ -8,6 +8,14 @@
 # Define the configuration file relative to this script.
 CONFIG="cloudy_tools.yml"
 
+# Leave this blank and vendor will be detected automatically, only change it if
+# you know what you're doing.  Search the codebase for more info.
+# You may want to define an alternative location for the Composer vendor
+# directory relative to this script.  See documentation on installing Cloudy
+# using composer.  This is a step you will probably take if you are using Cloudy
+# inside of a PHP application that uses other Composer dependencies.
+COMPOSER_VENDOR=""
+
 # Uncomment this line to enable file logging.
 #LOGFILE="cloudy_tools.log"
 
