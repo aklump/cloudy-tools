@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "124ab6d94b9486410f4b1526173db1a1",
+    "content-hash": "3f66afc443a544c5ca2d520cc6e49194",
     "packages": [
         {
             "name": "aklump/data",
