@@ -91,6 +91,9 @@ class Arrays {
    *   The new array with shuffled order and preserved keys.
    */
   public static function shuffleWithKeys(array $array) {
+    if (count($array) < 2) {
+      return $array;
+    }
     $keys = array_keys($array);
     shuffle($keys);
     do {
@@ -190,9 +193,10 @@ class Arrays {
 
       return $position;
     }
+    $position = count($array);
     $array[] = $insert;
 
-    return count($insert) - 1;
+    return $position;
   }
 
   /**
@@ -231,7 +235,6 @@ class Arrays {
     $b = array_slice($array, $offset + 1);
     $array = array_merge($a, $insert, $b);
   }
-
 
   /**
    * Compares they keys of $a against $b and returns the values in $a that
@@ -365,4 +368,56 @@ class Arrays {
     return $a;
   }
 
+  /**
+   * Implode an array with an optional final glue that is different.[
+   *
+   * This method facilitates English style lists where you have something like
+   * "do, re and mi".
+   *
+   * @param string $glue
+   *   The glue between $pieces.
+   * @param string $final_glue
+   *   The glue for attaching the last element, e.g. ' and ', ' or '.
+   * @param array $pieces
+   *   An indexed array of "words".
+   *
+   * @return string
+   */
+  public static function listImplode($glue, $final_glue, array $pieces) {
+    if ($final_glue && count($pieces) > 1) {
+      $last = array_pop($pieces);
+
+      return implode($glue, $pieces) . $final_glue . $last;
+    }
+
+    return implode($glue, $pieces);
+  }
+
+  /**
+   * Return the value in $array that is closest to $value
+   *
+   * @param int|float $value
+   *   The numeric value to look for it's closest match.  $values that are
+   *   exactly in the middle will be matched to the lesser value in $array.
+   * @param array $array
+   *   An array of numeric values.
+   *
+   * @return float|int
+   *   The closest value in $array to $value.
+   */
+  public static function getClosestValueTo($value, $array) {
+    $distance = NULL;
+    foreach ($array as $v) {
+      $d = abs($v - $value);
+      if (is_null($distance) || $d < $distance) {
+        $distance = $d;
+        $closest = $v;
+      }
+    }
+    $closest = $closest ?? $v;
+
+    return $closest;
+  }
 }
+
+

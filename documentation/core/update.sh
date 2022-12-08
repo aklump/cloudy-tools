@@ -62,14 +62,18 @@ done
 CORE="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 ROOT="$CORE/.."
 
-source $CORE/functions.sh
+source "$CORE/functions.sh"
 
 # Override to use the version file of the core
 function get_version_file() {
     echo $ROOT/core-version.info
 }
 
-load_config
+if [[ "$1" ]] && [[ $(basename "$1") != "core-config.sh" ]]; then
+  echo "The basename of argument one must be core-config.sh; you gave me: $(basename "$1")"
+  exit 1
+fi
+load_config "$1"
 
 if [ ! -d "$ROOT/core" ] && [ ! -f "$ROOT/core_version.info" ]; then
   echo_red "Update failed. Corrupt file structure."

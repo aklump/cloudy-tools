@@ -9,6 +9,8 @@
 
 namespace AKlump\LoftLib\Bash;
 
+use AKlump\LoftLib\Storage\FilePath;
+
 /**
  * Represents a class to help with connecting PHP to BASH scripts.
  *
@@ -103,17 +105,24 @@ class Bash {
    *
    * This handles redirecting the error and capturing it as an exception.
    *
-   * @param  string|array $command Arrays will be imploded with ' '.
+   * @param string|array $command
+   *   Arrays will be imploded with ' '.
    * @param array $args
    *   Only pass this if you have an array of arguments that you want to pass
    *   to $command.  They will be wrapped with double quotes.  If you don't
    *   want to wrap in double quotes, then just pass an array as $command.
+   * @param bool $async
+   *   Set to TRUE to run the command async.  You can review the result via the
+   *   return object AsyncResult().
    *
-   * @return string  The output from the $command.
+   * @return string
+   *   The output from the $command.
+   *
    * @throws AKlump\LoftLib\Component\Bash\FailedExecException if the command
+   * @throws \AKlump\LoftLib\Bash\FailedExecException
    *   returns a non 0 status.  The exception code holds the return status.
    */
-  public static function exec($command, $args = []) {
+  public static function exec($command, $args = [], $async = FALSE) {
 
     // Wrap all args in "".
     $args = array_map(function ($item) {
@@ -124,15 +133,25 @@ class Bash {
     }
     $command = array_merge($command, $args);
     $command = implode(' ', $command);
-    if (!strpos($command, ' 2>&1')) {
-      $command .= ' 2>&1';
-    }
-    exec($command, $result, $status);
-    if ($status !== 0) {
-      throw new FailedExecException(implode(PHP_EOL, $result), $status);
-    }
 
-    return implode(PHP_EOL, $result);
+    if ($async) {
+      $output_file = FilePath::create(sys_get_temp_dir(), ['autoname' => '.output'])
+        ->getPath();
+      exec(sprintf("%s > %s 2>&1 &", $command, $output_file));
+
+      return new AsyncResult($output_file);
+    }
+    else {
+      if (!strpos($command, ' 2>&1')) {
+        $command .= ' 2>&1';
+      }
+      exec($command, $result, $status);
+      if ($status !== 0) {
+        throw new FailedExecException(implode(PHP_EOL, $result), $status);
+      }
+
+      return implode(PHP_EOL, $result);
+    }
   }
 
   public function getArgs() {
@@ -142,9 +161,9 @@ class Bash {
   /**
    * Returns an argument by index.
    *
-   * @param  int $index Be aware that a zero index here may point to
+   * @param int $index Be aware that a zero index here may point to
    *                         $argv[1].
-   * @param  string $default The default ot return if not found.
+   * @param string $default The default ot return if not found.
    *
    * @return string|NULL
    */
@@ -173,8 +192,8 @@ class Bash {
   /**
    * Return the value of a single parameter.
    *
-   * @param  string $param The param name
-   * @param  string $default The default ot return if not found.
+   * @param string $param The param name
+   * @param string $default The default ot return if not found.
    *
    * @return mixed|NULL
    */
@@ -204,4 +223,62 @@ class Bash {
 
     return FALSE;
   }
+
+  /**
+   * Prompt user to confirm one of several options.
+   *
+   * @param string $label
+   *   The label to use for the prompt.  This may include the token OPTIONS
+   *   which will be replaced with a CSV string of the $valid_input, e.g. 'Are
+   *   you sure? OPTIONS'.
+   * @param array|string[] $options
+   *   An array of valid answers, the prompt will only allow one of these
+   *   answers.
+   * @param string $invalid_message
+   *   The message to print if an invalid input is received.
+   * @param bool $ignore_case
+   *   Set this to false for case checking on the response.
+   *
+   * @return mixed|string
+   *   The accepted user response; one of $options.
+   */
+  public static function confirm(string $label, array $options = [
+    'y',
+    'n',
+  ], string $invalid_message = ' 👈 is not one of OPTIONS', bool $ignore_case = TRUE
+  ) {
+    $command = ['read'];
+    $max_chars = 0;
+    foreach ($options as $input) {
+      $max_chars = max($max_chars, strlen($input));
+    }
+    $command[] = "-n $max_chars";
+    $detoken = function ($string) use ($options) {
+      return str_replace('OPTIONS', sprintf('(%s)', implode('/', $options)), $string);
+    };
+    if ($label) {
+      $label = $detoken($label);
+      $command[] = "-p \"$label \"";
+    }
+    $command = implode(' ', $command);
+    if ($ignore_case) {
+      $options = array_map('strtolower', $options);
+    }
+    while (!in_array($user_input, $options)) {
+      if ($user_input) {
+        echo Color::wrap('red', $detoken($invalid_message));
+        echo PHP_EOL;
+      }
+      $command_response = [];
+      exec($command . ' input && echo $input', $command_response);
+      $user_input = $command_response[0];
+      if ($ignore_case) {
+        $user_input = strtolower($user_input);
+      }
+    }
+    echo PHP_EOL;
+
+    return $user_input;
+  }
+
 }

@@ -2,10 +2,39 @@
 
 namespace AKlump\LoftLib\Code;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Test the class Arrays.
  */
-class ArraysTest extends \PHPUnit_Framework_TestCase {
+class ArraysTest extends TestCase {
+
+  public function testGetClosestValueTo() {
+    $array = [8, 16, 24, 36];
+    $this->assertSame(8, Arrays::getClosestValueTo(4, $array));
+    $this->assertSame(36, Arrays::getClosestValueTo(37, $array));
+    $this->assertSame(8, Arrays::getClosestValueTo(12, $array));
+    $this->assertSame(16, Arrays::getClosestValueTo(12.01, $array));
+    $this->assertSame(24, Arrays::getClosestValueTo(24, $array));
+  }
+
+  public function testListImplodeWithOr() {
+    $list = ["foo", "bar", "baz"];
+    $this->assertSame('foo, bar or baz', Arrays::listImplode(', ', ' or ', $list));
+    $list = ["foo", "bar"];
+    $this->assertSame('foo or bar', Arrays::listImplode(', ', ' or ', $list));
+    $list = ["foo"];
+    $this->assertSame('foo', Arrays::listImplode(', ', ' or ', $list));
+  }
+
+  public function testListImplodeWithAnd() {
+    $list = ["foo", "bar", "baz"];
+    $this->assertSame('foo, bar and baz', Arrays::listImplode(', ', ' and ', $list));
+    $list = ["foo", "bar"];
+    $this->assertSame('foo and bar', Arrays::listImplode(', ', ' and ', $list));
+    $list = ["foo"];
+    $this->assertSame('foo', Arrays::listImplode(', ', ' and ', $list));
+  }
 
   /**
    * @expectedException InvalidArgumentException
@@ -27,6 +56,20 @@ class ArraysTest extends \PHPUnit_Framework_TestCase {
     $index = Arrays::insertBeforeValue($subject, 'ipsum', 'lorem');
     $this->assertSame(1, $index);
     $this->assertSame(['header', 'lorem', 'ipsum', 'footer'], $subject);
+  }
+
+  public function testSuffleWithKeysWorksWithEmptyArrays() {
+    $original = $subject = [];
+    $subject = Arrays::shuffleWithKeys($subject);
+    $this->assertSame($original, $subject);
+  }
+
+  public function testSuffleWithKeysWorksWithSingleElementArrays() {
+    $original = $subject = [
+      'do' => 'dough',
+    ];
+    $subject = Arrays::shuffleWithKeys($subject);
+    $this->assertSame($original, $subject);
   }
 
   public function testSuffleWithKeysWorksAsExpected() {

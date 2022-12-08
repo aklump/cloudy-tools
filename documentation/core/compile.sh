@@ -7,7 +7,7 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 CORE="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-source $CORE/functions.sh
+source "$CORE/functions.sh"
 process_start=$(date +%s)
 
 # Load in our user CLI options so we can use: has_option and get_option.
@@ -19,10 +19,15 @@ for arg in "$@"; do
   fi
 done
 
-
 # Pull in config vars
 installing=0
-load_config
+
+if [[ "$1" ]] && [[ $(basename "$1") != "core-config.sh" ]]; then
+  echo "The basename of argument one must be core-config.sh; you gave me: $(basename "$1")"
+  exit 1
+fi
+load_config "$1"
+
 echo_purple "Compiling your documentation..."
 
 do_pre_hooks
@@ -48,7 +53,7 @@ done
 # Empty out all files one level deep; do not touch folders as these may contain assets like images and videos and we don't want to delete them if not needed.  This would cause a longer compile times.  The folders will be rsynced later on to handle the deletes.
 for dir in "${dirs_to_empty[@]}"; do
   if [ "$dir" ] && [ -d "$dir" ]; then
-    find $dir -type f ! -name '*.git*' ! -name '*.htaccess' -maxdepth 1 -exec rm {} \;
+    find "$dir" -type f ! -name '*.git*' -maxdepth 1 -exec rm {} \;
   fi
 done
 
@@ -60,11 +65,11 @@ LOFT_DOCS_TMP_DIR="$docs_tmp_dir"
 export LOFT_DOCS_TMP_DIR
 
 # If no dirs, copy the patterns into place from the patterns dir.  This is important after --clean
-ensure_pattern_directory $docs_website_dir "public_html"
-ensure_pattern_directory $docs_html_dir "html"
-ensure_pattern_directory $docs_mediawiki_dir "mediawiki"
-ensure_pattern_directory $docs_text_dir "text"
-ensure_pattern_directory $docs_drupal_dir "advanced_help"
+ensure_pattern_directory "$docs_website_dir" "public_html"
+ensure_pattern_directory "$docs_html_dir" "html"
+ensure_pattern_directory "$docs_mediawiki_dir" "mediawiki"
+ensure_pattern_directory "$docs_text_dir" "text"
+ensure_pattern_directory "$docs_drupal_dir" "advanced_help"
 
 # Assert dir exists if not create it and parents
 for path in "${dirs[@]}"; do
@@ -79,7 +84,7 @@ done
 # Copy of any dirs in the (instance) compile directory to the compiled output dirs.
 if test -e "$docs_root_dir/compile"; then
     for dir in "$docs_root_dir/compile/*/"; do
-        basename=${dir##*/}
+        basename="${dir##*/}"
         if [ "$basename" != . ] && [ "$basename" != .. ] && test -e "$docs_root_dir/$basename"; then
             rsync -a "$docs_root_dir/compile/$basename/" "$docs_root_dir/$basename/"
         fi
@@ -93,10 +98,14 @@ fi
 
 get_version
 
-do_plugin_handler $docs_plugins_tpl pre
+do_plugin_handler "$docs_plugins_tpl" pre
 
 # Get all the files in the source directory.
 declare -a files=("$docs_source_path"/*)
+declare -a hidden_files=("$docs_source_path"/.*)
+for i in "${hidden_files[@]}"; do
+   [[ -f "$i" ]] && files=("${files[@]}" "$i")
+done
 
 # Then add in all files we created.
 declare -a generated=("$docs_cache_dir/source"/*)
@@ -106,10 +115,10 @@ files=("${generated[@]}" "${files[@]}")
 # extension as it goes over; this is our baseline html that we will further
 # process for the intended audience.
 echo -n "Processing files"
-for file in ${files[@]}; do
-  if [ -f "$file" ]; then
+for file in "${files[@]}"; do
+  if [[ -f "$file" ]]; then
     echo -n "."
-    basename=${file##*/}
+    basename="${file##*/}"
     extension=".${file##*.}"
     filename="${basename%%.*}"
 
@@ -135,44 +144,44 @@ for file in ${files[@]}; do
 
     # CSS files pass through to the website and html dir
     elif [ "$extension" == ".css" ]; then
-      cp $file $docs_html_dir/$basename
+      cp "$file" "$docs_html_dir/$basename"
       _check_file "$docs_html_dir/$basename"
-      cp $file $docs_website_dir/$basename
+      cp "$file" "$docs_website_dir/$basename"
       _check_file "$docs_website_dir/$basename"
 
     # HTML files pass through to drupal, website and html
     elif echo "$file" | grep -q '.html$'; then
-      cp $file $docs_drupal_dir/$basename
+      cp "$file" "$docs_drupal_dir/$basename"
       _check_file "$docs_drupal_dir/$basename"
-      cp $file $docs_website_dir/$basename
+      cp "$file" "$docs_website_dir/$basename"
       _check_file "$docs_website_dir/$basename"
-      cp $file $docs_html_dir/$basename
+      cp "$file" "$docs_html_dir/$basename"
       _check_file "$docs_html_dir/$basename"
 
     # text files pass through to drupal, website and txt
     elif echo "$file" | grep -q '.txt$'; then
-      cp $file $docs_drupal_dir/$basename
+      cp "$file" "$docs_drupal_dir/$basename"
       _check_file "$docs_drupal_dir/$basename"
-      cp $file $docs_website_dir/$basename
+      cp "$file" "$docs_website_dir/$basename"
       _check_file "$docs_website_dir/$basename"
-      cp $file $docs_text_dir/$basename
+      cp "$file" "$docs_text_dir/$basename"
       _check_file "$docs_text_dir/$basename"
 
     # Rename the .ini file; we should only ever have one
     elif echo "$file" | grep -q '.ini$' && [ ! -f "$docs_drupal_dir/$docs_drupal_module.$basename" ]; then
-      cp $file "$docs_drupal_dir/$docs_drupal_module.$basename"
+      cp "$file" "$docs_drupal_dir/$docs_drupal_module.$basename"
       _check_file "$docs_drupal_dir/$docs_drupal_module.$basename"
 
     # All files types pass through to drupal and webpage
     else
-      cp $file $docs_drupal_dir/$basename
+      cp "$file" "$docs_drupal_dir/$basename"
       _check_file "$docs_drupal_dir/$basename"
-      cp $file $docs_website_dir/$basename
+      cp "$file" "$docs_website_dir/$basename"
       _check_file "$docs_website_dir/$basename"
     fi
 
   elif [[ -d "$file" ]]; then
-    basename=${file##*/}
+    basename="${file##*/}"
     echo "Copying directory $basename..."
     if ! is_disabled "drupal"; then
         rsync -ua --delete "$docs_source_dir/$basename/" "$docs_drupal_dir/$basename/"
@@ -194,8 +203,8 @@ echo -n "Converting to HTML"
 for file in "$docs_tmp_dir"/*.html; do
   if [[ -f "$file" ]]; then
     echo -n "."
-    basename=${file##*/}
-    basename=$(echo $basename | sed 's/\.html$//g')
+    basename="${file##*/}"
+    basename="$(echo "$basename" | sed 's/\.html$//g')"
     html_file="$basename.html"
     kit_file="$basename.kit"
     tmp_file="$basename.kit.txt"
@@ -207,9 +216,9 @@ for file in "$docs_tmp_dir"/*.html; do
 
     # Convert to plaintext
     if [[ "$docs_text_dir" ]] && lynx_loc="$(type -p "$docs_lynx")" && [ ! -z "$lynx_loc" ]; then
-      textname=`basename $file html`
+      textname=`basename "$file" html`
       textname=${textname}txt
-      $docs_lynx --dump $file > "$docs_text_dir/${textname}"
+      $docs_lynx --dump "$file" > "$docs_text_dir/${textname}"
       _check_file "$docs_text_dir/${textname}"
     fi
 
@@ -225,15 +234,15 @@ for file in "$docs_tmp_dir"/*.html; do
 
     # Wrap with with tpl files
     # handlers.file
-    do_plugin_handler $docs_plugins_tpl file
+    do_plugin_handler "$docs_plugins_tpl" file
   fi
 done
 
 # Get all stylesheets from the tpl dir.
-for file in $docs_tpl_dir/*.css; do
-  if [ -f "$file" ]; then
-    basename=${file##*/}
-    cp $file $docs_website_dir/$basename
+for file in "$docs_tpl_dir"/*.css; do
+  if [[ -f "$file" ]]; then
+    basename="${file##*/}"
+    cp "$file" "$docs_website_dir/$basename"
     _check_file "$docs_website_dir/$basename"
   fi
 done
@@ -246,9 +255,9 @@ if [ "$docs_README" ]; then
   destinations=($docs_README)
 
   for output in "${destinations[@]}"; do
-    output=$(realpath "$docs_root_dir/$output");
-    readme_file=${output##*/}
-    readme_dir=${output%/*}
+    output="$(realpath "$docs_root_dir/$output")"
+    readme_file="${output##*/}"
+    readme_dir="${output%/*}"
     test -d "$readme_dir" || mkdir -p "$readme_dir"
     if echo "$readme_file" | grep -q '.txt$'; then
         readme_source="$docs_text_dir/$readme_file"
@@ -261,6 +270,10 @@ if [ "$docs_README" ]; then
         if [[ $? -ne 0 ]]; then
           echo $cp_result
         fi
+        if [[ "$docs_not_source_do_not_edit__md" ]]; then
+          header=${docs_not_source_do_not_edit__md/SOURCE/"./$docs_source_dir/$readme_file"}
+          echo -e "$header\n\n$(cat "$output")" > "$output"
+        fi
         _check_file "$output"
     fi
 
@@ -271,9 +284,9 @@ fi
 if [ "$docs_CHANGELOG" ]; then
   destinations=($docs_CHANGELOG)
   for output in "${destinations[@]}"; do
-    output=$(realpath "$docs_root_dir/$output");
-    changelog_file=${output##*/}
-    changelog_dir=${output%/*}
+    output="$(realpath "$docs_root_dir/$output")"
+    changelog_file="${output##*/}"
+    changelog_dir="${output%/*}"
     test -d "$changelog_dir" || mkdir -p "$changelog_dir"
     if echo "$changelog_file" | grep -q '.txt$'; then
         changelog_source="$docs_text_dir/$changelog_file"
@@ -286,13 +299,17 @@ if [ "$docs_CHANGELOG" ]; then
         if [[ $? -ne 0 ]]; then
           echo $cp_result
         fi
+        if [[ "$docs_not_source_do_not_edit__md" ]]; then
+          header=${docs_not_source_do_not_edit__md/SOURCE/"./$docs_source_dir/$changelog_file"}
+          echo -e "$header\n\n$(cat "$output")" > "$output"
+        fi
         _check_file "$output"
     fi
   done
 fi
 
 echo ''
-do_plugin_handler $docs_plugins_tpl post
+do_plugin_handler "$docs_plugins_tpl" post
 
 # Provide search support
 $docs_php "$CORE/includes/search.inc" "$docs_outline_file" "$CORE" "$docs_root_dir" "$docs_website_dir" "$docs_root_dir/$docs_source_dir"
