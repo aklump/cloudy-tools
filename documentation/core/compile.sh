@@ -22,11 +22,7 @@ done
 # Pull in config vars
 installing=0
 
-if [[ "$1" ]] && [[ $(basename "$1") != "core-config.sh" ]]; then
-  echo "The basename of argument one must be core-config.sh; you gave me: $(basename "$1")"
-  exit 1
-fi
-load_config "$1"
+load_config
 
 echo_purple "Compiling your documentation..."
 
@@ -182,15 +178,17 @@ for file in "${files[@]}"; do
 
   elif [[ -d "$file" ]]; then
     basename="${file##*/}"
-    echo "Copying directory $basename..."
-    if ! is_disabled "drupal"; then
-        rsync -ua --delete "$docs_source_dir/$basename/" "$docs_drupal_dir/$basename/"
-    fi
-    if ! is_disabled "website"; then
-        rsync -ua --delete "$docs_source_dir/$basename/" "$docs_website_dir/$basename/"
-    fi
-    if ! is_disabled "html"; then
-        rsync -ua --delete "$docs_source_dir/$basename/" "$docs_html_dir/$basename/"
+    if [[ -d "$docs_source_dir/$basename/" ]]; then
+      echo "Copying directory $basename..."
+      if ! is_disabled "drupal"; then
+          rsync -ua --delete "$docs_source_dir/$basename/" "$docs_drupal_dir/$basename/"
+      fi
+      if ! is_disabled "website"; then
+          rsync -ua --delete "$docs_source_dir/$basename/" "$docs_website_dir/$basename/"
+      fi
+      if ! is_disabled "html"; then
+          rsync -ua --delete "$docs_source_dir/$basename/" "$docs_html_dir/$basename/"
+      fi
     fi
   fi
 done
