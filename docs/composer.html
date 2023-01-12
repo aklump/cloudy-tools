@@ -30,9 +30,17 @@
 
 <ol>
 <li>Create your cloudy script (<code>foo.sh</code>) in the desired location of your application, e.g. <code>cloudy new foo.sh</code>. (See also <code>cloudy core</code>.)</li>
-<li>Open <em>foo.sh</em> and add the path to your application's vendor directory as <code>COMPOSER_VENDOR</code>; see <em>script.example.sh</em> for code example.</li>
-<li>Add a repository reference to Cloudy in your application's <em>composer.json</em>.</li>
-<li>Tell your app you want to require Cloudy: <code>composer require aklump/cloudy</code></li>
+<li>Open <em>foo.sh</em> and add the path (relative to <em>foo.sh</em>) to your application's vendor directory as <code>COMPOSER_VENDOR</code>; see <em>script.example.sh</em> for code example.</li>
+<li><p>Add a repository reference to Cloudy in your application's <em>composer.json</em>.</p>
+
+<pre><code class="php">"repositories": [
+  {
+     "type": "path",
+     "url": "./cloudy/"
+
+],
+</code></pre></li>
+<li><p>Tell your app you want to require Cloudy: <code>composer require aklump/cloudy</code></p></li>
 <li><p>Ignore the following in your app's root <em>.gitignore</em>, adjusting paths as appropriate:</p>
 
 <pre><code class="gitignore">/cloudy/vendor/
@@ -67,7 +75,7 @@
 <footer>
   <div class="pager"><a href="documenting.html" class="prev documenting">&laquo;Documenting Code</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="events.html" class="next events">Events (Hooks)&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.4.10 &bull; Last Updated: Wed, 07 Dec 2022 22:01:35 -0800</p>
+    <p class="legaleeze center">Version: 1.4.10 &bull; Last Updated: Wed, 11 Jan 2023 18:08:32 -0800</p>
   </div>
 </footer>
 
