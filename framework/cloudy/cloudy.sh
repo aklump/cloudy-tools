@@ -1882,12 +1882,23 @@ function throw() {
     exit 3
 }
 
-##
- # @link https://www.php-fig.org/psr/psr-3/
- #
-function write_log_emergency() {
-    local args=("emergency" "$@")
-    _cloudy_write_log ${args[@]}
+# Echo a message to the user to either enable and repeat, or view log for info.
+#
+# $1 - Path to the logfile; usually you send $LOGFILE, which is the global path.
+#
+# @code
+# fail_because "$(echo_see_log $LOGFILE)"
+# @endcode
+#
+# Returns nothing.
+function echo_see_log() {
+  local logfile="$1"
+
+  if [[ ! "$logfile" ]]; then
+    echo "For details enable logging and try again."
+  else
+    echo "See log for details: $logfile"
+  fi
 }
 
 ##
@@ -1900,6 +1911,14 @@ function write_log() {
     if [ $# -eq 1 ]; then
         args=("log" "${args[@]}")
     fi
+    _cloudy_write_log ${args[@]}
+}
+
+##
+ # @link https://www.php-fig.org/psr/psr-3/
+ #
+function write_log_emergency() {
+    local args=("emergency" "$@")
     _cloudy_write_log ${args[@]}
 }
 

@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+function testEchoSeeLog() {
+  local message
+
+  message=$(echo_see_log)
+  assert_same "For details enable logging and try again." "$message"
+
+  message=$(echo_see_log "/foo/bar")
+  assert_same "See log for details: /foo/bar" "$message"
+}
+
 function testArrayDedupeEchosCorrectly() {
     declare -a duplicates=("red white" "blue" "red" "blue" "red white")
     assert_count 5 duplicates
