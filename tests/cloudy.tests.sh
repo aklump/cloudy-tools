@@ -174,9 +174,9 @@ function testSucceedBecauseReturns0() {
   assert_exit_status 0
 }
 
-function testWarnBecauseWithoutArgumentsExitsWith1() {
+function testWarnBecauseWithoutArgumentsExitsWith0() {
   warn_because
-  assert_exit_status 1
+  assert_exit_status 0
 }
 
 function _testSucceedBecauseCausesExitToBeZero() {
@@ -184,9 +184,9 @@ function _testSucceedBecauseCausesExitToBeZero() {
   assert_exit_status 0
 }
 
-function testSucceedBecauseWithoutArgumentsExitsWith1() {
+function testSucceedBecauseWithoutArgumentsExitsWith0() {
   succeed_because
-  assert_exit_status 1
+  assert_exit_status 0
 }
 
 function testWarnBecauseWithTwoArgumentsUsesThemBoth() {
@@ -215,9 +215,9 @@ function testFailBecauseCausesExitToBeNonZero() {
   assert_exit_status 1
 }
 
-function testFailBecauseWithoutArgumentsExitsWith1() {
+function testFailBecauseWithoutArgumentsExitsWith0() {
   fail_because
-  assert_exit_status 1
+  assert_exit_status 0
 }
 
 function testFailBecauseWithoutArgumentsSetsExitStatus() {

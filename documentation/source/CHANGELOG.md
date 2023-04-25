@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.5] - 2023-04-25
+
+### Changed
+
+- POTENTIAL BREAKING CHANGES: The return value for fail_because(), warn_because(), and succeed_because() is now always `0`. Previously it was `1` if the message was empty AND the default was empty.
+
 ## [1.4.9] - 2022-12-07
 
 ### Fixed
