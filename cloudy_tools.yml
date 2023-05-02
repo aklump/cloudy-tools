@@ -4,6 +4,10 @@ additional_config:
   - cloudy_tools.additional.yml
 default_command: help
 commands:
+  pm-show:
+    help: Display detailed information about a package, or list all packages available.
+    aliases:
+      - pms
   pm-clear-cache:
     help: 'Flush locally cached package info and refresh from remote registry.'
     aliases:

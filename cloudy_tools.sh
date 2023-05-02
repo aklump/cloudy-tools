@@ -73,6 +73,18 @@ installation_info_filepath="$WDIR/cloudy/version.sh"
 command=$(get_command)
 case $command in
 
+"pm-show")
+  # TODO Upscan to find .lock
+  # TODO Add descriptions
+  # TODO Columnize
+  # TODO Write cloudy version to cloudy.lock
+  ! [ -f "$WDIR/cloudypm.lock" ] && fail_because "Missing file $(path_relative_to_pwd "$WDIR/cloudypm.lock")" && exit_with_failure
+  source "$WDIR/opt/cloudy/cloudy/version.sh"
+  echo "aklump/cloudy:$cloudy_update__version"
+  cat "$WDIR/cloudypm.lock"
+  exit_with_success
+  ;;
+
 "pm-clear-cache")
   cache_dir="${CLOUDY_ROOT}/cache/cpm"
   [[ ! "${CLOUDY_ROOT}" ]] && exit_with_failure "Invalid cache directory ${cache_dir}"
