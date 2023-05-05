@@ -55,10 +55,12 @@ function rsync_framework() {
 function echo_path_to_framework_version() {
     local version="$1"
 
-    local local_source_path="$(tempdir "cloudy")/cloudy-$version"
-    if [ ! -e "$local_source_path" ]; then
+    local local_source_path="${CLOUDY_ROOT}/cache/versions/cloudy-$version"
+    local local_source_dir="$(dirname "$local_source_path")"
+    if [ ! -e "$local_source_dir" ]; then
+      mkdir -p "$local_source_dir"
       local source_url="https://github.com/aklump/cloudy/archive/refs/tags/$version.zip"
-      (cd $(dirname "$local_source_path") && wget -q "$source_url" && unzip -q "$version.zip" && rm "$version.zip") || exit 1
+      (cd "$local_source_dir" && wget -q "$source_url" && unzip -q "$version.zip" && rm "$version.zip") || exit 1
     fi
 
     echo "$local_source_path/framework"
