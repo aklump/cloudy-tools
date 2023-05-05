@@ -16,9 +16,9 @@ When using Cloudy with a PHP application managed by Composer, you may follow thi
 
    ],
    ```   
-
-6. Tell your app you want to require Cloudy: `composer require aklump/cloudy`
-7. Ignore the following in your app's root _.gitignore_, adjusting paths as appropriate:
+1. Delete `cloudy/vendor` and `cloudy/composer.lock` for clarity.
+4. Next, tell your app you want to require Cloudy: `composer require aklump/cloudy`
+5. Ignore the following in your app's root _.gitignore_, adjusting paths as appropriate:
 
    ```gitignore
    /cloudy/vendor/
