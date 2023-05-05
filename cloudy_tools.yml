@@ -1,11 +1,11 @@
 title: 'Cloudy Tools'
-version: 1.5.0
+version: 1.5.1
 additional_config:
   - cloudy_tools.additional.yml
 default_command: help
 commands:
   pm-show:
-    help: Display detailed information about a package, or list all packages available.
+    help: 'Display detailed information about a package, or list all packages available.'
     aliases:
       - pms
   pm-clear-cache:
@@ -59,7 +59,7 @@ commands:
   flush:
     help: 'Flush all cached data for the current directory''s cloudy scripts.'
   install:
-    help: Install all Cloudy files for the current project based on cloudy/version.sh
+    help: 'Install all Cloudy files for the current project based on cloudy/version.sh'
   update:
     help: 'Update a cloudy framework in the current directory.  The version is updated to the version being used by cloudy_tools.sh, not pulled from the internet.  If you installed Cloudy Tools using Git, then you need only to a git pull in $HOME/opt/cloudy to update.'
     options:
