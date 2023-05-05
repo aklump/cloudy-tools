@@ -58,6 +58,8 @@ commands:
     help: 'Clear the Cloudy Tools caches.'
   flush:
     help: 'Flush all cached data for the current directory''s cloudy scripts.'
+  install:
+    help: Install all Cloudy files for the current project based on cloudy/version.sh
   update:
     help: 'Update a cloudy framework in the current directory.  The version is updated to the version being used by cloudy_tools.sh, not pulled from the internet.  If you installed Cloudy Tools using Git, then you need only to a git pull in $HOME/opt/cloudy to update.'
     options:

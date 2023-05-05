@@ -25,11 +25,20 @@ After installing Cloudy, to write a new script called _thunder.sh_ ...
 1. Open _thunder.yml_ and add some configuration.
 1. To learn about the options to use with `new` type `cloudy help new`.
 1. Refer to [the documentation](https://aklump.github.io/cloudy/README.html) for to learn more.
- 
+
 ### Using JSON
 
 1. To work with JSON configuration instead type `cloudy new thunder.sh --json`.
- 
+
+### Source Control
+
+1. You may omit the cloudy framework from your repository with something like the following, then use `cloudy install` to put the files in place when necessary.
+
+```gitignore
+cloudy/**
+!cloudy/version.sh
+```
+
 ## Requirements
 
 * Works with BASH 3

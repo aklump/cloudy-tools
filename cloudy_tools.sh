@@ -31,9 +31,37 @@ function on_compile_config() {
   echo "$ROOT/cloudy_tools.runtime.yml"
 }
 
+# Rsync the framework into the cwd
+#
+# Returns 0 if .
 function rsync_framework() {
-  [[ "$framework" ]] || return 1
-  rsync -a $framework/cloudy/ ./cloudy --exclude=*.log --exclude=cache/
+  local source_dir="${1}"
+
+  if [ "" == "$source_dir" ]; then
+    source_dir="$framework"
+  fi
+  [[ "$source_dir" ]] || return 1
+  [ -d "$source_dir/cloudy" ] || return 1
+  rsync -a "$source_dir/cloudy/" ./cloudy --exclude=*.log --exclude=cache/
+}
+
+# Echo the source path for a specific framework version.
+#
+# $1 - The exact semantic version string, e.g. "1.4.13".
+#
+# Returns 1 if the version can't be found. 0 if it was found and echoed.
+#
+# @see rsync_framework
+function echo_path_to_framework_version() {
+    local version="$1"
+
+    local local_source_path="$(tempdir "cloudy")/cloudy-$version"
+    if [ ! -e "$local_source_path" ]; then
+      local source_url="https://github.com/aklump/cloudy/archive/refs/tags/$version.zip"
+      (cd $(dirname "$local_source_path") && wget -q "$source_url" && unzip -q "$version.zip" && rm "$version.zip") || exit 1
+    fi
+
+    echo "$local_source_path/framework"
 }
 
 function write_version_file() {
@@ -125,6 +153,17 @@ case $command in
 "flush")
   validate_cloudy_instance_or_exit_with_failure
   exit_with_cache_clear "$WDIR/cloudy"
+  ;;
+
+"install")
+  echo_title "Cloudy Framework Installer"
+  validate_cloudy_instance_or_exit_with_failure
+  [ -f "$installation_info_filepath" ] || exit_with_failure "Cannot determine installed version; missing file $installation_info_filepath."
+  source $installation_info_filepath
+  source_dir="$(echo_path_to_framework_version "$cloudy_update__version")"
+  ! [[ "$source_dir" ]] && fail_because "Can't find version $cloudy_update__version" && exit_with_failure "Failed to install Cloudy"
+  rsync_framework "$source_dir" || exit_with_failure
+  exit_with_success_elapsed "Cloudy version $cloudy_update__version files are installed."
   ;;
 
 "update")
