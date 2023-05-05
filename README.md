@@ -25,11 +25,20 @@ After installing Cloudy, to write a new script called _thunder.sh_ ...
 1. Open _thunder.yml_ and add some configuration.
 1. To learn about the options to use with `new` type `cloudy help new`.
 1. Refer to [the documentation](https://aklump.github.io/cloudy/README.html) for to learn more.
- 
+
 ### Using JSON
 
 1. To work with JSON configuration instead type `cloudy new thunder.sh --json`.
- 
+
+### Source Control
+
+1. You may omit the cloudy framework from your repository with something like the following, then use `cloudy install` to put the files in place when necessary.
+
+```gitignore
+cloudy/**
+!cloudy/version.sh
+```
+
 ## Requirements
 
 * Works with BASH 3
@@ -41,9 +50,9 @@ If you find this project useful... please consider [making a donation](https://w
 
 ## Installation
 
-Installation means downloading this repository to your system.  It contains _cloudy_tools.sh_ which is used to generate new scripts, as well as the cloudy framework.  It is a Cloudy script.
+Installation means downloading this repository to your system. It contains _cloudy_tools.sh_ which is used to generate new scripts, as well as the cloudy framework. It is a Cloudy script.
 
-Here is a snippet to clone this repo to a directory on your system _$HOME/opt/cloudy_ and create a symlink in _$HOME/bin/cloudy_.  This assumes _~/bin_ is in your `$PATH` variable.
+Here is a snippet to clone this repo to a directory on your system _$HOME/opt/cloudy_ and create a symlink in _$HOME/bin/cloudy_. This assumes _~/bin_ is in your `$PATH` variable.
 
     (cd $HOME && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy || git clone https://github.com/aklump/cloudy.git) && (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) && cloudy
 
@@ -55,15 +64,15 @@ On success you should see something resembling the following:
 
 Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariables.html#BASHSUBSHELLREF) the following variables are made available by Cloudy.
 
-| varname | description |
-|----------|----------|
-| `$CLOUDY_NAME` | Machine name of your script.  |
-| `$ROOT` | The directory containing your script. |
-| `$APP_ROOT` | All relative configuration files use this as base.  [Learn more](@app_root) |
-| `$SCRIPT` | Absolute path to your script.  |
-| `$CONFIG` | Absolute path to the base config file. |
-| `$WDIR` | The working directory when script was initiated. |
-| `$LOGFILE` | Absolute path to a log file, if enabled. |
+| varname        | description                                                                 |
+|----------------|-----------------------------------------------------------------------------|
+| `$CLOUDY_NAME` | Machine name of your script.                                                |
+| `$ROOT`        | The directory containing your script.                                       |
+| `$APP_ROOT`    | All relative configuration files use this as base.  [Learn more](@app_root) |
+| `$SCRIPT`      | Absolute path to your script.                                               |
+| `$CONFIG`      | Absolute path to the base config file.                                      |
+| `$WDIR`        | The working directory when script was initiated.                            |
+| `$LOGFILE`     | Absolute path to a log file, if enabled.                                    |
 
 * Determine your version of BASH with `echo $BASH_VERSION`
 

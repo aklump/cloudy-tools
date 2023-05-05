@@ -58,6 +58,16 @@
 <li>To work with JSON configuration instead type <code>cloudy new thunder.sh --json</code>.</li>
 </ol>
 
+<h3>Source Control</h3>
+
+<ol>
+<li>You may omit the cloudy framework from your repository with something like the following, then use <code>cloudy install</code> to put the files in place when necessary.</li>
+</ol>
+
+<pre><code class="gitignore">cloudy/**
+!cloudy/version.sh
+</code></pre>
+
 <h2>Requirements</h2>
 
 <ul>
@@ -71,9 +81,9 @@
 
 <h2>Installation</h2>
 
-<p>Installation means downloading this repository to your system.  It contains <em>cloudy_tools.sh</em> which is used to generate new scripts, as well as the cloudy framework.  It is a Cloudy script.</p>
+<p>Installation means downloading this repository to your system. It contains <em>cloudy_tools.sh</em> which is used to generate new scripts, as well as the cloudy framework. It is a Cloudy script.</p>
 
-<p>Here is a snippet to clone this repo to a directory on your system <em>$HOME/opt/cloudy</em> and create a symlink in <em>$HOME/bin/cloudy</em>.  This assumes <em>~/bin</em> is in your <code>$PATH</code> variable.</p>
+<p>Here is a snippet to clone this repo to a directory on your system <em>$HOME/opt/cloudy</em> and create a symlink in <em>$HOME/bin/cloudy</em>. This assumes <em>~/bin</em> is in your <code>$PATH</code> variable.</p>
 
 <pre><code>(cd $HOME &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; (test -d cloudy || git clone https://github.com/aklump/cloudy.git) &amp;&amp; (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) &amp;&amp; cloudy
 </code></pre>
@@ -144,7 +154,7 @@
 <footer>
   <div class="pager"><a href="app_root.html" class="prev app_root">&laquo;Application Root</a><a href="index.html" class="index pager__book-title">Cloudy</a><a href="api.html" class="next api">Cloudy API&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.5.0 &bull; Last Updated: Tue, 25 Apr 2023 16:24:09 -0700</p>
+    <p class="legaleeze center">Version: 1.5.1 &bull; Last Updated: Thu, 04 May 2023 19:04:21 -0700</p>
   </div>
 </footer>
 
