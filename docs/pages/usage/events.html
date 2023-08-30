@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.5.1">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.5.1">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.5.1">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist//Users/aklump/opt/cloudy/knowledge/style.css?ver=1.5.1">
+    <title>Events (Hooks) | Book</title>
+</head>
+<body class="my-5">
+
+<header class="header bg-light fixed-top p-2 pt-1">
+  <div class="container-md">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="header__breadcrumbs flex-shrink-0 flex-grow-1 me-3">
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+      <a class="fw-bold" href="/Users/aklump/opt/cloudy/docs/index.html">Book</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a class="fw-bold" href="#" data-bs-toggle="offcanvas"
+         data-bs-target="#table-of-contents"
+         aria-controls="table-of-contents">TOC</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html">Usage</a></li>
+  </ol>
+</nav>
+
+      </div>
+      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
+          type="button" class="badge
+        rounded-pill
+        bg-primary">USAGE</span>
+  </div>
+      <div class="header__page-numbers flex-shrink-1">20
+        / 34</div>
+    </div>
+  </div>
+</header>
+
+<main class="container-md flex-column">
+  <div class="row mb-5 pt-5">
+    <article class="col">
+      <h1 class="mb-4 text-primary">Events (Hooks)</h1>
+      <ul>
+<li><p>Event handlers are functions that must be defined before the Cloudy bootstrap.</p>
+<pre><code>  #!/usr/bin/env bash
+    
+  ...
+    
+  #
+  # Define all event handlers here.
+  #
+    
+  # Begin Cloudy Bootstrap
+  s="${BASH_SOURCE[0]}";while ...
+</code></pre>
+</li>
+<li><p>To see the available events recursively search codebase for <code>event_dispatch "</code>.</p>
+</li>
+</ul>
+<h2>Cloudy Core Events</h2>
+<ul>
+<li>pre_config</li>
+<li>compile_config</li>
+<li>boot</li>
+<li>clear_cache</li>
+</ul>
+<h2>on_boot</h2>
+<p>If you define this function before the bootstrap it will be called once the minimum bootstrap has been called.  To see an example of this you can look to the <code>tests</code> path in _cloudy<em>installer.sh</em>.</p>
+<h2>Example of a Custom Event</h2>
+<p>Imagine a custom event like showing info.  Let's call the event <code>show_info</code>.  You Cloudy script will fire or trigger the event with a line like this:</p>
+<pre><code>event_dispatch "show_info" "do" "re" "mi"
+local trigger_result=$?
+
+</code></pre>
+<p>How might another script respond to this event?</p>
+<pre><code>function on_show_info() {
+    local do=$1
+    local re=$2
+    local mi=$3
+    
+    ...
+}
+</code></pre>
+<h3>Listening for events</h3>
+<p>You can register custom callbacks using <code>event_listen</code>.  See below...</p>
+<h3>Using <code>additional_bootstrap</code> files</h3>
+<p>In some cases you will need to add your listeners in a custom bootstrap file which is registered in your configuration as <code>additional_bootstrap</code>.  They are sourced after all configuration has been loaded.  The contents of such file could look like this:</p>
+<pre><code>#!/usr/bin/env bash
+
+function here_we_go() {
+    debug "$FUNCNAME;\$FUNCNAME"
+}
+
+event_listen "boot" "here_we_go"
+</code></pre>
+    </article>
+  </div>
+</main>
+
+  <footer class="footer d-flex justify-content-center">
+    <div class="flex-column justify-content-center">
+                  Version:
+          <strong>1.5.1</strong>
+          &bull;
+                Last Update: <strong>8/30/2023</strong>
+    </div>
+  </footer>
+
+
+<nav class="nav d-flex justify-content-center align-items-center
+  fixed-bottom">
+  <div class="btn-group flex-fill">
+              <a href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Application Root</a>
+  
+    
+              <a href="/Users/aklump/opt/cloudy/docs/pages/usage/error_handling.html" class="btn nav__prev-page js-nav__prev-page
+    btn-primary"><i class="bi
+      bi-caret-left-fill"></i></a>
+  
+    
+    <a class="nav__toc btn btn-light" href="#"
+       data-bs-toggle="offcanvas"
+       data-bs-target="#table-of-contents"
+       aria-controls="table-of-contents"><i class="bi
+           bi-list-ol"></i></a>
+    
+              <a href="/Users/aklump/opt/cloudy/docs/pages/usage/cloudy_php.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> PHP and Cloudy <i class="bi
+       bi-caret-right-fill"></i></a>
+  
+    
+              <span class="btn nav__next-chapter btn-secondary "></span>
+  
+  </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="table-of-contents"
+     aria-labelledby="table-of-contents__title" data-bs-keyboard="true">
+  <div class="offcanvas-header">
+    <h1 class="h6 offcanvas-title js-chapter-list-title"
+        id="table-of-contents__title">All
+      Chapters
+      &amp; Pages</h1>
+    <h1 class="d-none h6 offcanvas-title js-search-results-title"
+        id="table-of-contents__title">Search Results</h1>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+          <input class="js-search form-control mb-4" type="search"
+             placeholder="Search docs..."
+             aria-label="Search">
+      <div class="js-search-results d-none">
+        <h2 class="h4 mt-4">Matched Pages</h2>
+        <ol class="list-unstyled">
+                                              <li data-page="readme" value="1">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/about/readme.html">Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[About]
+    </li>
+  
+                                    <li data-page="changelog" value="2">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/about/changelog.html">Cloudy Changelog<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[About]
+    </li>
+  
+                                    <li data-page="api" value="3">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/about/api.html">Cloudy API<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[About]
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="4">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Quick Start]
+    </li>
+  
+                                                          <li data-page="functions" value="5">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/functions.html">Functions<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Code Examples]
+    </li>
+  
+                                    <li data-page="menus_input" value="6">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/menus_input.html">User Input and Menus<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Code Examples]
+    </li>
+  
+                                    <li data-page="plugins" value="7">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/plugins.html">Single File Plugins Pattern<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Code Examples]
+    </li>
+  
+                                    <li data-page="route_access" value="8">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/route_access.html">Command Access<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Code Examples]
+    </li>
+  
+                                                          <li data-page="arrays" value="9">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/bash/arrays.html">Arrays<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[BASH]
+    </li>
+  
+                                    <li data-page="strings" value="10">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/bash/strings.html">String Manipulation<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[BASH]
+    </li>
+  
+                                                          <li data-page="app_root" value="11">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html">Application Root<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="arguments" value="12">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/arguments.html">This script "arguments"<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="command" value="13">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/command.html">The Script "Command"<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="composer" value="14">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/composer.html">Building a Cloudy-based App w/ Composer<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="configuration" value="15">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/configuration.html">Configuration<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="conventions" value="16">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/conventions.html">Cloudy Conventions<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="development" value="17">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/development.html">Development Tools<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="documenting" value="18">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/documenting.html">Documenting Code<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="error_handling" value="19">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/error_handling.html">Exit Status<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="events" value="20">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/events.html">Events (Hooks)<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="cloudy_php" value="21">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/cloudy_php.html">PHP and Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="installer" value="22">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/installer.html">The Initialize API<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="lists" value="23">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/lists.html">Lists<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="localize" value="24">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/localize.html">Localization/Translation<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="logging" value="25">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/logging.html">Logging to File<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="menus" value="26">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/menus.html">Menus<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="options" value="27">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/options.html">The Script "Options"<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="packages" value="28">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/packages.html">Cloudy Packages<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="tables" value="29">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/tables.html">Tables (Tabular Output)<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="tempdir" value="30">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/tempdir.html">Using a Temporary Directory<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="testing" value="31">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/testing.html">Unit Testing<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="version" value="32">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/version.html">Script Version<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="yaml" value="33">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/yaml.html">YAML in BASH<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                                          <li data-page="empty_config" value="34">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Troubleshooting]
+    </li>
+  
+                              </ol>
+      </div>
+        
+    <div class="js-chapter-list">
+              <h2 class="h4 mt-4">About</h2>
+        <ol>
+                                <li data-page="readme" value="1">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/about/readme.html">Cloudy</a>&nbsp;[About]
+    </li>
+  
+                                <li data-page="changelog" value="2">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/about/changelog.html">Cloudy Changelog</a>&nbsp;[About]
+    </li>
+  
+                                <li data-page="api" value="3">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/about/api.html">Cloudy API</a>&nbsp;[About]
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Quick Start</h2>
+        <ol>
+                                <li data-page="writing_scripts" value="4">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>&nbsp;[Quick Start]
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Code Examples</h2>
+        <ol>
+                                <li data-page="functions" value="5">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/functions.html">Functions</a>&nbsp;[Code Examples]
+    </li>
+  
+                                <li data-page="menus_input" value="6">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/menus_input.html">User Input and Menus</a>&nbsp;[Code Examples]
+    </li>
+  
+                                <li data-page="plugins" value="7">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/plugins.html">Single File Plugins Pattern</a>&nbsp;[Code Examples]
+    </li>
+  
+                                <li data-page="route_access" value="8">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/examples/route_access.html">Command Access</a>&nbsp;[Code Examples]
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">BASH</h2>
+        <ol>
+                                <li data-page="arrays" value="9">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/bash/arrays.html">Arrays</a>&nbsp;[BASH]
+    </li>
+  
+                                <li data-page="strings" value="10">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/bash/strings.html">String Manipulation</a>&nbsp;[BASH]
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Usage</h2>
+        <ol>
+                                <li data-page="app_root" value="11">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html">Application Root</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="arguments" value="12">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/arguments.html">This script "arguments"</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="command" value="13">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/command.html">The Script "Command"</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="composer" value="14">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/composer.html">Building a Cloudy-based App w/ Composer</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="configuration" value="15">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/configuration.html">Configuration</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="conventions" value="16">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/conventions.html">Cloudy Conventions</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="development" value="17">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/development.html">Development Tools</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="documenting" value="18">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/documenting.html">Documenting Code</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="error_handling" value="19">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/error_handling.html">Exit Status</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="events" value="20">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/events.html">Events (Hooks)</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="cloudy_php" value="21">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/cloudy_php.html">PHP and Cloudy</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="installer" value="22">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/installer.html">The Initialize API</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="lists" value="23">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/lists.html">Lists</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="localize" value="24">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/localize.html">Localization/Translation</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="logging" value="25">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/logging.html">Logging to File</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="menus" value="26">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/menus.html">Menus</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="options" value="27">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/options.html">The Script "Options"</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="packages" value="28">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/packages.html">Cloudy Packages</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="tables" value="29">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/tables.html">Tables (Tabular Output)</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="tempdir" value="30">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/tempdir.html">Using a Temporary Directory</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="testing" value="31">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/testing.html">Unit Testing</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="version" value="32">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/version.html">Script Version</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="yaml" value="33">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/usage/yaml.html">YAML in BASH</a>&nbsp;[Usage]
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Troubleshooting</h2>
+        <ol>
+                                <li data-page="empty_config" value="34">
+      <a class="js-page-link" href="/Users/aklump/opt/cloudy/docs/pages/trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>&nbsp;[Troubleshooting]
+    </li>
+  
+                  </ol>
+          </div>
+  </div>
+</div>
+<div class="modal fade" id="modal" tabindex="-1"
+     aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="js-modal-title modal-title" id="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mt-1 mb-4">
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="ABOUT" aria-pressed="false">ABOUT</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="BASH" aria-pressed="false">BASH</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="COMPOSER" aria-pressed="false">COMPOSER</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="DEPENDENCIES" aria-pressed="false">DEPENDENCIES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="EXAMPLES" aria-pressed="false">EXAMPLES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="PHP" aria-pressed="false">PHP</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="QUICK_START" aria-pressed="false">QUICK_START</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
+                  </p>
+        
+                
+        <ul class="list-group list-group-flush">
+                                    <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;ABOUT&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/about/readme.html">Cloudy</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;ABOUT&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/about/changelog.html">Cloudy Changelog</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/cloudy/docs/pages/about/api.html">Cloudy API</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;QUICK_START&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;EXAMPLES&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/examples/functions.html">Functions</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;EXAMPLES&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/examples/menus_input.html">User Input and Menus</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;EXAMPLES&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/examples/plugins.html">Single File Plugins Pattern</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;EXAMPLES&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/examples/route_access.html">Command Access</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;BASH&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/bash/arrays.html">Arrays</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;BASH&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/bash/strings.html">String Manipulation</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html">Application Root</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/arguments.html">This script &quot;arguments&quot;</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/command.html">The Script &quot;Command&quot;</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/composer.html">Building a Cloudy-based App w/ Composer</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/configuration.html">Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/conventions.html">Cloudy Conventions</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/development.html">Development Tools</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/documenting.html">Documenting Code</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/error_handling.html">Exit Status</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/events.html">Events (Hooks)</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;PHP&quot;,&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/cloudy_php.html">PHP and Cloudy</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/installer.html">The Initialize API</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/lists.html">Lists</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/localize.html">Localization/Translation</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/logging.html">Logging to File</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/menus.html">Menus</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/options.html">The Script &quot;Options&quot;</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/packages.html">Cloudy Packages</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/tables.html">Tables (Tabular Output)</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/tempdir.html">Using a Temporary Directory</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/testing.html">Unit Testing</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/version.html">Script Version</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/opt/cloudy/docs/pages/usage/yaml.html">YAML in BASH</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/cloudy/docs/pages/trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>
+                              </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.5.1"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/dist/lunr.js?ver=1.5.1"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.5.1"></script>
+
+</body>
+</html>
