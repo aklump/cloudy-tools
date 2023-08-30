@@ -1,6 +1,5 @@
-/vendor
-/tests/code-coverage
-/tests/logs
-/tests/sandbox
-/documentation/core
 /documentation/README.md
+/documentation/core
+/vendor
+composer.lock
+reports/coverage
