@@ -8,3 +8,4 @@ push_develop = no
 patch_prefix = .
 git_root = .
 info_file = cloudy_tools.yml
+version_file = cloudy_tools.yml
