@@ -7,6 +7,12 @@ tags: about
 
 ## [Unreleased]
 
+## [1.5.5] - 2023-09-21
+
+### Changed
+
+- Split _cloudy.sh_ into _inc/cloudy.api.sh_ and _cloudy.sh_ to allow cherry-picking the api functions without bootstrapping the app.
+
 ## [1.5] - 2023-04-25
 
 ### Changed
