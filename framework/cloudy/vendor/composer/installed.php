@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.5.1',
-        'version' => '1.5.1.0',
+        'pretty_version' => '1.5.8',
+        'version' => '1.5.8.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'aklump/cloudy' => array(
-            'pretty_version' => '1.5.1',
-            'version' => '1.5.1.0',
+            'pretty_version' => '1.5.8',
+            'version' => '1.5.8.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -119,12 +119,12 @@
             'dev_requirement' => false,
         ),
         'nesbot/carbon' => array(
-            'pretty_version' => '2.69.0',
-            'version' => '2.69.0.0',
+            'pretty_version' => '2.71.0',
+            'version' => '2.71.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nesbot/carbon',
             'aliases' => array(),
-            'reference' => '4308217830e4ca445583a37d1bf4aff4153fa81c',
+            'reference' => '98276233188583f2ff845a0f992a235472d9466a',
             'dev_requirement' => false,
         ),
         'psr/clock' => array(
