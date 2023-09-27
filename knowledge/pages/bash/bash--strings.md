@@ -9,12 +9,27 @@ Taken from [Advanced Bash-Scripting Guide: Chapter 10. Manipulating Variables](h
 
 ## Trim the dot from right side of string
 
-    ${string%.}
+```bash
+${string%.}
+```
     
 ## Trim the dot from left side of string
 
-    ${string#.}
+```bash
+${string#.}
+```
+
+## Trim all leading and trailing whitespace
+
+```bash
+string="   foo    "
+string=${foo## }
+string=${foo%% }
+# "$string" == "foo"
+```    
     
 ## Get string length
 
-    ${#string}
+```bash
+${#string}
+```
