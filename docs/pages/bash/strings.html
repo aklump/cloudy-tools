@@ -4,10 +4,10 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.5.7">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.5.7">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.5.7">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist//Users/aklump/opt/cloudy/knowledge/style.css?ver=1.5.7">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.5.8">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.5.8">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.5.8">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist//Users/aklump/opt/cloudy/knowledge/style.css?ver=1.5.8">
     <title>String Manipulation | Book</title>
 </head>
 <body class="my-5">
@@ -49,15 +49,19 @@
       <h1 class="mb-4 text-primary">String Manipulation</h1>
       <p>Taken from <a href="https://www.tldp.org/LDP/abs/html/string-manipulation.html">Advanced Bash-Scripting Guide: Chapter 10. Manipulating Variables</a></p>
 <h2>Trim the dot from right side of string</h2>
-<pre><code>${string%.}
-
+<pre><code class="bash">${string%.}
 </code></pre>
 <h2>Trim the dot from left side of string</h2>
-<pre><code>${string#.}
-
+<pre><code class="bash">${string#.}
+</code></pre>
+<h2>Trim all leading and trailing whitespace</h2>
+<pre><code class="bash">string="   foo    "
+string=${foo## }
+string=${foo%% }
+# "$string" == "foo"
 </code></pre>
 <h2>Get string length</h2>
-<pre><code>${#string}
+<pre><code class="bash">${#string}
 </code></pre>
     </article>
   </div>
@@ -66,7 +70,7 @@
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
                   Version:
-          <strong>1.5.7</strong>
+          <strong>1.5.8</strong>
           &bull;
                 Last Update: <strong>9/27/2023</strong>
     </div>
@@ -615,9 +619,9 @@
   </div>
 </div>
 
-  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.5.7"></script>
-  <script src="/Users/aklump/opt/cloudy/docs/dist/dist/lunr.js?ver=1.5.7"></script>
-  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.5.7"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.5.8"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/dist/lunr.js?ver=1.5.8"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.5.8"></script>
 
 </body>
 </html>
