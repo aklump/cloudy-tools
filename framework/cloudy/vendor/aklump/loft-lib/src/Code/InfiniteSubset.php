@@ -3,8 +3,7 @@
 
 namespace AKlump\LoftLib\Code;
 
-
-use AKlump\Data\Data;
+use Dflydev\DotAccessData\Data;
 
 /**
  * Class InfiniteSubset
@@ -32,11 +31,15 @@ use AKlump\Data\Data;
  */
 class InfiniteSubset {
 
-  protected $g;
+  /**
+   * @var null|array
+   */
+  protected $container;
 
-  protected $stateArray;
-
-  protected $stateArrayPath;
+  /**
+   * @var string
+   */
+  protected $containerPath;
 
   /**
    * InfiniteSubset constructor.
@@ -47,10 +50,11 @@ class InfiniteSubset {
    *   will be used. Elements should be single values (strings, int, etc) not
    *   arrays nor objects.
    * @param array $stateArray Defaults to $_SESSION.  An array to hold state.
-   * @param \AKlump\Data\Data $data Only needed to override default.
    */
-  public function __construct($stateArrayPath = '', $dataset = array(), array &$stateArray = NULL, Data $data = NULL) {
-    $this->g = $data ? $data : new Data();
+  public function __construct($stateArrayPath = '', $dataset = array(), array &$stateArray = NULL) {
+    if (func_num_args() > 3) {
+      throw new \InvalidArgumentException('Passing $data to __construct is no longer supported');
+    }
     if ($stateArray === NULL) {
       $this->container =& $_SESSION;
     }
@@ -93,7 +97,7 @@ class InfiniteSubset {
   public function getDataset() {
     $container = $this->getContainerData();
 
-    return $this->g->get($container, 'dataset', []);
+    return $container['dataset'] ?? [];
   }
 
   public function reset(array $dataset) {
@@ -134,7 +138,7 @@ class InfiniteSubset {
    * @return mixed
    */
   private function getStack() {
-    return $this->g->get($this->getContainerData(), 'stack', []);
+    return $this->getContainerData()['stack'] ?? [];
   }
 
   /**
@@ -151,9 +155,9 @@ class InfiniteSubset {
       return $this->container + $default;
     }
     else {
-      return $this->g->get($this->container, $this->containerPath, $default, function ($value, $default) {
-        return $value + $default;
-      });
+      $value = (new Data($this->container))->get($this->containerPath, $default);
+
+      return $value + $default;
     }
   }
 
@@ -176,7 +180,9 @@ class InfiniteSubset {
       $this->container = $data;
     }
     else {
-      $this->g->set($this->container, $this->containerPath, $data);
+      $temp = (new Data($this->container));
+      $temp->set($this->containerPath, $data);
+      $this->container = $temp->export();
     }
 
     return $this;

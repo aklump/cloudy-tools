@@ -58,7 +58,7 @@ class BashTest extends TestCase {
   /**
    * Provides data for testGetters.
    */
-  public function dataForTestGettersProvider() {
+  public static function dataForTestGettersProvider() {
     $tests = array();
     $tests[] = array(
       array(

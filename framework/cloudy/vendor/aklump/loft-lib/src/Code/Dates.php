@@ -317,7 +317,7 @@ class Dates {
     return $date->setDate($y, $m, $d);
   }
 
-  protected static function setTime($date, $key, $value) {
+  public static function setTime($date, $key, $value) {
     $h = $date->format('G') * 1;
     $m = $date->format('i') * 1;
     $s = $date->format('s') * 1;
@@ -339,8 +339,8 @@ class Dates {
    *   True if today is $dateString.  False if now is before or after
    *   $dateString.
    *
-   * @see isTodayInDays().
    * @throws \Exception
+   * @see isTodayInDays().
    */
   public function isToday($date) {
     return $this->isTodayInDays($date, $date);

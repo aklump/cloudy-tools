@@ -53,6 +53,7 @@ class ComposerStaticInit161edfef4d39909e83d990466d457059
         'D' => 
         array (
             'Doctrine\\Inflector\\' => 19,
+            'Dflydev\\DotAccessData\\' => 22,
         ),
         'C' => 
         array (
@@ -62,7 +63,6 @@ class ComposerStaticInit161edfef4d39909e83d990466d457059
         'A' => 
         array (
             'AKlump\\LoftLib\\' => 15,
-            'AKlump\\Data\\' => 12,
         ),
     );
 
@@ -133,6 +133,10 @@ class ComposerStaticInit161edfef4d39909e83d990466d457059
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
         ),
+        'Dflydev\\DotAccessData\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
+        ),
         'Ckr\\Util\\' => 
         array (
             0 => __DIR__ . '/..' . '/ckr/arraymerger/src',
@@ -144,10 +148,6 @@ class ComposerStaticInit161edfef4d39909e83d990466d457059
         'AKlump\\LoftLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/aklump/loft-lib/src',
-        ),
-        'AKlump\\Data\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/aklump/data',
         ),
     );
 

@@ -9,7 +9,7 @@ class DatasetTestBase extends PhpUnitTestCase {
    *
    * Enter each key and it's default value.
    *
-   * @dataProvider DataForTestDefaultsProvider
+   * @dataProvider dataForTestDefaultsProvider
    */
   public function testDefaults($key, $value) {
     $classname = get_class($this->obj);
@@ -23,7 +23,7 @@ class DatasetTestBase extends PhpUnitTestCase {
    * Add some keys (string types) for with values that should not pass the
    * match().
    *
-   * @dataProvider DataForTestInvalidFormatShowsProblemsProvider
+   * @dataProvider dataForTestInvalidFormatShowsProblemsProvider
    */
   public function testInvalidFormatShowsProblems($key = NULL, $invalidValue = NULL) {
     if ($key) {
@@ -41,7 +41,7 @@ class DatasetTestBase extends PhpUnitTestCase {
    *
    * List all the required keys that exist in $this->objArgs
    *
-   * @dataProvider DataForTestMissingKeyShowsProblemProvider
+   * @dataProvider dataForTestMissingKeyShowsProblemProvider
    */
   public function testMissingFieldShowsProblem($key, $master_key = NULL) {
     unset($this->objArgs[0][$key]);

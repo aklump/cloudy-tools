@@ -22,7 +22,7 @@ class LegacyConfigurationTest extends TestCase {
   /**
    * Provides data for testGetVarEvalCode.
    */
-  public function dataForTestGetVarEvalCodeProvider() {
+  public static function dataForTestGetVarEvalCodeProvider() {
     $tests = array();
     $tests[] = array(
       'version="1.0.5"',
@@ -82,7 +82,7 @@ class LegacyConfigurationTest extends TestCase {
   /**
    * Provides data for testFlattenReturnsArray.
    */
-  public function dataForTestFlattenReturnsArrayProvider() {
+  public static function dataForTestFlattenReturnsArrayProvider() {
     $tests = array();
 
     $tests[] = array(

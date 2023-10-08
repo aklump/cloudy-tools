@@ -94,7 +94,7 @@ class ShortCodesTest extends PhpUnitTestCase {
   /**
    * Provides data for testWordPressExamplesPass.
    */
-  public function dataForTestWordPressExamplesPassProvider() {
+  public static function dataForTestWordPressExamplesPassProvider() {
     $tests = array();
     $tests[] = array(
       '[pull_quote margin_top="7"]',
@@ -226,7 +226,7 @@ class ShortCodesTest extends PhpUnitTestCase {
   /**
    * Provides data for testReplaceTagsWorks.
    */
-  public function dataForTestReplaceTagsWorksProvider() {
+  public static function dataForTestReplaceTagsWorksProvider() {
     $tests = array();
 
     // Self closing inside of of nested HTML.

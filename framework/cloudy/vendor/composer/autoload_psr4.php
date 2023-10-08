@@ -22,8 +22,8 @@ return array(
     'Illuminate\\Support\\' => array($vendorDir . '/illuminate/collections', $vendorDir . '/illuminate/macroable', $vendorDir . '/illuminate/support'),
     'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
     'Doctrine\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Inflector'),
+    'Dflydev\\DotAccessData\\' => array($vendorDir . '/dflydev/dot-access-data/src'),
     'Ckr\\Util\\' => array($vendorDir . '/ckr/arraymerger/src'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'AKlump\\LoftLib\\' => array($vendorDir . '/aklump/loft-lib/src'),
-    'AKlump\\Data\\' => array($vendorDir . '/aklump/data'),
 );

@@ -13,7 +13,7 @@ class CacheTest extends PhpUnitTestCase {
     /**
      * Provides data for testIdMethodSortsAndReturnsSameCacheId.
      */
-    public function DataForTestIdMethodSortsAndReturnsSameCacheIdProvider()
+    public static function dataForTestIdMethodSortsAndReturnsSameCacheIdProvider()
     {
         $tests = array();
         $tests[] = array(
@@ -29,7 +29,7 @@ class CacheTest extends PhpUnitTestCase {
     }
 
     /**
-     * @dataProvider DataForTestIdMethodSortsAndReturnsSameCacheIdProvider
+     * @dataProvider dataForTestIdMethodSortsAndReturnsSameCacheIdProvider
      */
     public function testIdMethodSortsAndReturnsSameCacheId($a, $b)
     {

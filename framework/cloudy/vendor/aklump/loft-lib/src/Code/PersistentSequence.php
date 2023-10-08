@@ -2,8 +2,6 @@
 
 namespace AKlump\LoftLib\Code;
 
-use AKlump\Data\Data;
-
 /**
  * Create a sequence of items that can be iterated across page loads.
  *
@@ -32,9 +30,9 @@ use AKlump\Data\Data;
  */
 class PersistentSequence extends InfiniteSubset {
 
-    public static function next($stateArrayPath = '', $dataset = array(), array &$stateArray = null, Data $data = null)
+    public static function next($stateArrayPath = '', $dataset = array(), array &$stateArray = null)
     {
-        $instance = new static($stateArrayPath, $dataset, $stateArray, $data);
+        $instance = new static($stateArrayPath, $dataset, $stateArray);
 
         return $instance->getNext();
     }

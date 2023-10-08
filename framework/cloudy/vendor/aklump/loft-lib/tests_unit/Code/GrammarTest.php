@@ -16,7 +16,7 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testTitleCaseWorksOnRealWorldExamples.
    */
-  public function DataForTestTitleWorksOnRealWorldExamplesProvider() {
+  public static function dataForTestTitleWorksOnRealWorldExamplesProvider() {
     $tests = array();
     $tests[] = array(
       'Check Out My MySQL Page',
@@ -38,7 +38,7 @@ class GrammarTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestTitleWorksOnRealWorldExamplesProvider
+   * @dataProvider dataForTestTitleWorksOnRealWorldExamplesProvider
    */
   public function testTitleCaseWorksOnRealWorldExamples($control, $subject, $ignore) {
     $this->assertSame($control, Grammar::titleCase($subject, $ignore));
@@ -56,14 +56,14 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testIsConsonantReturnsTrueForAllConsonants.
    */
-  public function DataForTestIsVowelReturnsTrueForAllVowelsProvider() {
+  public static function dataForTestIsVowelReturnsTrueForAllVowelsProvider() {
     return array_map(function ($item) {
       return [$item];
     }, str_split('aeiou'));
   }
 
   /**
-   * @dataProvider DataForTestIsVowelReturnsTrueForAllVowelsProvider
+   * @dataProvider dataForTestIsVowelReturnsTrueForAllVowelsProvider
    */
   public function testIsVowelReturnsTrueForAllVowels($subject) {
     $this->assertTrue(Grammar::isVowel($subject));
@@ -72,14 +72,14 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testIsConsonantReturnsTrueForAllConsonants.
    */
-  public function DataForTestIsConsonantReturnsTrueForAllConsonantsProvider() {
+  public static function dataForTestIsConsonantReturnsTrueForAllConsonantsProvider() {
     return array_map(function ($item) {
       return [$item];
     }, str_split('bcdfghjklmnpqrstvwxy'));
   }
 
   /**
-   * @dataProvider DataForTestIsConsonantReturnsTrueForAllConsonantsProvider
+   * @dataProvider dataForTestIsConsonantReturnsTrueForAllConsonantsProvider
    */
   public function testIsConsonantReturnsTrueForAllConsonants($subject) {
     $this->assertTrue(Grammar::isConsonant($subject));
@@ -88,7 +88,7 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testPresentParticiple.
    */
-  function DataForTestPresentParticipleProvider() {
+  public static function dataForTestPresentParticipleProvider() {
     $tests = array();
     $tests[] = array('Start', 'Starting');
     $tests[] = array('unpublish', 'unpublishing');
@@ -108,7 +108,7 @@ class GrammarTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestPresentParticipleProvider
+   * @dataProvider dataForTestPresentParticipleProvider
    */
   public function testPresentParticiple($base, $control) {
     $this->assertSame($control, Grammar::presentParticiple($base));
@@ -117,7 +117,7 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testPastTense.
    */
-  function DataForTestPastTenseProvider() {
+  public static function dataForTestPastTenseProvider() {
     $tests = array();
     $tests[] = array('remove', 'removed');
     $tests[] = array('save', 'saved');
@@ -131,7 +131,7 @@ class GrammarTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestPastTenseProvider
+   * @dataProvider dataForTestPastTenseProvider
    */
   public function testPastTense($base, $control) {
     $this->assertSame($control, Grammar::pastTense($base));
@@ -147,7 +147,7 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testToPlural and testToSingular.
    */
-  function toPluralProvider() {
+  public static function toPluralProvider() {
     $tests = array();
     $tests[] = array(
       'seed',
@@ -211,7 +211,7 @@ class GrammarTest extends TestCase {
   /**
    * Provides data for testIsPlural.
    */
-  function isPluralProvider() {
+  public static function isPluralProvider() {
     $tests = array();
     $tests[] = array(
       'cars',

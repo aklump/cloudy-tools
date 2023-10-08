@@ -6,6 +6,7 @@ use AKlump\LoftLib\Testing\PhpUnitTestCase;
 
 /**
  * Defines testing class LoftXmlElementTest.
+ *
  * @covers \AKlump\LoftLib\Code\LoftXmlElement
  */
 class LoftXmlElementTest extends PhpUnitTestCase {
@@ -13,7 +14,7 @@ class LoftXmlElementTest extends PhpUnitTestCase {
   /**
    * Provides data for testFromArrayAsArray.
    */
-  function DataForTestFromArrayAsArrayProvider() {
+  public static function dataForTestFromArrayAsArrayProvider() {
     $tests = array();
 
     $tests[] = array(
@@ -168,7 +169,7 @@ class LoftXmlElementTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestFromArrayAsArrayProvider
+   * @dataProvider dataForTestFromArrayAsArrayProvider
    */
   public function testFromArrayAsArray($xml, array $array) {
     $xml = trim($xml);
@@ -372,7 +373,7 @@ James T. Kirk
   /**
    * Provides data for testGetTemplateWithData.
    */
-  function DataForTestGetTemplateWithDataProvider() {
+  public static function dataForTestGetTemplateWithDataProvider() {
     $tests = array();
     $tests[] = array(
       'comp',
@@ -384,17 +385,17 @@ James T. Kirk
           6 => 'numerickeysignored',
         ),
       ),
-      function ($value, $xml) {
+      function ($test, $value, $xml) {
         $control = '<comp type="mobile">http://comp.com</comp>';
-        $this->assertSame($control, $xml->asXML());
+        $test->assertSame($control, $xml->asXML());
       },
     );
     $tests[] = array('title', 'My Title');
     $tests[] = array(
       'title',
       'My Title',
-      function ($value, $xml) {
-        $this->assertXmlEquals('My Title', $xml);
+      function ($test, $value, $xml) {
+        $test->assertXmlEquals('My Title', $xml);
       },
     );
     $tests[] = array('status', 3);
@@ -404,14 +405,18 @@ James T. Kirk
   }
 
   /**
-   * @dataProvider DataForTestGetTemplateWithDataProvider
+   * @dataProvider dataForTestGetTemplateWithDataProvider
    */
   public function testGetTemplateWithData($key, $value, callable $control = NULL) {
-    $control = $control ? $control : array($this, 'assertXMLEquals');
     $xml = new LoftXmlElement('<facet/>');
     $xml->addChildFromArray($key, $value);
     $this->assertXMLHasChild($key, $xml);
-    $control($value, $xml->{$key});
+    if (NULL === $control) {
+      $this->assertXMLEquals($value, $xml->{$key});
+    }
+    else {
+      $control($this, $value, $xml->{$key});
+    }
   }
 
   public function testStripHeader() {

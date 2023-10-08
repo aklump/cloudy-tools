@@ -2,7 +2,7 @@
 
 namespace AKlump\LoftLib\Code;
 
-use AKlump\Data\Data;
+use Dflydev\DotAccessData\Data;
 
 /**
  * Class Dataset
@@ -787,22 +787,18 @@ abstract class Dataset implements DatasetInterface {
    * @return mixed
    */
   public function __get($key) {
-    $data = $this->dataset;
-    $g = new Data();
+    $getter = new Data($this->dataset);
     $default = static::getDefault($key);
-
-    return $g->get($data, $key, $default, function ($value, $default, $exists) use ($data, $key) {
-      if (!$exists) {
-        $aliases = static::getOtherAliases($key);
-        foreach ($aliases as $alias) {
-          if (array_key_exists($alias, $data)) {
-            return $data[$alias];
-          }
+    if (!$getter->has($key)) {
+      $aliases = static::getOtherAliases($key);
+      foreach ($aliases as $alias) {
+        if (array_key_exists($alias, $this->dataset)) {
+          return $this->dataset[$alias];
         }
       }
+    }
 
-      return $value;
-    });
+    return $getter->get($key, $default);
   }
 
   /**

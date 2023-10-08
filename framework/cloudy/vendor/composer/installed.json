@@ -1,79 +1,32 @@
 {
     "packages": [
         {
-            "name": "aklump/data",
-            "version": "0.0.28",
-            "version_normalized": "0.0.28.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aklump/data.git",
-                "reference": "0c15963143161f595acdbc8078533992ced9cbc5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aklump/data/zipball/0c15963143161f595acdbc8078533992ced9cbc5",
-                "reference": "0c15963143161f595acdbc8078533992ced9cbc5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "time": "2017-05-31T01:04:19+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "AKlump\\Data\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Aaron Klump",
-                    "email": "sourcecode@intheloftstudios.com",
-                    "homepage": "http://www.intheloftstudios.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Common interface for interacting with data in objects and arrays.",
-            "homepage": "http://github.com/aklump/data",
-            "keywords": [
-                "array",
-                "data",
-                "getters",
-                "objects",
-                "php"
-            ],
-            "install-path": "../aklump/data"
-        },
-        {
             "name": "aklump/loft-lib",
-            "version": "2.0.2",
-            "version_normalized": "2.0.2.0",
+            "version": "2.1.1",
+            "version_normalized": "2.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aklump/loft-lib.git",
-                "reference": "5127cf17c890ca5bd8f7e8574033b07d3efbbe3d"
+                "reference": "6c0678a7602d9f0d315e756d712ba992bf8b34a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aklump/loft-lib/zipball/5127cf17c890ca5bd8f7e8574033b07d3efbbe3d",
-                "reference": "5127cf17c890ca5bd8f7e8574033b07d3efbbe3d",
+                "url": "https://api.github.com/repos/aklump/loft-lib/zipball/6c0678a7602d9f0d315e756d712ba992bf8b34a6",
+                "reference": "6c0678a7602d9f0d315e756d712ba992bf8b34a6",
                 "shasum": ""
             },
             "require": {
-                "aklump/data": "^0.0.28",
+                "dflydev/dot-access-data": "^3.0",
+                "ext-simplexml": "*",
                 "illuminate/support": "^7|^8|^10.14",
                 "league/mime-type-detection": "^1.11",
                 "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.5"
+                "aklump/phpswap": "dev-main",
+                "phpunit/phpunit": "^9.5 | ^10"
             },
-            "time": "2023-06-29T20:51:47+00:00",
+            "time": "2023-10-08T20:19:09+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -94,7 +47,7 @@
             "description": "Core utilities provided by In the Loft Studios",
             "support": {
                 "issues": "https://github.com/aklump/loft-lib/issues",
-                "source": "https://github.com/aklump/loft-lib/tree/2.0.2"
+                "source": "https://github.com/aklump/loft-lib/tree/2.1.1"
             },
             "install-path": "../aklump/loft-lib"
         },
@@ -143,6 +96,84 @@
                 "source": "https://github.com/ckressibucher/array_merger/tree/master"
             },
             "install-path": "../ckr/arraymerger"
+        },
+        {
+            "name": "dflydev/dot-access-data",
+            "version": "v3.0.2",
+            "version_normalized": "3.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dflydev/dflydev-dot-access-data.git",
+                "reference": "f41715465d65213d644d3141a6a93081be5d3549"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dflydev/dflydev-dot-access-data/zipball/f41715465d65213d644d3141a6a93081be5d3549",
+                "reference": "f41715465d65213d644d3141a6a93081be5d3549",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.42",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.3",
+                "scrutinizer/ocular": "1.6.0",
+                "squizlabs/php_codesniffer": "^3.5",
+                "vimeo/psalm": "^4.0.0"
+            },
+            "time": "2022-10-27T11:44:00+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Dflydev\\DotAccessData\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dragonfly Development Inc.",
+                    "email": "info@dflydev.com",
+                    "homepage": "http://dflydev.com"
+                },
+                {
+                    "name": "Beau Simensen",
+                    "email": "beau@dflydev.com",
+                    "homepage": "http://beausimensen.com"
+                },
+                {
+                    "name": "Carlos Frutos",
+                    "email": "carlos@kiwing.it",
+                    "homepage": "https://github.com/cfrutos"
+                },
+                {
+                    "name": "Colin O'Dell",
+                    "email": "colinodell@gmail.com",
+                    "homepage": "https://www.colinodell.com"
+                }
+            ],
+            "description": "Given a deep data structure, access data by dot notation.",
+            "homepage": "https://github.com/dflydev/dflydev-dot-access-data",
+            "keywords": [
+                "access",
+                "data",
+                "dot",
+                "notation"
+            ],
+            "support": {
+                "issues": "https://github.com/dflydev/dflydev-dot-access-data/issues",
+                "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.2"
+            },
+            "install-path": "../dflydev/dot-access-data"
         },
         {
             "name": "doctrine/inflector",

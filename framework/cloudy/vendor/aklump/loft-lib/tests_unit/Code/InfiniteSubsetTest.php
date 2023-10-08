@@ -10,6 +10,13 @@ use AKlump\LoftLib\Testing\PhpUnitTestCase;
  */
 class InfiniteSubsetTest extends PhpUnitTestCase {
 
+  public function testPassingFourthArgumentThrows() {
+    $this->expectException(\InvalidArgumentException::class);
+    $state = [];
+    $data = new \stdClass();
+    new InfiniteSubset('foo.bar', [1, 2, 4, 8], $state, $data);
+  }
+
   public function testKeysArePreserved() {
     $this->objArgs[2] = [];
     $this->objArgs[1] = [

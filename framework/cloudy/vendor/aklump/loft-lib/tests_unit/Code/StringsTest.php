@@ -14,7 +14,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testEndsWithSentenceWorksAsExpected.
    */
-  public function dataForTestEndsWithSentenceWorksAsExpectedProvider() {
+  public static function dataForTestEndsWithSentenceWorksAsExpectedProvider() {
     $tests = array();
     $tests[] = array(
       'lorem ipsum dolar sit',
@@ -58,7 +58,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testAcronymWorksAsExpected.
    */
-  public function dataForTestAcronymWorksAsExpectedProvider() {
+  public static function dataForTestAcronymWorksAsExpectedProvider() {
     $tests = array();
 
     $tests[] = array(
@@ -95,7 +95,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testGetFirstNameVariantes.
    */
-  public function DataForTestGetFirstNameVariantesProvider() {
+  public static function dataForTestGetFirstNameVariantesProvider() {
     $tests = array();
     $tests[] = array(
       'Aaron',
@@ -138,7 +138,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestGetFirstNameVariantesProvider
+   * @dataProvider dataForTestGetFirstNameVariantesProvider
    */
   public function testGetFirstNameVariantes($control, $subject) {
     $this->assertSame($control, Strings::getFirstName($subject));
@@ -147,7 +147,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testSplitByWorksAsPlanned.
    */
-  public function DataForTestSplitByWorksAsPlannedProvider() {
+  public static function dataForTestSplitByWorksAsPlannedProvider() {
     $tests = array();
     $tests[] = array(
       "In the Loft<br/>Studios",
@@ -167,7 +167,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestSplitByWorksAsPlannedProvider
+   * @dataProvider dataForTestSplitByWorksAsPlannedProvider
    */
   public function testSplitByWorksAsPlanned($control, $text, $lineCount, $eol) {
     $this->assertSame($control, Strings::splitBy($text, $eol, $lineCount));
@@ -176,7 +176,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testPhoneWorksOnDifferentFormats.
    */
-  public function DataForTestPhoneWorksOnDifferentFormatsProvider() {
+  public static function dataForTestPhoneWorksOnDifferentFormatsProvider() {
     $tests = array();
     $tests[] = array(
       '(123) 555-1212',
@@ -193,7 +193,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestPhoneWorksOnDifferentFormatsProvider
+   * @dataProvider dataForTestPhoneWorksOnDifferentFormatsProvider
    */
   public function testPhoneWorksOnDifferentFormats($control, $subject, $format = NULL) {
     $result = is_null($format) ? Strings::phone($subject) : Strings::phone($subject, $format);
@@ -203,7 +203,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testNoSmartQuotes.
    */
-  public function DataForTestNoSmartQuotesProvider() {
+  public static function dataForTestNoSmartQuotesProvider() {
     $tests = array();
     $tests[] = array(
       'That\'s cool!',
@@ -222,14 +222,14 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestNoSmartQuotesProvider
+   * @dataProvider dataForTestNoSmartQuotesProvider
    */
   public function testNoSmartQuotes($control, $subject) {
     $this->assertSame($control, Strings::noSmartQuotes($subject));
   }
 
   /**
-   * @dataProvider DataForTestReplaceUrlsProvider
+   * @dataProvider dataForTestReplaceUrlsProvider
    */
   public function testReplaceUrlsReplaceWithProvidedString() {
     $this->assertSame('to re <url> and then <url> so that we.', Strings::replaceUrls('to re http://www.phpliveregex.com/ and then https://oscarotero.com/embed3/demo/index.php?url=https%3A%2F%2Ftwitter.com%2Fgoproject%2Fstatus%2F941051874282754048 so that we.', ' <url> '));
@@ -238,7 +238,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testReplaceUrls.
    */
-  public function DataForTestReplaceUrlsProvider() {
+  public static function dataForTestReplaceUrlsProvider() {
     $tests = array();
 
     $tests[] = array(
@@ -263,7 +263,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestReplaceUrlsProvider
+   * @dataProvider dataForTestReplaceUrlsProvider
    */
   public function testReplaceUrls($control, $subject) {
     $this->assertSame($control, Strings::replaceUrls($subject));
@@ -279,7 +279,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testUpperUnderscore.
    */
-  function DataForTestUpperUnderscoreProvider() {
+  public static function dataForTestUpperUnderscoreProvider() {
     $tests = array();
     $tests[] = array('timeForBreakfast');
     $tests[] = array('TimeForBreakfast');
@@ -291,7 +291,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestUpperUnderscoreProvider
+   * @dataProvider dataForTestUpperUnderscoreProvider
    */
   public function testUpperUnderscore($subject) {
     $this->assertSame('TIME_FOR_BREAKFAST', Strings::upperUnderscore($subject));
@@ -300,7 +300,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testLowerUnderscore.
    */
-  function DataForTestLowerUnderscoreProvider() {
+  public static function dataForTestLowerUnderscoreProvider() {
     $tests = array();
     $tests[] = array('timeForBreakfast');
     $tests[] = array('TimeForBreakfast');
@@ -312,7 +312,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestLowerUnderscoreProvider
+   * @dataProvider dataForTestLowerUnderscoreProvider
    */
   public function testLowerUnderscore($subject) {
     $this->assertSame('time_for_breakfast', Strings::lowerUnderscore($subject));
@@ -321,7 +321,7 @@ class StringsTest extends TestCase {
   /**
    * Provides data for testLowerHyphen.
    */
-  function DataForTestLowerHyphenProvider() {
+  public static function dataForTestLowerHyphenProvider() {
     $tests = array();
     $tests[] = array('timeForBreakfast');
     $tests[] = array('TimeForBreakfast');
@@ -333,7 +333,7 @@ class StringsTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestLowerHyphenProvider
+   * @dataProvider dataForTestLowerHyphenProvider
    */
   public function testLowerHyphen($subject) {
     $this->assertSame('time-for-breakfast', Strings::lowerHyphen($subject));
@@ -345,7 +345,7 @@ class StringsTest extends TestCase {
    * @return
    *   - 0:
    */
-  function noWhitespaceProvider() {
+  public static function noWhitespaceProvider() {
     return array(
       array('here we go', 'herewego'),
       array("here\twe\tgo", 'herewego'),
@@ -368,7 +368,7 @@ class StringsTest extends TestCase {
    * @return
    *   - 0:
    */
-  function transformProvider() {
+  public static function transformProvider() {
     return array(
       array(
         'hasUuid',

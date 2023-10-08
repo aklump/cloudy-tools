@@ -69,7 +69,7 @@ class FilePathTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestChildrenAndDescendentsReturnCorrectLevelsProvider
+   * @dataProvider dataForTestChildrenAndDescendentsReturnCorrectLevelsProvider
    */
   public function testChildrenAndDescendentsReturnCorrectLevels($method, $args, $control) {
     // Setup a testing file structure.
@@ -323,7 +323,7 @@ class FilePathTest extends PhpUnitTestCase {
   /**
    * Provides data for testChildrenAndDescendentsReturnCorrectLevels.
    */
-  public function DataForTestChildrenAndDescendentsReturnCorrectLevelsProvider() {
+  public static function dataForTestChildrenAndDescendentsReturnCorrectLevelsProvider() {
     $tests = array();
     $tests[] = [
       'descendents',
@@ -523,7 +523,7 @@ class FilePathTest extends PhpUnitTestCase {
   /**
    * Provides data for testMimeTypes.
    */
-  function DataForTestMimeTypesProvider() {
+  public static function dataForTestMimeTypesProvider() {
     $tests = array();
     $tests[] = array(
       'image.gif',
@@ -550,7 +550,7 @@ class FilePathTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestMimeTypesProvider
+   * @dataProvider dataForTestMimeTypesProvider
    */
   public function testMimeTypes($filename, $contents, $mime) {
     $obj = new FilePath($this->sb . '/' . $filename);
@@ -794,7 +794,7 @@ class FilePathTest extends PhpUnitTestCase {
   /**
    * Provides data for testConstructorCreatesNestedDirs.
    */
-  function DataForTestConstructorCreatesNestedDirsProvider() {
+  public static function dataForTestConstructorCreatesNestedDirsProvider() {
     $tests = array();
     $tests[] = array('/do/re/mi');
     $tests[] = array('/do/re/mi/test.json');
@@ -803,7 +803,7 @@ class FilePathTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestConstructorCreatesNestedDirsProvider
+   * @dataProvider dataForTestConstructorCreatesNestedDirsProvider
    */
   public function testConstructorDoesNotCreateNestedDirectoriesWhenInstallOptionIsFalseButInstallMethodDoes($subject) {
     $control = $this->sb . $subject;
@@ -815,7 +815,7 @@ class FilePathTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestConstructorCreatesNestedDirsProvider
+   * @dataProvider dataForTestConstructorCreatesNestedDirsProvider
    */
   public function testConstructorDoesNotCreateNestedDirectoriesWhenInstallOptionIsFalse($subject) {
     $control = $this->sb . $subject;
@@ -825,7 +825,7 @@ class FilePathTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestConstructorCreatesNestedDirsProvider
+   * @dataProvider dataForTestConstructorCreatesNestedDirsProvider
    */
   public function testConstructorCreatesNestedDirs($subject) {
     $control = $this->sb . $subject;

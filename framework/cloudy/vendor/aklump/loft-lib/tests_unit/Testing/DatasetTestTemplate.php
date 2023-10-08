@@ -13,7 +13,7 @@ class __CLassNameTest extends DatasetTestBase {
    * Enter a test for each key and alias that has a default value.  If no
    * default values, test the first key for null.
    */
-  public function DataForTestDefaultsProvider() {
+  public static function dataForTestDefaultsProvider() {
     $tests = array();
     $tests[] = array('reserves', FALSE);
 
@@ -25,7 +25,7 @@ class __CLassNameTest extends DatasetTestBase {
    *
    * Add some keys with invalid values.
    */
-  public function DataForTestInvalidFormatShowsProblemsProvider() {
+  public static function dataForTestInvalidFormatShowsProblemsProvider() {
     $tests = array();
     $tests[] = array('id', 'my.bad.id');
 
@@ -39,7 +39,7 @@ class __CLassNameTest extends DatasetTestBase {
    * the master, the actual key used in the
    * $this->objArgs).
    */
-  public function DataForTestMissingKeyShowsProblemProvider() {
+  public static function dataForTestMissingKeyShowsProblemProvider() {
     $tests = array();
     $tests[] = array('value');
 

@@ -36,7 +36,7 @@ class ConfigBashTest extends PhpUnitTestCase {
   /**
    * Provides data for testNonScalars.
    */
-  public function DataForTestNonScalarsProvider() {
+  public static function dataForTestNonScalarsProvider() {
     $tests = array();
     $tests[] = array(array('do' => 're'));
     $tests[] = array((object) array('do' => 're'));
@@ -45,7 +45,7 @@ class ConfigBashTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestNonScalarsProvider
+   * @dataProvider dataForTestNonScalarsProvider
    */
   public function testNonScalars($value) {
     $this->expectException(\InvalidArgumentException::class);

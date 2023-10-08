@@ -30,7 +30,7 @@ class DatesTest extends PhpUnitTestCase {
    *
    * For these tests, today is '2017-09-20'
    */
-  public function DataForTestNormalizeDateOnVariousInputsWorksAsExpectedProvider() {
+  public static function dataForTestNormalizeDateOnVariousInputsWorksAsExpectedProvider() {
     $tests = array();
 
     $tests[] = array(
@@ -195,7 +195,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestNormalizeDateOnVariousInputsWorksAsExpectedProvider
+   * @dataProvider dataForTestNormalizeDateOnVariousInputsWorksAsExpectedProvider
    */
   public function testNormalizeDateOnVariousInputsWorksAsExpected($control, $subject) {
     $now = new \DateTime('2017-09-20', new \DateTimeZone('America/Los_Angeles'));
@@ -426,7 +426,7 @@ class DatesTest extends PhpUnitTestCase {
   /**
    * Provides data for testGetMonthFromStringWorksOnVariousStrings.
    */
-  public function DataForTestGetMonthFromStringWorksOnVariousStringsProvider() {
+  public static function dataForTestGetMonthFromStringWorksOnVariousStringsProvider() {
     $tests = array();
     $tests[] = array(1, 'jan');
     $tests[] = array(1, 'january');
@@ -441,7 +441,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestGetMonthFromStringWorksOnVariousStringsProvider
+   * @dataProvider dataForTestGetMonthFromStringWorksOnVariousStringsProvider
    */
   public function testGetMonthFromStringWorksOnVariousStrings($control, $string) {
     $this->assertSame($control, Dates::getMonthFromString($string));
@@ -450,7 +450,7 @@ class DatesTest extends PhpUnitTestCase {
   /**
    * Provides data for testNormalizeDateHandlesTimeZoneCorrectly.
    */
-  public function DataForTestNormalizeDateHandlesTimeZoneCorrectlyProvider() {
+  public static function dataForTestNormalizeDateHandlesTimeZoneCorrectlyProvider() {
     // normalized date, date to normalize, now, timezone name,
     $tests = array();
 
@@ -498,7 +498,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestNormalizeDateHandlesTimeZoneCorrectlyProvider
+   * @dataProvider dataForTestNormalizeDateHandlesTimeZoneCorrectlyProvider
    */
   public function testNormalizeDateHandlesTimeZoneCorrectly($control, $subject, $now, $timezone) {
     $this->objArgs[0] = $timezone;
@@ -565,7 +565,7 @@ class DatesTest extends PhpUnitTestCase {
   /**
    * Provides data for testTheLessThanTrimFlagWorksOnVariousCombos.
    */
-  public function DataForTestTheLessThanTrimFlagWorksOnVariousCombosProvider() {
+  public static function dataForTestTheLessThanTrimFlagWorksOnVariousCombosProvider() {
     $tests = array();
     $tests[] = array('2017-10-23T10:49:25-07', '2017-10-23T10:49:25PDT');
     $tests[] = array('2017-10-23T10:49', '2017-10-23T10:49:00Z');
@@ -577,7 +577,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestTheLessThanTrimFlagWorksOnVariousCombosProvider
+   * @dataProvider dataForTestTheLessThanTrimFlagWorksOnVariousCombosProvider
    */
   public function testTheLessThanTrimFlagWorksOnVariousCombos($control, $source, $expand = NULL) {
     // See if it compresses
@@ -639,7 +639,7 @@ class DatesTest extends PhpUnitTestCase {
    * Provides data for
    * testFormatWithQPlusOtherFormattersReturnsTheCorrectString.
    */
-  public function DataForTestFormatWithQPlusOtherFormattersReturnsTheCorrectStringProvider() {
+  public static function dataForTestFormatWithQPlusOtherFormattersReturnsTheCorrectStringProvider() {
     $tests = array();
     $tests[] = array(
       'q: 4 2017',
@@ -662,7 +662,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestFormatWithQPlusOtherFormattersReturnsTheCorrectStringProvider
+   * @dataProvider dataForTestFormatWithQPlusOtherFormattersReturnsTheCorrectStringProvider
    */
   public function TestFormatWithQPlusOtherFormattersReturnsTheCorrectString($control, $date) {
     // Test with a \DateTime
@@ -698,7 +698,7 @@ class DatesTest extends PhpUnitTestCase {
   /**
    * Provides data for testGetQuarterReturnsFirstAndLastDaysOfNowQuarter.
    */
-  public function DataForTestGetQuarterReturnsFirstAndLastDaysOfNowQuarterProvider() {
+  public static function dataForTestGetQuarterReturnsFirstAndLastDaysOfNowQuarterProvider() {
     {
       $tests = array();
       $tests[] = array(['2017-01-01', '2017-03-31'], '2017-01-01');
@@ -735,7 +735,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestGetQuarterReturnsFirstAndLastDaysOfNowQuarterProvider
+   * @dataProvider dataForTestGetQuarterReturnsFirstAndLastDaysOfNowQuarterProvider
    */
   public function testGetQuarterReturnsFirstAndLastDaysOfNowQuarter($control, $date) {
     $subject = $this->obj->getQuarter(date_create($date));
@@ -754,7 +754,7 @@ class DatesTest extends PhpUnitTestCase {
   /**
    * Provides data for testGetQuarter.
    */
-  public function DataForTestGetQuarterProvider() {
+  public static function dataForTestGetQuarterProvider() {
     $tests = array();
     $tests[] = array('2017-Q1', '2017-01-01');
     $tests[] = array('2017-Q1', '2017-02-01');
@@ -773,7 +773,7 @@ class DatesTest extends PhpUnitTestCase {
   }
 
   /**
-   * @dataProvider DataForTestGetQuarterProvider
+   * @dataProvider dataForTestGetQuarterProvider
    */
   public function testGetQuarterReturnsCorrectQuarterForEachMonthOfTheYear($control, $date) {
     $this->assertSame($control, Dates::format(Dates::o($date), DATES_FORMAT_QUARTER));

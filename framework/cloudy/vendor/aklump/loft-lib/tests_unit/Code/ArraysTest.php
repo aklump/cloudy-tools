@@ -186,7 +186,7 @@ class ArraysTest extends TestCase {
   /**
    * Provides data for testFlattenAndExpandParents.
    */
-  function DataForTestFlattenAndExpandParentsProvider() {
+  public static function dataForTestFlattenAndExpandParentsProvider() {
     $tests = array();
     $tests[] = array(array(), '');
     $tests[] = array(
@@ -198,7 +198,7 @@ class ArraysTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestFlattenAndExpandParentsProvider
+   * @dataProvider dataForTestFlattenAndExpandParentsProvider
    */
   public function testFlattenAndExpandParents($array, $string) {
     $this->assertSame($string, Arrays::flattenParents($array));
@@ -208,7 +208,7 @@ class ArraysTest extends TestCase {
   /**
    * Provides data for testFormFuzzyGet.
    */
-  function DataForTestFormFuzzyGetProvider() {
+  public static function dataForTestFormFuzzyGetProvider() {
     $tests = array();
     $tests[] = array(
       array(
@@ -244,7 +244,7 @@ class ArraysTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestFormFuzzyGetProvider
+   * @dataProvider dataForTestFormFuzzyGetProvider
    */
   public function testFormFuzzyGet($a, $b, $control) {
     $this->assertSame($control, Arrays::formFuzzyGet($a, $b));
@@ -274,7 +274,7 @@ class ArraysTest extends TestCase {
   /**
    * Provides data for testFormFuzzyIntersectKey.
    */
-  function DataForTestFormFuzzyIntersectKeyProvider() {
+  public static function dataForTestFormFuzzyIntersectKeyProvider() {
     $tests = array();
     $tests[] = array(
       array(
@@ -318,7 +318,7 @@ class ArraysTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestFormFuzzyIntersectKeyProvider
+   * @dataProvider dataForTestFormFuzzyIntersectKeyProvider
    */
   public function testFormFuzzyIntersectKey($a, $b, $control) {
     $this->assertSame($control, Arrays::formFuzzyIntersectKey($a, $b));
@@ -342,7 +342,7 @@ class ArraysTest extends TestCase {
   /**
    * Provides data for testFormExpand.
    */
-  function DataForTestFormExpandProvider() {
+  public static function dataForTestFormExpandProvider() {
     $tests = array();
     $tests[] = array(
       array('_val[todo][default]' => array()),
@@ -410,7 +410,7 @@ class ArraysTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestFormExpandProvider
+   * @dataProvider dataForTestFormExpandProvider
    */
   public function testFormExpand($subject, $control) {
     $this->assertSame($control, Arrays::formExpand($subject, '_val'));
@@ -513,7 +513,7 @@ class ArraysTest extends TestCase {
   /**
    * Provides data for testFormExport.
    */
-  function DataForTestFormExportProvider() {
+  public static function dataForTestFormExportProvider() {
     $tests = array();
     $tests[] = array(
       array(),
@@ -588,7 +588,7 @@ class ArraysTest extends TestCase {
   }
 
   /**
-   * @dataProvider DataForTestFormExportProvider
+   * @dataProvider dataForTestFormExportProvider
    */
   public function testFormExport($multi, $flat, $prefix = NULL) {
     $this->assertSame($flat, Arrays::formExport($multi, $prefix));

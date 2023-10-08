@@ -79,7 +79,7 @@ class DatasetBravoTest extends DatasetTestBase {
    *
    * Enter each key and it's default value.
    */
-  public function DataForTestDefaultsProvider() {
+  public static function dataForTestDefaultsProvider() {
     $tests = array();
     $tests[] = array('integer', 0);
     $tests[] = array('double', 0.0);
@@ -97,7 +97,7 @@ class DatasetBravoTest extends DatasetTestBase {
    * Add some keys (string types) for with values that should not pass the
    * match().
    */
-  public function DataForTestInvalidFormatShowsProblemsProvider() {
+  public static function dataForTestInvalidFormatShowsProblemsProvider() {
     $tests = array();
     $tests[] = [NULL, NULL];
 
@@ -109,7 +109,7 @@ class DatasetBravoTest extends DatasetTestBase {
    *
    * List all the required keys that exist in $this->objArgs
    */
-  public function DataForTestMissingKeyShowsProblemProvider() {
+  public static function dataForTestMissingKeyShowsProblemProvider() {
     $tests = array();
     $tests[] = array('integer');
 

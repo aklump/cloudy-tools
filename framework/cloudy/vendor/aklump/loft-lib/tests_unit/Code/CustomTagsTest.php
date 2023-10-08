@@ -59,7 +59,7 @@ class CustomTagsTest extends PhpUnitTestCase {
   /**
    * Provides data for testReplaceTagsWorks.
    */
-  public function dataForTestReplaceTagsWorksProvider() {
+  public static function dataForTestReplaceTagsWorksProvider() {
     $tests = array();
 
     // Self closing inside of of nested HTML.

@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=2.0.2">
+      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/dist/style.css?ver=2.0.2">
+      <link rel="stylesheet" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=2.0.2">
+    <title>Dataset | In the Loft Studios PHP Library</title>
+</head>
+<body class="my-5">
+
+<header class="header bg-light fixed-top p-2 pt-1">
+  <div class="container-md">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="header__breadcrumbs flex-shrink-0 flex-grow-1 me-3">
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+      <a class="fw-bold" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/index.html">In the Loft Studios PHP Library</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a class="fw-bold" href="#" data-bs-toggle="offcanvas"
+         data-bs-target="#table-of-contents"
+         aria-controls="table-of-contents">TOC</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/readme.html">Usage</a></li>
+  </ol>
+</nav>
+
+      </div>
+      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
+          type="button" class="badge
+        rounded-pill
+        bg-primary">USAGE</span>
+  </div>
+      <div class="header__page-numbers flex-shrink-1">4
+        / 4</div>
+    </div>
+  </div>
+</header>
+
+<main class="container-md flex-column">
+  <div class="row mb-5 pt-5">
+    <article class="col">
+      <h1 class="mb-4 text-primary">Dataset</h1>
+      <p>An PHP class to use for data objects, using JSON schema as a validation structure.</p>
+<h2>Quick Start</h2>
+<ol>
+<li>Create a class that extends <code>Dataset</code>.</li>
+<li><p>Now define the json schema.  A simple method is to supply a class constant <code>JSON_SCHEMA</code> with the schema value:</p>
+<pre><code> class SimpleExample extends Dataset {
+    
+   const JSON_SCHEMA = '{"type": "object","required":["id"],"id":{"type":"integer"},"version":{"type":"string","default":"1.2.5"}}';
+    
+ }  
+</code></pre>
+</li>
+<li><p>Most times however, your schema will live in a separate file.  Therefore you will not define the class constant <code>JSON_SCHEMA</code>, rather provide the path to the json schema as the return value of the public static method <code>pathToJsonSchema</code>.  You may follow the convention of appending <code>.schema.json</code> to the classname, if you wish, as shown here:</p>
+<pre><code> /**
+  * {@inheritdoc}
+  */
+ protected static function pathToJsonSchema() {
+   return __DIR__ . '/DatasetAlpha.schema.json';
+ }
+</code></pre>
+</li>
+<li><p>Now create a <a href="https://json-schema.org/latest/json-schema-validation.html#rfc.section.10">json schema file</a> to define your dataset at the path defined above. <br />
+ 1. Be aware that when you use the <code>pattern</code> keyword to define a regex expression that you do NOT include the delimiters like you do in PHP's <code>preg_match</code>.  This is corrent JSON: <code>"pattern": "\\?[^#]+"</code>, notice there are no delimiters.</p>
+</li>
+<li><p>Then implement an instance in your code like this:</p>
+<pre><code> &lt;?php
+ $data = ['id' =&gt; 123];
+ ...
+ try {
+     $timer = Timer::dataset($data)-&gt;validate()-&gt;throwFirstProblem();
+ } catch (\Exception $exception) {
+     // Do something if validation failed.
+ }
+</code></pre>
+</li>
+</ol>
+<h3>Using PHP class members in your JSON code with <code>static::</code></h3>
+<p>You can provide class methods, constants, etc in your JSON schema files and they will be evaluated at runtime.  For example, here we provide the regex pattern for the <code>date</code> property with a class constant, and the <code>default</code> value with a class method.  The cornerstone of this process is that the value begin with <code>static::</code>.</p>
+<pre><code>    "date": {
+        "type": "string",
+        "default": "static::defaultDate()",
+        "pattern": "static::REGEX_DATEISO8601"
+    },
+    
+</code></pre>
+<h2>Accessing Data</h2>
+<ol>
+<li>Get the complete dataset as an array (sorted, with defaults, etc): <code>$array = $data-&gt;get()</code></li>
+<li>Get the JSON value of the dataset by casting to a string: <code>$json = strval($data)</code>.</li>
+<li>Use a property directly: <code>$id = $data-&gt;id</code></li>
+<li>Use a property's alias directly: <code>$id = $data-&gt;userId</code>.  Read about aliases for more info.</li>
+</ol>
+<h2>Accessing Defaults</h2>
+<ol>
+<li>Get the default for single key: <code>Timer::getDefault('id')</code>.</li>
+<li>Get an array of defaults: <code>Timer::getDefaults()</code></li>
+</ol>
+<h2>Detecting Errors</h2>
+<ol>
+<li>Return an array of all: <code>$data-&gt;getProblems</code>.</li>
+<li>Throw an <em>\InvalidArgumentException</em> with the first problem: <code>$data-&gt;throwFirstError</code></li>
+</ol>
+<h2>Setting Data</h2>
+<ul>
+<li>You can alter a single key using <code>::mutate</code>.</li>
+</ul>
+<h2>Aliases</h2>
+<p>You may have aliases for property keys, which means you can access the same value using any of a number of keys.  To define an alias use colon separation as seen below:</p>
+<pre><code>{
+    ...
+    "properties": {
+        "mi:me:moi": {
+            "default": "myself",
+            "type": "string",
+            "pattern": "/^m.+/"
+        },
+</code></pre>
+<h2>Custom Validation</h2>
+<ol>
+<li>If you have advanced validation beyond what comes for free, you may extend <code>validate()</code>, but read the docs there for what needs to happen.</li>
+<li>Consider using <code>ignoreKey()</code> instead, if possible.</li>
+</ol>
+<h2>How to Ignore a Key in Your Dataset (so as to not cause validation error)</h2>
+<pre><code>protected static function ignoreKey($key)
+{
+    return $key === 'duration';
+}
+
+protected static function ignoreKey($key)
+{
+    return strpos($key, '#') === 0;
+}
+</code></pre>
+<h2>Notes</h2>
+<ul>
+<li>To ignore some keys use <code>static::ignoreKey()</code> in your class.</li>
+</ul>
+<h2>Advanced Usage</h2>
+<h3>Auto-generate Values: Example 1</h3>
+<p>The time to do this is during <code>::import</code>. </p>
+<pre><code>&lt;?php
+
+/**
+ * Import extra data based on a default value.
+ *
+ * In this example, the defaults set the user id by global var.  During import
+ * we check for a user_id, either by import $data or the default data.  Then we
+ * make sure the the $original import data doesn't contain session_id, and if
+ * so we pull that data from the user account object.
+ */
+class Alpha extends Dataset {
+
+  ... 
+  
+  /**
+   * {@inheritdoc}
+   */
+  protected static function defaults() {
+    global $user;
+
+    return [
+      'user_id' =&gt; $user-&gt;uid,
+      'session_id' =&gt; -1,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function import($data) {
+    $original = $data;
+    $data += static::getDefaults();
+
+    // Figure the session id based on the last time the user logged in.
+    // https://amplitude.zendesk.com/hc/en-us/articles/115002323627-Sessions
+    if ($data['user_id'] &amp;&amp; empty($original['session_id'])) {
+      $account = user_load($data['user_id']);
+
+      // We will count our session based on last login.
+      // https://drupal.stackexchange.com/questions/21864/whats-the-difference-between-user-login-and-access#21873
+      $data['session_id'] = $account-&gt;login * 1000;
+    }
+
+    return parent::import($data);
+  }
+  
+}
+</code></pre>
+    </article>
+  </div>
+</main>
+
+  <footer class="footer d-flex justify-content-center">
+    <div class="flex-column justify-content-center">
+                  Version:
+          <strong>2.0.2</strong>
+          &bull;
+                Last Update: <strong>10/8/2023</strong>
+    </div>
+  </footer>
+
+
+<nav class="nav d-flex justify-content-center align-items-center
+  fixed-bottom">
+  <div class="btn-group flex-fill">
+              <a href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/readme.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> In the Loft Studios PHP Library</a>
+  
+    
+              <a href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/developers.html" class="btn nav__prev-page js-nav__prev-page
+    btn-primary"><i class="bi
+      bi-caret-left-fill"></i></a>
+  
+    
+    <a class="nav__toc btn btn-light" href="#"
+       data-bs-toggle="offcanvas"
+       data-bs-target="#table-of-contents"
+       aria-controls="table-of-contents"><i class="bi
+           bi-list-ol"></i></a>
+    
+              <span class="btn nav__next-page js-nav__next-page
+    btn-primary"></span>
+  
+    
+              <span class="btn nav__next-chapter btn-secondary "></span>
+  
+  </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="table-of-contents"
+     aria-labelledby="table-of-contents__title" data-bs-keyboard="true">
+  <div class="offcanvas-header">
+    <h1 class="h6 offcanvas-title js-chapter-list-title"
+        id="table-of-contents__title">All
+      Chapters
+      &amp; Pages</h1>
+    <h1 class="d-none h6 offcanvas-title js-search-results-title"
+        id="table-of-contents__title">Search Results</h1>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+          <input class="js-search form-control mb-4" type="search"
+             placeholder="Search docs..."
+             aria-label="Search">
+      <div class="js-search-results d-none">
+        <h2 class="h4 mt-4">Matched Pages</h2>
+        <ol class="list-unstyled">
+                                              <li data-page="readme" value="1">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/readme.html">In the Loft Studios PHP Library<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="changelog" value="2">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/changelog.html">Changelog<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="developers" value="3">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/developers.html">Developing This Package<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                                    <li data-page="dataset" value="4">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/dataset.html">Dataset<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>&nbsp;[Usage]
+    </li>
+  
+                              </ol>
+      </div>
+        
+    <div class="js-chapter-list">
+              <h2 class="h4 mt-4">Usage</h2>
+        <ol>
+                                <li data-page="readme" value="1">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/readme.html">In the Loft Studios PHP Library</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="changelog" value="2">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/changelog.html">Changelog</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="developers" value="3">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/developers.html">Developing This Package</a>&nbsp;[Usage]
+    </li>
+  
+                                <li data-page="dataset" value="4">
+      <a class="js-page-link" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/dataset.html">Dataset</a>&nbsp;[Usage]
+    </li>
+  
+                  </ol>
+          </div>
+  </div>
+</div>
+<div class="modal fade" id="modal" tabindex="-1"
+     aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="js-modal-title modal-title" id="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mt-1 mb-4">
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
+                  </p>
+        
+                
+        <ul class="list-group list-group-flush">
+                                    <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/readme.html">In the Loft Studios PHP Library</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/changelog.html">Changelog</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/developers.html">Developing This Package</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;USAGE&quot;]" href="/Users/aklump/Code/Packages/php/loft_lib/app/docs/pages/usage/dataset.html">Dataset</a>
+                              </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="/Users/aklump/Code/Packages/php/loft_lib/app/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=2.0.2"></script>
+  <script src="/Users/aklump/Code/Packages/php/loft_lib/app/docs/dist/dist/lunr.js?ver=2.0.2"></script>
+  <script src="/Users/aklump/Code/Packages/php/loft_lib/app/docs/dist/knowledge.min.js?ver=2.0.2"></script>
+
+</body>
+</html>
