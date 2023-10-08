@@ -19,12 +19,6 @@
       "AKlump\\LoftLib\\": "tests_unit\/"
     }
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "/Users/aklump/Code/Packages/php/phpswap"
-    }
-  ],
   "require": {
     "php": "^7.3|^8.0",
     "illuminate\/support": "^7|^8|^10.14",
@@ -33,7 +27,7 @@
     "dflydev/dot-access-data": "^3.0"
   },
   "require-dev": {
-    "aklump/phpswap": "dev-main",
+    "aklump/phpswap": "^0.0.2",
     "phpunit\/phpunit": "^9.5 | ^10"
   },
   "minimum-stability": "dev",

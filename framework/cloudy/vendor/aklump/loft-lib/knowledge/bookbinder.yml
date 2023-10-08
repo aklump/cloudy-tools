@@ -1,6 +1,6 @@
 -
   format: markdown
-  path: ../../
+  path: ../
   include:
     - '**/README.md'
     - '**/CHANGELOG.md'

@@ -1,7 +1,7 @@
 author: 'Aaron Klump <sourcecode@intheloftstudios.com>'
 create_tags: patch
 develop: master
-do_version_commit: false
+do_version_commit: true
 master: master
 patch_prefix: .
 patch_step: 1

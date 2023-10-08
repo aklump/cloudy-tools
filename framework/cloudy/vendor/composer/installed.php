@@ -20,12 +20,12 @@
             'dev_requirement' => false,
         ),
         'aklump/loft-lib' => array(
-            'pretty_version' => '2.1.1',
-            'version' => '2.1.1.0',
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../aklump/loft-lib',
             'aliases' => array(),
-            'reference' => '6c0678a7602d9f0d315e756d712ba992bf8b34a6',
+            'reference' => 'f20db5309dbb29c7665d5c83cd7509f6eaef6a98',
             'dev_requirement' => false,
         ),
         'ckr/arraymerger' => array(

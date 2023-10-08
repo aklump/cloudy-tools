@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "126904680d6c737730bd3de55f09ab70",
+    "content-hash": "ae8528247a8c1d3e8e37431da42c8217",
     "packages": [
         {
             "name": "aklump/loft-lib",
-            "version": "2.1.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aklump/loft-lib.git",
-                "reference": "6c0678a7602d9f0d315e756d712ba992bf8b34a6"
+                "reference": "f20db5309dbb29c7665d5c83cd7509f6eaef6a98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aklump/loft-lib/zipball/6c0678a7602d9f0d315e756d712ba992bf8b34a6",
-                "reference": "6c0678a7602d9f0d315e756d712ba992bf8b34a6",
+                "url": "https://api.github.com/repos/aklump/loft-lib/zipball/f20db5309dbb29c7665d5c83cd7509f6eaef6a98",
+                "reference": "f20db5309dbb29c7665d5c83cd7509f6eaef6a98",
                 "shasum": ""
             },
             "require": {
@@ -28,7 +28,7 @@
                 "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "aklump/phpswap": "dev-main",
+                "aklump/phpswap": "^0.0.2",
                 "phpunit/phpunit": "^9.5 | ^10"
             },
             "type": "library",
@@ -50,9 +50,9 @@
             "description": "Core utilities provided by In the Loft Studios",
             "support": {
                 "issues": "https://github.com/aklump/loft-lib/issues",
-                "source": "https://github.com/aklump/loft-lib/tree/2.1.1"
+                "source": "https://github.com/aklump/loft-lib/tree/2.1.0"
             },
-            "time": "2023-10-08T20:19:09+00:00"
+            "time": "2023-10-08T20:41:11+00:00"
         },
         {
             "name": "ckr/arraymerger",

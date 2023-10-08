@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [2.1.0] - 2023-10-08
+
+### Changed
+
+- `\AKlump\LoftLib\Code\Dates::setTime` was made public.
+
+### Removed
+
+- Passing a `\AKlump\Data` instance to `\AKlump\LoftLib\Code\PersistentSequence::next()` was removed.
+- Passing a `\AKlump\Data` instance to `\AKlump\LoftLib\Code\InfiniteSubset::__construct()` was removed.
+
 ## [2.0.0] - 2023-06-28
 
 ### Deprecated
