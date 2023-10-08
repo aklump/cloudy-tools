@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.5.8',
-        'version' => '1.5.8.0',
+        'pretty_version' => '1.5.9',
+        'version' => '1.5.9.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'aklump/cloudy' => array(
-            'pretty_version' => '1.5.8',
-            'version' => '1.5.8.0',
+            'pretty_version' => '1.5.9',
+            'version' => '1.5.9.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -101,12 +101,12 @@
             'dev_requirement' => false,
         ),
         'justinrainbow/json-schema' => array(
-            'pretty_version' => '5.2.12',
-            'version' => '5.2.12.0',
+            'pretty_version' => 'v5.2.13',
+            'version' => '5.2.13.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../justinrainbow/json-schema',
             'aliases' => array(),
-            'reference' => 'ad87d5a5ca981228e0e205c2bc7dfb8e24559b60',
+            'reference' => 'fbbe7e5d79f618997bc3332a6f49246036c45793',
             'dev_requirement' => false,
         ),
         'league/mime-type-detection' => array(
