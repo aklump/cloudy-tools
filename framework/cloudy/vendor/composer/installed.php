@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.5.9',
-        'version' => '1.5.9.0',
+        'pretty_version' => '1.5.13',
+        'version' => '1.5.13.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'aklump/cloudy' => array(
-            'pretty_version' => '1.5.9',
-            'version' => '1.5.9.0',
+            'pretty_version' => '1.5.13',
+            'version' => '1.5.13.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -20,12 +20,12 @@
             'dev_requirement' => false,
         ),
         'aklump/loft-lib' => array(
-            'pretty_version' => '2.1.0',
-            'version' => '2.1.0.0',
+            'pretty_version' => '2.1.1',
+            'version' => '2.1.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../aklump/loft-lib',
             'aliases' => array(),
-            'reference' => 'f20db5309dbb29c7665d5c83cd7509f6eaef6a98',
+            'reference' => 'e3e50660dd65b2c31576c1ccd748e2b724061cc2',
             'dev_requirement' => false,
         ),
         'ckr/arraymerger' => array(
