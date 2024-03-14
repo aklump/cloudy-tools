@@ -38,3 +38,4 @@ page_order:
   - yaml
   - ''
   - empty_config
+  - autoloader
