@@ -68,6 +68,9 @@ function yaml_to_json($yaml) {
  */
 function json_get_value($path, $json) {
   $subject = json_decode($json);
+  if (json_last_error() !== JSON_ERROR_NONE) {
+    throw new \RuntimeException('Invalid JSON string: ' . json_last_error_msg());
+  }
 
   return DotKey::on($subject)->get($path);
 }

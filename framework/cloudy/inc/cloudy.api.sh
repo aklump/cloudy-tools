@@ -56,7 +56,14 @@ function json_get() {
 function json_get_value() {
   local path="$1"
 
-  echo $("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_get_value" "$path" "$json_content")
+  local value
+  value="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_get_value" "$path" "$json_content")"
+  if [[ $? -ne 0 ]]; then
+    write_log_error "json_get_value \"$path\" failed against JSON: $(json_get)"
+    write_log_error "$value"
+    return 1
+  fi
+  echo "$value"
 }
 
 # Present a multiple choice selection list to the user.
@@ -609,9 +616,15 @@ function array_sort() {
 # Returns 0 on success; 1 on failure.
 function array_sort_by_item_length() {
     local sorted
-    local eval=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
+    local php_result
+    php_result=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
     result=$?
-    eval $eval
+    if [[ $result -ne 0 ]]; then
+      write_log_error "array_sort_by_item_length failed."
+      write_log_error "$php_result"
+      return 1
+    fi
+    eval $php_result
     array_sort_by_item_length__array=("${sorted[@]}")
     return $result
 }
@@ -1222,6 +1235,7 @@ function exit_with_init() {
  #
 function exit_with_cache_clear() {
     local cloudy_dir="${1:-$CLOUDY_ROOT}"
+    local clear
     [[ ! "${cloudy_dir}" ]] && exit_with_failure "Invalid cache directory ${cloudy_dir}"
     event_dispatch "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
     if dir_has_files "$cloudy_dir/cache"; then
@@ -2178,7 +2192,12 @@ function yaml_get() {
 #
 # Returns 0
 function yaml_get_json() {
-  local yaml="$1"
-
-  echo $("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "yaml_to_json" "$yaml_content")
+  local json
+  json=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "yaml_to_json" "$yaml_content")
+  if [[ $? -ne 0 ]]; then
+    write_log_error "yaml_get_json \"$yaml\" failed against YAML: $($yaml_content)"
+    write_log_error "$json"
+    return 1
+  fi
+  echo "$json"
 }
