@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.5.16">
       <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.5.16">
       <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/Users/aklump/opt/cloudy/knowledge/style.css?ver=1.5.16">
-    <title>Lists | Book</title>
+    <title>Composer autoloader not found | Book</title>
 </head>
 <body class="my-5">
 
@@ -27,17 +27,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html">Usage</a></li>
+      <a href="/Users/aklump/opt/cloudy/docs/pages/trouble/empty_config.html">Troubleshooting</a></li>
   </ol>
 </nav>
 
       </div>
-      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
-          type="button" class="badge
-        rounded-pill
-        bg-primary">USAGE</span>
-  </div>
-      <div class="header__page-numbers flex-shrink-1">23
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">35
         / 35</div>
     </div>
   </div>
@@ -46,16 +42,11 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Lists</h1>
-      <p>Here is an example of a realtime list with nice bullets. You might use this if you are processing something where it would take too long to wait for the entire list to be complete, hence using <code>echo_list</code> is not fast enough user feedback.</p>
-<pre><code class="bash">i=1
-for item in ${items[@]}; do
-  bullet=$LI
-  [ $i -eq ${#items[@]} ] &amp;&amp; bullet=$LIL
-  echo "$bullet $name"
-  ((i++))
-done
-</code></pre>
+      <h1 class="mb-4 text-primary">Composer autoloader not found</h1>
+      <p>To fix this for a Cloudy PM app, do the following in it's controller.</p>
+<ol>
+<li>Change to <code>COMPOSER_VENDOR="../../cloudy/cloudy/vendor"</code></li>
+</ol>
     </article>
   </div>
 </main>
@@ -73,11 +64,11 @@ done
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="/Users/aklump/opt/cloudy/docs/pages/usage/app_root.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> Application Root</a>
+              <a href="/Users/aklump/opt/cloudy/docs/pages/trouble/empty_config.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> `$CLOUDY_CONFIG_JSON cannot be empty...`</a>
   
     
-              <a href="/Users/aklump/opt/cloudy/docs/pages/usage/installer.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="/Users/aklump/opt/cloudy/docs/pages/trouble/empty_config.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -88,9 +79,8 @@ done
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="/Users/aklump/opt/cloudy/docs/pages/usage/localize.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> Localization/Translation <i class="bi
-       bi-caret-right-fill"></i></a>
+              <span class="btn nav__next-page js-nav__next-page
+    btn-primary"></span>
   
     
               <span class="btn nav__next-chapter btn-secondary "></span>

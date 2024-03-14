@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.5.16] - 2024-03-14
+
+### Fixed
+
+- Bug with JSON methods when JSON contains unescaped single quotes.
+
 ## [1.5.5] - 2023-09-21
 
 ### Changed

@@ -1,3 +1,8 @@
+<!--
+id: autoloader
+tags: ''
+-->
+
 # Composer autoloader not found
 
 To fix this for a Cloudy PM app, do the following in it's controller.
