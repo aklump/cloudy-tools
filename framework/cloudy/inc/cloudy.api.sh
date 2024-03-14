@@ -16,9 +16,16 @@
 # Returns 0 if the JSON is valid; 1 otherwise.
 json_content=''
 function json_set() {
-  json_content="$1"
+  local incoming_json="$1"
 
-  $CLOUDY_PHP -r "json_decode('$json_content') === null ? exit(1) : exit(0);"
+  local clean_json
+  clean_json="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_bash_filter" "$incoming_json")"
+  if [[ $? -ne 0 ]]; then
+    write_log_error "json_set \"$path\" failed set JSON: $incoming_json"
+    write_log_error "$clean_json"
+    return 1
+  fi
+  json_content="$clean_json"
 }
 
 # Load a JSON file to be read by json_get_value.
@@ -29,7 +36,14 @@ function json_set() {
 function json_load_file() {
   local path_to_json="$1"
 
-  json_set "$(cat "$path_to_json")"
+  local loaded_json
+  loaded_json="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_load_file" "$path_to_json")"
+  if [[ $? -ne 0 ]]; then
+    write_log_error "json_load_file \"$path\" failed to load $path_to_json"
+    write_log_error "$loaded_json"
+    return 1
+  fi
+  json_set "$loaded_json"
 }
 
 # Echo the JSON string as set
