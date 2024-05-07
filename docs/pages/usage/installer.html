@@ -4,11 +4,11 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.5.17">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.5.17">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.5.17">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/Users/aklump/opt/cloudy/knowledge/style.css?ver=1.5.17">
-    <title>The Initialize API | Book</title>
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.6.0">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.6.0">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.6.0">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/Users/aklump/opt/cloudy/knowledge/style.css?ver=1.6.0">
+    <title>The Initialize API | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -19,7 +19,7 @@
         <nav aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">
-      <a class="fw-bold" href="/Users/aklump/opt/cloudy/docs/index.html">Book</a>
+      <a class="fw-bold" href="/Users/aklump/opt/cloudy/docs/index.html">Cloudy BASH Framework</a>
     </li>
     <li class="breadcrumb-item">
       <a class="fw-bold" href="#" data-bs-toggle="offcanvas"
@@ -47,32 +47,30 @@
   <div class="row mb-5 pt-5">
     <article class="col">
       <h1 class="mb-4 text-primary">The Initialize API</h1>
-      <p>If you want you may hook into the Cloudy initialize api, which normalizes the work of initializing configuration files for an instance of your Cloudy Package.</p>
-<ol>
-<li>Create a folder <em>init/</em> and place all files needed during initializeation.</li>
-<li>Create a file _init/cloudypm.files<em>map.txt</em> and define where the files go.  See below.</li>
-</ol>
-<h2>The files map</h2>
-<p>This is a text file that tells what files go where.  Basically two columns, separated by a space.  The first column lists filenames in <em>init/</em>.  The second column are filenames (not directories) relative to <code>$ROOT</code>, or absolute.</p>
-<p>The contents of the files map must have at least the following line; however column two dirname may be different.  The point is the asterix must be there.</p>
-<pre><code>* ../../../bin/config/*
+      <p>The Cloudy Initialization API makes it easy for your application to provide scaffolding (files and directories) to an instance during installation.</p>
+<p><strong>In your app, create a folder called <em>init/</em>. When users of your app run the <code>init</code> command, files will be copied from <em>init/</em> to the location you've specified in your files map.</strong></p>
+<h2>The Files Map</h2>
+<p>In your app, <em>init/cloudypm.files_map.txt</em> is a text file that tells what files go where. Basically two columns, separated by a space. The first column represents filenames relative to <em>init/</em>, where <code>*</code> is all files. The second column is either a path relative to <code>$ROOT</code> or an absolute path, which represents the installed location.</p>
+<p>The contents of the files map must have at least one line that will look something like this; notice the use of the asterix in both columns.</p>
+<pre><code class="text">* ../../../bin/config/*
 </code></pre>
-<ul>
-<li>The <code>*</code> represents all filenames in <em>init/</em>.</li>
-</ul>
-<p>But let's say you want one of the files to go elsewhere.  The contents of _cloudypm.files<em>map.txt</em> might look like this:</p>
-<pre><code>* ../../../bin/config/*
+<h3>Multiple Destinations</h3>
+<p>But let's say you want one of the files to go elsewhere. The contents of <em>cloudypm.files_map.txt</em> might look like this:</p>
+<pre><code class="text">* ../../../bin/config/*
 _perms.custom.sh ../../../bin/_perms.custom.sh
 </code></pre>
-<p>In this case <code>*</code> represents all files except for <em>_perms.custom.sh</em>.  They are initializeed as before, however <em>_perms.custom.sh</em> is initializeed at <em>$ROOT/../../../bin/_perms.custom.sh</em>.</p>
-<p>Remember you must indicate filenames, not directories.  Also, you may rename the file by indicating a different filename in column two.</p>
+<p>In this case <code>*</code> represents all files except for <em>_perms.custom.sh</em>. They are initialized as before, however <em>_perms.custom.sh</em> is initializeed at <em>$ROOT/../../../bin/_perms.custom.sh</em>.</p>
+<p>Renaming the installed file is achieved by indicating a different basename in column two.</p>
+<h3>Ignoring Files in <em>init/</em></h3>
 <p>Finally let's say you want to skip over a file completely; do not include a destination for it, and it will be ignored, like this</p>
-<pre><code>* ../../../bin/config/*
+<pre><code class="text">* ../../../bin/config/*
 _perms.custom.sh ../../../bin/_perms.custom.sh
 ignored_file.txt
 </code></pre>
-<h2>Special Handling for files named <em>gitignore</em></h2>
-<p>If you create <em>init/gitignore</em> (no leading dot), it will be copied to <em>../../../opt/.gitignore</em>.  (This is the recommended location by Cloudy Package Manager.)  <strong>However, it will be merged with an existing .gitignore file, which already exists at that location.</strong>  Do not make an entry in _cloudypm.files<em>map.txt</em>.</p>
+<h2>Special Filenames</h2>
+<p><strong>Special files should not be listed in the files map.</strong></p>
+<h3><em>gitignore</em></h3>
+<p>If you create a file at <em>init/gitignore</em> (no leading dot!), it will be automatically be copied to <em>../../../opt/.gitignore</em> and merged with the existing <em>.gitignore</em>.  (This is the recommended location by Cloudy Package Manager.)</p>
     </article>
   </div>
 </main>
@@ -80,9 +78,9 @@ ignored_file.txt
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
                   Version:
-          <strong>1.5.17</strong>
+          <strong>1.6.0</strong>
           &bull;
-                Last Update: <strong>3/15/2024</strong>
+                Last Update: <strong>5/7/2024</strong>
     </div>
   </footer>
 
@@ -642,9 +640,9 @@ ignored_file.txt
   </div>
 </div>
 
-  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.5.17"></script>
-  <script src="/Users/aklump/opt/cloudy/docs/dist/lunr.js?ver=1.5.17"></script>
-  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.5.17"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.6.0"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/lunr.js?ver=1.6.0"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.6.0"></script>
 
 </body>
 </html>
