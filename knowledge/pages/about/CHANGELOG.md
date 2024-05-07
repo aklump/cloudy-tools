@@ -7,6 +7,12 @@ tags: about
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-05-07
+
+### Added
+
+- The initialization API now supports directories as well as files.
+
 ## [1.5.16] - 2024-03-14
 
 ### Fixed
