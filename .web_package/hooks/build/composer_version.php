@@ -17,4 +17,4 @@ $build
   })
   ->saveReplacingSourceFile();
 
-echo "Version updated in $path";
+echo "Version updated in $path" . PHP_EOL;
