@@ -1155,7 +1155,7 @@ function implement_cloudy_basic() {
 # Performs an initialization (setup default config, etc.)
 #
 # You must set up an init command in your core config file.
-# Then call this function from inside `on_pre_config`, e.g.
+# Then call this function from inside `on_boot`, e.g.
 # [[ "$(get_command)" == "init" ]] && handle_init
 # ...do your extra work here...
 # exit_with...
@@ -1185,15 +1185,45 @@ function handle_init() {
     local init_config_dir
     local from
     local to
+    local token_support
+    local token_match
 
+    # Token support is detected by checking if APP_ROOT has been set yet or not.
+    # If this is called too early then the configuration is not loaded and token
+    # support will not be supported.
+    [[ "$APP_ROOT" ]] && token_support=true || token_support=false
+
+    # The token "${config_path_base}" should be used in the files map, so it's
+    # required that the configured value is available to proceed with this
+    # process.
+    if [[ $token_support == true ]]; then
+      eval $(get_config_as config_path_base config_path_base)
+      if [[ ! "$config_path_base" ]]; then
+        fail_because "config_path_base cannot be empty, did you mean '.'?"
+        write_log_notice "config_path_base cannot be empty, did you mean '.' ?"
+        write_log_debug "${FUNCNAME[0]}() should be called from your app's on_boot() event handler.  The configuration must already be loaded. Did you call it too soon?"
+        write_log_debug "Make sure $CONFIG contains a value for config_path_base."
+      fi
+    fi
+
+    token_match='\\$\{.+\}'
     while read -r from to || [[ -n "$line" ]]; do
-        if [[ "$from" == "*" ]]; then
-            to="${to%\*}"
-            init_config_dir="${to%/}"
-        else
-            from_map=("${from_map[@]}" "$from")
-            to_map=("${to_map[@]}" "$to")
-        fi
+      if [[ "$token_support" == true ]]; then
+        to="${to/\$\{config_path_base\}/$config_path_base}"
+        to="${to/\$\{APP_ROOT\}/$APP_ROOT}"
+      fi
+      if [[ "$from" == "*" ]]; then
+          to="${to%\*}"
+          init_config_dir="${to%/}"
+      else
+          from_map=("${from_map[@]}" "$from")
+          to_map=("${to_map[@]}" "$to")
+      fi
+
+      if [[ "$to" =~ $regex ]]; then
+        fail_because "Uninterpolated token ${BASH_REMATCH[0]} found in files map; check docs for supported tokens."
+      fi
+
     done < $path_to_files_map
 
     [[ "$init_config_dir" ]] || fail_because "Missing default initialization directory; should be defined in: $(basename $path_to_files_map)."

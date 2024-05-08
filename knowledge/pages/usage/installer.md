@@ -42,6 +42,25 @@ _perms.custom.sh ../../../bin/_perms.custom.sh
 ignored_file.txt
 ```
 
+### Tokens
+
+In most cases you should consider using tokens like shown below. If you find your tokens are not get interpolated it's possible `handle_init` is getting called too early. Try moving `handle_init` to the `on_boot` event handler in your controller file to fix this. Early versions of Cloudy recommended calling that from `on_pre_config`, which does not support tokens.
+
+```text
+* ${APP_ROOT}/.live_dev_porter/*
+config.gitignore ${APP_ROOT}/.live_dev_porter/.gitignore
+```
+
+```text
+* ${config_path_base}/.live_dev_porter/*
+config.gitignore ${config_path_base}/.live_dev_porter/.gitignore
+```
+
+#### Supported Tokens
+
+1. `${config_path_base}`
+1. `${APP_ROOT}`
+
 ## Special Filenames
 
 **Special files should not be listed in the files map.**
