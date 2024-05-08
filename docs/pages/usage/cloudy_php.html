@@ -4,10 +4,10 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.6.1">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.6.1">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.6.1">
-      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/Users/aklump/opt/cloudy/knowledge/style.css?ver=1.6.1">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=1.7.0">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/style.css?ver=1.7.0">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=1.7.0">
+      <link rel="stylesheet" href="/Users/aklump/opt/cloudy/docs/dist/Users/aklump/opt/cloudy/knowledge/style.css?ver=1.7.0">
     <title>PHP and Cloudy | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
@@ -51,7 +51,7 @@
   <div class="row mb-5 pt-5">
     <article class="col">
       <h1 class="mb-4 text-primary">PHP and Cloudy</h1>
-      <p>Cloudy uses quite a bit of PHP under the hood.  </p>
+      <p>Cloudy uses quite a bit of PHP under the hood.</p>
 <h2>PHP Version</h2>
 <p>The value of the <a href="https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/">environment variable</a> <code>CLOUDY_PHP</code> will be used to locate the PHP binary. You may set that explicitly (see below) or let Cloudy do it automatically. See <code>cloudy_bootstrap_php()</code> for details.</p>
 <blockquote class="blockquote"><p>The value of the environment variable <code>CLOUDY_PHP</code> will be used to locate the PHP binary.</p>
@@ -64,6 +64,29 @@
 <p>Coincidentally, if you run the following, the test will actually fail, as it asserts that <code>$CLOUDY_PHP</code> is set to the default PHP binary, which it will not be in this case.</p>
 <pre><code class="bash"> export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"; ./cloudy_tools.sh tests
 </code></pre>
+<h3>Setting PHP in Your Controller</h3>
+<p>Let's say the PHP path exists in another global variable.  You may pass that off to Cloudy in the <code>on_pre_config</code> <a href="/Users/aklump/opt/cloudy/docs/pages/usage/events.html">event handler</a>, like this:</p>
+<pre><code class="bash">function on_pre_config() {
+  if [[ "$PHP_PATH" ]]; then
+    CLOUDY_PHP="$PHP_PATH"
+  fi
+}
+</code></pre>
+<h3>Setting PHP in Additional Config</h3>
+<p><em>foo.core.yml</em></p>
+<pre><code class="yaml">additional_config:
+  - .foo/config.local.yml
+</code></pre>
+<p>You may provide the PHP path using an <code>additional_config</code> file that matches <em>*.local.yml</em>. It might contain the following:</p>
+<p><em>.foo/config.local.yml</em></p>
+<pre><code class="yaml">shell_commands:
+  php: /usr/local/bin/php
+</code></pre>
+<p>In the controller file, in <code>on_pre_config</code>, you must add the following line so that the local config is read during bootstrap.</p>
+<pre><code class="bash">function on_pre_config() {
+  source "$CLOUDY_ROOT/inc/cloudy.read_local_config.sh"
+}
+</code></pre>
 <h2>PHP Dependencies (and Composer)</h2>
 <p><a href="/Users/aklump/opt/cloudy/docs/pages/usage/composer.html">See Composer</a> for dependency management strategies.</p>
 <h2>Writing Code</h2>
@@ -73,14 +96,6 @@
 <h3>Accessing Configuration</h3>
 <p>For your PHP scripts to have access to the configuration values setup in the YAML file(s), you should decode the environment variable <code>CLOUDY_CONFIG_JSON</code>, e.g., <code>$config = json_decode(getenv('CLOUDY_CONFIG_JSON'), TRUE);</code>.</p>
 <p><strong>You will need to add <code>export CLOUDY_CONFIG_JSON</code> to your controller file.</strong></p>
-<h3>Aliasing the PHP version variable</h3>
-<p>Let's say you want users to provide the path to the PHP for a Cloudy-based app that you are building called <em>Fission</em>. You want them to set the variable <code>FISSION_PHP</code> with the path. To hand that off to Cloudy so it uses that same PHP binary you should do like this in your controller script, in the <a href="/Users/aklump/opt/cloudy/docs/pages/usage/events.html">event handler</a> sections</p>
-<pre><code class="bash">function on_pre_config() {
-  if [[ "$FISSION_PHP" ]]; then
-    CLOUDY_PHP="$FISSION_PHP"
-  fi
-}
-</code></pre>
     </article>
   </div>
 </main>
@@ -88,9 +103,9 @@
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
                   Version:
-          <strong>1.6.1</strong>
+          <strong>1.7.0</strong>
           &bull;
-                Last Update: <strong>5/7/2024</strong>
+                Last Update: <strong>5/8/2024</strong>
     </div>
   </footer>
 
@@ -650,9 +665,9 @@
   </div>
 </div>
 
-  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.6.1"></script>
-  <script src="/Users/aklump/opt/cloudy/docs/dist/lunr.js?ver=1.6.1"></script>
-  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.6.1"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=1.7.0"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/lunr.js?ver=1.7.0"></script>
+  <script src="/Users/aklump/opt/cloudy/docs/dist/knowledge.min.js?ver=1.7.0"></script>
 
 </body>
 </html>
