@@ -5,7 +5,7 @@ tags: usage, php
 
 # PHP and Cloudy
 
-Cloudy uses quite a bit of PHP under the hood.  
+Cloudy uses quite a bit of PHP under the hood.
 
 ## PHP Version
 
@@ -29,6 +29,44 @@ Coincidentally, if you run the following, the test will actually fail, as it ass
  export CLOUDY_PHP="/Applications/MAMP/bin/php/php7.2.20/bin/php"; ./cloudy_tools.sh tests
 ```
 
+### Setting PHP in Your Controller
+
+Let's say the PHP path exists in another global variable.  You may pass that off to Cloudy in the `on_pre_config` [event handler](@events), like this:
+
+```bash
+function on_pre_config() {
+  if [[ "$PHP_PATH" ]]; then
+    CLOUDY_PHP="$PHP_PATH"
+  fi
+}
+```
+
+### Setting PHP in Additional Config
+
+_foo.core.yml_
+
+```yaml
+additional_config:
+  - .foo/config.local.yml
+```
+
+You may provide the PHP path using an `additional_config` file that matches _*.local.yml_. It might contain the following:
+
+_.foo/config.local.yml_
+
+```yaml
+shell_commands:
+  php: /usr/local/bin/php
+```
+
+In the controller file, in `on_pre_config`, you must add the following line so that the local config is read during bootstrap.
+
+```bash
+function on_pre_config() {
+  source "$CLOUDY_ROOT/inc/cloudy.read_local_config.sh"
+}
+```
+
 ## PHP Dependencies (and Composer)
 
 [See Composer](@composer) for dependency management strategies.
@@ -47,14 +85,5 @@ For your PHP scripts to have access to the configuration values setup in the YAM
 
 **You will need to add `export CLOUDY_CONFIG_JSON` to your controller file.**
 
-### Aliasing the PHP version variable
 
-Let's say you want users to provide the path to the PHP for a Cloudy-based app that you are building called _Fission_. You want them to set the variable `FISSION_PHP` with the path. To hand that off to Cloudy so it uses that same PHP binary you should do like this in your controller script, in the [event handler](@events) sections
 
-```bash
-function on_pre_config() {
-  if [[ "$FISSION_PHP" ]]; then
-    CLOUDY_PHP="$FISSION_PHP"
-  fi
-}
-```
