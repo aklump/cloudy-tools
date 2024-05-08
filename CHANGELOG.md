@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 2024-05-07
+
+### Added
+
+- Add functionality to read PHP override from local config in Cloudy. See docs for code examples.
+
 ## [1.6.0] - 2024-05-07
 
 ### Added
