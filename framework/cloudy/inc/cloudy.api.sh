@@ -1187,6 +1187,7 @@ function handle_init() {
     local to
     local token_support
     local token_match
+    local uninterpolated_token
 
     # Token support is detected by checking if APP_ROOT has been set yet or not.
     # If this is called too early then the configuration is not loaded and token
@@ -1201,16 +1202,15 @@ function handle_init() {
       if [[ ! "$config_path_base" ]]; then
         fail_because "config_path_base cannot be empty, did you mean '.'?"
         write_log_notice "config_path_base cannot be empty, did you mean '.' ?"
-        write_log_debug "${FUNCNAME[0]}() should be called from your app's on_boot() event handler.  The configuration must already be loaded. Did you call it too soon?"
         write_log_debug "Make sure $CONFIG contains a value for config_path_base."
       fi
     fi
 
-    token_match='\\$\{.+\}'
+    token_match='\{.+\}'
     while read -r from to || [[ -n "$line" ]]; do
       if [[ "$token_support" == true ]]; then
-        to="${to/\$\{config_path_base\}/$config_path_base}"
-        to="${to/\$\{APP_ROOT\}/$APP_ROOT}"
+        to="${to/\{config_path_base\}/$config_path_base}"
+        to="${to/\{APP_ROOT\}/$APP_ROOT}"
       fi
       if [[ "$from" == "*" ]]; then
           to="${to%\*}"
@@ -1220,10 +1220,14 @@ function handle_init() {
           to_map=("${to_map[@]}" "$to")
       fi
 
-      if [[ "$to" =~ $regex ]]; then
-        fail_because "Uninterpolated token ${BASH_REMATCH[0]} found in files map; check docs for supported tokens."
+      if [[ "$to" =~ $token_match ]]; then
+        uninterpolated_token="${BASH_REMATCH[0]}"
+        fail_because "Uninterpolated token $uninterpolated_token found in $(basename $path_to_files_map); check docs for supported tokens."
+        if [[ "$token_support" == false ]]; then
+          write_log_error "Uninterpolated token $uninterpolated_token found in $(basename $path_to_files_map)"
+          write_log_debug "${FUNCNAME[0]}() must be called from your app's on_boot() event handler for token support.  Did you call it too soon?"
+        fi
       fi
-
     done < $path_to_files_map
 
     [[ "$init_config_dir" ]] || fail_because "Missing default initialization directory; should be defined in: $(basename $path_to_files_map)."
@@ -1249,8 +1253,8 @@ function handle_init() {
             # Handle files already existing; do not install.
             #
             if [ -e "$destination_path" ]; then
-              fail_because "Path exists: $destination_path"
               fail_because "Could not install \"$basename\""
+              fail_because "Path exists: $destination_path"
 
             #
             # Handle cloudy PM gitignore
