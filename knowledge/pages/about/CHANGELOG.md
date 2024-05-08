@@ -7,6 +7,12 @@ tags: about
 
 ## [Unreleased]
 
+## [1.7.1] - 2024-05-08
+
+### Fixed
+
+- Swapped hardcoded `php` for `$CLOUDY_PHP`
+
 ## [1.7.0] - 2024-05-07
 
 ### Added

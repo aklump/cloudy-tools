@@ -73,7 +73,7 @@ function on_pre_config() {
 
 ## Writing Code
 
-When writing your app's source code, never hardcode PHP as `php` nor as a path. Instead use `"$CLOUDY_PHP"`, as shown below. This will ensure consistent PHP versions throughout execution. **Notice the surrounding double-quotes that ensure space-containing paths will still work.**
+When writing your app's source code, never hardcode PHP as `php` nor as a path. Instead use `"$CLOUDY_PHP"`, as shown below.  **Always wrap this variable with double quotes (to support spaces in paths).** This will ensure consistent PHP versions throughout execution.
 
 ```php
 "$CLOUDY_PHP" "/my/php/script/foo.php"
