@@ -49,25 +49,8 @@ fi
 #
 # PHP Bootstrapping.
 #
-if [[ "$COMPOSER_VENDOR" ]]; then
-  # This will be used when this directory is defined at the top of the entry
-  # script as relative to that script.
-  if ! path_is_absolute "$COMPOSER_VENDOR"; then
-    COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
-  fi
-fi
-# If the application script did not explicitly define the path to the composer
-# vendor directory, then we will try to find it based on likely scenarios.
-if [[ ! "$COMPOSER_VENDOR" ]]; then
-  # If it's installed as a Composer dependency it will be here:
-  COMPOSER_VENDOR="$r/../../../vendor/"
-  # A stand-alone cloudy script will have it here, e.g. "cloudy new foo.sh".
-  [[ ! -d "$COMPOSER_VENDOR" ]] && COMPOSER_VENDOR="$r/cloudy/vendor/"
-  # Otherwise a Cloudy app will have it here:
-  [[ ! -d "$COMPOSER_VENDOR" ]] && COMPOSER_VENDOR="$r/framework/cloudy/vendor/"
-  # If it's installed as a Composer create-project it will be here:
-  [[ ! -d "$COMPOSER_VENDOR" ]] && COMPOSER_VENDOR="$r/vendor/"
-fi
+source "$CLOUDY_ROOT/inc/cloudy.composer.sh" || exit_with_failure "Cannot find Composer dependencies."
+
 event_dispatch "pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
 
 if [[ ! -f "$COMPOSER_VENDOR/autoload.php" ]]; then
@@ -76,7 +59,7 @@ if [[ ! -f "$COMPOSER_VENDOR/autoload.php" ]]; then
   composer_lock=$(dirname $COMPOSER_VENDOR)/composer.lock
   if [[ -f "$composer_json" && ! -f "$composer_lock" ]]; then
     fail_because "You may need to install Composer dependencies."
-    fail_because "e.g., cd "$(dirname "$composer_json")" && composer install"
+    fail_because "e.g., (cd "$(dirname "$composer_json")" && composer install)"
   fi
   exit_with_failure "Composer autoloader not found in $COMPOSER_VENDOR"
 fi

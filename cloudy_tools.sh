@@ -77,7 +77,12 @@ function write_version_file() {
 }
 
 function validate_cloudy_instance_or_exit_with_failure() {
-  [ -d "$WDIR/cloudy" ] || exit_with_failure "No Cloudy framework found in this directory."
+  local command="$1"
+
+  [ -d "$WDIR/cloudy" ] && return 0
+
+  fail_because "Did you mean cloudy pm-$command?"
+  exit_with_failure "No Cloudy framework found in this directory."
 }
 
 # Begin Cloudy Bootstrap
@@ -154,13 +159,13 @@ case $command in
   ;;
 
 "flush")
-  validate_cloudy_instance_or_exit_with_failure
+  validate_cloudy_instance_or_exit_with_failure 'flush'
   exit_with_cache_clear "$WDIR/cloudy"
   ;;
 
 "install")
   echo_title "Cloudy Framework Installer"
-  validate_cloudy_instance_or_exit_with_failure
+  validate_cloudy_instance_or_exit_with_failure 'install'
   [ -f "$installation_info_filepath" ] || exit_with_failure "Cannot determine installed version; missing file $installation_info_filepath."
   source $installation_info_filepath
   source_dir="$(echo_path_to_framework_version "$cloudy_update__version")"
@@ -175,7 +180,7 @@ case $command in
   available_version=$(get_version)
 
   # Check for cloudy folder.
-  validate_cloudy_instance_or_exit_with_failure
+  validate_cloudy_instance_or_exit_with_failure 'update'
   [ -f "$installation_info_filepath" ] || exit_with_failure "Cannot determine installed version; missing file $installation_info_filepath."
   source $installation_info_filepath
 
