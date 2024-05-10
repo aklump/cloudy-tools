@@ -1,1 +1,3 @@
 - Look into why I have to manually edit opt/aklump/htaccess/htaccess.sh by setting `COMPOSER_VENDOR="../../cloudy/cloudy/vendor"`, and why it doesn't happen automatically.  It should be automatic.
+- consider removing version from framework/cloudy/composer.json to align with best practices.
+- To avoid collision we should rename LOGFILE TO CLOUDY_LOG.

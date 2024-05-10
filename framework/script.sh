@@ -17,6 +17,7 @@ CONFIG="__CONFIG";
 COMPOSER_VENDOR=""
 
 # Uncomment this line to enable file logging.
+# Or, set for a terminal session using `export LOGFILE="__FILENAME.log"`.
 #LOGFILE="__FILENAME.log"
 
 # TODO: Event handlers and other functions go here or register one or more includes in "additional_bootstrap".

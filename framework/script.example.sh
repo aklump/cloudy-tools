@@ -17,6 +17,7 @@ CONFIG="script.example.yml";
 COMPOSER_VENDOR=""
 
 # Uncomment this line to enable file logging.
+# Or, set for a terminal session using `export LOGFILE="script.example.log"`.
 LOGFILE="script.example.log"
 
 # TODO: Event handlers and other functions go here or register one or more includes in "additional_bootstrap".

@@ -1,22 +1,13 @@
 <?php
 
 /**
- * Sort an array by the length of it's values.
- *
- * @param string ...
- *   Any number of items to be taken as an array.
- *
- * @return array
- *   The sorted array
+ * @file
+ * Provide PHP public functions to be used by cloudy developers.  Functions in
+ * this class should be considered stable.
  */
-function array_sort_by_item_length() {
-  $stack = func_get_args();
-  uasort($stack, function ($a, $b) {
-    return strlen($a) - strlen($b);
-  });
 
-  return array_values($stack);
-}
+use Symfony\Component\Yaml\Yaml;
+use Jasny\DotKey;
 
 /**
  * Convert a YAML string to a JSON string.
@@ -80,6 +71,8 @@ function json_load_file(string $path): string {
 }
 
 /**
+ * Escape a JSON string for special BASH use Cloudy.
+ *
  * @param string $json
  *   A JSON string to be used by cloudy.
  *
@@ -93,126 +86,6 @@ function json_bash_filter(string $json): string {
   }
 
   return json_encode($data, JSON_UNESCAPED_SLASHES);
-}
-
-/**
- * Load a configuration file into memory.
- *
- * @param $filepath
- *   The absolute filepath to a configuration file.
- *
- * @return array|mixed
- */
-function load_configuration_data($filepath, $exception_if_not_exists = TRUE) {
-  $data = [];
-  if (!file_exists($filepath)) {
-    if ($exception_if_not_exists) {
-      throw new \RuntimeException("Missing configuration file: " . $filepath);
-    }
-
-    return $data;
-  }
-  if (!($contents = file_get_contents($filepath))) {
-    // TODO Need a php method to write a log file, and then log this.
-    //    throw new \RuntimeException("Empty configuration file: " . realpath($filepath));
-  }
-  if ($contents) {
-    switch (($extension = pathinfo($filepath, PATHINFO_EXTENSION))) {
-      case 'yml':
-      case 'yaml':
-        try {
-          if ($yaml = Yaml::parse($contents)) {
-            $data += $yaml;
-          }
-        }
-        catch (\Exception $exception) {
-          $class = get_class($exception);
-          $message = sprintf("Syntax error in configuration file: %s: %s", $filepath, $exception->getMessage());
-          write_log_error($message);
-          throw new $class($message, $exception->getCode());
-        }
-        break;
-
-      case 'json':
-        if ($json = json_decode($contents, TRUE)) {
-          $data += $json;
-        }
-        break;
-
-      default:
-        throw new \RuntimeException("Configuration files of type \"$extension\" are not supported.");
-
-    }
-  }
-
-  return $data;
-}
-
-/**
- * Merge an array of configuration arrays.
- *
- * @param... two or more arrays to merge.
- *
- * @return array|mixed
- *   The merged array.
- */
-function merge_config() {
-  $stack = func_get_args();
-  $merged = [];
-  while (($array = array_shift($stack))) {
-    $merged = ArrayMerger::doMerge($merged, $array);
-  }
-
-  return $merged;
-}
-
-/**
- * Create a hash of a string of filenames separated by \n.
- *
- * @return string
- *   The has of filenames.
- */
-function get_config_cache_id() {
-  $paths = func_get_arg(0);
-
-  return md5(str_replace("\n", ':', $paths));
-}
-
-/**
- * Expand a path based on $config_path_base.
- *
- * This function can handle:
- * - paths that begin with ~/
- * - paths that contain the glob character '*'
- * - absolute paths
- * - relative paths to `config_path_base`
- *
- * @param string $path
- *   The path to expand.
- *
- * @return array
- *   The expanded paths.  This will have multiple items when using globbing.
- */
-function _cloudy_realpath($path) {
-  global $_config_path_base;
-
-  if (!empty($_SERVER['HOME'])) {
-    $path = preg_replace('/^~\//', rtrim($_SERVER['HOME'], '/') . '/', $path);
-  }
-  if (!empty($path) && substr($path, 0, 1) !== '/') {
-    $path = ROOT . '/' . "$_config_path_base/$path";
-  }
-  if (strstr($path, '*')) {
-    $paths = glob($path);
-  }
-  else {
-    $paths = [$path];
-  }
-  $paths = array_map(function ($item) {
-    return is_file($item) ? realpath($item) : $item;
-  }, $paths);
-
-  return $paths;
 }
 
 ##
@@ -323,35 +196,4 @@ function write_log_debug() {
   $args = func_get_args();
   array_unshift($args, 'debug');
   call_user_func_array('_cloudy_write_log', $args);
-}
-
-/**
- * Create a log entry if logging is enabled.
- *
- * @param string $level
- *   The log level
- * @param... string $message
- *   Any number of string parameters, each will be a single log line entry.
- *
- * @return void
- */
-function _cloudy_write_log($level) {
-  $logfile = getenv('LOGFILE');
-  if (empty($logfile)) {
-    return;
-  }
-  $args = func_get_args();
-  $level = array_shift($args);
-  $directory = dirname($logfile);
-  if (!is_dir($directory)) {
-    mkdir($directory, 0755, TRUE);
-  }
-
-  $date = date('D M d H:i:s T Y');
-  $lines = array_map(function ($message) use ($level, $date) {
-    return "[$date] [$level] $message";
-  }, $args);
-  $stream = fopen($logfile, 'a');
-  fwrite($stream, implode($lines, PHP_EOL));
-  fclose($stream);
 }
