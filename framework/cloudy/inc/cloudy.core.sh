@@ -70,7 +70,17 @@ if [[ ! "$COMPOSER_VENDOR" ]]; then
 fi
 event_dispatch "pre_config" || exit_with_failure "Non-zero returned by on_pre_config()."
 
-[[ -f "$COMPOSER_VENDOR/autoload.php" ]] || exit_with_failure "Composer autoloader not found in $COMPOSER_VENDOR"
+if [[ ! -f "$COMPOSER_VENDOR/autoload.php" ]]; then
+  # Attempt to install composer.
+  composer_json=$(dirname $COMPOSER_VENDOR)/composer.json
+  composer_lock=$(dirname $COMPOSER_VENDOR)/composer.lock
+  if [[ -f "$composer_json" && ! -f "$composer_lock" ]]; then
+    fail_because "You may need to install Composer dependencies."
+    fail_because "e.g., cd "$(dirname "$composer_json")" && composer install"
+  fi
+  exit_with_failure "Composer autoloader not found in $COMPOSER_VENDOR"
+fi
+
 export COMPOSER_VENDOR="$(cd $COMPOSER_VENDOR && pwd)"
 
 _cloudy_bootstrap_php || exit_with_failure "Invalid PHP"

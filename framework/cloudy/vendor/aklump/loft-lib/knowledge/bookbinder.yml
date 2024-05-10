@@ -1,9 +1,0 @@
--
-  format: markdown
-  path: ../
-  include:
-    - '**/README.md'
-    - '**/CHANGELOG.md'
--
-  format: website
-  path: ../docs
