@@ -129,7 +129,6 @@ function _load_configuration_data($filepath, $exception_if_not_exists = TRUE) {
     switch (($extension = pathinfo($filepath, PATHINFO_EXTENSION))) {
       case 'yml':
       case 'yaml':
-        $foo = new Taml();
         try {
           if ($yaml = Yaml::parse($contents)) {
             $data += $yaml;
