@@ -52,7 +52,9 @@ fi
 if [[ "$COMPOSER_VENDOR" ]]; then
   # This will be used when this directory is defined at the top of the entry
   # script as relative to that script.
-  COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
+  if ! path_is_absolute "$COMPOSER_VENDOR"; then
+    COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
+  fi
 fi
 # If the application script did not explicitly define the path to the composer
 # vendor directory, then we will try to find it based on likely scenarios.
