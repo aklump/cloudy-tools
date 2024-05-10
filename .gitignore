@@ -1,3 +1,5 @@
 /.idea
 /framework/cloudy/vendor/composer/tmp*
 .web_package/tmp
+/framework/vendor
+/framework/composer.lock
