@@ -142,6 +142,11 @@ function write_log_error() {
   call_user_func_array('_cloudy_write_log', $args);
 }
 
+function write_log_exception(\Exception $e, string $level = 'error') {
+  $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+  write_log($level, sprintf('%s: %s', $message, $e->getFile()));
+}
+
 # Write to the log with level warning.
 #
 # $1 - The message to write.

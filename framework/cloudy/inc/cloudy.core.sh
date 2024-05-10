@@ -82,20 +82,24 @@ config_cache_id=$("$CLOUDY_PHP" $CLOUDY_ROOT/php/helpers.php get_config_cache_id
 CLOUDY_CONFIG_HAS_CHANGED=false
 _cloudy_auto_purge_config
 
-# Generate the cached configuration file.
+# Normalize user configuration to JSON
 if [[ ! -f "$CACHED_CONFIG_JSON_FILEPATH" ]]; then
+  write_log_debug "$(basename $CACHED_CONFIG_JSON_FILEPATH) will be (re)built."
   CLOUDY_CONFIG_HAS_CHANGED=true
   # Normalize the config file to JSON.
   CLOUDY_CONFIG_JSON="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/config_to_json.php" "$CLOUDY_ROOT/cloudy_config.schema.json" "$CONFIG" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
   json_result=$?
-  [[ "$CLOUDY_CONFIG_JSON" ]] || exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
+  if [[ ! "$CLOUDY_CONFIG_JSON" ]]; then
+    fail_because "config_to_json.php returned empty JSON; exit code $json_result".
+    exit_with_failure "\$CLOUDY_CONFIG_JSON cannot be empty in $(basename $BASH_SOURCE) $LINENO"
+  fi
   [[ $json_result -ne 0 ]] && exit_with_failure "$CLOUDY_CONFIG_JSON"
   echo "$CLOUDY_CONFIG_JSON" >"$CACHED_CONFIG_JSON_FILEPATH"
 else
   CLOUDY_CONFIG_JSON="$(cat "$CACHED_CONFIG_JSON_FILEPATH")"
 fi
 
-# Generate the cached configuration file.
+# Generate the cached configuration file from JSON config.
 if [[ ! -f "$CACHED_CONFIG_FILEPATH" ]]; then
   CLOUDY_CONFIG_HAS_CHANGED=true
   touch "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Unable to write cache file: $CACHED_CONFIG_FILEPATH"
@@ -106,6 +110,7 @@ if [[ ! -f "$CACHED_CONFIG_FILEPATH" ]]; then
   "$CLOUDY_PHP" "$CLOUDY_ROOT/php/json_to_bash.php" "$ROOT" "cloudy_config" "$CLOUDY_CONFIG_JSON" >"$CACHED_CONFIG_FILEPATH"
   json_to_bash_result=$?
   if [[ $json_to_bash_result -ne 0 ]]; then
+    fail_because "json_to_bash.php exited with code $json_result".
     fail_because "$(cat "$CACHED_CONFIG_FILEPATH"|tr -d '\n')"
     rm "$CACHED_CONFIG_FILEPATH"
     exit_with_failure "Cannot cache config to: $CACHED_CONFIG_FILEPATH."

@@ -136,9 +136,10 @@ function _load_configuration_data($filepath, $exception_if_not_exists = TRUE) {
           }
         }
         catch (\Exception $exception) {
-          $class = get_class($exception);
+          write_log_exception($exception);
           $message = sprintf("Syntax error in configuration file: %s: %s", $filepath, $exception->getMessage());
           write_log_error($message);
+          $class = get_class($exception);
           throw new $class($message, $exception->getCode());
         }
         break;

@@ -7,6 +7,14 @@ tags: about
 
 ## [Unreleased]
 
+## [] - 2024-05-10
+
+### Added
+
+- COMPOSER_VENDOR can now handle absolute paths.
+- PHP functions to match write_log_*().
+- PHP errors are now logged to the Cloudy logfile.
+
 ## [1.7.1] - 2024-05-08
 
 ### Fixed
