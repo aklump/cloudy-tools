@@ -54,26 +54,33 @@
 [Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_commands_coretest_options__keys
 [Tue Sep 11 18:16:24 PDT 2018] [debug] Using filesystem to obtain config: cloudy_config_commands__keys
 </code></pre>
-<p>First you must declare the filename of the log file; this enables logging.  This is relative to your script's directory and should be placed at the top of your script before the bootstrap.</p>
-<pre><code>LOGFILE="script.example.log"
-
-# Begin Cloudy Bootstrap
-s="${BASH_SOURCE[0]}";while ...
-</code></pre>
 <p>These functions should be self-explanatory; each one takes a single argument, which is the message.</p>
 <pre><code>write_log_*
-
 </code></pre>
-<p>To log an error, e.g.,</p>
-<pre><code>write_log_error "Cannot load file $filepath"    
-
+<p>To log an error in BASH:</p>
+<pre><code class="shell">write_log_error "Cannot load file $filepath"    
+</code></pre>
+<p>There are PHP, same-name equivalents, e.g.:</p>
+<pre><code class="php">write_log_error("Cannot load file $filepath");    
 </code></pre>
 <p>The one that may require explanation is <code>write_log</code>, which takes one or two arguments.</p>
-<p>When using two arguments the first is an arbitrary log label, which appears in place of the standard log levels from above.  You can set this to anything and that will allow you to filter your log items by that key using whatever log reader you're using.  Using <em>Console</em> in OSX is my preference.</p>
+<p>When using two arguments the first is an arbitrary log label, which appears in place of the standard log levels from above. You can set this to anything and that will allow you to filter your log items by that key using whatever log reader you're using. Using <em>Console</em> in OSX is my preference.</p>
 <pre><code>write_log "alpha" "Recording a value $value"    
 </code></pre>
 <p>You may also call it like this:</p>
 <pre><code>write_log "No custom label"
+</code></pre>
+<h2>Enabling Logging</h2>
+<h3>Hardcoding Into Your Controller</h3>
+<p>First you must declare the filename of the log file; this enables logging. This is relative to your script's directory and should be placed at the top of your script before the bootstrap.</p>
+<pre><code class="shell">LOGFILE="script.example.log"
+
+# Begin Cloudy Bootstrap
+s="${BASH_SOURCE[0]}";while ...
+</code></pre>
+<h3>Enabling on the CLI</h3>
+<p>Export the <code>LOGFILE</code> variable with a path to the logfile and then run your app.</p>
+<pre><code class="shell">export LOGFILE=/path/to/file.log
 </code></pre>
     </article>
   </div>
@@ -84,7 +91,7 @@ s="${BASH_SOURCE[0]}";while ...
                   Version:
           <strong>1.7.3</strong>
           &bull;
-                Last Update: <strong>5/8/2024</strong>
+                Last Update: <strong>5/10/2024</strong>
     </div>
   </footer>
 
