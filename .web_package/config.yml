@@ -1,0 +1,8 @@
+master:  "master"
+remote:  origin
+create_tags:  patch
+push_tags:  auto
+push_master:  auto
+patch_prefix:  .
+git_root:  .
+version_file:  cloudy_tools.yml

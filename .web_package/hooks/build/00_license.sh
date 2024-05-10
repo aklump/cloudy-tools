@@ -1,1 +1,2 @@
-cp "$7/LICENSE" "$7/framework/cloudy/"
+#!/usr/bin/env bash
+cp "LICENSE" "framework/cloudy/"
