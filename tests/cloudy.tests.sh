@@ -655,6 +655,9 @@ function testGetConfigPathWorksAsItShould() {
 
   eval $(get_config_path 'tests.filepaths.cache')
   assert_same "$CLOUDY_ROOT/cache" $tests_filepaths_cache
+
+  eval $(get_config_path 'tests.filepaths.token_app_root')
+  assert_same "$APP_ROOT/.project/config.yml" $tests_filepaths_token_app_root
 }
 
 function testGetConfigPathAsWorksAsItShould() {
