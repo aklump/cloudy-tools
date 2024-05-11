@@ -43,7 +43,7 @@ function rsync_framework() {
   fi
   [[ "$source_dir" ]] || return 1
   [ -d "$source_dir/cloudy" ] || return 1
-  rsync -a "$source_dir/cloudy/" ./cloudy --exclude=*.log --exclude=cache/
+  rsync -a "$source_dir/cloudy/" ./cloudy --exclude=*.log --exclude=cache/ --exclude=composer.lock --exclude=vendor
 }
 
 # Echo the source path for a specific framework version.
