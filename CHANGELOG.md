@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-## [] - 2024-05-10
+## [1.7.7] - 2024-05-10
+
+### Changed
+
+- APP_ROOT is no longer influenced by symlinking.
 
 ### Added
 
