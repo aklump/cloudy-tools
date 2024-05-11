@@ -54,5 +54,10 @@ function _cloudy_php_shutdown_handler() {
   call_user_func_array('write_log', $args);
 }
 
+$logfile = getenv('LOGFILE');
+if (!empty($logfile)) {
+  error_reporting(E_ALL);
+}
+
 set_error_handler('_cloudy_php_error_handler');
 register_shutdown_function("_cloudy_php_shutdown_handler");
