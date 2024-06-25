@@ -12,12 +12,22 @@ use Symfony\Component\Yaml\Yaml;
  * Root directory of the Cloudy instance script.
  */
 define('ROOT', getenv('ROOT'));
+if (empty(ROOT)) {
+  throw new RuntimeException('Environment var "ROOT" cannot be empty.');
+}
 define('APP_ROOT', getenv('APP_ROOT'));
+if (empty(APP_ROOT)) {
+  throw new RuntimeException('Environment var "APP_ROOT" cannot be empty.');
+}
+$composer_vendor = getenv('COMPOSER_VENDOR');
+if (empty($composer_vendor)) {
+  throw new RuntimeException('Environment var "$composer_vendor" cannot be empty.');
+}
 
 require_once __DIR__ . '/error_handler.php';
 
 /** @var \Composer\Autoload\ClassLoader $class_loader */
-$class_loader = require_once getenv('COMPOSER_VENDOR') . '/autoload.php';
+$class_loader = require_once $composer_vendor . '/autoload.php';
 
 /**
  * Expand a path based on $config_path_base.
@@ -118,7 +128,7 @@ function _load_configuration_data($filepath, $exception_if_not_exists = TRUE) {
   $data = [];
   if (!file_exists($filepath)) {
     if ($exception_if_not_exists) {
-      throw new \RuntimeException("Missing configuration file: " . $filepath);
+      throw new RuntimeException("Missing configuration file: " . $filepath);
     }
 
     return $data;
@@ -152,7 +162,7 @@ function _load_configuration_data($filepath, $exception_if_not_exists = TRUE) {
         break;
 
       default:
-        throw new \RuntimeException("Configuration files of type \"$extension\" are not supported.");
+        throw new RuntimeException("Configuration files of type \"$extension\" are not supported.");
 
     }
   }
