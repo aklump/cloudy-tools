@@ -22,8 +22,8 @@ CONFIG="script.example.yml";
 #APP_ROOT=""
 
 # Uncomment this line to enable file logging.
+#[[ ! "$LOGFILE" ]] && LOGFILE="script.example.log"
 # Or, set for a terminal session using `export LOGFILE="script.example.log"`.
-LOGFILE="script.example.log"
 
 # TODO: Event handlers and other functions go here or register one or more includes in "additional_bootstrap".
 

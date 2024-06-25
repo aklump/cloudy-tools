@@ -17,8 +17,8 @@ CONFIG="cloudy_tools.yml"
 COMPOSER_VENDOR=""
 
 # Uncomment this line to enable file logging.
+#[[ ! "$LOGFILE" ]] && LOGFILE="cloudy_tools.log"
 # Or, set for a terminal session using `export LOGFILE="script.example.log"`.
-#LOGFILE="cloudy_tools.log"
 
 function on_boot() {
   # Run the test command before the bootstrap to avoid conflicts.
