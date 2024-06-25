@@ -1,41 +1,42 @@
 page_order:
-  - readme
-  - about
-  - app_root
-  - arguments
-  - arrays
-  - bash
-  - changelog
-  - command
-  - composer
-  - configuration
-  - conventions
-  - development
-  - documenting
-  - error_handling
-  - events
-  - examples
-  - functions
-  - cloudy_php
-  - installer
-  - lists
-  - localize
-  - logging
-  - menus
-  - menus_input
-  - options
-  - packages
-  - plugins
-  - quick_start
-  - route_access
-  - strings
-  - tables
-  - tempdir
-  - testing
-  - usage
-  - version
-  - writing_scripts
-  - yaml
-  - ''
-  - empty_config
-  - autoloader
+  0: ''
+  about:
+    - readme
+    - changelog
+  bash:
+    - arrays
+    - strings
+  examples:
+    - functions
+    - menus_input
+    - plugins
+    - route_access
+  usage:
+    - app_root
+    - arguments
+    - command
+    - composer
+    - configuration
+    - conventions
+    - development
+    - documenting
+    - error_handling
+    - events
+    - cloudy_php
+    - installer
+    - lists
+    - localize
+    - logging
+    - menus
+    - options
+    - packages
+    - tables
+    - tempdir
+    - testing
+    - version
+    - yaml
+  trouble:
+    - empty_config
+    - autoloader
+  quick_start:
+    - writing_scripts
