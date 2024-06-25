@@ -26,7 +26,10 @@ fi
 
 # It's possible that the controller has set APP_ROOT, if not we will try to
 # detect what it is automatically.
-if [[ ! "$APP_ROOT" ]]; then
+if [[ "$APP_ROOT" ]]; then
+  path_is_absolute "$APP_ROOT" && exit_with_failure "\$APP_ROOT must not be set as an absolute path; check $SCRIPT"
+  APP_ROOT="$(_resolve_dir "$(dirname $SCRIPT)/$APP_ROOT")"
+else
   APP_ROOT="$(_cloudy_detect_app_root_by_installation "$CLOUDY_INSTALLED_AS")"
   if [ $? -ne 0 ]; then
     write_log_error "Failed to detect/set \$APP_ROOT "

@@ -1,24 +1,51 @@
 #!/usr/bin/env bash
 
+# TODO rename this as appropriate or find a similar function and merge them.
+function _resolve_file() {
+  local path="$1"
+
+  local directory
+  local basename
+
+  directory=${path%/*}
+  basename=${path##*/}
+
+  if [ -d "$directory" ]; then
+    directory="$(cd "$directory"; pwd -P)"
+  fi
+
+  echo "$directory/$basename"
+}
+# TODO rename this as appropriate or find a similar function and merge them.
+function _resolve_dir() {
+  local directory="$1"
+
+  if [ -d "$directory" ]; then
+    directory="$(cd "$directory"; pwd -P)"
+  fi
+
+  echo "$directory"
+}
+
 function _cloudy_detect_installation_type() {
   local base
   local check_composer
   local check_cloudy
   base=$(dirname $SCRIPT)
 
-  check_composer="$(_resolve "$base/../../../composer.json")"
-  [ -f "$(_resolve "$check_composer")" ] && echo $CLOUDY_INSTALL_TYPE_COMPOSER && return 0
+  check_composer="$(_resolve_file "$base/../../../composer.json")"
+  [ -f "$(_resolve_file "$check_composer")" ] && echo $CLOUDY_INSTALL_TYPE_COMPOSER && return 0
 
-  check_composer="$(_resolve "$base/composer.json")"
-  check_cloudy="$(_resolve "$base/cloudy/cloudy.sh")"
+  check_composer="$(_resolve_file "$base/composer.json")"
+  check_cloudy="$(_resolve_file "$base/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_CORE && return 0
 
-  check_composer="$(_resolve "$base/framework/cloudy/composer.json")"
-  check_cloudy="$(_resolve "$base/framework/cloudy/cloudy.sh")"
+  check_composer="$(_resolve_file "$base/framework/cloudy/composer.json")"
+  check_cloudy="$(_resolve_file "$base/framework/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SELF && return 0
 
-  check_composer="$(_resolve "$base/../../cloudy/cloudy/composer.json")"
-  check_cloudy="$(_resolve "$base/../../../cloudypm.lock")"
+  check_composer="$(_resolve_file "$base/../../cloudy/cloudy/composer.json")"
+  check_cloudy="$(_resolve_file "$base/../../../cloudypm.lock")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ] && echo $CLOUDY_INSTALL_TYPE_PM && return 0
 
   return 1
@@ -49,7 +76,7 @@ function _cloudy_detect_app_root_by_installation() {
   *)
     return 1
   esac
-  echo "$(_resolve "$app_root")"
+  echo "$(_resolve_file "$app_root")"
   return 0
 }
 
@@ -78,7 +105,7 @@ function _cloudy_detect_composer_vendor_by_installation() {
     *)
       return 1
     esac
-    echo "$(_resolve "$vendor")"
+    echo "$(_resolve_file "$vendor")"
     return 0
 }
 

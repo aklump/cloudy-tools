@@ -12,3 +12,9 @@ The application root is by default the same as `$ROOT`, which is the directory c
 
 * Relative paths read in with `get_config_path` are made absolute using `$APP_ROOT`.
 * Paths shortened via `path_shorten` use `$APP_ROOT` as the basis for prefix removal.
+
+
+## Functions
+
+`cloudy_resolve_to_app`
+`cloudy_resolve_to_script`
