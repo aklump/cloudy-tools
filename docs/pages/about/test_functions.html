@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="../../dist/style.css">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="../../dist/style.css">
-    <title>Functions | Cloudy BASH Framework</title>
+    <title>Cloudy API: Test Functions | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -27,17 +27,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="functions.html">Code Examples</a></li>
+      <a href="readme.html">About</a></li>
   </ol>
 </nav>
 
       </div>
-      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
-          type="button" class="badge
-        rounded-pill
-        bg-primary">EXAMPLES</span>
-  </div>
-      <div class="header__page-numbers flex-shrink-1">7
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">4
         / 36</div>
     </div>
   </div>
@@ -46,58 +42,391 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Functions</h1>
-      <h2>Correct Way to Pass Function Arguments</h2>
-<blockquote class="blockquote"><p>Notice the double quotes below <code>"$@"</code>  Without these any quoted arguments containing spaces will not be properly passed along.</p>
-</blockquote>
-<pre><code class="shell">function env_on_import_db() {
-  call_plugin mysql import_db "$@"
-}
-</code></pre>
-<p>Or shift the first argument and pass the rest:</p>
-<pre><code class="shell">function remote_ssh_by_environment() {
-  local environment_id="$1"
+      <h1 class="mb-4 text-primary">Cloudy API: Test Functions</h1>
+      <div class="function-index">
+      <a href="#assert_contains">assert_contains</a>
+      <a href="#assert_count">assert_count</a>
+      <a href="#assert_empty">assert_empty</a>
+      <a href="#assert_equals">assert_equals</a>
+      <a href="#assert_exit_status">assert_exit_status</a>
+      <a href="#assert_false">assert_false</a>
+      <a href="#assert_file_exists">assert_file_exists</a>
+      <a href="#assert_file_not_exists">assert_file_not_exists</a>
+      <a href="#assert_greater_than">assert_greater_than</a>
+      <a href="#assert_internal_type">assert_internal_type</a>
+      <a href="#assert_less_than">assert_less_than</a>
+      <a href="#assert_not_contains">assert_not_contains</a>
+      <a href="#assert_not_empty">assert_not_empty</a>
+      <a href="#assert_not_equals">assert_not_equals</a>
+      <a href="#assert_not_internal_type">assert_not_internal_type</a>
+      <a href="#assert_reg_exp">assert_reg_exp</a>
+      <a href="#assert_same">assert_same</a>
+      <a href="#assert_true">assert_true</a>
+      <a href="#create_test_sandbox">create_test_sandbox</a>
+      <a href="#delete_test_sandbox">delete_test_sandbox</a>
+      <a href="#do_tests_in">do_tests_in</a>
+      <a href="#exit_with_test_results">exit_with_test_results</a>
+      <a href="#is_being_tested">is_being_tested</a>
+      <a href="#mark_test_skipped">mark_test_skipped</a>
+      <a href="#test_fail_because">test_fail_because</a>
+  </div>
 
-  eval $(get_config_as env_auth "environments.$environment_id.ssh")
-  [[ "$env_auth" ]] || return 1
-  echo ssh -t -o BatchMode=yes "$env_auth" "${@:2}"
-}
-</code></pre>
-<h2>Using Functions to Create Variable Values</h2>
-<p>Follow this pattern for best results.</p>
-<pre><code class="bash">function lorem_echo_color() {
-  local is_colorblind="$1"
-  
-  [[ "$is_colorblind" == true ]] &amp;&amp; echo "Observer is colorblind." &amp;&amp; return 1
-  echo "blue" &amp;&amp; return 0
-}
-</code></pre>
-<h3>Acting Only When a Variable Is Set</h3>
-<pre><code class="bash">if color=$(lorem_echo_color); then
-  echo "The color has been set to: $color"
-fi
-</code></pre>
-<h3>Failing When a Variable Cannot Be Set</h3>
-<pre><code class="bash">function parent_caller() {
-  local color
-  ! color=$(lorem_echo_color) &amp;&amp; fail_because "$color" &amp;&amp; return 1
-}
+<div class="function-list">
+      <a name="assert_contains"></a>
+    <h2>assert_contains()</h2>
+    <p class="summary">Assert that an array contains a value.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The value to search for.</li>
+                  <li><code></code> <em>string</em> The name of a global variable.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_count"></a>
+    <h2>assert_count()</h2>
+    <p class="summary">Assert that an array has a given number of elements.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>int</em> The expected length.</li>
+                  <li><code></code> <em>string</em> The name of a global array.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_empty"></a>
+    <h2>assert_empty()</h2>
+    <p class="summary">Assert that variable by name is empty.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The name of a global variable.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_equals"></a>
+    <h2>assert_equals()</h2>
+    <p class="summary">Assert that two values are equal in value but not necessarily type.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The expected value.</li>
+                  <li><code></code> <em>mixed</em> The value to test.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_exit_status"></a>
+    <h2>assert_exit_status()</h2>
+    <p class="summary"></p>
+    
+                        
+          <pre><code> $1 The expected exit code of the previous command.
+ Here are three examples of how to call...
+ @code
+   array_sort; assert_exit_status 0
+   $(has_option &#039;name&#039;); assert_exit_status 0
+   has_option &#039;name&#039; &gt; /dev/null; assert_exit_status 0
+ @endcode</code></pre>
+        <hr/>
+      <a name="assert_false"></a>
+    <h2>assert_false()</h2>
+    <p class="summary">Assert that a value equals &quot;false&quot; or &quot;FALSE&quot;.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The value to test.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_file_exists"></a>
+    <h2>assert_file_exists()</h2>
+    <p class="summary">Assert that a file exists by path.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The filepath of the expected file.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_file_not_exists"></a>
+    <h2>assert_file_not_exists()</h2>
+    <p class="summary">Assert that a file does not exist at path.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The filepath to ensure does not exist.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_greater_than"></a>
+    <h2>assert_greater_than()</h2>
+    <p class="summary">Asset one number is greater than another.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The target value.</li>
+                  <li><code></code> <em>number</em> The number than should be greater than the target.</li>
+              </ul>
+                    
+          <pre><code>Returns 0 if  $2 is &gt; $1</code></pre>
+        <hr/>
+      <a name="assert_internal_type"></a>
+    <h2>assert_internal_type()</h2>
+    <p class="summary">Assert that an global variable is of a given type.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> stringThe expected type.</li>
+                  <li><code></code> <em>string</em> The name of a global variable.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_less_than"></a>
+    <h2>assert_less_than()</h2>
+    <p class="summary">Asset one number is less than another.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The target value.</li>
+                  <li><code></code> <em>number</em> The number than should be less than the target.</li>
+              </ul>
+                    
+          <pre><code>Returns 0 if  $2 is &lt; $1</code></pre>
+        <hr/>
+      <a name="assert_not_contains"></a>
+    <h2>assert_not_contains()</h2>
+    <p class="summary">Assert that an array does not contain a value.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The value to search for.</li>
+                  <li><code></code> <em>string</em> The name of a global variable.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_not_empty"></a>
+    <h2>assert_not_empty()</h2>
+    <p class="summary">Assert that variable by name is not empty.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The actual value</li>
+                  <li><code></code> <em>string</em> A custom message on failure.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_not_equals"></a>
+    <h2>assert_not_equals()</h2>
+    <p class="summary">Assert that two values are not the same.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The expected value.</li>
+                  <li><code></code> <em>mixed</em> The value to test.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_not_internal_type"></a>
+    <h2>assert_not_internal_type()</h2>
+    <p class="summary">Assert that an global variable is not of a given type.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> stringThe expected type.</li>
+                  <li><code></code> <em>string</em> The name of a global variable.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_reg_exp"></a>
+    <h2>assert_reg_exp()</h2>
+    <p class="summary">Assert that a value matches a regular expression.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The regular expression.</li>
+                  <li><code></code> <em>mixed</em> The value to match against the regexp.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="assert_same"></a>
+    <h2>assert_same()</h2>
+    <p class="summary">Assert that two values are equal and of the same type.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The expected value.</li>
+                  <li><code></code> <em>mixed</em> The value to test.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+          <pre><code>@todo is this needed, since bash is untyped?</code></pre>
+        <hr/>
+      <a name="assert_true"></a>
+    <h2>assert_true()</h2>
+    <p class="summary">Assert that a value equals &quot;true&quot; or &quot;TRUE&quot;.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>mixed</em> The value to test.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> if assertion is true.</li>
+                  <li><code>1</code> if assertion fails.</li>
+              </ul>
+        
+        <hr/>
+      <a name="create_test_sandbox"></a>
+    <h2>create_test_sandbox()</h2>
+    <p class="summary">Create a sandbox for testing.</p>
+    
+                        
+          <pre><code>Some global variables need to be stashed during testing, such as those
+to do with the exit system.
 
-# In this example `lorem_echo_color` is not being called from inside a parent function.
-! color=$(lorem_echo_color) &amp;&amp; fail_because "$color" &amp;&amp; exit_with_failure
-</code></pre>
-<h3>Assigning Default Values Instead of Failing</h3>
-<pre><code class="bash"># Use this pattern for an empty or default value
-color=$(lorem_echo_color) || color=''
-color=$(lorem_echo_color) || color='some default'
-</code></pre>
-<p>Points to take note of:</p>
-<ul>
-<li>Do not put <code>fail_because</code> inside of functions that echo their results. The message will get lost due due to the subshell aspect.</li>
-<li>Instead echo the message to be passed into <code>fail_because</code> by the caller.</li>
-<li>In parent functions, do not use <code>local</code> on the same line as the <code>color=</code> assignment or this will cause the <code>return 1</code> to be lost.</li>
-<li>Sometimes you will want a default value rather than to process a failure, use the second example in that case.</li>
-</ul>
+@see delete_test_sandbox
+
+Returns nothing.</code></pre>
+        <hr/>
+      <a name="delete_test_sandbox"></a>
+    <h2>delete_test_sandbox()</h2>
+    <p class="summary">Remove the sandboxed variables.</p>
+    
+                        
+          <pre><code>@see create_test_sandbox
+
+Returns nothing.</code></pre>
+        <hr/>
+      <a name="do_tests_in"></a>
+    <h2>do_tests_in()</h2>
+    <p class="summary">Perform all tests in a file.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The path to a test file.</li>
+              </ul>
+              Options:
+      <ul class="function-list__options">
+                  <li><code>--continue</code> Use this for subsequent calls to this function where you</li>
+              </ul>
+                
+          <pre><code>want the results to be added together; that is to say, use this so as NOT to
+reset the test count, failure count, etc.
+
+Returns 0 if all tests pass; 1 otherwise.</code></pre>
+        <hr/>
+      <a name="exit_with_test_results"></a>
+    <h2>exit_with_test_results()</h2>
+    <p class="summary">Echo test results and exit.</p>
+    
+                        
+          <pre><code>Returns 0 if all tests pass; 1 otherwise.</code></pre>
+        <hr/>
+      <a name="is_being_tested"></a>
+    <h2>is_being_tested()</h2>
+    <p class="summary">Determine if code is being run from inside a test.</p>
+    
+                        
+          <pre><code>Returns 0 if inside test; 1 if not.</code></pre>
+        <hr/>
+      <a name="mark_test_skipped"></a>
+    <h2>mark_test_skipped()</h2>
+    <p class="summary">Mark a single test as skipped</p>
+    
+                        
+          <pre><code>Returns nothing.</code></pre>
+        <hr/>
+      <a name="test_fail_because"></a>
+    <h2>test_fail_because()</h2>
+    <p class="summary">#actual} -eq 0 ] &amp;&amp; actual=&#039;&quot;&quot;&#039;</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The reason for the failure.</li>
+                  <li><code></code> <em>string</em> A default value if $1 is empty.</li>
+              </ul>
+                    
+          <pre><code> -gt 2 ]] &amp;&amp; expected=&quot;$(echo_green &quot;$3&quot;)&quot;
+ -gt 2 ]] &amp;&amp; because=&quot;$because expected $expected&quot;
+ Add a failure message to be shown on exit.
+
+
+ @code
+   test_fail_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;
+ @endcode
+
+ Returns 1 if both $message and $default are empty.</code></pre>
+        <hr/>
+  </div>
     </article>
   </div>
 </main>
@@ -115,11 +444,11 @@ color=$(lorem_echo_color) || color='some default'
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="functions.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> Functions</a>
+              <a href="readme.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Cloudy</a>
   
     
-              <a href="../bash/strings.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="api_functions.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -130,8 +459,8 @@ color=$(lorem_echo_color) || color='some default'
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="menus_input.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> User Input and Menus <i class="bi
+              <a href="../bash/arrays.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Arrays <i class="bi
        bi-caret-right-fill"></i></a>
   
     
@@ -160,28 +489,28 @@ color=$(lorem_echo_color) || color='some default'
         <h2 class="h4 mt-4">Matched Pages</h2>
         <ol class="list-unstyled">
                                               <li data-page="readme" value="1">
-      <a class="js-page-link" href="../about/readme.html">Cloudy<span
+      <a class="js-page-link" href="readme.html">Cloudy<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="changelog" value="2">
-      <a class="js-page-link" href="../about/changelog.html">Cloudy Changelog<span
+      <a class="js-page-link" href="changelog.html">Cloudy Changelog<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="api_functions" value="3">
-      <a class="js-page-link" href="../about/api_functions.html">Cloudy API: Functions<span
+      <a class="js-page-link" href="api_functions.html">Cloudy API: Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="test_functions" value="4">
-      <a class="js-page-link" href="../about/test_functions.html">Cloudy API: Test Functions<span
+      <a class="js-page-link" href="test_functions.html">Cloudy API: Test Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -202,28 +531,28 @@ color=$(lorem_echo_color) || color='some default'
     </li>
   
                                                           <li data-page="functions" value="7">
-      <a class="js-page-link" href="functions.html">Functions<span
+      <a class="js-page-link" href="../examples/functions.html">Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="menus_input" value="8">
-      <a class="js-page-link" href="menus_input.html">User Input and Menus<span
+      <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="plugins" value="9">
-      <a class="js-page-link" href="plugins.html">Single File Plugins Pattern<span
+      <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="route_access" value="10">
-      <a class="js-page-link" href="route_access.html">Command Access<span
+      <a class="js-page-link" href="../examples/route_access.html">Command Access<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -418,19 +747,19 @@ color=$(lorem_echo_color) || color='some default'
               <h2 class="h4 mt-4">About</h2>
         <ol>
                                 <li data-page="readme" value="1">
-      <a class="js-page-link" href="../about/readme.html">Cloudy</a>
+      <a class="js-page-link" href="readme.html">Cloudy</a>
     </li>
   
                                 <li data-page="changelog" value="2">
-      <a class="js-page-link" href="../about/changelog.html">Cloudy Changelog</a>
+      <a class="js-page-link" href="changelog.html">Cloudy Changelog</a>
     </li>
   
                                 <li data-page="api_functions" value="3">
-      <a class="js-page-link" href="../about/api_functions.html">Cloudy API: Functions</a>
+      <a class="js-page-link" href="api_functions.html">Cloudy API: Functions</a>
     </li>
   
                                 <li data-page="test_functions" value="4">
-      <a class="js-page-link" href="../about/test_functions.html">Cloudy API: Test Functions</a>
+      <a class="js-page-link" href="test_functions.html">Cloudy API: Test Functions</a>
     </li>
   
                   </ol>
@@ -448,19 +777,19 @@ color=$(lorem_echo_color) || color='some default'
               <h2 class="h4 mt-4">Code Examples</h2>
         <ol>
                                 <li data-page="functions" value="7">
-      <a class="js-page-link" href="functions.html">Functions</a>
+      <a class="js-page-link" href="../examples/functions.html">Functions</a>
     </li>
   
                                 <li data-page="menus_input" value="8">
-      <a class="js-page-link" href="menus_input.html">User Input and Menus</a>
+      <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus</a>
     </li>
   
                                 <li data-page="plugins" value="9">
-      <a class="js-page-link" href="plugins.html">Single File Plugins Pattern</a>
+      <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern</a>
     </li>
   
                                 <li data-page="route_access" value="10">
-      <a class="js-page-link" href="route_access.html">Command Access</a>
+      <a class="js-page-link" href="../examples/route_access.html">Command Access</a>
     </li>
   
                   </ol>
@@ -603,25 +932,25 @@ color=$(lorem_echo_color) || color='some default'
                 
         <ul class="list-group list-group-flush">
                                     <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;ABOUT&quot;]" href="../about/readme.html">Cloudy</a>
+                 data-tags="[&quot;ABOUT&quot;]" href="readme.html">Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;ABOUT&quot;]" href="../about/changelog.html">Cloudy Changelog</a>
+                 data-tags="[&quot;ABOUT&quot;]" href="changelog.html">Cloudy Changelog</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../about/api_functions.html">Cloudy API: Functions</a>
+                 data-tags="[]" href="api_functions.html">Cloudy API: Functions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../about/test_functions.html">Cloudy API: Test Functions</a>
+                 data-tags="[]" href="test_functions.html">Cloudy API: Test Functions</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;BASH&quot;]" href="../bash/arrays.html">Arrays</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;BASH&quot;]" href="../bash/strings.html">String Manipulation</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="functions.html">Functions</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/functions.html">Functions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="menus_input.html">User Input and Menus</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/menus_input.html">User Input and Menus</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="plugins.html">Single File Plugins Pattern</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/plugins.html">Single File Plugins Pattern</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="route_access.html">Command Access</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/route_access.html">Command Access</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/app_root.html">Application Root</a>
                                                 <a class="list-group-item list-group-item-action"
