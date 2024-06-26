@@ -17,9 +17,6 @@
     "autoload-dev": {
         "psr-4": {
             "AKlump\\Cloudy\\Tests\\Unit\\": "./tests_unit"
-        },
-        "files": [
-            "./php/cloudy.functions.php"
-        ]
+        }
     }
 }
