@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="../../dist/style.css">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="../../dist/style.css">
-    <title>Cloudy | Cloudy BASH Framework</title>
+    <title>PHP Unit Tests | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -32,12 +32,8 @@
 </nav>
 
       </div>
-      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
-          type="button" class="badge
-        rounded-pill
-        bg-primary">ABOUT</span>
-  </div>
-      <div class="header__page-numbers flex-shrink-1">1
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">3
         / 37</div>
     </div>
   </div>
@@ -46,77 +42,12 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Cloudy</h1>
-      <p><img class="img-fluid" src="../../images/screenshot.jpg" alt="cloudy" /></p>
-<h2>Summary</h2>
-<p>A BASH framework, which uses YAML or JSON for your script's configuration and provides a unit testing framework.</p>
-<p>Cloudy Boosts the following features:</p>
-<ul>
-<li>Clean configuration options (YAML, JSON) for your scripts</li>
-<li>A BASH Unit Testing framework inspired by <a href="https://phpunit.de">PHPUnit</a></li>
-<li>Auto-generated help output</li>
-<li>Support for multilingual localization</li>
-</ul>
-<p><strong>Visit <a href="https://aklump.github.io/cloudy">https://aklump.github.io/cloudy</a> for full documentation.</strong></p>
-<h2>Quick Start</h2>
-<p>After installing Cloudy, to write a new script called <em>thunder.sh</em> ...</p>
-<ol>
-<li><code>cd</code> to the directory where you want the script to be created.</li>
-<li>Type <code>cloudy new thunder.sh</code> and the necessary files/directories will be created in the current directory.</li>
-<li>Open <em>thunder.sh</em>, enable logging, and write your code.</li>
-<li>Open <em>thunder.yml</em> and add some configuration.</li>
-<li>To learn about the options to use with <code>new</code> type <code>cloudy help new</code>.</li>
-<li>Refer to <a href="https://aklump.github.io/cloudy/README.html">the documentation</a> for to learn more.</li>
-</ol>
-<h3>Using JSON</h3>
-<ol>
-<li>To work with JSON configuration instead type <code>cloudy new thunder.sh --json</code>.</li>
-</ol>
-<h3>Source Control</h3>
-<ol>
-<li>You may omit the cloudy framework from your repository with something like the following, then use <code>cloudy install</code> to put the files in place when necessary.</li>
-</ol>
-<pre><code class="gitignore">cloudy/**
-!cloudy/version.sh
-</code></pre>
-<h2>Requirements</h2>
-<ul>
-<li>Works with BASH 3</li>
-<li>PHP (Used invisibly on the backend for configuration processing; no PHP knowledge is required to use Cloudy.)</li>
-</ul>
-<h2>Contributing</h2>
-<p>If you find this project useful... please consider <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=4E5KZHDQCEUV8&amp;item_name=Gratitude%20for%20aklump%2Fcloudy">making a donation</a>.</p>
-<h2>Installation</h2>
-<p>Installation means downloading this repository to your system. It contains _cloudy<em>tools.sh</em> which is used to generate new scripts, as well as the cloudy framework. It is a Cloudy script.</p>
-<p>Here is a snippet to clone this repo to a directory on your system <em>$HOME/opt/cloudy</em> and create a symlink in <em>$HOME/bin/cloudy</em>. This assumes <em>~/bin</em> is in your <code>$PATH</code> variable.</p>
-<pre><code>(cd $HOME &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; (test -d cloudy || git clone https://github.com/aklump/cloudy.git) &amp;&amp; (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) &amp;&amp; cloudy
-</code></pre>
-<p>On success you should see something resembling the following:</p>
-<p><img class="img-fluid" src="../../images/installed.jpg" alt="Successful installation" /></p>
-<h2>Usage</h2>
-<p>Beyond the <a href="https://www.tldp.org/LDP/abs/html/internalvariables.html#BASHSUBSHELLREF">internal variables</a> the following variables are made available by Cloudy.</p>
-<table class="table">
-<thead>
-<tr><th>varname</th><th>description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>$CLOUDY_NAME</code></td><td>Machine name of your script.</td></tr>
-<tr><td><code>$ROOT</code></td><td>The directory containing your script.</td></tr>
-<tr><td><code>$APP_ROOT</code></td><td>All relative configuration files use this as base.  <a href="../usage/app_root.html">Learn more</a></td></tr>
-<tr><td><code>$SCRIPT</code></td><td>Absolute path to your script.</td></tr>
-<tr><td><code>$CONFIG</code></td><td>Absolute path to the base config file.</td></tr>
-<tr><td><code>$WDIR</code></td><td>The working directory when script was initiated.</td></tr>
-<tr><td><code>$LOGFILE</code></td><td>Absolute path to a log file, if enabled.</td></tr>
-</tbody>
-</table>
-<ul>
-<li>Determine your version of BASH with <code>echo $BASH_VERSION</code></li>
-</ul>
-<h2>Learn More</h2>
-<ul>
-<li>Learn more about BASH with the <a href="https://www.tldp.org/LDP/abs/html/">Advanced Bash-Scripting Guide</a>.</li>
-<li>Checkout <a href="https://guide.bash.academy/">The Bash Guide</a> by Maarten Billemont.</li>
-</ul>
+      <h1 class="mb-4 text-primary">PHP Unit Tests</h1>
+      <h1><code>`</code>shell</h1>
+<p>cd framework/cloudy
+composer install
+bin/run_unit_tests.sh
+<code>`</code></p>
     </article>
   </div>
 </main>
@@ -138,8 +69,9 @@
       bi-caret-left-fill"></i> Cloudy</a>
   
     
-              <span class="btn nav__prev-page js-nav__prev-page
-    btn-primary"></span>
+              <a href="changelog.html" class="btn nav__prev-page js-nav__prev-page
+    btn-primary"><i class="bi
+      bi-caret-left-fill"></i></a>
   
     
     <a class="nav__toc btn btn-light" href="#"
@@ -148,8 +80,8 @@
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="changelog.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> Cloudy Changelog <i class="bi
+              <a href="api_functions.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Cloudy API: Functions <i class="bi
        bi-caret-right-fill"></i></a>
   
     
