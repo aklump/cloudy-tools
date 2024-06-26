@@ -3,6 +3,7 @@ page_order:
   about:
     - readme
     - changelog
+    - cloudy_core_testing
   bash:
     - arrays
     - strings
