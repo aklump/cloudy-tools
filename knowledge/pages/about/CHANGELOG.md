@@ -7,6 +7,12 @@ tags: about
 
 ## [Unreleased]
 
+## [1.7.9] - 2024-06-25
+
+### Fixed
+
+- Bug introduced in 1.7.8 with {APP_ROOT} tokens.
+
 ## [1.7.7] - 2024-05-10
 
 ### Changed

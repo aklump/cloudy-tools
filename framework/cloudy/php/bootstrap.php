@@ -25,47 +25,10 @@ if (empty($composer_vendor)) {
 }
 
 require_once __DIR__ . '/error_handler.php';
+require_once __DIR__ . '/cloudy.functions.php';
 
 /** @var \Composer\Autoload\ClassLoader $class_loader */
 $class_loader = require_once $composer_vendor . '/autoload.php';
-
-/**
- * Expand a path based on $config_path_base.
- *
- * This function can handle:
- * - paths that begin with ~/
- * - paths that contain the glob character '*'
- * - absolute paths
- * - relative paths to `config_path_base`
- *
- * @param string $path
- *   The path to expand.
- *
- * @return array
- *   The expanded paths.  This will have multiple items when using globbing.
- */
-function _cloudy_realpath($path) {
-  global $_config_path_base;
-
-  if (!empty($_SERVER['HOME'])) {
-    $path = preg_replace('/^~\//', rtrim($_SERVER['HOME'], '/') . '/', $path);
-  }
-  if (!empty($path) && substr($path, 0, 1) !== '/') {
-    $path = ROOT . '/' . "$_config_path_base/$path";
-    $path = APP_ROOT . '/' . "$_config_path_base/$path";
-  }
-  if (strstr($path, '*')) {
-    $paths = glob($path);
-  }
-  else {
-    $paths = [$path];
-  }
-  $paths = array_map(function ($item) {
-    return is_file($item) ? realpath($item) : $item;
-  }, $paths);
-
-  return $paths;
-}
 
 /**
  * Create a log entry if logging is enabled.
