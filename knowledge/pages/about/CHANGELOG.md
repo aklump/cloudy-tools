@@ -7,6 +7,12 @@ tags: about
 
 ## [Unreleased]
 
+## [1.7.11] - 2024-06-29
+
+### Changed
+
+- Allow $APP_ROOT to be set with an absolute path.
+
 ## [1.7.9] - 2024-06-25
 
 ### Fixed
