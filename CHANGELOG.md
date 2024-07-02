@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.8.0] - 2024-07-02
+
+### Fixed
+
+- Merge of cloudy package gitignore into cloudy pm .gitignore on install of package. 
+
+### Removed
+
+- The token `${config_path_base}` has been replaced by `{APP_ROOT}` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `{APP_ROOT}` in all cloudy pm packages.
+
 ## [1.7.11] - 2024-06-29
 
 ### Changed

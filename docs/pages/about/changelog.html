@@ -48,6 +48,15 @@
     <article class="col">
       <h1 class="mb-4 text-primary">Cloudy Changelog</h1>
       <h2>[Unreleased]</h2>
+<h2>[1.8.0] - 2024-07-02</h2>
+<h3>Fixed</h3>
+<ul>
+<li>Merge of cloudy package gitignore into cloudy pm .gitignore on install of package. </li>
+</ul>
+<h3>Removed</h3>
+<ul>
+<li>The token <code>${config_path_base}</code> has been replaced by <code>{APP_ROOT}</code> for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with <code>{APP_ROOT}</code> in all cloudy pm packages.</li>
+</ul>
 <h2>[1.7.11] - 2024-06-29</h2>
 <h3>Changed</h3>
 <ul>
@@ -190,9 +199,9 @@ additional_config:
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>1.7.12</strong>
+        <strong>1.8.0</strong>
         &bull;
-            Last Update: <strong>6/29/2024</strong>
+            Last Update: <strong>7/2/2024</strong>
     </div>
   </footer>
 
