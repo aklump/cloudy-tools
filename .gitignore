@@ -2,3 +2,4 @@
 /.web_package/tmp/
 /framework/cloudy/vendor/
 /framework/cloudy/composer.lock
+/cloudy_tools.log

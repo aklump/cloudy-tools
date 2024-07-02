@@ -40,6 +40,11 @@ function _cloudypm_install_package() {
   fi
   echo_green "$LI Downloaded package version $cloudypm___version." || return 1
 
+  # Create this file early, as core looks for this file when trying to determine
+  # certain paths, which may be necessary as the package installs itself. @see
+  # _cloudy_detect_installation_type
+  touch "$lockfile"
+
   # Manage the bin/symlink.
   ! [ -d "$bin" ] && mkdir "$bin" && echo_green "$LI Created directory \"$(basename bin)\"."
 

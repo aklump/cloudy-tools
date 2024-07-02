@@ -94,7 +94,7 @@ function _cloudy_detect_composer_vendor_by_installation() {
       vendor="$base/../../../vendor"
       ;;
     "$CLOUDY_INSTALL_TYPE_CORE")
-      # First assume the app has a vendor directory, which cloudy is going to leverage...
+      # Does the app have a vendor directory, which cloudy should leverage?
       vendor="$base/vendor"
       # ... if not then use the one inside cloudy core.
       [ ! -d "$vendor" ] && vendor="$base/cloudy/vendor"

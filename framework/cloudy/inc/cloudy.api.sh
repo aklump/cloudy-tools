@@ -1216,22 +1216,15 @@ function handle_init() {
     # support will not be supported.
     [[ "$APP_ROOT" ]] && token_support=true || token_support=false
 
-    # The token "${config_path_base}" should be used in the files map, so it's
-    # required that the configured value is available to proceed with this
-    # process.
-    if [[ $token_support == true ]]; then
-      eval $(get_config_as config_path_base config_path_base)
-      if [[ ! "$config_path_base" ]]; then
-        fail_because "config_path_base cannot be empty, did you mean '.'?"
-        write_log_notice "config_path_base cannot be empty, did you mean '.' ?"
-        write_log_debug "Make sure $CONFIG contains a value for config_path_base."
-      fi
+    # @see changelog for version 2.0.0
+    grep \${config_path_base} "$path_to_files_map" > /dev/null
+    if [[ $? -eq 0 ]]; then
+      fail_because "The token \"{APP_ROOT}\" must be used; \"\${config_path_base}\" is no longer suppored; in $path_to_files_map"
     fi
 
     token_match='\{.+\}'
     while read -r from to || [[ -n "$line" ]]; do
       if [[ "$token_support" == true ]]; then
-        to="${to/\{config_path_base\}/$config_path_base}"
         to="${to/\{APP_ROOT\}/$APP_ROOT}"
       fi
       if [[ "$from" == "*" ]]; then
@@ -1260,7 +1253,8 @@ function handle_init() {
             source_path="$init_source_dir/$basename"
             destination_path=$(path_relative_to_root "$init_config_dir/$basename")
             if [[ "$basename" == 'gitignore' ]]; then
-              $destination_path = "$(realpath "$ROOT/../../../opt/.gitignore")"
+              # Merge into the cloudy PM git ignore.
+              destination_path="$(realpath "$ROOT/../../../opt/.gitignore")"
             fi
 
             local i=0
@@ -1307,7 +1301,7 @@ function handle_init() {
 # Performs an initialization (setup default config, etc.) and exits.
 #
 # You must set up an init command in your core config file.
-# Then call this function from inside `on_pre_config`, e.g.
+# Then call this function from inside `on_boot`, e.g.
 # [[ "$(get_command)" == "init" ]] && exit_with_init
 # The translation service is not yet bootstrapped in on_pre_config, so if you
 # want to alter the strings printed you can do something like this:

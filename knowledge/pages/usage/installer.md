@@ -51,14 +51,8 @@ In most cases you should consider using tokens like shown below. If you find you
 config.gitignore {APP_ROOT}/.live_dev_porter/.gitignore
 ```
 
-```text
-* {config_path_base}/.live_dev_porter/*
-config.gitignore {config_path_base}/.live_dev_porter/.gitignore
-```
-
 #### Supported Tokens
 
-1. `{config_path_base}`
 1. `{APP_ROOT}`
 
 ## Special Filenames
