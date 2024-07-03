@@ -137,6 +137,10 @@ installation_info_filepath="$WDIR/cloudy/version.sh"
 command=$(get_command)
 case $command in
 
+"version")
+  exit_with_success "Cloudy version $(get_version)"
+  ;;
+
 "pm-show")
   # TODO Upscan to find .lock
   # TODO Add descriptions

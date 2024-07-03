@@ -43,8 +43,10 @@ commands:
         type: boolean
         aliases:
           - 'y'
+  version:
+    help: Display the local Cloudy version, which is also used for pm-update.
   core:
-    help: 'Install cloudy core only, in the current directory.  This is similar to "new" but it doesn''t create the script and configuration files.'
+    help: 'Install cloudy core only, in the current directory.  This is similar to "new" but it does not create the script and configuration files.'
   help:
     help: 'Show this help screen.'
     options:
@@ -61,7 +63,7 @@ commands:
   install:
     help: 'Install existing ./cloudy/ based on ./cloudy/version.sh'
   update:
-    help: 'Update ./cloudy/ to the latest version.  The latest version from your local cloudy_tools.sh, not pulled from the internet.'
+    help: 'Update ./cloudy/ to the latest version.  The latest version as shown by `cloudy version`, which comes from your local installation.'
     options:
       'yes':
         help: 'Answer yes to all confirmation questions.'

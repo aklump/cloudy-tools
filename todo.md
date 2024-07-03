@@ -1,3 +1,4 @@
 - Look into why I have to manually edit opt/aklump/htaccess/htaccess.sh by setting `COMPOSER_VENDOR="../../cloudy/cloudy/vendor"`, and why it doesn't happen automatically.  It should be automatic.
 - consider removing version from framework/cloudy/composer.json to align with best practices.
 - To avoid collision we should rename LOGFILE TO CLOUDY_LOG.
+- when cloudy pmi fails, it needs to remove the files that were partially installed, otherwise a repeat requires the user to manually do that.
