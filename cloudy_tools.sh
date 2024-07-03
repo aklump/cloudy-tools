@@ -32,18 +32,46 @@ function on_compile_config() {
   echo "$ROOT/cloudy_tools.runtime.yml"
 }
 
-# Rsync the framework into the cwd
-#
-# Returns 0 if .
+##
+ # Rsync the Cloudy core to a given directory.
+ #
+ # @global string $framework
+ # @param string Path to the core to use as source files.  If empty then
+ # $framework is used.
+ #
+ # @return 0 If the sync appeared successful.
+ # @return 1 If something went wrong
+ ##
 function rsync_framework() {
-  local source_dir="${1}"
+  local core_dir="$1"
 
-  if [ "" == "$source_dir" ]; then
-    source_dir="$framework"
+  local destination_dir='./cloudy/'
+
+  if [ "" == "$core_dir" ]; then
+    core_dir="$framework"
   fi
-  [[ "$source_dir" ]] || return 1
-  [ -d "$source_dir/cloudy" ] || return 1
-  rsync -a "$source_dir/cloudy/" ./cloudy --exclude=*.log --exclude=cache/ --exclude=composer.lock --exclude=vendor
+  [[ "$core_dir" ]] || return 1
+  [ -d "$core_dir" ] || return 1
+  [ -d "$core_dir/cloudy/" ] || return 1
+  rsync -av "$core_dir/cloudy/" "$destination_dir" --exclude=*.log --exclude=cache/ --exclude=composer.lock --exclude=.DS_Store --exclude=vendor
+}
+
+##
+ # Handle the installation of composer dependencies in the provided directory.
+ #
+ # @param string Path to Cloudy core.
+ #
+ # @return 0 If all is well
+ # @return 1 If directory is not Cloudy core.
+ # @return 2 If composer.json is missing from the provided directory.
+ ##
+function framework_handle_composer() {
+  local path_to_core="$1"
+
+  [ ! -f "$path_to_core/cloudy.sh" ] && fail_because "Dir is not Cloudy core: $1" && return 1
+  [ ! -f "$path_to_core/composer.json" ] && fail_because "Missing file: $1/composer.json" && return 2
+
+  (cd "$path_to_core" && composer install)
 }
 
 # Echo the source path for a specific framework version.
@@ -168,32 +196,39 @@ case $command in
   validate_cloudy_instance_or_exit_with_failure 'install'
   [ -f "$installation_info_filepath" ] || exit_with_failure "Cannot determine installed version; missing file $installation_info_filepath."
   source $installation_info_filepath
+
   source_dir="$(echo_path_to_framework_version "$cloudy_update__version")"
   ! [[ "$source_dir" ]] && fail_because "Can't find version $cloudy_update__version" && exit_with_failure "Failed to install Cloudy"
   rsync_framework "$source_dir" || exit_with_failure
+  framework_handle_composer "$PWD/cloudy" || exit_with_failure
   exit_with_success_elapsed "Cloudy version $cloudy_update__version files are installed."
   ;;
 
 "update")
   echo_title "Cloudy Framework Updater"
-
-  available_version=$(get_version)
-
-  # Check for cloudy folder.
   validate_cloudy_instance_or_exit_with_failure 'update'
   [ -f "$installation_info_filepath" ] || exit_with_failure "Cannot determine installed version; missing file $installation_info_filepath."
   source $installation_info_filepath
+
+  # TODO Consider using the latest published version from github instead of local?
+  available_version=$(get_version)
 
   # Check current version of instance.
   echo_key_value "Cloudy Directory" "$WDIR/cloudy"
   echo_key_value "Installed Version" "$cloudy_update__version"
   echo_key_value "Available System Version" "$available_version"
 
-  # Check installed version.
-  ! has_option "f" && [[ "$cloudy_update__version" == "$available_version" ]] && exit_with_success "You're already up-to-date."
+  has_latest_version=false
+  [[ "$cloudy_update__version" == "$available_version" ]] && has_latest_version=true
+  has_latest_version=false
 
-  echo
-  [[ "$cloudy_update__version" != "$available_version" ]] && echo_yellow "Your version $cloudy_update__version is out-of-date." && echo
+  [[ false == "$has_latest_version" ]] && echo && echo_yellow "Your version $cloudy_update__version is out-of-date."
+
+  if ! has_option "f" && [[ true == "$has_latest_version" ]]; then
+    echo_heading "Composer"
+    framework_handle_composer "$PWD/cloudy" >/dev/null || exit_with_failure
+    exit_with_success "You're already up-to-date."
+  fi
 
   has_option "dry_run" && exit_with_success "This was a dry run; nothing was changed."
 
@@ -201,6 +236,8 @@ case $command in
   ! has_option 'y' && ! confirm --caution "Do you want to update now?" && exit_with_failure "Update cancelled"
 
   rsync_framework || exit_with_failure "An error occurred while updating this Cloudy framework."
+  echo_heading "Composer"
+  framework_handle_composer "$PWD/cloudy" || exit_with_failure
   write_version_file
 
   ! has_failed && exit_with_success "Framework has been updated"
@@ -209,6 +246,7 @@ case $command in
 "core")
   [ -e ./cloudy ] && exit_with_success "Cloudy is already installed.  Did you mean \"update\"?"
   rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
+  framework_handle_composer "$PWD/cloudy" || exit_with_failure
   if ! has_failed; then
     write_version_file
   fi
@@ -233,6 +271,7 @@ case $command in
 
   if ! has_failed; then
     rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
+    framework_handle_composer "$PWD/cloudy" || exit_with_failure
     cp $framework/script.sh ./
     cp $framework/script.yml ./
 

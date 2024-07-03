@@ -11,12 +11,15 @@ function _cloudypm_install_package() {
 
   ! [[ "$package" ]] && fail_because "Missing package name, e.g. \"aklump/perms\"." && return 1
 
-  # Install or update cloudy/cloudy.
   echo_heading "Checking environment..."
-  if [ ! -d "$cloudy_destination_dir" ]; then
-    (mkdir -p "$(dirname $cloudy_destination_dir)" && cd "$(dirname $cloudy_destination_dir)" && cloudy core >/dev/null)
-    echo_green "$LI Installed Cloudy $(cd $cloudy_destination_dir && cloudy --version)."
+  [ -d "$cloudy_destination_dir" ] && has_core=true || has_core=false
+
+  if [[ false == "$has_core" ]]; then
+    echo_heading "... cloudy/cloudy not found; installing..."
+    ! _cloudypm_install_cloudy && fail_because "Failed to install cloudy/cloudy." && return 1
+    echo_green "$LI Installed Cloudy $(cd "$cloudy_destination_dir" && cloudy --version)."
   else
+    echo_heading "... cloudy/cloudy found; updating to latest..."
     ! _cloudypm_update_cloudy && fail_because "Failed to update cloudy/cloudy." && return 1
     echo_green "$LI Updated Cloudy to $(cd $cloudy_destination_dir && cloudy --version)."
   fi
@@ -123,6 +126,20 @@ function _cloudypm_load_and_validate_package() {
   return 0
 }
 
+# Installation of Cloudy by cloudypm
+#
+# Returns 0 if successful. 1 if not.
+function _cloudypm_install_cloudy() {
+  local path_to_dir="$WDIR/opt/cloudy/"
+  mkdir -p "$path_to_dir"
+
+  # TODO Leverage "cloudy core"
+  !(cd "$path_to_dir" && rsync_framework) && fail_because "Could not copy Cloudy core to $WDIR." && return 1
+
+  # TODO Move this to cloudy core?
+  framework_handle_composer "$path_to_dir/cloudy" || return 2
+}
+
 # Update cloudy as installed by cloudypm.
 #
 # Returns 0 if successful. 1 if not.
@@ -131,6 +148,10 @@ function _cloudypm_update_cloudy() {
   ! [[ -d "$path_to_dir" ]] && fail_because "Missing Cloudy package, which is expected to be installed in $path_to_dir." && return 1
   result=$(cd $path_to_dir && cloudy update -fy)
   [[ $? -ne 0 ]] && write_log_error "$result" && return 1
+
+# TODO Move this to cloudy update?
+  framework_handle_composer "$path_to_dir/cloudy" || return 2
+
   succeed_because "cloudy/cloudy is at version $(cd $path_to_dir && cloudy --version)."
 
   return 0
