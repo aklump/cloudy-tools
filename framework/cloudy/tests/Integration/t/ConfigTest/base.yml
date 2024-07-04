@@ -1,0 +1,7 @@
+title: Foo
+additional_config:
+  - '{APP_ROOT}/config/additional.yml'
+default_command: foo
+commands:
+  foo:
+    help: Lorem ipsum dolar.
