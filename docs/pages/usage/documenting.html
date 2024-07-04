@@ -47,23 +47,30 @@
   <div class="row mb-5 pt-5">
     <article class="col">
       <h1 class="mb-4 text-primary">Documenting Code</h1>
-      <h2>CloudyDocumentation</h2>
-<p>@todo</p>
-<h2>TomDoc</h2>
-<p>Cloudy scripts should include function documentation per <a href="http://tomdoc.org">TomDoc</a> syntax.</p>
-<p>Documentation can be extracted using <a href="https://github.com/tests-always-included/tomdoc.sh">tomdoc.sh</a></p>
-<p>Here is an example docblock.</p>
-<pre><code># Prompt for a Y or N confirmation.
-#
-# $1 - The confirmation message
-# --caution - Use when answering Y requires caution.
-# --danger - Use when answering Y is a dangerous thing.
-#
-# Returns 0 if the user answers Y; 1 if not.
-function confirm() {
-    local message="$1"
-    ...
+      <p>Functions should adhere to the following docblock convention:</p>
+<pre><code class="shell">##
+ # The summary of the function goes here followed by two spaces.
+ #
+ # @global &lt;?type&gt; &lt;$name&gt; A description of the global used.
+ # @param &lt;?type&gt; A description of this param
+ # @option --foo
+ # @option --bar=&lt;value|value2|value3&gt;
+ #
+ # @echo The name of the foo.
+ # @return 0 If all is well
+ # @return 1 If can't do foo
+ # @return 2 If can't do bar
+ #
+ # Anything that follows will be called the description, it maay include more info and code snippets as necessary to document the function.
+ # @code
+ # @endcode
+ ##
+function firstFunc() {}
+
 </code></pre>
+<h2>Developers</h2>
+<p>To learn more start with <code>knowledge/src/CloudyDocumentation</code></p>
+<p>/Users/aklump/opt/cloudy/knowledge/src/CloudyDocumentation/README.md</p>
     </article>
   </div>
 </main>
@@ -71,9 +78,9 @@ function confirm() {
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>1.8.0</strong>
+        <strong>1.8.1</strong>
         &bull;
-            Last Update: <strong>7/2/2024</strong>
+            Last Update: <strong>7/4/2024</strong>
     </div>
   </footer>
 
