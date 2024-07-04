@@ -149,6 +149,7 @@ if [[ ! -f "$CACHED_CONFIG_FILEPATH" ]]; then
     fail_because "json_to_bash.php exited with code $json_result".
     fail_because "$(cat "$CACHED_CONFIG_FILEPATH"|tr -d '\n')"
     rm "$CACHED_CONFIG_FILEPATH"
+    fail_because "Check log for more information."
     exit_with_failure "Cannot cache config to: $CACHED_CONFIG_FILEPATH."
   else
     source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
@@ -177,7 +178,6 @@ source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached config
 #
 # End caching setup
 #
-
 eval $(get_config -a additional_bootstrap)
 if [[ "$additional_bootstrap" != null ]]; then
   for include in "${additional_bootstrap[@]}"; do

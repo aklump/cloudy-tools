@@ -2,7 +2,7 @@
 
 #
 # @file
-# Coudy installer script.
+# Cloudy installer script.
 #
 
 # Define the configuration file relative to this script.
@@ -14,7 +14,7 @@ CONFIG="cloudy_tools.yml"
 # directory relative to this script.  See documentation on installing Cloudy
 # using composer.  This is a step you will probably take if you are using Cloudy
 # inside of a PHP application that uses other Composer dependencies.
-COMPOSER_VENDOR=""
+#COMPOSER_VENDOR=""
 
 # Uncomment this line to enable file logging.
 #[[ ! "$LOGFILE" ]] && LOGFILE="cloudy_tools.log"
