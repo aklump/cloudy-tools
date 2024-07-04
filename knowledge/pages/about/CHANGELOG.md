@@ -7,11 +7,37 @@ tags: about
 
 ## [Unreleased]
 
+## [] - 2024-07-??
+
+### Added
+
+- lorem
+
+### Changed
+
+- Absolute paths can now be set on CONFIG; previously only relative paths worked.
+
+### Deprecated
+
+- lorem
+
+### Removed
+
+- lorem
+
+### Fixed
+
+- lorem
+
+### Security
+
+- lorem
+
 ## [1.8.0] - 2024-07-02
 
 ### Fixed
 
-- Merge of cloudy package gitignore into cloudy pm .gitignore on install of package. 
+- Merge of cloudy package gitignore into cloudy pm .gitignore on install of package.
 
 ### Removed
 

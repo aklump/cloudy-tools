@@ -5,7 +5,10 @@
 #
 
 # Expand some vars from our controlling script.
-export CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
+if ! path_is_absolute "$CONFIG"; then
+  CONFIG="$(cd $(dirname "$r/$CONFIG") && pwd)/$(basename $CONFIG)"
+fi
+export CONFIG
 
 if [[ "$LOGFILE" ]]; then
   LOGFILE="$(path_resolve "$r" "$LOGFILE")"
