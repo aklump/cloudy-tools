@@ -15,7 +15,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AKlump\\Cloudy\\Tests\\Unit\\": "./tests_unit"
+            "AKlump\\Cloudy\\Tests\\Unit\\": "./tests/Unit/"
         }
     }
 }

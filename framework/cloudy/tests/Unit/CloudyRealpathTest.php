@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 // Do not add this to the composer autoloader as it creates strange recursions.
 // Even when adding to autoload-dev.  Better to only put it here.
-require_once __DIR__ . '/../php/cloudy.functions.php';
+require_once __DIR__ . '/../../php/cloudy.functions.php';
 
 /**
  * @covers _cloudy_realpath()
