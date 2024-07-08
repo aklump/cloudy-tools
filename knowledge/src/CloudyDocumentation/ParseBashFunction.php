@@ -38,6 +38,10 @@ class ParseBashFunction {
           $function_doc->setDescription($token->value);
           break;
 
+        case BashFunctionInfoLexer::T_EXPORT:
+          $function_doc->addExport($token->value);
+          break;
+
         case BashFunctionInfoLexer::T_GLOBAL:
           $function_doc->addGlobal($token->value);
           break;

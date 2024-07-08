@@ -2,8 +2,7 @@
 #
 # @global array $array_csv__array
 #
-# @option --prose Use comma+space and then the word "all" as the final separator
-# as when writing English prose, e.g. "do, re and mi".
+# @option --prose Use comma+space and then the word "all" as the final separator as when writing English prose, e.g. "do, re and mi".
 # @option --quotes Wrap each item with double quotes.
 # @option --single-quotes Wrap each item with single quotes.
 #

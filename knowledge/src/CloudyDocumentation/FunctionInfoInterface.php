@@ -11,6 +11,10 @@ interface FunctionInfoInterface {
   public function getDescription(): string;
 
   /**
+   * @return \AKlump\Knowledge\User\CloudyDocumentation\ExportVariable[]
+   */
+  public function getExports(): array;
+  /**
    * @return \AKlump\Knowledge\User\CloudyDocumentation\FunctionGlobal[]
    */
   public function getGlobals(): array;

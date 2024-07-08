@@ -13,6 +13,8 @@ class FunctionInfo implements FunctionInfoInterface, \JsonSerializable {
 
   protected $description = '';
 
+  protected $exports = [];
+
   protected $globals = [];
 
   protected $parameters = [];
@@ -22,6 +24,14 @@ class FunctionInfo implements FunctionInfoInterface, \JsonSerializable {
   protected $echos = [];
 
   protected $returns = [];
+
+  public function addExport(ExportVariable $export): void {
+    $this->exports[] = $export;
+  }
+
+  public function getExports(): array {
+    return $this->exports;
+  }
 
   public function addGlobal(FunctionGlobal $global): void {
     $this->globals[] = $global;

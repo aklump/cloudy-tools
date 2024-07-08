@@ -10,8 +10,22 @@ use PHPUnit\Framework\TestCase;
  */
 final class ParseBashFunctionTest extends TestCase {
 
+  public function testExport() {
+    $bash_code = file_get_contents(__DIR__ . '/../testing_files/function.sh');
+    $info = (new ParseBashFunction())($bash_code);
+    $this->assertSame('$LOREM', $info->getExports()[0]->name);
+    $this->assertSame('string', $info->getExports()[0]->type);
+    $this->assertSame('will be set and exported.', $info->getExports()[0]->description);
+
+    $bash_code = file_get_contents(__DIR__ . '/../testing_files/function2.sh');
+    $info = (new ParseBashFunction())($bash_code);
+    $this->assertSame('$LOREM', $info->getExports()[0]->name);
+    $this->assertSame('string', $info->getExports()[0]->type);
+    $this->assertSame('will be set and exported.', $info->getExports()[0]->description);
+  }
+
   public function testGlobal() {
-    $bash_code = file_get_contents(__DIR__.'/../testing_files/array_csv.sh');
+    $bash_code = file_get_contents(__DIR__ . '/../testing_files/array_csv.sh');
     $info = (new ParseBashFunction())($bash_code);
     $this->assertSame('$array_csv__array', $info->getGlobals()[0]->name);
     $this->assertSame('array', $info->getGlobals()[0]->type);
@@ -44,6 +58,9 @@ final class ParseBashFunctionTest extends TestCase {
     $tests[] = [
       file_get_contents(__DIR__ . '/../testing_files/function.sh'),
     ];
+    $tests[] = [
+      file_get_contents(__DIR__ . '/../testing_files/function2.sh'),
+    ];
 
     return $tests;
   }
@@ -58,7 +75,7 @@ final class ParseBashFunctionTest extends TestCase {
     $this->assertSame('Set a JSON string to be later read by json_get_value().', $info->getSummary());
 
     // Assert the description
-    $this->assertSame("Call this once to put your json string into memory, then make unlimited calls\nto json_get_value as necessary.  You may check the return code to ensure JSON syntax\nis valid.  If your string contains single quotes, you will need to escape them.\n\n@code\n  json_set '{\"foo\":{\"bar\":\"baz et al\"}}'\n@endcode", $info->getDescription());
+    $this->assertSame("Call this once to put your json string into memory, then make unlimited calls to json_get_value as necessary.  You may check the return code to ensure JSON syntax is valid.  If your string contains single quotes, you will need to escape them.\n\n@code\n  json_set '{\"foo\":{\"bar\":\"baz et al\"}}'\n@endcode", $info->getDescription());
 
     // Assert the globals.
     $globals = $info->getGlobals();

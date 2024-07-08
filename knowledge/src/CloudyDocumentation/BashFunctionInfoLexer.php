@@ -23,11 +23,16 @@ class BashFunctionInfoLexer extends AbstractLexer {
 
   const T_RETURN = 8;
 
+  const T_EXPORT = 9;
+
   protected $hasSummary = FALSE;
 
   protected $description = '';
 
-  protected $indent = NULL;
+  /**
+   * @var bool
+   */
+  private $isCodeBlock;
 
   /**
    * @inheritDoc
@@ -76,15 +81,12 @@ class BashFunctionInfoLexer extends AbstractLexer {
       return 0;
     }
 
-    // Detect the indentation.
-    if (!isset($this->indent)) {
-      preg_match('#^\#\s+#', $value, $matches);
-      $this->indent = $matches[0] ?? '';
-    }
-
-    // Remove the indent.
-    if ($this->indent && strpos($value, $this->indent) === 0) {
-      $value = substr($value, strlen($this->indent));
+    // Remove the indentation.
+    $indent_regex = '#^\#{1,2}\s#';
+    $is_indented = preg_match($indent_regex, $value, $matches);
+    $indent = $matches[0];
+    if ($is_indented) {
+      $value = substr($value, strlen($indent));
     }
 
     if (!$this->hasSummary) {
@@ -94,10 +96,30 @@ class BashFunctionInfoLexer extends AbstractLexer {
       return self::T_SUMMARY;
     }
 
-    // Every other line will be concantenated into the description.
-    $value = ltrim($value, '#');
+    // Every other line will be concatenated into the description.
+    if (empty($value)) {
+      return 0;
+    }
+
+    if (preg_match('#@code#', $value)) {
+      $this->isCodeBlock = TRUE;
+      $this->description .= "\n\n";
+    }
+    elseif (preg_match('#@endcode#', $value)) {
+      $this->isCodeBlock = FALSE;
+    }
+
+    if (!$this->isCodeBlock) {
+      $value = rtrim($value, "\n");
+    }
+
+    //    $value = preg_replace('#^@(end)?code#', "\n$0", $value);
+    if ($this->description) {
+      $value = preg_replace('#^\w#', ' $0', $value);
+    }
     $this->description .= $value;
-    $value = trim($this->description, "\n");
+    $value = $this->description;
+    $value = ltrim($value, "\n");
 
     return self::T_DESCRIPTION;
   }
@@ -107,7 +129,6 @@ class BashFunctionInfoLexer extends AbstractLexer {
    */
   public function reset() {
     $this->description = '';
-    $this->indent = NULL;
     $this->hasSummary = FALSE;
     parent::reset();
   }
@@ -117,6 +138,7 @@ class BashFunctionInfoLexer extends AbstractLexer {
 
     $type = NULL;
     if (in_array($flag, [
+      DocBlockTags::EXPORT,
       DocBlockTags::GLOBAL,
       DocBlockTags::PARAM,
       DocBlockTags::OPTION,
@@ -129,6 +151,16 @@ class BashFunctionInfoLexer extends AbstractLexer {
     }
 
     switch ($flag) {
+      case DocBlockTags::EXPORT:
+        $name = '';
+        if (preg_match('#(\$\S+)(?:\s+([^\n]*))?#', $line, $matches)) {
+          $name = $matches[1] ?? '';
+          $line = $matches[2] ?? '';
+        }
+        $value = new ExportVariable($name, $line, $type);
+
+        return self::T_EXPORT;
+
       case DocBlockTags::GLOBAL:
         $name = '';
         if (preg_match('#(\$\S+)(?:\s+([^\n]*))?#', $line, $matches)) {

@@ -3,6 +3,7 @@
 ##
  # The summary of the function goes here followed by two spaces.
  #
+ # @export <?type> <$name> A description of an exported variable.
  # @global <?type> <$name> A description of the global used.
  # @param <?type> A description of this param
  # @option --foo

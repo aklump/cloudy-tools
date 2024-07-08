@@ -7,6 +7,8 @@ namespace AKlump\Knowledge\User\CloudyDocumentation;
  */
 class DocBlockTags {
 
+  const EXPORT = '@export';
+
   const GLOBAL = '@global';
 
   const PARAM = '@param';

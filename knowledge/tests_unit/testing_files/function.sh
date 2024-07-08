@@ -2,6 +2,7 @@
 
 # Set a JSON string to be later read by json_get_value().
 #
+# @export string $LOREM will be set and exported.
 # @global string $json_content will by set with the mutated JSON.
 # @param string A JSON string, wrapped by single quotes.
 # @param number The level of cleaning to use.
