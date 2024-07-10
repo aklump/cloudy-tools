@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+##
+ # @file Unpublished, private functions
+ #
+ # Developers should not rely on the functions in this file as they may change
+ # at any time.
+ ##
+
 # TODO rename this as appropriate or find a similar function and merge them.
 function _resolve_file() {
   local path="$1"
@@ -31,7 +38,7 @@ function _cloudy_detect_installation_type() {
   local base
   local check_composer
   local check_cloudy
-  base=$(dirname $SCRIPT)
+  base=$(dirname $CLOUDY_PACKAGE_CONTROLLER)
 
   check_composer="$(_resolve_file "$base/../../../composer.json")"
   [ -f "$(_resolve_file "$check_composer")" ] && echo $CLOUDY_INSTALL_TYPE_COMPOSER && return 0
@@ -51,6 +58,25 @@ function _cloudy_detect_installation_type() {
   return 1
 }
 
+function _cloudy_detect_basepath() {
+  local app_root
+  local base
+  base="$(dirname "$CLOUDY_PACKAGE_CONFIG")";
+  regex=".*/([^/]*)/([^/]*)/([^/]*)$"
+  [[ "$base" =~ $regex ]]
+  third_last_element="${BASH_REMATCH[1]}"
+  if [[ 'opt' == "$third_last_element" ]]; then
+    basepath="$base/../../../"
+  elif [[ 'vendor' == "$third_last_element" ]]; then
+    basepath="$base/../../../"
+  else
+    basepath="$base/"
+  fi
+
+  echo $(realpath "$basepath")
+  return 0;
+}
+
 # Echo the detected app root by installation type.
 #
 # Returns 1 if detection failed.
@@ -59,7 +85,7 @@ function _cloudy_detect_app_root_by_installation() {
 
   local base
   local app_root
-  base="$(dirname "$SCRIPT")"
+  base="$(dirname "$CLOUDY_PACKAGE_CONTROLLER")"
   case "$installation_type" in
   "$CLOUDY_INSTALL_TYPE_SELF")
     app_root="$base"
@@ -85,7 +111,7 @@ function _cloudy_detect_composer_vendor_by_installation() {
 
     local base
     local vendor
-    base="$(dirname "$SCRIPT")"
+    base="$(dirname "$CLOUDY_PACKAGE_CONTROLLER")"
     case "$installation_type" in
     "$CLOUDY_INSTALL_TYPE_SELF")
       vendor="$base/framework/cloudy/vendor"
@@ -107,34 +133,6 @@ function _cloudy_detect_composer_vendor_by_installation() {
     esac
     echo "$(_resolve_file "$vendor")"
     return 0
-}
-
-#
-# @file
-# Non-public functions used by the cloudy API.
-#
-function _cloudy_define_cloudy_vars() {
-  # todo Can we move more things here, checking scope is not lost.
-  LI="├──"
-  LIL="└──"
-  LI2="│   $LI"
-  LIL2="│   $LIL"
-
-  CLOUDY_INSTALL_TYPE_SELF='self'
-  CLOUDY_INSTALL_TYPE_COMPOSER='composer'
-  CLOUDY_INSTALL_TYPE_CORE='cloudy_core'
-  CLOUDY_INSTALL_TYPE_PM='cloudy_pm'
-}
-
-function _cloudy_bootstrap_php() {
-  if [[ ! "$CLOUDY_PHP" ]]; then
-    CLOUDY_PHP="$(command -v php)"
-  fi
-  [[ !  "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP cannot be set; PHP not found." && return 1
-  [[ ! -x "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) is not executable" && return 1
-  local php_version=$("$CLOUDY_PHP" -v | head -1 | grep -E "PHP ([0-9.]+)")
-  [[ ! "$php_version" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) does not appear to be a PHP binary; $CLOUDY_PHP -v failed to display PHP version" && return 1
-  return 0
 }
 
 function _cloudy_bootstrap_translations() {
@@ -186,8 +184,12 @@ function _cloudy_bootstrap() {
 }
 
 ##
-# Delete $CACHED_CONFIG_FILEPATH as necessary.
-#
+ # Delete $CACHED_CONFIG_FILEPATH as necessary.
+ #
+ # @global string $CACHED_CONFIG_HASH_FILEPATH
+ # @global string $CACHED_CONFIG_FILEPATH
+ # @global string $CACHED_CONFIG_JSON_FILEPATH
+
 function _cloudy_auto_purge_config() {
   local purge=false
 
@@ -220,12 +222,12 @@ function _cloudy_auto_purge_config() {
     fi
   fi
 
-  has_failed && exit_with_failure "Cannot auto purge config."
+  has_failed && return 1
   return 0
 }
 
 ##
-# Detect if cached config is stale against $CONFIG.
+# Detect if cached config is stale against $CLOUDY_PACKAGE_CONFIG.
 #
 function _cloudy_has_config_changed() {
   # When configuration gets cached, this file gets created with a line for
@@ -644,7 +646,7 @@ function _cloudy_help_for_single_command() {
   echo_green "$help"
   echo
 
-  usage="./$(basename $SCRIPT) CMD"
+  usage="./$(basename $CLOUDY_PACKAGE_CONTROLLER) CMD"
   [ ${#arguments} -gt 0 ] && usage="$usage <arguments>"
   [ ${#options} -gt 0 ] && usage="$usage <options>"
 
@@ -733,13 +735,13 @@ function _cloudy_debug_helper() {
 }
 
 function _cloudy_write_log() {
-  [[ "$LOGFILE" ]] || return
+  [[ "$CLOUDY_LOG" ]] || return
   local level="$1"
   shift
-  local directory=$(dirname $LOGFILE)
+  local directory=$(dirname $CLOUDY_LOG)
   test -d "$directory" || mkdir -p "$directory"
-  touch "$LOGFILE"
-  echo "[$(date)] [$level] $@" >>"$LOGFILE"
+  touch "$CLOUDY_LOG"
+  echo "[$(date)] [$level] $@" >>"$CLOUDY_LOG"
 }
 
 ##
@@ -856,7 +858,7 @@ function _cloudy_validate_command() {
     array_has_value "$command" && return 0
   done
 
-  fail_because "You have called $(basename $SCRIPT) using the command \"$command\", which does not exist."
+  fail_because "You have called $(basename $CLOUDY_PACKAGE_CONTROLLER) using the command \"$command\", which does not exist."
   return 1
 }
 
@@ -891,6 +893,7 @@ function _cloudy_validate_input_against_schema() {
   local value=$3
 
   local errors
+  # TODO Rewrite using source_php
   echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
   return $?
 }

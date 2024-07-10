@@ -6,7 +6,7 @@
 #
 
 # Define the configuration file relative to this script.
-CONFIG="$1";
+CLOUDY_PACKAGE_CONFIG="$1";
 
 # This has been altered to facilitate testing; it is not standard initial code.
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../../cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1

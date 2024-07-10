@@ -46,7 +46,7 @@ You may also call it like this:
 First you must declare the filename of the log file; this enables logging. This is relative to your script's directory and should be placed at the top of your script before the bootstrap.
 
 ```shell
-[[ ! "$LOGFILE" ]] && LOGFILE="script.example.log"
+[[ ! "$CLOUDY_LOG" ]] && CLOUDY_LOG="script.example.log"
 
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while ...
@@ -54,8 +54,8 @@ s="${BASH_SOURCE[0]}";while ...
 
 ### Enabling on the CLI
 
-Export the `LOGFILE` variable with a path to the logfile and then run your app.
+Export the `CLOUDY_LOG` variable with a path to the logfile and then run your app.
 
 ```shell
-export LOGFILE=/path/to/file.log
+export CLOUDY_LOG=/path/to/file.log
 ```

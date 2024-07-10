@@ -6,24 +6,16 @@
 #
 
 # Define the configuration file relative to this script.
-CONFIG="cloudy_tools.yml"
-
-# Leave this blank and vendor will be detected automatically, only change it if
-# you know what you're doing.  Search the codebase for more info.
-# You may want to define an alternative location for the Composer vendor
-# directory relative to this script.  See documentation on installing Cloudy
-# using composer.  This is a step you will probably take if you are using Cloudy
-# inside of a PHP application that uses other Composer dependencies.
-#COMPOSER_VENDOR=""
+CLOUDY_PACKAGE_CONFIG="cloudy_tools.yml"
 
 # Uncomment this line to enable file logging.
-#[[ ! "$LOGFILE" ]] && LOGFILE="cloudy_tools.log"
-# Or, set for a terminal session using `export LOGFILE="script.example.log"`.
+[[ ! "$CLOUDY_LOG" ]] && CLOUDY_LOG="cloudy_tools.log"
+# Or, set for a terminal session using `export CLOUDY_LOG="script.example.log"`.
 
 function on_boot() {
   # Run the test command before the bootstrap to avoid conflicts.
   [[ "$(get_command)" == "tests" ]] || return 0
-  source "$CLOUDY_ROOT/inc/cloudy.testing.sh"
+  source "$CLOUDY_CORE_DIR/inc/cloudy.testing.sh"
   do_tests_in "tests/cloudy.tests.sh"
   exit_with_test_results
 }
@@ -130,7 +122,7 @@ validate_input || exit_with_failure "Input validation failed."
 
 implement_cloudy_basic
 
-framework=$(realpath $CLOUDY_ROOT/..) || exit_with_failure "Missing Cloudy framework"
+framework=$(realpath $CLOUDY_CORE_DIR/..) || exit_with_failure "Missing Cloudy framework"
 installation_info_filepath="$WDIR/cloudy/version.sh"
 
 # Handle other commands.
@@ -296,10 +288,12 @@ case $command in
 
     # Convert YAML config files to JSON, if necessary.
     if has_option "json"; then
-      echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "script.yml") >${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
+      # TODO Rewrite using source_php
+      echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "script.yml") >${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
       [ $? -eq 0 ] && rm script.yml
 
-      echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/config_to_json.php "$CLOUDY_ROOT/cloudy_config.schema.json" "$WDIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
+      # TODO Rewrite using source_php
+      echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "$WDIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
       [ $? -eq 0 ] && rm script.example.yml
     else
       mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."

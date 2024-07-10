@@ -50,3 +50,6 @@
     echo $title
     ```
 
+## Logging
+
+The tests are logged to _tests.log_

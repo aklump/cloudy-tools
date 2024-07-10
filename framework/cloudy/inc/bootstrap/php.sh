@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+##
+ # @file Bootstrap the PHP layer.
+ #
+ # @return 1 Unknown error.
+ # @return 2 If composer vendor cannot be located.
+ # @return 3 If pre_config hook returns non-zero
+ # @return 4 If PHP cannot be found.
+ # @return 5 If $CLOUDY_PHP is not executable.
+ # @return 6 If $CLOUDY_PHP path does not appear to be a PHP binary.
+ ##
+
+if [[ "$COMPOSER_VENDOR" ]]; then
+  # This will be used when this directory is defined at the top of the entry
+  # script as relative to that script.  We look to see if it needs to be
+  # resolved to an absolute path and then exit.
+  if ! path_is_absolute "$COMPOSER_VENDOR"; then
+    # TODO Change this to _resolve()?
+    COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
+  fi
+else
+  COMPOSER_VENDOR=$(_cloudy_detect_composer_vendor_by_installation "$CLOUDY_INSTALLED_AS")
+  if [ $? -ne 0 ]; then
+    write_log_error "Failed to detect/set \$COMPOSER_VENDOR"
+    fail_because "Cannot find Composer dependencies."
+    return 2;
+  fi
+fi
+write_log_debug "\$COMPOSER_VENDOR is \"$COMPOSER_VENDOR\""
+
+! event_dispatch "pre_config" && fail_because "Non-zero returned by on_pre_config()." && return 3;
+
+if [[ ! -f "$COMPOSER_VENDOR/autoload.php" ]]; then
+  # Attempt to install composer.
+  composer_json=$(dirname $COMPOSER_VENDOR)/composer.json
+  composer_lock=$(dirname $COMPOSER_VENDOR)/composer.lock
+  if [[ -f "$composer_json" && ! -f "$composer_lock" ]]; then
+    fail_because "You may need to install Composer dependencies."
+    fail_because "e.g., (cd "$(dirname "$composer_json")" && composer install)"
+  fi
+  fail_because "Composer autoloader not found in $COMPOSER_VENDOR"
+  exit 2
+fi
+
+export COMPOSER_VENDOR="$(cd $COMPOSER_VENDOR && pwd)"
+
+if [[ ! "$CLOUDY_PHP" ]]; then
+  CLOUDY_PHP="$(command -v php)"
+fi
+[[ ! "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP cannot be set; PHP not found." && return 4
+[[ ! -x "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) is not executable" && return 5
+php_version=$("$CLOUDY_PHP" -v | head -1 | grep -E "PHP ([0-9.]+)")
+[[ ! "$php_version" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) does not appear to be a PHP binary; $CLOUDY_PHP -v failed to display PHP version" && return 6
+
+has_failed && return 1
+return 0

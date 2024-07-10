@@ -8,12 +8,12 @@
  * This is the second step in the configuration compiling.
  *
  * @group configuration
- * @see config_to_json.php
+ * @see normalize.php
  */
 
 use AKlump\LoftLib\Bash\Configuration;
 
-require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 $namespace = $argv[2];
 $json = $argv[3];

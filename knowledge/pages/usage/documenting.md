@@ -11,6 +11,12 @@ Functions should adhere to the following docblock convention:
 {{ function_docblock|raw }}
 ```
 
+Sourced files should include a docblock along these lines:
+
+```shell
+{{ file_docblock|raw }}
+```
+
 ## Developers
 
 To learn more start with `knowledge/src/CloudyDocumentation`

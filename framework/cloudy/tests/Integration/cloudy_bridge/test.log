@@ -1,0 +1,9 @@
+[Mon Jul  8 18:44:26 PDT 2024] [debug] $CLOUDY_INSTALLED_AS set to "composer"
+[Mon Jul  8 18:44:26 PDT 2024] [debug] $CLOUDY_BASEPATH is "/Users/aklump/opt/cloudy/framework/cloudy/tests/Integration/t/InstallTypeCore"
+[Mon Jul  8 18:44:26 PDT 2024] [debug] $COMPOSER_VENDOR is "/Users/aklump/opt/cloudy/framework/cloudy/vendor"
+[Mon Jul  8 18:44:26 PDT 2024] [info] Dispatching event: pre_config
+[Mon Jul  8 18:44:26 PDT 2024] [info] Dispatching event: compile_config
+[Mon Jul  8 18:44:26 PDT 2024] [notice] Config hash change detected in "_cached.test_runner.logfile.config.hash.txt".
+[Mon Jul  8 18:44:26 PDT 2024] [debug] _cached.test_runner.logfile.config.json will be (re)built.
+[Mon Jul  8 18:44:27 PDT 2024] [notice] config.yml configuration compiled to /Users/aklump/opt/cloudy/framework/cloudy/cache/_cached.test_runner.logfile.config.sh.
+[Mon Jul  8 18:44:27 PDT 2024] [info] Dispatching event: boot

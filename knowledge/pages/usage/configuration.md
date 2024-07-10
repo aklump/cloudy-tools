@@ -21,7 +21,7 @@ The following examples will be shown with YAML.
 
 In the header of your script you will find `$CONFIG`, this is for the base configuration file, e.g.,
 
-        CONFIG=script.example.yml
+        CLOUDY_PACKAGE_CONFIG=script.example.yml
 
 1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname your_cloudy_script.sh)`
 1. You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the `{APP_ROOT}` token is encouraged over the use of relative paths, as it is less confusing.
@@ -132,7 +132,7 @@ Configuration values which are filepaths can be added to the YAML as relative pa
 
 Then when you access the configuration use `get_config_path`, e.g.,
 
-    eval $(get_config_path "webroot")
+    eval $(get_config_path_as "webroot" "webroot")
 
 The value of `$webroot` will be an an absolute filepath.
 
@@ -184,7 +184,7 @@ If you put a stack of paths under a single key, like so:
 
 You can import all of them with one line like this:
 
-    eval $(get_config_path "files")
+    eval $(get_config_path_as "files" "files")
 
 And you will have access to:
 

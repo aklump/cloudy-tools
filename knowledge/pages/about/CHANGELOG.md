@@ -5,13 +5,15 @@ tags: about
 
 # Cloudy Changelog
 
-## [Unreleased]
-
-## [] - 2024-07-??
+## [2.0.0] - 2024-07-??
 
 ### Added
 
-- lorem
+- PACKAGE_BASEPATH To point to the basepath of the Cloudy-based package.
+- CLOUDY_BASEPATH To point to the basepath of the application. In some cases this will be the same as PACKAGE_BASEPATH, in other cases this will be a parent directory such as a website that leverages Cloudy apps installed with Cloudy Package Manager. Relative configuration paths are ALWAYS resolved with this path.
+- CLOUDY_CORE_DIR To point to the directory where Cloudy core is installed.
+- CLOUDY_PACKAGE_CONTROLLER To point to the directory where Cloudy core is installed.
+- CLOUDY_CACHE_DIR To point to the directory where Cloudy stores it's cache files.
 
 ### Changed
 
@@ -19,29 +21,27 @@ tags: about
 
 ### Deprecated
 
-- lorem
+- SCRIPT Use CLOUDY_PACKAGE_CONTROLLER instead.
+- APP_ROOT Use CLOUDY_BASEPATH instead.
+- LOGFILE Use CLOUDY_LOG instead.
+- ROOT Use PACKAGE_BASEPATH instead.
+- CLOUDY_ROOT instead CLOUDY_CORE_DIR
+- `get_config()` is too brittle. Use get_config_as instead, e.g. `get_config 'title'` -> `get_config_as 'title' 'title'`
+- `get_config_keys()`
+- `get_config_path()`
 
 ### Removed
 
-- lorem
-
-### Fixed
-
-- lorem
-
-### Security
-
-- lorem
-
-## [1.8.0] - 2024-07-02
+- The token `${config_path_base}` has been replaced by `{APP_ROOT}` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `{APP_ROOT}` in all cloudy pm packages.
+- `CLOUDY_NAME`; Use this if you need the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
 
 ### Fixed
 
 - Merge of cloudy package gitignore into cloudy pm .gitignore on install of package.
 
-### Removed
+### Security
 
-- The token `${config_path_base}` has been replaced by `{APP_ROOT}` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `{APP_ROOT}` in all cloudy pm packages.
+- lorem
 
 ## [1.7.11] - 2024-06-29
 

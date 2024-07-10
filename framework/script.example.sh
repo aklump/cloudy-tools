@@ -6,7 +6,7 @@
 #
 
 # Define the configuration file relative to this script.
-CONFIG="script.example.yml";
+CLOUDY_PACKAGE_CONFIG="script.example.yml";
 
 # Leave this blank and vendor will be detected automatically, only change it if
 # you know what you're doing.  Search the codebase for more info.
@@ -22,8 +22,8 @@ CONFIG="script.example.yml";
 #APP_ROOT=""
 
 # Uncomment this line to enable file logging.
-#[[ ! "$LOGFILE" ]] && LOGFILE="script.example.log"
-# Or, set for a terminal session using `export LOGFILE="script.example.log"`.
+#[[ ! "$CLOUDY_LOG" ]] && CLOUDY_LOG="script.example.log"
+# Or, set for a terminal session using `export CLOUDY_LOG="script.example.log"`.
 
 # TODO: Event handlers and other functions go here or register one or more includes in "additional_bootstrap".
 

@@ -12,7 +12,7 @@
          verbose="true">
     <testsuites>
         <testsuite name="default">
-            <file>./ConfigTest.php</file>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

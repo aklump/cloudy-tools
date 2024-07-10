@@ -84,7 +84,7 @@ class BashFunctionInfoLexer extends AbstractLexer {
     // Remove the indentation.
     $indent_regex = '#^\#{1,2}\s#';
     $is_indented = preg_match($indent_regex, $value, $matches);
-    $indent = $matches[0];
+    $indent = $matches[0] ?? '';
     if ($is_indented) {
       $value = substr($value, strlen($indent));
     }

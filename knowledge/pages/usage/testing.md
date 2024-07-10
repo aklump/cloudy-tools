@@ -21,7 +21,7 @@ You will want to implement the `on_boot` hook if you want to run tests.
 
     ...
     # Uncomment this line to enable file logging.
-    LOGFILE="install/cloudy/cache/cloudy_installer.log"
+    CLOUDY_LOG="install/cloudy/cache/cloudy_installer.log"
     
     function on_boot() {
         [[ "$(get_command)" == "tests" ]] || return 0

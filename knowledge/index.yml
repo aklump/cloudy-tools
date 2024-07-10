@@ -2,8 +2,12 @@ page_order:
   0: ''
   about:
     - readme
-    - changelog
+    - lexicon
+    - globals
+    - filepaths
     - cloudy_core_testing
+    - changelog
+    - cloudy_basepath
   bash:
     - arrays
     - strings
@@ -39,5 +43,9 @@ page_order:
   trouble:
     - empty_config
     - autoloader
+  developers:
+    - upgrade_v2
+    - variable_scopes
+    - dev_configuration
   quick_start:
     - writing_scripts

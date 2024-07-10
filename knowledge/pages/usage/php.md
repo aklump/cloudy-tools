@@ -5,13 +5,57 @@ tags: usage, php
 
 # PHP and Cloudy
 
+To execute PHP you should use `source_php` with the path to the PHP include file, like this:
+
+```shell
+source_php "/Users/aklump/opt/cloudy/framework/cloudy/tests/Integration/tests/../t/InstallTypeCore/php/_variables.php"
+```
+
+_variables.php_
+
+```php
+{{ file_variables_php|raw }}
+```
+
+## Error Handling
+
+You are encouraged to use the Cloudy error handling functions even in PHP:
+
+* `fail_because`
+* `exit_with_failure`
+
+You may throw exceptions as well. In that case the exception message will automatically be passed to:
+
+1. fail_because
+2. write_log_error
+
+## Passing Variables between PHP and BASH
+
+To pass variables from BASH to PHP use the native BASH `export` and the PHP `getenv()`
+
+```shell
+export FOO=BAR
+```
+
+```php
+$FOO=getenv('FOO')
+```
+
+The PHP function `cloudy_putenv()` when used inside the BASH function `source_php` allows you to pass variables from your PHP scripts to your BASH scripts. There is nothing to do on the BASH side of things, the variable will simply be set (or overridden).
+
+```php
+cloudy_putenv('FOO=BAR');
+```
+
+---
+
+@todo Beyond here needs review
+
 Cloudy uses quite a bit of PHP under the hood.
 
 ## PHP Version
 
 The value of the [environment variable](https://www.howtogeek.com/668503/how-to-set-environment-variables-in-bash-on-linux/) `CLOUDY_PHP` will be used to locate the PHP binary. You may set that explicitly (see below) or let Cloudy do it automatically. See `cloudy_bootstrap_php()` for details.
-
-> The value of the environment variable `CLOUDY_PHP` will be used to locate the PHP binary.
 
 ### Setting Cloudy's PHP Version Globally
 
@@ -31,7 +75,7 @@ Coincidentally, if you run the following, the test will actually fail, as it ass
 
 ### Setting PHP in Your Controller
 
-Let's say the PHP path exists in another global variable.  You may pass that off to Cloudy in the `on_pre_config` [event handler](@events), like this:
+Let's say the PHP path exists in another global variable. You may pass that off to Cloudy in the `on_pre_config` [event handler](@events), like this:
 
 ```bash
 function on_pre_config() {
@@ -82,8 +126,3 @@ When writing your app's source code, never hardcode PHP as `php` nor as a path. 
 ### Accessing Configuration
 
 For your PHP scripts to have access to the configuration values setup in the YAML file(s), you should decode the environment variable `CLOUDY_CONFIG_JSON`, e.g., `$config = json_decode(getenv('CLOUDY_CONFIG_JSON'), TRUE);`.
-
-**You will need to add `export CLOUDY_CONFIG_JSON` to your controller file.**
-
-
-

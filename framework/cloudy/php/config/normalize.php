@@ -14,43 +14,60 @@
  * This is the first step in the configuration compiling.
  *
  * @group configuration
- * @see json_to_bash.php
+ * @see config/cache.php
  */
 
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 
 try {
-  require_once __DIR__ . '/bootstrap.php';
+  require_once __DIR__ . '/../bootstrap.php';
 
   $path_to_config_schema = $argv[1];
-  $path_to_master_config = $argv[2];
+  $CLOUDY_PACKAGE_CONFIG = $argv[2];
   $skip_config_validation = isset($argv[3]) && $argv[3] === 'true';
   $additional_config_paths = array_filter(explode("\n", (isset($argv[4]) ? $argv[4] : '')));
 
   $config = [
     '__cloudy' => [
+      'CLOUDY_CORE_DIR' => getenv('CLOUDY_CORE_DIR'),
+      'CLOUDY_CACHE_DIR' => getenv('CLOUDY_CACHE_DIR'),
+      'CLOUDY_PACKAGE_CONTROLLER' => getenv('SCRIPT'),
+      'CLOUDY_PACKAGE_CONFIG' => $CLOUDY_PACKAGE_CONFIG,
+      'CLOUDY_BASEPATH' => CLOUDY_BASEPATH,
+
       'CLOUDY_NAME' => getenv('CLOUDY_NAME'),
-      'ROOT' => ROOT,
-      'APP_ROOT' => APP_ROOT,
-      'SCRIPT' => getenv('SCRIPT'),
-      'CONFIG' => $path_to_master_config,
       'WDIR' => getenv('WDIR'),
-      'LOGFILE' => getenv('LOGFILE'),
+      'CLOUDY_LOG' => getenv('CLOUDY_LOG'),
+      //      'PACKAGE_BASEPATH' => ROOT,
+
+      // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
+      //      'CONFIG' => $CLOUDY_PACKAGE_CONFIG,
+      // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
+      //      'APP_ROOT' => CLOUDY_BASEPATH,
+      // @deprecated Since version 2.0, Use PACKAGE_BASEPATH instead.
+      //      'ROOT' => ROOT,
+      // @deprecated Since version 2.0, Use CLOUDY_PACKAGE_CONTROLLER instead.
+      //      'SCRIPT' => getenv('SCRIPT'),
     ],
   ];
-  $config = _merge_config($config, _load_configuration_data($path_to_master_config));
+  $config = _cloudy_merge_config($config, _cloudy_load_configuration_data($CLOUDY_PACKAGE_CONFIG));
 
-  // This is a global so don't erase it. @see _cloudy_realpath().
-  $_config_path_base = isset($config['config_path_base']) ? $config['config_path_base'] : '';
+  if (empty($config['config_path_base'])) {
+    $config['config_path_base'] = CLOUDY_BASEPATH;
+  }
+  else {
+    $path = path_resolve($config['config_path_base'], dirname($CLOUDY_PACKAGE_CONFIG));
+    $config['config_path_base'] = $path;
+  }
 
   $extra_config_paths = array_filter(array_merge($config['additional_config'] ?? [], $additional_config_paths ?? []));
   foreach ($extra_config_paths as $path_or_glob) {
     $paths = _cloudy_realpath($path_or_glob);
     foreach ($paths as $path) {
-      $new_data = _load_configuration_data($path, FALSE);
+      $new_data = _cloudy_load_configuration_data($path, FALSE);
       if ($new_data) {
-        $config = _merge_config($config, $new_data);
+        $config = _cloudy_merge_config($config, $new_data);
       }
     }
   }
@@ -68,7 +85,7 @@ try {
   }
   catch (Exception $exception) {
     $class = get_class($exception);
-    throw new $class("Configuration syntax error in \"" . basename($path_to_master_config) . '": ' . $exception->getMessage());
+    throw new $class("Configuration syntax error in \"" . basename($CLOUDY_PACKAGE_CONFIG) . '": ' . $exception->getMessage());
   }
 
   $last_error = error_get_last();

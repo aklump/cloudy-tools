@@ -18,6 +18,8 @@ function json_set() {
   local incoming_json="$1"
 
   local clean_json
+
+  # TODO Rewrite using source_php
   clean_json="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_bash_filter" "$incoming_json")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_set \"$path\" failed set JSON: $incoming_json"
@@ -36,6 +38,8 @@ function json_load_file() {
   local path_to_json="$1"
 
   local loaded_json
+
+  # TODO Rewrite using source_php
   loaded_json="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_load_file" "$path_to_json")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_load_file \"$path\" failed to load $path_to_json"
@@ -72,6 +76,8 @@ function json_get_value() {
   local path="$1"
 
   local value
+
+  # TODO Rewrite using source_php
   value="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_get_value" "$path" "$json_content")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_get_value \"$path\" failed against JSON: $(json_get)"
@@ -196,7 +202,7 @@ function get_title() {
     local default="$1"
 
     local title
-    eval $(get_config "title" "$default")
+    eval $(get_config_as "title" "title" "$default")
     echo $title
 }
 
@@ -221,7 +227,7 @@ function md5_string() {
 # @return nothing.
 function get_version() {
     local version
-    eval $(get_config "version" "1.0")
+    eval $(get_config_as "version" "version" "1.0")
     echo $version
 }
 
@@ -638,6 +644,8 @@ function array_sort() {
 function array_sort_by_item_length() {
     local sorted
     local php_result
+
+    # TODO Rewrite using source_php
     php_result=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
     result=$?
     if [[ $result -ne 0 ]]; then
@@ -712,6 +720,8 @@ function get_command_args() {
  #   eval $(get_config -a 'path.to.array' 'default_value')
  # @code
  #
+ # @deprecated Since version 2.0.0, Use get_config_as() instead.
+ #
 function get_config() {
     local config_path=$1
     local default_value=$2
@@ -742,11 +752,14 @@ function get_config_as() {
     _cloudy_get_config "$config_path" "$default_value" --as="$custom_var_name" $parse_args__options_passthru
 }
 
-# Echos eval code for the keys of a configuration associative array.
-#
-# @param string The path to the config item, e.g. "files.private"
-#
-# @return 0 on success.
+## Echos eval code for the keys of a configuration associative array.
+ #
+ # @param string The path to the config item, e.g. "files.private"
+ #
+ # @return 0 on success.
+ #
+ # @deprecated Since version 2.0.0, Use get_config_keys_as() instead.
+ ##
 function get_config_keys() {
     local config_key_path="$1"
 
@@ -768,14 +781,17 @@ function get_config_keys_as() {
     _cloudy_get_config -a --keys "$config_key_path" "" --as="$custom_var_name"
 }
 
-# Echo eval code for paths of a configuration item.
-#
-# Relative paths are made absolute using $APP_ROOT.
-#
-# @param string The path to the config item, e.g. "files.private"
-# @option -a If you are expecting an array
-#
-# @return 0 on success.
+## Echo eval code for paths of a configuration item.
+ #
+ # Relative paths are made absolute using $APP_ROOT.
+ #
+ # @param string The path to the config item, e.g. "files.private"
+ # @option -a If you are expecting an array
+ #
+ # @return 0 on success.
+ #
+ # @deprecated Since version 2.0.0, Use get_config_path_as() instead.
+ ##
 function get_config_path() {
     local config_key_path=$1
     local default_value=$2
@@ -1671,16 +1687,17 @@ function fail() {
     CLOUDY_EXIT_STATUS=1 && return 0
 }
 
-# Add a failure message to be shown on exit.
-#
-# @param string The reason for the failure.
-# @param string A default value if $1 is empty.
-#
-# @code
-#   fail_because "$reason" "Some default if $reason is empty"
-# @endcode
-#
-# @return 1 if both $message and $default are empty. 0 otherwise.
+## Add a failure message to be shown on exit.
+ #
+ # @param string The reason for the failure.
+ # @param string A default value if $1 is empty.
+ #
+ # @code
+ #   fail_because "$message" "Some default if \$message is empty"
+ # @endcode
+ #
+ # @return 1 if both $message and $default are empty. 0 otherwise.
+ ##
 function fail_because() {
     local message="$1"
     local default="$2"
@@ -1700,7 +1717,7 @@ function fail_because() {
 #
 # @return 0 if one or more failure messages are present; 1 if not.
 function has_failed() {
-    [ $CLOUDY_EXIT_STATUS -gt 0 ] && return 0
+    [[ $CLOUDY_EXIT_STATUS -gt 0 ]] && return 0
     return 1
 }
 
@@ -2030,10 +2047,10 @@ function throw() {
 
 # Echo a message to the user to either enable and repeat, or view log for info.
 #
-# @param string Path to the logfile; usually you send $LOGFILE, which is the global path.
+# @param string Path to the logfile; usually you send $CLOUDY_LOG, which is the global path.
 #
 # @code
-# fail_because "$(echo_see_log $LOGFILE)"
+# fail_because "$(echo_see_log $CLOUDY_LOG)"
 # @endcode
 #
 # @return nothing.
@@ -2288,6 +2305,8 @@ function yaml_get() {
 # @return 0
 function yaml_get_json() {
   local json
+
+  # TODO Rewrite using source_php
   json=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "yaml_to_json" "$yaml_content")
   if [[ $? -ne 0 ]]; then
     write_log_error "yaml_get_json \"$yaml\" failed against YAML: $($yaml_content)"
@@ -2295,4 +2314,61 @@ function yaml_get_json() {
     return 1
   fi
   echo "$json"
+}
+
+##
+ # Include a PHP file within a Cloudy script with configuration context.
+ #
+ # @param string $path_to_php_file If this does not exist then the script will exit immediately with failure
+ # @param... Any additional params are passed to PHP file.
+ #
+ # @echo Anything that is echoed in the PHP file.
+ #
+ # @return int The exit code of the PHP file.
+ #
+ # By including PHP files with this function you have access to the same
+ # variables as in BASH.  You also have access to same-named Cloudy functions
+ # such as: fail_because(), succeed_because(), exit_with_failure(), etc.
+ ##
+function source_php() {
+  local path_to_php_file="$1"
+
+  local runtime_vars_path
+  local php_exit_code
+
+  if [[ ! "$path_to_php_file" ]]; then
+    exit_with_failure "\$path_to_php_file cannot be empty." --status=126
+  fi
+  if ! [ -f "$path_to_php_file" ]; then
+    exit_with_failure "$path_to_php_file not found and cannot be sourced." --status=125
+  fi
+
+  "$CLOUDY_PHP" "$CLOUDY_CORE_DIR/php/functions/source_php.php" "$path_to_php_file" "${@:2}"
+  php_exit_code=$?
+
+  # Import any variables that PHP has passed to us via cloudy_putenv().
+  runtime_vars_path="$CLOUDY_CACHE_DIR/_runtime_vars.$CLOUDY_RUNTIME_UUID.sh"
+  if [[ "$runtime_vars_path" ]] && [ -f "$runtime_vars_path" ]; then
+    write_log_debug "Reading PHP variables from $runtime_vars_path"
+    source "$runtime_vars_path"
+    rm "$runtime_vars_path"
+  fi
+
+  if [[ "$php_exit_code" -ne 0 ]]; then
+    path_to_php_file=$(realpath "$path_to_php_file")
+    write_log_error "$path_to_php_file exited with $php_exit_code"
+    exit_with_failure --status=$php_exit_code
+  else
+    write_log_debug "$path_to_php_file exited with $php_exit_code"
+  fi
+  return $php_exit_code
+}
+
+##
+ # Get a new UUID
+ #
+ # @echo A new UUID
+ #
+function create_uuid() {
+  echo $(uuidgen)
 }

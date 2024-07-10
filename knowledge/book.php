@@ -2,7 +2,6 @@
 
 /** @var string $command */
 /** @var string $book_path */
-
 /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
 
 use AKlump\Knowledge\Events\AssemblePages;
@@ -98,11 +97,25 @@ $dispatcher->addListener(AssemblePages::NAME, function (AssemblePages $event) {
 });
 
 $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
-  $path_to_example = $event->getPathToSource() . '/src/CloudyDocumentation/example.sh';
-  $example = file_get_contents($path_to_example);
+  $path_to_function_ex = $event->getPathToSource() . '/src/CloudyDocumentation/example_function.sh';
+  $example = file_get_contents($path_to_function_ex);
   $example = preg_replace('#^\#!/usr/bin/env bash\n\s*#i', '', $example);
   if (FALSE === $example) {
-    throw new RuntimeException(sprintf("Missing documentation example file.\nCheck if the path %s, has moved.", $path_to_example));
+    throw new RuntimeException(sprintf("Missing documentation example file.\nCheck if the path %s, has moved.", $path_to_function_ex));
   }
   $event->setVariable('function_docblock', $example);
+
+  $path_to_file_ex = $event->getPathToSource() . '/src/CloudyDocumentation/example_file.sh';
+  $example = file_get_contents($path_to_file_ex);
+  $example = preg_replace('#^\#!/usr/bin/env bash\n\s*#i', '', $example);
+  if (FALSE === $example) {
+    throw new RuntimeException(sprintf("Missing documentation example file.\nCheck if the path %s, has moved.", $path_to_file_ex));
+  }
+  $event->setVariable('file_docblock', $example);
+
+
+  $path_to_file_ex = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/InstallTypeCore/php/_variables.php';
+  $example = file_get_contents($path_to_file_ex);
+  $example = preg_replace('#^<\?php\n\s*#i', '', $example);
+  $event->setVariable('file_variables_php', $example);
 });
