@@ -47,6 +47,7 @@ export COMPOSER_VENDOR="$(cd $COMPOSER_VENDOR && pwd)"
 
 if [[ ! "$CLOUDY_PHP" ]]; then
   CLOUDY_PHP="$(command -v php)"
+  [[ ! "$CLOUDY_PHP" ]] && fail_because "\$(command -v php) returned empty" && return 4
 fi
 [[ ! "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP cannot be set; PHP not found." && return 4
 [[ ! -x "$CLOUDY_PHP" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) is not executable" && return 5
