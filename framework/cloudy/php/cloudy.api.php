@@ -6,6 +6,7 @@
  * this class should be considered stable.
  */
 
+use AKlump\Cloudy\CreateTransportPath;
 use Symfony\Component\Yaml\Yaml;
 use Jasny\DotKey;
 
