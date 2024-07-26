@@ -6,7 +6,7 @@
  * this class should be considered stable.
  */
 
-use AKlump\Cloudy\CreateTransportPath;
+use AKlump\Cloudy\EnvVars;
 use Symfony\Component\Yaml\Yaml;
 use Jasny\DotKey;
 
@@ -24,7 +24,7 @@ function yaml_to_json($yaml) {
     return '{}';
   }
   elseif (!($data = Yaml::parse($yaml))) {
-    throw new \RuntimeException("Unable to parse invalid YAML string.");
+    throw new RuntimeException("Unable to parse invalid YAML string.");
   }
 
   return json_encode($data);
@@ -44,7 +44,7 @@ function yaml_to_json($yaml) {
 function json_get_value($path, $json) {
   $subject = json_decode($json);
   if (json_last_error() !== JSON_ERROR_NONE) {
-    throw new \RuntimeException('Invalid JSON string: ' . json_last_error_msg());
+    throw new RuntimeException('Invalid JSON string: ' . json_last_error_msg());
   }
 
   return DotKey::on($subject)->get($path);
@@ -64,7 +64,7 @@ function json_get_value($path, $json) {
  */
 function json_load_file(string $path): string {
   if (!file_exists($path)) {
-    throw new \RuntimeException("Missing JSON file: " . $path);
+    throw new RuntimeException("Missing JSON file: " . $path);
   }
   $contents = file_get_contents($path);
 
@@ -83,7 +83,7 @@ function json_load_file(string $path): string {
 function json_bash_filter(string $json): string {
   $data = json_decode($json);
   if (json_last_error() !== JSON_ERROR_NONE) {
-    throw new \RuntimeException('Invalid JSON string: ' . json_last_error_msg());
+    throw new RuntimeException('Invalid JSON string: ' . json_last_error_msg());
   }
 
   return json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -202,4 +202,87 @@ function write_log_debug() {
   $args = func_get_args();
   array_unshift($args, 'debug');
   call_user_func_array('_cloudy_write_log', $args);
+}
+
+/**
+ * Assigns a variable to the Cloudy environment.
+ *
+ * The Cloudy environment includes the PHP runtime as well as any BASH script
+ * that called the PHP using `$PHP_FILE_RUNNER`.  In this way, this is a super
+ * function that does what normally is impossible to do, that is, passing
+ * variables from PHP back to SHELL across separate processes.  Arrays are also
+ * supported for variable values.
+ *
+ * @param string $var_name
+ * @param mixed $value
+ *
+ * @return void
+ *
+ * @global string $CLOUDY_RUNTIME_ENV
+ * @see \AKlump\Cloudy\EnvVars
+ */
+function cloudy_putenv(string $var_name, $value): void {
+  global $CLOUDY_RUNTIME_ENV;
+  (new EnvVars($CLOUDY_RUNTIME_ENV))->putenv($var_name, $value);
+}
+
+/**
+ * Sort an array by the length of it's values.
+ *
+ * @param string ...
+ *   Any number of items to be taken as an array.
+ *
+ * @return array
+ *   The sorted array
+ */
+function array_sort_by_item_length() {
+  $stack = func_get_args();
+  uasort($stack, function ($a, $b) {
+    return strlen($a) - strlen($b);
+  });
+
+  return array_values($stack);
+}
+
+function succeed_because(string $message, string $default = ''): int {
+  global $CLOUDY_SUCCESSES;
+  global $CLOUDY_EXIT_STATUS;
+
+  // @see cloudy.api.sh::succeed_because()
+  $CLOUDY_EXIT_STATUS = 0;
+
+  if (!$message && !$default) {
+    return 0;
+  }
+  elseif ($message) {
+    $CLOUDY_SUCCESSES[] = $message;
+  }
+  elseif ($default) {
+    $CLOUDY_SUCCESSES[] = $default;
+  }
+
+  return 0;
+}
+
+function fail_because(string $message, string $default = '', int $exit_status = 1): int {
+  global $CLOUDY_FAILURES;
+  global $CLOUDY_EXIT_STATUS;
+  // @see cloudy.api.sh::fail()
+  $CLOUDY_EXIT_STATUS = $exit_status;
+
+  if (!$message && !$default) {
+    return 0;
+  }
+  elseif ($message) {
+    $CLOUDY_FAILURES[] = $message;
+  }
+  elseif ($default) {
+    $CLOUDY_FAILURES[] = $default;
+  }
+
+  return 0;
+}
+
+function exit_with_failure(int $status = 1) {
+  throw new RuntimeException('', $status);
 }

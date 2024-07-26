@@ -28,9 +28,9 @@ There are some helper functions to facilitate JSON and YAML data manipulation.  
     done
     
     # Send the YAML off to be processed by PHP, but first convert it to JSON for
-    # easier PHP consumption.  helpers.php will process the raw json and add
+    # easier PHP consumption.  functions/invoke.php will process the raw json and add
     # some values to it and echo augmented JSON string which we can then do
     # something with...
-    processed_json=$("$CLOUDY_PHP" "$ROOT/helpers.php" "$(yaml_get_json)") || fail_because "Could not process raw results."
+    processed_json=$(. "$PHP_FILE_RUNNER" "$ROOT/functions/invoke.php" "$(yaml_get_json)") || fail_because "Could not process raw results."
     
     ...

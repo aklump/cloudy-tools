@@ -14,10 +14,4 @@
 
 $function_args = $argv;
 array_shift($function_args);
-$function = array_shift($function_args);
-call_user_func_array($function, $function_args);
-
-
-function _throw_runtime_exception() {
-  throw new RuntimeException();
-}
+call_user_func_array('exit_with_failure', $function_args);

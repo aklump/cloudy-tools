@@ -34,11 +34,18 @@ function _resolve_dir() {
   echo "$directory"
 }
 
+##
+ # Detect the type of Cloudy installation for a given directory.
+ #
+ # @param string $base The base directory to use to detect the installation type.
+ #
+ ##
 function _cloudy_detect_installation_type() {
-  local base
+  local base="$1"
+
   local check_composer
   local check_cloudy
-  base=$(dirname $CLOUDY_PACKAGE_CONTROLLER)
+  base=$(dirname "$base")
 
   check_composer="$(_resolve_file "$base/../../../composer.json")"
   [ -f "$(_resolve_file "$check_composer")" ] && echo $CLOUDY_INSTALL_TYPE_COMPOSER && return 0
@@ -441,6 +448,7 @@ function _cloudy_get_config() {
 
 function _cloudy_exit() {
   event_dispatch "exit" $CLOUDY_EXIT_STATUS
+  [ -f "$CLOUDY_RUNTIME_ENV" ] && rm "$CLOUDY_RUNTIME_ENV"
   [[ "$CLOUDY_EXIT_STATUS" -eq 0 ]] && write_log_info "Exit status is: $CLOUDY_EXIT_STATUS"
   [[ "$CLOUDY_EXIT_STATUS" -ne 0 ]] && write_log_notice "Exit status is: $CLOUDY_EXIT_STATUS"
   exit $CLOUDY_EXIT_STATUS
@@ -893,7 +901,7 @@ function _cloudy_validate_input_against_schema() {
   local value=$3
 
   local errors
-  # TODO Rewrite using source_php
+  # TODO Rewrite using $PHP_FILE_RUNNER
   echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
   return $?
 }

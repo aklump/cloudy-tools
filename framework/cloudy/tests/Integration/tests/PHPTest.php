@@ -12,34 +12,19 @@ class PHPTest extends TestCase {
 
   use TestWithCloudyTrait;
 
-  public function _testFailBecause() {
-    $this->bootCloudy(__DIR__ . '/../t/InstallTypeCore/config.yml');
-    $include = __DIR__ . '/../t/InstallTypeCore/php/_error_handling.php';
-    $result = $this->execCloudy("source_php '$include' 'fail_because' 'Lorem ipsum'");
-    $this->assertSame('asdf', $result);
-//    $this->execCloudy("source_php '$include' 'fail_because' '' 'Alpa bravo'");
-//    $this->execCloudy("source_php '$include' 'fail_because' 'Lorem ipsum' 'Alpa bravo'");
-  }
 
-
-  public function testEmptyPhpPathReturns126() {
+  public function testExceptionMessageIsPassedToFailBecause() {
     $this->bootCloudy(__DIR__ . '/../t/InstallTypeCore/config.yml');
-    $this->execCloudy("source_php");
-    $this->assertSame(126, $this->getCloudyResultCode());
-  }
-
-  public function testNonFilePhpPathReturns125() {
-    $this->bootCloudy(__DIR__ . '/../t/InstallTypeCore/config.yml');
-    $include = __DIR__ . '/../t/InstallTypeCore/php/_bogus_not_found.php';
-    $this->execCloudy("source_php '$include'");
-    $this->assertSame(125, $this->getCloudyResultCode());
+    $include = __DIR__ . '/../t/InstallTypeCore/tests/exceptions.php';
+    $output = $this->execCloudy('. "$PHP_FILE_RUNNER" "' . $include . '"');
+    $this->assertMatchesRegularExpression('#An unknown problem occurred.#', $output);
   }
 
   public function testExceptionWithNoCodeReturns127() {
     $this->bootCloudy(__DIR__ . '/../t/InstallTypeCore/config.yml');
-    $include = __DIR__ . '/../t/InstallTypeCore/php/_functions.php';
-    $this->execCloudy("source_php '$include' '_throw_runtime_exception'");
-    $this->assertSame(127, $this->getCloudyResultCode());
+    $include = __DIR__ . '/../t/InstallTypeCore/tests/exceptions.php';
+    $this->execCloudy('. "$PHP_FILE_RUNNER" "' . $include . '"');
+    $this->assertSame(127, $this->getCloudyExitStatus());
   }
 
   public function dataFortestExitWithFailureProvider() {
@@ -56,12 +41,12 @@ class PHPTest extends TestCase {
    */
   public function testExitWithFailure(int $exit_code) {
     $this->bootCloudy(__DIR__ . '/../t/InstallTypeCore/config.yml');
-    $include = __DIR__ . '/../t/InstallTypeCore/php/_functions.php';
-    $this->execCloudy("source_php '$include' 'exit_with_failure' $exit_code");
-    $this->assertSame($exit_code, $this->getCloudyResultCode());
+    $invoker = __DIR__ . '/../t/InstallTypeCore/tests/fn.exit_with_failure.php';
+    $this->execCloudy(sprintf('. "$PHP_FILE_RUNNER" "%s" %s', $invoker, $exit_code));
+    $this->assertSame($exit_code, $this->getCloudyExitStatus());
   }
 
-  public function testCloudPhpPointsToAPhpExecutable() {
+  public function testCloudyPhpPointsToAPhpExecutable() {
     $this->bootCloudy(__DIR__ . '/../t/ConfigTest/base.yml');
     $result = $this->execCloudy('echo $CLOUDY_PHP');
     $this->assertNotEmpty($result, 'Assert value for $CLOUDY_PHP');

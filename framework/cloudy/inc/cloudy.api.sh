@@ -19,10 +19,9 @@ function json_set() {
 
   local clean_json
 
-  # TODO Rewrite using source_php
-  clean_json="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_bash_filter" "$incoming_json")"
+  clean_json="$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "json_bash_filter" "$incoming_json")"
   if [[ $? -ne 0 ]]; then
-    write_log_error "json_set \"$path\" failed set JSON: $incoming_json"
+    write_log_error "json_set \"$path\" failed to set JSON: $incoming_json"
     write_log_error "$clean_json"
     return 1
   fi
@@ -39,8 +38,7 @@ function json_load_file() {
 
   local loaded_json
 
-  # TODO Rewrite using source_php
-  loaded_json="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_load_file" "$path_to_json")"
+  loaded_json="$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "json_load_file" "$path_to_json")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_load_file \"$path\" failed to load $path_to_json"
     write_log_error "$loaded_json"
@@ -77,8 +75,7 @@ function json_get_value() {
 
   local value
 
-  # TODO Rewrite using source_php
-  value="$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "json_get_value" "$path" "$json_content")"
+  value="$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "json_get_value" "$path" "$json_content")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_get_value \"$path\" failed against JSON: $(json_get)"
     write_log_error "$value"
@@ -644,9 +641,9 @@ function array_sort() {
 function array_sort_by_item_length() {
     local sorted
     local php_result
+    local result
 
-    # TODO Rewrite using source_php
-    php_result=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
+    php_result=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
     result=$?
     if [[ $result -ne 0 ]]; then
       write_log_error "array_sort_by_item_length failed."
@@ -2306,62 +2303,13 @@ function yaml_get() {
 function yaml_get_json() {
   local json
 
-  # TODO Rewrite using source_php
-  json=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/helpers.php" "yaml_to_json" "$yaml_content")
+  json=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "yaml_to_json" "$yaml_content")
   if [[ $? -ne 0 ]]; then
-    write_log_error "yaml_get_json \"$yaml\" failed against YAML: $($yaml_content)"
+    write_log_error "yaml_get_json \"$yaml\" failed against YAML: $yaml_content"
     write_log_error "$json"
     return 1
   fi
   echo "$json"
-}
-
-##
- # Include a PHP file within a Cloudy script with configuration context.
- #
- # @param string $path_to_php_file If this does not exist then the script will exit immediately with failure
- # @param... Any additional params are passed to PHP file.
- #
- # @echo Anything that is echoed in the PHP file.
- #
- # @return int The exit code of the PHP file.
- #
- # By including PHP files with this function you have access to the same
- # variables as in BASH.  You also have access to same-named Cloudy functions
- # such as: fail_because(), succeed_because(), exit_with_failure(), etc.
- ##
-function source_php() {
-  local path_to_php_file="$1"
-
-  local runtime_vars_path
-  local php_exit_code
-
-  if [[ ! "$path_to_php_file" ]]; then
-    exit_with_failure "\$path_to_php_file cannot be empty." --status=126
-  fi
-  if ! [ -f "$path_to_php_file" ]; then
-    exit_with_failure "$path_to_php_file not found and cannot be sourced." --status=125
-  fi
-
-  "$CLOUDY_PHP" "$CLOUDY_CORE_DIR/php/functions/source_php.php" "$path_to_php_file" "${@:2}"
-  php_exit_code=$?
-
-  # Import any variables that PHP has passed to us via cloudy_putenv().
-  runtime_vars_path="$CLOUDY_CACHE_DIR/_runtime_vars.$CLOUDY_RUNTIME_UUID.sh"
-  if [[ "$runtime_vars_path" ]] && [ -f "$runtime_vars_path" ]; then
-    write_log_debug "Reading PHP variables from $runtime_vars_path"
-    source "$runtime_vars_path"
-    rm "$runtime_vars_path"
-  fi
-
-  if [[ "$php_exit_code" -ne 0 ]]; then
-    path_to_php_file=$(realpath "$path_to_php_file")
-    write_log_error "$path_to_php_file exited with $php_exit_code"
-    exit_with_failure --status=$php_exit_code
-  else
-    write_log_debug "$path_to_php_file exited with $php_exit_code"
-  fi
-  return $php_exit_code
 }
 
 ##

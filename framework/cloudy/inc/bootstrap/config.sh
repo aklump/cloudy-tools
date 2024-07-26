@@ -4,10 +4,11 @@
  # @file Bootstrap the configuration layer.
  ##
 
+declare -rx CLOUDY_RUNTIME_ENV="$CLOUDY_CACHE_DIR/_runtime_vars.$CLOUDY_RUNTIME_UUID.sh";
+
 compile_config__runtime_files=$(event_dispatch "compile_config")
 
-# TODO Rewrite using source_php
-config_cache_id=$("$CLOUDY_PHP" $CLOUDY_ROOT/php/helpers.php _cloudy_get_config_cache_id "$ROOT\n$compile_config__runtime_files")
+config_cache_id=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "_cloudy_get_config_cache_id" "$ROOT\n$compile_config__runtime_files")
 
 source "$CLOUDY_CORE_DIR/inc/config/normalize.sh" || exit_with_failure "Cannot normalize configuration."
 source "$CLOUDY_CORE_DIR/inc/config/cache.sh" || exit_with_failure "Cannot cache configuration."

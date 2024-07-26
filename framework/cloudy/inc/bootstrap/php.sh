@@ -55,4 +55,21 @@ php_version=$("$CLOUDY_PHP" -v | head -1 | grep -E "PHP ([0-9.]+)")
 [[ ! "$php_version" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) does not appear to be a PHP binary; $CLOUDY_PHP -v failed to display PHP version" && return 6
 
 has_failed && return 1
+declare -xr CLOUDY_PHP="$CLOUDY_PHP"
+
+##
+ # @var PHP_FILE_RUNNER The absolute filepath; see code usage example.
+ #
+ # By including PHP files with this recommended method you have access to the
+ # same variables as in BASH.  You also have access to same-named Cloudy
+ # functions such as: fail_because(), succeed_because(), exit_with_failure(),
+ # etc.
+ #
+ # @code
+ # . "$PHP_FILE_RUNNER" .../some/file.php <ARG1> <ARG2> ...
+ # @endcode
+ ##
+declare -xr PHP_FILE_RUNNER="$CLOUDY_CORE_DIR/inc/cloudy.php_file_runner.sh"
+write_log_debug "\$PHP_FILE_RUNNER set to $PHP_FILE_RUNNER"
+
 return 0

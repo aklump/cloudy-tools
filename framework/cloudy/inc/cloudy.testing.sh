@@ -59,6 +59,7 @@ function do_tests_in() {
           fail_because "Test not found: $CLOUDY_ACTIVE_TEST"
         else
             let CLOUDY_TEST_COUNT=(CLOUDY_TEST_COUNT + 1)
+            write_log_debug "TEST #$CLOUDY_TEST_COUNT: $CLOUDY_ACTIVE_TEST"
             [ "$(type -t 'setup_before_test')" = "function" ] && setup_before_test
             create_test_sandbox
             $CLOUDY_ACTIVE_TEST

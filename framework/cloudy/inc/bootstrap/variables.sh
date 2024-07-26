@@ -16,7 +16,10 @@ source "$CLOUDY_CORE_DIR/inc/cloudy.define_variables.sh"
 if [[ "$CLOUDY_PACKAGE_CONFIG" ]] && ! path_is_absolute "$CLOUDY_PACKAGE_CONFIG"; then
   CLOUDY_PACKAGE_CONFIG="$(cd $(dirname "$r/$CLOUDY_PACKAGE_CONFIG") && pwd)/$(basename $CLOUDY_PACKAGE_CONFIG)"
 fi
-export CLOUDY_PACKAGE_CONFIG="$(realpath "$CLOUDY_PACKAGE_CONFIG")"
+if [[ "$CLOUDY_PACKAGE_CONFIG" ]] && [ -f "$CLOUDY_PACKAGE_CONFIG" ]; then
+  CLOUDY_PACKAGE_CONFIG="$(realpath "$CLOUDY_PACKAGE_CONFIG")"
+fi
+declare -rx CLOUDY_PACKAGE_CONFIG="$CLOUDY_PACKAGE_CONFIG"
 
 if [[ "$CLOUDY_LOG" ]]; then
   CLOUDY_LOG="$(path_resolve "$r" "$CLOUDY_LOG")"
@@ -25,17 +28,22 @@ if [[ "$CLOUDY_LOG" ]]; then
     fail_because "Please manually create \"$log_dir\" and ensure it is writeable."
     return 2
   fi
-  export CLOUDY_LOG="$(cd $log_dir && pwd)/$(basename $CLOUDY_LOG)"
+  declare -rx CLOUDY_LOG="$(cd "$log_dir" && pwd)/$(basename $CLOUDY_LOG)"
 fi
 
 # Detect installation type
-CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type)
+declare -rx CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type "$cloudy_package_controller")
 if [ $? -ne 0 ]; then
   write_log_error "Failed to determine \$CLOUDY_INSTALLED_AS"
 else
   write_log_debug "\$CLOUDY_INSTALLED_AS set to \"$CLOUDY_INSTALLED_AS\""
 fi
 
-CLOUDY_PACKAGE_CONTROLLER="$(realpath "$CLOUDY_PACKAGE_CONTROLLER")"
+declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$cloudy_package_controller")"
+unset cloudy_package_controller
 
-export CLOUDY_RUNTIME_UUID=$(create_uuid)
+declare -rx CLOUDY_RUNTIME_UUID=$(create_uuid)
+
+# Holds the path of the controlling script that is executing $PHP_FILE_RUNNER;
+# can be read by the PHP file to know it's parent script.
+declare -x PHP_FILE_RUN_CONTROLLER=''

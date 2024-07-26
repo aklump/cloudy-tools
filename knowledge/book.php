@@ -4,6 +4,7 @@
 /** @var string $book_path */
 /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
 
+use AKlump\CloudyDocumentation\Variables\LoadCodeExampleFileAsVariable;
 use AKlump\Knowledge\Events\AssemblePages;
 use AKlump\Knowledge\Events\AssembleWebpageAssets;
 use AKlump\Knowledge\Events\GetVariables;
@@ -97,25 +98,17 @@ $dispatcher->addListener(AssemblePages::NAME, function (AssemblePages $event) {
 });
 
 $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
-  $path_to_function_ex = $event->getPathToSource() . '/src/CloudyDocumentation/example_function.sh';
-  $example = file_get_contents($path_to_function_ex);
-  $example = preg_replace('#^\#!/usr/bin/env bash\n\s*#i', '', $example);
-  if (FALSE === $example) {
-    throw new RuntimeException(sprintf("Missing documentation example file.\nCheck if the path %s, has moved.", $path_to_function_ex));
-  }
-  $event->setVariable('function_docblock', $example);
+  $loader = new LoadCodeExampleFileAsVariable();
 
-  $path_to_file_ex = $event->getPathToSource() . '/src/CloudyDocumentation/example_file.sh';
-  $example = file_get_contents($path_to_file_ex);
-  $example = preg_replace('#^\#!/usr/bin/env bash\n\s*#i', '', $example);
-  if (FALSE === $example) {
-    throw new RuntimeException(sprintf("Missing documentation example file.\nCheck if the path %s, has moved.", $path_to_file_ex));
-  }
-  $event->setVariable('file_docblock', $example);
+  $base = $event->getPathToSource() . '/src/CloudyDocumentation';
+  $event->setVariable('function_docblock', $loader("$base/example_function.sh"));
+  $event->setVariable('file_docblock', $loader("$base/example_file.sh"));
 
+  $path_to_file_ex = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/InstallTypeCore/tests/variables.php';
+  $event->setVariable('file_variables_php', $loader($path_to_file_ex));
 
-  $path_to_file_ex = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/InstallTypeCore/php/_variables.php';
-  $example = file_get_contents($path_to_file_ex);
-  $example = preg_replace('#^<\?php\n\s*#i', '', $example);
-  $event->setVariable('file_variables_php', $example);
+  $base = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/KnowledgeExamples/';
+  $event->setVariable('php_usage_controller', $loader("$base/controller_include.sh"));
+  $event->setVariable('php_usage_php_file_runner', $loader("$base/json_decode.php"));
 });
+

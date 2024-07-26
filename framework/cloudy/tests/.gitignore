@@ -1,3 +1,4 @@
 *.cache
 reports/
 test_files/
+*.log

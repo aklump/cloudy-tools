@@ -6,6 +6,7 @@
 #
 
 CLOUDY_PACKAGE_CONFIG="$1";
+shift
 
 # The old variable is here on purpose to test and throw.
 APP_ROOT=.

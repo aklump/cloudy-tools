@@ -99,6 +99,7 @@ trait TestWithCloudyTrait {
    *
    * @param string $test_script Path to the bash test file to execute; it must
    * be relative to the dirname of the $cloudy_package_config.
+   * @param... Additional arguments sent to test script file.
    *
    * @return string
    *   The output from the execution.
@@ -109,7 +110,7 @@ trait TestWithCloudyTrait {
 
     if (!$this->pointsToFile($test_script)) {
       $data = $test_script . PHP_EOL;
-      $test_script = tempnam(sys_get_temp_dir(), time());
+      $test_script = tempnam(sys_get_temp_dir(), time()) . '.sh';
       file_put_contents($test_script, $data);
       $file_to_delete = $test_script;
     }
@@ -125,18 +126,22 @@ trait TestWithCloudyTrait {
 
     // Enable logging for all test runners.
     $exports .= sprintf('export CLOUDY_LOG="%s"', $this->getCloudyLog());
-
-    exec(sprintf($exports . ';' . __DIR__ . '/../cloudy_bridge/%s "%s" "%s"', $this->testRunner, $this->cloudyPackageConfig, $test_script), $this->cloudyOutput, $this->cloudyResultCode);
+    $command = sprintf($exports . ';' . __DIR__ . '/../cloudy_bridge/%s "%s" "%s"', $this->testRunner, $this->cloudyPackageConfig, $test_script);
+    exec($command, $this->cloudyOutput, $this->cloudyResultCode);
 
     if (isset($file_to_delete)) {
       unlink($file_to_delete);
     }
 
-    return implode(PHP_EOL, $this->cloudyOutput);
+    return $this->getCloudyOutput();
   }
 
-  public function getCloudyResultCode(): int {
+  public function getCloudyExitStatus(): int {
     return $this->cloudyResultCode;
+  }
+
+  public function getCloudyOutput(): string {
+    return implode(PHP_EOL, $this->cloudyOutput ?? []);
   }
 
   /**
@@ -145,6 +150,10 @@ trait TestWithCloudyTrait {
    * @return bool True if $test_script is a filename, rather than BASH code.
    */
   private function pointsToFile(string $test_script): bool {
+    if (preg_match('#\S+\.\S+#', $test_script, $matches)
+      && $matches[0] === basename($test_script)) {
+      return TRUE;
+    }
     $test_script_file = $this->cloudyTestDir . "/$test_script";
     if (file_exists($test_script_file)) {
       return TRUE;

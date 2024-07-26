@@ -5,6 +5,7 @@
 /** @var string $CLOUDY_PACKAGE_CONFIG */
 /** @var string $CLOUDY_BASEPATH */
 /** @var string $CLOUDY_RUNTIME_UUID */
+/** @var string $CLOUDY_RUNTIME_ENV */
 
 $data = [
   'CLOUDY_CORE_DIR' => $CLOUDY_CORE_DIR,
@@ -13,5 +14,6 @@ $data = [
   'CLOUDY_PACKAGE_CONFIG' => $CLOUDY_PACKAGE_CONFIG,
   'CLOUDY_BASEPATH' => $CLOUDY_BASEPATH,
   'CLOUDY_RUNTIME_UUID' => $CLOUDY_RUNTIME_UUID,
+  'CLOUDY_RUNTIME_ENV' => $CLOUDY_RUNTIME_ENV,
 ];
 echo json_encode($data);

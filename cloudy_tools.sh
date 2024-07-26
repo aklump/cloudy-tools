@@ -288,11 +288,11 @@ case $command in
 
     # Convert YAML config files to JSON, if necessary.
     if has_option "json"; then
-      # TODO Rewrite using source_php
+      # TODO Rewrite using $PHP_FILE_RUNNER
       echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "script.yml") >${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
       [ $? -eq 0 ] && rm script.yml
 
-      # TODO Rewrite using source_php
+      # TODO Rewrite using $PHP_FILE_RUNNER
       echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "$WDIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
       [ $? -eq 0 ] && rm script.example.yml
     else

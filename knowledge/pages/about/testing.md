@@ -5,10 +5,10 @@ tags: ''
 
 # Cloudy Core Testing
 
-## PHP Unit Tests
+To run all tests us:
 
-```shell
-cd framework/cloudy
-composer install
-bin/run_unit_tests.sh
+```bash
+./bin/run_all_tests.sh
 ```
+
+Open that file to see how to cherry pick only some tests.

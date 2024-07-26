@@ -11,7 +11,7 @@
  #
  ##
 
-export CLOUDY_CACHE_DIR="$CLOUDY_ROOT/cache"
+declare -rx CLOUDY_CACHE_DIR="$CLOUDY_ROOT/cache"
 
 CACHED_CONFIG_FILEPATH="$CLOUDY_CACHE_DIR/_cached.$(path_filename $SCRIPT).config.sh"
 CACHED_CONFIG_JSON_FILEPATH="$CLOUDY_CACHE_DIR/_cached.$(path_filename $SCRIPT).config.json"

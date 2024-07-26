@@ -4,8 +4,8 @@
  # @file Define all the variables used by Cloudy Core
  #
  # @export array CLOUDY_FAILURES
+ # @export int CLOUDY_EXIT_STATUS
  # @global array CLOUDY_SUCCESSES
- # @global int CLOUDY_EXIT_STATUS
  # @global string CLOUDY_INSTALL_TYPE_COMPOSER
  # @global string CLOUDY_INSTALL_TYPE_CORE
  # @global string CLOUDY_INSTALL_TYPE_PM
@@ -16,7 +16,7 @@
  # @global string LIL2
  ##
 
-CLOUDY_EXIT_STATUS=0
+export CLOUDY_EXIT_STATUS=0
 CLOUDY_INSTALL_TYPE_COMPOSER='composer'
 CLOUDY_INSTALL_TYPE_CORE='cloudy_core'
 CLOUDY_INSTALL_TYPE_PM='cloudy_pm'
@@ -25,6 +25,7 @@ LI2="│   $LI"
 LI="├──"
 LIL2="│   $LIL"
 LIL="└──"
-declare -a CLOUDY_FAILURES=()
-export CLOUDY_PHP_FAILURES=''
-declare -a CLOUDY_SUCCESSES=()
+declare -ax CLOUDY_FAILURES=()
+export CLOUDY_FAILURES__SERIALIZED_ARRAY=$(declare -p CLOUDY_FAILURES)
+declare -ax CLOUDY_SUCCESSES=()
+export CLOUDY_SUCCESSES__SERIALIZED_ARRAY=$(declare -p CLOUDY_SUCCESSES)

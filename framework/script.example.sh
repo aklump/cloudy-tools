@@ -61,10 +61,6 @@ case $command in
         echo; echo
         ;;
 
-    "help")
-        exit_with_help
-        ;;
-
 esac
 
 throw "Unhandled command \"$command\"."

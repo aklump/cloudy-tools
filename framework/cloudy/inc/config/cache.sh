@@ -19,8 +19,7 @@ CLOUDY_CONFIG_HAS_CHANGED=true
 [[ "$cloudy_development_skip_config_validation" == true ]] && write_log_dev_warning "Configuration validation is disabled due to \$cloudy_development_skip_config_validation == true."
 
 # Convert the JSON to bash config.
-# TODO Rewrite using source_php
-"$CLOUDY_PHP" "$CLOUDY_CORE_DIR/php/config/cache.php" "$ROOT" "cloudy_config" "$CLOUDY_CONFIG_JSON" >"$CACHED_CONFIG_FILEPATH"
+. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/config/cache.php" "$ROOT" "cloudy_config" "$CLOUDY_CONFIG_JSON" >"$CACHED_CONFIG_FILEPATH"
 json_to_bash_result=$?
 if [[ $json_to_bash_result -ne 0 ]]; then
   fail_because "php/config/cache.php exited with code $json_result".

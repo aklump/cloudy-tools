@@ -2,7 +2,7 @@
 
 #
 # @file
-# Lorem ipsum dolar sit amet consectador.
+# Controller for __APP_NAME
 #
 
 # Define the configuration file relative to this script.
@@ -28,12 +28,10 @@ command=$(get_command)
 case $command in
 
     "command")
-
-    # TODO: Write the code to handle this command here.
-
-    has_failed && exit_with_failure
-    exit_with_success
-    ;;
+      # TODO: Write the code to handle this command here.
+      has_failed && exit_with_failure
+      exit_with_success
+      ;;
 
 esac
 

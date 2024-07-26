@@ -7,15 +7,11 @@ tags: usage
 
 Functions should adhere to the following docblock convention:
 
-```shell
 {{ function_docblock|raw }}
-```
 
 Sourced files should include a docblock along these lines:
 
-```shell
 {{ file_docblock|raw }}
-```
 
 ## Developers
 

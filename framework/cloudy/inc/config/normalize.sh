@@ -24,7 +24,7 @@ CLOUDY_CONFIG_HAS_CHANGED=true
 write_log_debug "$(basename $CACHED_CONFIG_JSON_FILEPATH) will be (re)built."
 
 # Normalize the config file to JSON.
-# TODO Rewrite using source_php
+# TODO Rewrite using $PHP_FILE_RUNNER
 export CLOUDY_CONFIG_JSON="$("$CLOUDY_PHP" "$CLOUDY_CORE_DIR/php/config/normalize.php" "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "$CLOUDY_PACKAGE_CONFIG" "$cloudy_development_skip_config_validation" "$compile_config__runtime_files")"
 json_result=$?
 

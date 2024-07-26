@@ -2,18 +2,31 @@
 
 /**
  * @file
- * Used to invoke a PHP function using source_php
- *
- * @param $argv [1] The function to call.
- * @param... Any parameters to be passed to the function.
- *
- * @code
- * source_php "$CLOUDY_CLOUDY_CORE_DIR/php/invoke.php" "create_uuid"
- * @endcode
+ * Return a configuration value by key.
  */
 
-$function_args = $argv;
-array_shift($function_args);
-$function = array_shift($function_args);
-call_user_func_array($function, $function_args);
+use AKlump\LoftLib\Bash\Configuration;
 
+$args = $argv;
+array_shift($args);
+$function = array_shift($args);
+
+if (!function_exists($function)) {
+  fail_because('Function does not exist: ' . $function);
+  exit_with_failure();
+}
+
+if ($function == 'array_sort_by_item_length') {
+  $var_name = array_shift($args);
+}
+
+$result = call_user_func_array($function, $args);
+
+if (is_array($result)) {
+  $var_service = new Configuration('cloudy_config');
+  $eval_code = $var_service->getVarEvalCode($var_name, $result);
+  echo $eval_code;
+}
+else {
+  echo $result;
+}

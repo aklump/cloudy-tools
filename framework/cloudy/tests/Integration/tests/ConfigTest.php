@@ -17,7 +17,7 @@ class ConfigTest extends TestCase {
     $this->assertSame('Install Type Core', $output);
   }
 
-  public function testCanReadAdditonalConfig() {
+  public function testCanReadAdditionalConfig() {
     $output = $this->execCloudy('eval $(get_config_as "color" "color"); echo $color');
     $this->assertSame('blue', $output);
   }

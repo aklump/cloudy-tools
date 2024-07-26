@@ -8,6 +8,14 @@ page_order:
     - cloudy_core_testing
     - changelog
     - cloudy_basepath
+  php:
+    - composer
+    - php
+    - php_file_runner
+    - php_errors
+    - php_envvars
+    - cloudy_php
+    - php_version
   bash:
     - arrays
     - strings
@@ -20,14 +28,12 @@ page_order:
     - app_root
     - arguments
     - command
-    - composer
     - configuration
     - conventions
     - development
     - documenting
     - error_handling
     - events
-    - cloudy_php
     - installer
     - lists
     - localize

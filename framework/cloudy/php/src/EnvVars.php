@@ -20,6 +20,8 @@ use RuntimeException;
  * echo ${NOTES[0]}
  * echo ${NOTES[1]}
  * @endcode
+ *
+ * @see \AKlump\Cloudy\DeserializeBashArray
  */
 class EnvVars {
 
@@ -32,8 +34,8 @@ class EnvVars {
    */
   private $runtimeVarsPath;
 
-  public function __construct(string $transport_path) {
-    $this->runtimeVarsPath = $transport_path;
+  public function __construct(string $runtime_vars_path) {
+    $this->runtimeVarsPath = $runtime_vars_path;
   }
 
   /**
@@ -55,7 +57,7 @@ class EnvVars {
     if (is_array($value)) {
       $php_assignment = "$name=" . self::JSON_HEADER . json_encode($value);
       $this->bashQuoteValue($value);
-      $bash_assignment = sprintf("declare -a $name=(%s)", implode(' ', $value));
+      $bash_assignment = sprintf("declare -ax $name=(%s)", implode(' ', $value));
     }
     else {
       $php_assignment = "$name=$value";
@@ -95,6 +97,12 @@ class EnvVars {
     }
     elseif (is_numeric($value)) {
       $value *= 1;
+    }
+    elseif (is_bool($value)) {
+      $value = $value ? 'TRUE' : 'FALSE';
+    }
+    elseif (is_string($value) && in_array($value, ['TRUE', 'FALSE'])) {
+      $value = $value === 'TRUE';
     }
   }
 

@@ -60,22 +60,6 @@ On success you should see something resembling the following:
 
 ![Successful installation](images/installed.jpg)
 
-## Usage
-
-Beyond the [internal variables](https://www.tldp.org/LDP/abs/html/internalvariables.html#BASHSUBSHELLREF) the following variables are made available by Cloudy.
-
-| varname        | description                                                                 |
-|----------------|-----------------------------------------------------------------------------|
-| `$CLOUDY_NAME` | Machine name of your script.                                                |
-| `$ROOT`        | The directory containing your script.                                       |
-| `$APP_ROOT`    | All relative configuration files use this as base.  [Learn more](@app_root) |
-| `$SCRIPT`      | Absolute path to your script.                                               |
-| `$CONFIG`      | Absolute path to the base config file.                                      |
-| `$WDIR`        | The working directory when script was initiated.                            |
-| `$LOGFILE`     | Absolute path to a log file, if enabled.                                    |
-
-* Determine your version of BASH with `echo $BASH_VERSION`
-
 ## Learn More
 
 * Learn more about BASH with the [Advanced Bash-Scripting Guide](https://www.tldp.org/LDP/abs/html/).

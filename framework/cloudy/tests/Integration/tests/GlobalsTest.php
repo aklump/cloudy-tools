@@ -12,16 +12,6 @@ class GlobalsTest extends TestCase {
 
   use TestWithCloudyTrait;
 
-  public function testGetEnvReturnsVariableSetByCloudyPutEnv() {
-    $result = $this->execCloudy(sprintf('getenv.sh'));
-    $this->assertSame("Evergreen trees are nice!", $result);
-  }
-
-  public function testControllerReceivesVariablesSetByCloudyPutEnv() {
-    $result = $this->execCloudy(sprintf('cloudy_putenv.sh'));
-    $this->assertSame("Alpha Bravo\nLorem ipsum dolar sit", $result);
-  }
-
   public function dataFortestGlobalsProvider() {
     $integration_tests_dir = __DIR__ . '/../';
     $tests = [];
@@ -60,16 +50,18 @@ class GlobalsTest extends TestCase {
   }
 
   public function testSourcePHPProvidesExpectedVariables() {
-    $result = $this->execCloudy(sprintf('source_php "%s"', __DIR__ . '/../t/InstallTypeCore/php/_variables.php'));
+    $result = $this->execCloudy(sprintf('. "$PHP_FILE_RUNNER" "%s"', __DIR__ . '/../t/InstallTypeCore/tests/variables.php'));
     $this->assertNotEmpty($result);
     $data = json_decode($result, TRUE);
-    $this->assertSame($this->getCloudyCoreDir(), $data['CLOUDY_CORE_DIR'], 'Assert $CLOUDY_CORE_DIR in source_php');
-    $this->assertSame($this->getCloudyCacheDir(), $data['CLOUDY_CACHE_DIR'], 'Assert $CLOUDY_CACHE_DIR in source_php');
-    $this->assertSame($this->getCloudyPackageController(), $data['CLOUDY_PACKAGE_CONTROLLER'], 'Assert $CLOUDY_PACKAGE_CONTROLLER in source_php');
-    $this->assertSame($this->getCloudyPackageConfig(), $data['CLOUDY_PACKAGE_CONFIG'], 'Assert $CLOUDY_PACKAGE_CONFIG in source_php');
+    $this->assertSame($this->getCloudyCoreDir(), $data['CLOUDY_CORE_DIR'], 'Assert $CLOUDY_CORE_DIR in php_file_runner');
+    $this->assertSame($this->getCloudyCacheDir(), $data['CLOUDY_CACHE_DIR'], 'Assert $CLOUDY_CACHE_DIR in php_file_runner');
+    $this->assertSame($this->getCloudyPackageController(), $data['CLOUDY_PACKAGE_CONTROLLER'], 'Assert $CLOUDY_PACKAGE_CONTROLLER in php_file_runner');
+    $this->assertSame($this->getCloudyPackageConfig(), $data['CLOUDY_PACKAGE_CONFIG'], 'Assert $CLOUDY_PACKAGE_CONFIG in php_file_runner');
     $expected_cloudy_basepath = realpath(__DIR__ . '/../t/InstallTypeCore/');
-    $this->assertSame($expected_cloudy_basepath, $data['CLOUDY_BASEPATH'], 'Assert $CLOUDY_BASEPATH in source_php');
+    $this->assertSame($expected_cloudy_basepath, $data['CLOUDY_BASEPATH'], 'Assert $CLOUDY_BASEPATH in php_file_runner');
     $this->assertMatchesRegularExpression('#^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$#', $data['CLOUDY_RUNTIME_UUID']);
+
+    $this->assertMatchesRegularExpression('#\.sh$#', $data['CLOUDY_RUNTIME_ENV'], 'Assert $CLOUDY_RUNTIME_ENV appears to be a shell filepath.');
   }
 
   public function testCachedJSONContainsExpectedGlobals() {
