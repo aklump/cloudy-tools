@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 
 /**
@@ -20,88 +19,77 @@
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 
+$path_to_config_schema = $argv[1];
+$CLOUDY_PACKAGE_CONFIG = $argv[2];
+$skip_config_validation = isset($argv[3]) && $argv[3] === 'true';
+$additional_config_paths = array_filter(explode("\n", (isset($argv[4]) ? $argv[4] : '')));
+
+$config = [
+  '__cloudy' => [
+    'CLOUDY_CORE_DIR' => getenv('CLOUDY_CORE_DIR'),
+    'CLOUDY_CACHE_DIR' => getenv('CLOUDY_CACHE_DIR'),
+    'CLOUDY_PACKAGE_CONTROLLER' => getenv('SCRIPT'),
+    'CLOUDY_PACKAGE_CONFIG' => $CLOUDY_PACKAGE_CONFIG,
+    'CLOUDY_BASEPATH' => CLOUDY_BASEPATH,
+
+    'CLOUDY_NAME' => getenv('CLOUDY_NAME'),
+    'WDIR' => getenv('WDIR'),
+    'CLOUDY_LOG' => getenv('CLOUDY_LOG'),
+    //      'PACKAGE_BASEPATH' => ROOT,
+
+    // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
+    //      'CONFIG' => $CLOUDY_PACKAGE_CONFIG,
+    // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
+    //      'APP_ROOT' => CLOUDY_BASEPATH,
+    // @deprecated Since version 2.0, Use PACKAGE_BASEPATH instead.
+    //      'ROOT' => ROOT,
+    // @deprecated Since version 2.0, Use CLOUDY_PACKAGE_CONTROLLER instead.
+    //      'SCRIPT' => getenv('SCRIPT'),
+  ],
+];
+$config = _cloudy_merge_config($config, _cloudy_load_configuration_data($CLOUDY_PACKAGE_CONFIG));
+
+if (empty($config['config_path_base'])) {
+  $config['config_path_base'] = CLOUDY_BASEPATH;
+}
+else {
+  $path = path_resolve($config['config_path_base'], dirname($CLOUDY_PACKAGE_CONFIG));
+  $config['config_path_base'] = $path;
+}
+
+$extra_config_paths = array_filter(array_merge($config['additional_config'] ?? [], $additional_config_paths ?? []));
+foreach ($extra_config_paths as $path_or_glob) {
+  $paths = _cloudy_realpath($path_or_glob);
+  foreach ($paths as $path) {
+    $new_data = _cloudy_load_configuration_data($path, FALSE);
+    if ($new_data) {
+      $config = _cloudy_merge_config($config, $new_data);
+    }
+  }
+}
+
+// Validate against cloudy_config.schema.json.
+$validator = new Validator();
+$validate_data = json_decode(json_encode($config));
 try {
-  require_once __DIR__ . '/../bootstrap.php';
-
-  $path_to_config_schema = $argv[1];
-  $CLOUDY_PACKAGE_CONFIG = $argv[2];
-  $skip_config_validation = isset($argv[3]) && $argv[3] === 'true';
-  $additional_config_paths = array_filter(explode("\n", (isset($argv[4]) ? $argv[4] : '')));
-
-  $config = [
-    '__cloudy' => [
-      'CLOUDY_CORE_DIR' => getenv('CLOUDY_CORE_DIR'),
-      'CLOUDY_CACHE_DIR' => getenv('CLOUDY_CACHE_DIR'),
-      'CLOUDY_PACKAGE_CONTROLLER' => getenv('SCRIPT'),
-      'CLOUDY_PACKAGE_CONFIG' => $CLOUDY_PACKAGE_CONFIG,
-      'CLOUDY_BASEPATH' => CLOUDY_BASEPATH,
-
-      'CLOUDY_NAME' => getenv('CLOUDY_NAME'),
-      'WDIR' => getenv('WDIR'),
-      'CLOUDY_LOG' => getenv('CLOUDY_LOG'),
-      //      'PACKAGE_BASEPATH' => ROOT,
-
-      // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
-      //      'CONFIG' => $CLOUDY_PACKAGE_CONFIG,
-      // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
-      //      'APP_ROOT' => CLOUDY_BASEPATH,
-      // @deprecated Since version 2.0, Use PACKAGE_BASEPATH instead.
-      //      'ROOT' => ROOT,
-      // @deprecated Since version 2.0, Use CLOUDY_PACKAGE_CONTROLLER instead.
-      //      'SCRIPT' => getenv('SCRIPT'),
-    ],
-  ];
-  $config = _cloudy_merge_config($config, _cloudy_load_configuration_data($CLOUDY_PACKAGE_CONFIG));
-
-  if (empty($config['config_path_base'])) {
-    $config['config_path_base'] = CLOUDY_BASEPATH;
+  if (!($schema = json_decode(file_get_contents($path_to_config_schema)))) {
+    throw new RuntimeException("Invalid JSON in $path_to_config_schema");
   }
-  else {
-    $path = path_resolve($config['config_path_base'], dirname($CLOUDY_PACKAGE_CONFIG));
-    $config['config_path_base'] = $path;
+  if (!$skip_config_validation) {
+    $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);
   }
-
-  $extra_config_paths = array_filter(array_merge($config['additional_config'] ?? [], $additional_config_paths ?? []));
-  foreach ($extra_config_paths as $path_or_glob) {
-    $paths = _cloudy_realpath($path_or_glob);
-    foreach ($paths as $path) {
-      $new_data = _cloudy_load_configuration_data($path, FALSE);
-      if ($new_data) {
-        $config = _cloudy_merge_config($config, $new_data);
-      }
-    }
-  }
-
-  // Validate against cloudy_config.schema.json.
-  $validator = new Validator();
-  $validate_data = json_decode(json_encode($config));
-  try {
-    if (!($schema = json_decode(file_get_contents($path_to_config_schema)))) {
-      throw new RuntimeException("Invalid JSON in $path_to_config_schema");
-    }
-    if (!$skip_config_validation) {
-      $validator->validate($validate_data, $schema, Constraint::CHECK_MODE_EXCEPTIONS);
-    }
-  }
-  catch (Exception $exception) {
-    $class = get_class($exception);
-    throw new $class("Configuration syntax error in \"" . basename($CLOUDY_PACKAGE_CONFIG) . '": ' . $exception->getMessage());
-  }
-
-  $last_error = error_get_last();
-  if (!empty($last_error)) {
-    // If there are any errors then we have to exit with 1 so that the JSON will
-    // not be printed to the cache file; otherwise the cache breaks the cloudy
-    // will not be able to load next run due to error messages in the cached.sh
-    // file.
-    exit(1);
-  }
-  echo json_encode($config, JSON_UNESCAPED_SLASHES);
 }
 catch (Exception $exception) {
-  write_log_exception($exception);
-  echo $exception->getMessage();
-  exit(1);
+  $class = get_class($exception);
+  throw new $class("Configuration syntax error in \"" . basename($CLOUDY_PACKAGE_CONFIG) . '": ' . $exception->getMessage());
 }
 
-exit(0);
+$last_error = error_get_last();
+if (!empty($last_error)) {
+  // If there are any errors then we have to exit with 1 so that the JSON will
+  // not be printed to the cache file; otherwise the cache breaks the cloudy
+  // will not be able to load next run due to error messages in the cached.sh
+  // file.
+  exit(1);
+}
+echo json_encode($config, JSON_UNESCAPED_SLASHES);

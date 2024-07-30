@@ -54,6 +54,10 @@ function _cloudy_detect_installation_type() {
   check_cloudy="$(_resolve_file "$base/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_CORE && return 0
 
+  check_composer="$(_resolve_file "$base/cloudy/composer.json")"
+  check_cloudy="$(_resolve_file "$base/cloudy/cloudy.sh")"
+  [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SCRIPT && return 0
+
   check_composer="$(_resolve_file "$base/framework/cloudy/composer.json")"
   check_cloudy="$(_resolve_file "$base/framework/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SELF && return 0
@@ -97,6 +101,9 @@ function _cloudy_detect_app_root_by_installation() {
   "$CLOUDY_INSTALL_TYPE_SELF")
     app_root="$base"
     ;;
+  "$CLOUDY_INSTALL_TYPE_SCRIPT")
+    app_root="$base"
+    ;;
   "$CLOUDY_INSTALL_TYPE_COMPOSER")
     app_root="$base/../../../"
     ;;
@@ -122,6 +129,9 @@ function _cloudy_detect_composer_vendor_by_installation() {
     case "$installation_type" in
     "$CLOUDY_INSTALL_TYPE_SELF")
       vendor="$base/framework/cloudy/vendor"
+      ;;
+    "$CLOUDY_INSTALL_TYPE_SCRIPT")
+      vendor="$base/cloudy/vendor"
       ;;
     "$CLOUDY_INSTALL_TYPE_COMPOSER")
       vendor="$base/../../../vendor"

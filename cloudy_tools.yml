@@ -82,6 +82,7 @@ commands:
     help: 'Create a new script using Cloudy.'
     arguments:
       basename:
+        required: true
         help: 'The basename of the script to create.'
     options:
       config:

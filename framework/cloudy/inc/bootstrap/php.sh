@@ -20,7 +20,6 @@ if [[ "$COMPOSER_VENDOR" ]]; then
     # TODO Change this to _resolve()?
     COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
   fi
-  [[ ! -d "$COMPOSER_VENDOR" ]] && fail_because "\$COMPOSER_VENDOR is not a directory: $COMPOSER_VENDOR" && return 7
 else
   COMPOSER_VENDOR=$(_cloudy_detect_composer_vendor_by_installation "$CLOUDY_INSTALLED_AS")
   if [ $? -ne 0 ]; then
@@ -29,6 +28,8 @@ else
     return 2;
   fi
 fi
+
+[[ ! -d "$COMPOSER_VENDOR" ]] && fail_because "\$COMPOSER_VENDOR is not a directory: $COMPOSER_VENDOR" && return 7
 write_log_debug "\$COMPOSER_VENDOR is \"$COMPOSER_VENDOR\""
 
 ! event_dispatch "pre_config" && fail_because "Non-zero returned by on_pre_config()." && return 3;

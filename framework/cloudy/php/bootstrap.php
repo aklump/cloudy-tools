@@ -5,6 +5,9 @@
  * Bootstrap for all php files.
  */
 
+/** @var $read_only_vars */
+
+require_once $read_only_vars['COMPOSER_VENDOR'] . '/autoload.php';
 require_once __DIR__ . '/cloudy.api.php';
 require_once __DIR__ . '/error_handler.php';
 require_once __DIR__ . '/cloudy.functions.php';
