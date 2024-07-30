@@ -9,6 +9,7 @@
  # @return 4 If PHP cannot be found.
  # @return 5 If $CLOUDY_PHP is not executable.
  # @return 6 If $CLOUDY_PHP path does not appear to be a PHP binary.
+ # @return 7 If $COMPOSER_VENDOR path does not point to an existing directory.
  ##
 
 if [[ "$COMPOSER_VENDOR" ]]; then
@@ -19,6 +20,7 @@ if [[ "$COMPOSER_VENDOR" ]]; then
     # TODO Change this to _resolve()?
     COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
   fi
+  [[ ! -d "$COMPOSER_VENDOR" ]] && fail_because "\$COMPOSER_VENDOR is not a directory: $COMPOSER_VENDOR" && return 7
 else
   COMPOSER_VENDOR=$(_cloudy_detect_composer_vendor_by_installation "$CLOUDY_INSTALLED_AS")
   if [ $? -ne 0 ]; then
