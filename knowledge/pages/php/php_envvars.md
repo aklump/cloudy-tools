@@ -9,6 +9,14 @@ _variables.php_
 
 {{ file_variables_php|raw }}
 
+## Accessing Configuration via $CLOUDY_CONFIG_JSON
+
+The configuration will be written to an environment variable `$CLOUDY_CONFIG_JSON`, which can be decoded by PHP. You may not need to do this if you are using `$PHP_FILE_RUNNER` as some configuration is already provided as context.
+
+```php
+$config = json_decode(getenv('CLOUDY_CONFIG_JSON'), TRUE);
+```
+
 ## Passing Variables from PHP to BASH
 
 If you want your PHP code to set a BASH variable, do like this:

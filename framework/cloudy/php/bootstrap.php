@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Bootstrap for all php files.
+ * Bootstrap for all PHP files.
  */
 
 /** @var $read_only_vars */

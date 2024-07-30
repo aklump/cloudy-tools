@@ -5,7 +5,7 @@ tags: examples
 
 # Single File Plugins Pattern
 
-Here is a pattern that can be used if you want to allow "plugin" type files, php or bash, to be used by your project:
+Here is a pattern that can be used if you want to allow "plugin" type files, PHP or BASH, to be used by your project:
 
 _Implementing controller snippet:_
 

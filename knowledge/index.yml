@@ -9,13 +9,11 @@ page_order:
     - changelog
     - cloudy_basepath
   php:
-    - composer
-    - php
     - php_file_runner
-    - php_errors
     - php_envvars
-    - cloudy_php
+    - php_errors
     - php_version
+    - composer
   bash:
     - arrays
     - strings

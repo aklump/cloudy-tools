@@ -5,9 +5,20 @@ tags: usage, php, composer, dependencies
 
 # Building a Cloudy-based App w/ Composer
 
-By default Cloudy handles it's own PHP dependencies internally using Composer; it includes the vendor directory in the codebase so you never have to think about it.
+Cloudy uses Composer for it's PHP dependencies. By default these dependencies are located within the _cloudy_ folder and managed by _cloudy/composer.json_. Cloudy will try to install these dependencies using composer when you run `cloudy new`.
 
-This strategy becomes unnecessary and possibly confusing if the app you are building will also manage dependencies using Composer. When this is the case you should make the following modifications to consolidate the dependencies into a single _vendor/_ directory and follow Composer best-practices by excluding the vendor directory from your app's code repository.
+```text
+./cloudy/
+  ├── LICENSE
+  ├── cloudy.sh
+  ├── cloudy_config.schema.json
+  ├── cloudypm_info.schema.json
+  ├── composer.json
+  ├── composer.lock
+  ├── vendor/
+```
+
+It's possible however, to implement Cloudy into an existing app that uses Composer. That is to say, Cloudy itself becomes a composer dependency. In such case you should make a few changes as described below:
 
 ## Tell Composer About Cloudy
 
@@ -21,9 +32,9 @@ This strategy becomes unnecessary and possibly confusing if the app you are buil
       }
    ]
    ```   
-1. ... then tell Composer where to find Cloudy: `composer require aklump/cloudy`.
-1. Delete `cloudy/vendor` and `cloudy/composer.lock`; these will no longer be used...
-1. ... and just to be sure, set those same files to be ignored by source control, e.g.,
+1. `composer require aklump/cloudy:@dev`
+1. Delete `cloudy/vendor` and `cloudy/composer.lock`; these will no longer be used.
+1. Set those same files to be ignored by source control, e.g.,
 
    ```gitignore
    /cloudy/vendor/

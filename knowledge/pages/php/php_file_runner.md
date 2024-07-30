@@ -3,15 +3,19 @@ id: php_file_runner
 tags: ''
 -->
 
-# Embedding PHP Within Cloudy
+# Writing Cloudy PHP
 
-## The BASH Side of Things
+Mixing PHP with BASH using Cloudy is quite simple.
+
+## On the BASH Side
 
 ### Basic PHP File Inclusion Syntax
 
 ```php
 . "$PHP_FILE_RUNNER" <php_file> <args...>
 ```
+
+The above pattern allows your PHP file to execute within the current cloudy context and configuration. Cloudy also provides functions in PHP you will recognize from Cloudy's BASH API.
 
 ### Capturing php_file's Output
 
@@ -42,7 +46,7 @@ if has_failed; then
 fi 
 ```
 
-## The PHP Side of Things
+## On the PHP Side
 
 * Use [echo](https://www.php.net/manual/en/function.echo.php) as you would in a BASH function or sourced file.
 * Return values are always ignored; however [return](https://www.php.net/manual/en/function.return.php) may be used for early exit and/or code flow.
@@ -50,3 +54,16 @@ fi
 * To indicate failure use `fail_because` or `exit_with_failure`. To set exit status pass the number to one of those functions.
 * Any exception will be automatically converted to `exit_with_failure` and the script will stop immediately.
 * The BASH parent script can be known by looking at `$PHP_FILE_RUN_CONTROLLER`
+* Never hardcode PHP into your app codebase, e.g. `php`; instead if you must point to the PHP binary then use the variable `"$CLOUDY_PHP"`
+
+## Complete Code Example
+
+Let's say your Cloudy app defines the command  `json-decode`. Because PHP has a native function for this we will use PHP to do the work instead of BASH.
+
+This excerpt, taken from the _Cloudy Package Controller_, shows how to reference the PHP file that handles the `json-decode` command provided by the user.
+
+{{ php_usage_controller|raw }}
+
+Here are the contents of a PHP file, which will do the work for the command `json-decode`. Notice the use of the functions that you have been using while writing Cloudy BASH code.
+
+{{ php_usage_php_file_runner|raw }}
