@@ -46,4 +46,4 @@ It's possible however, to implement Cloudy into an existing app that uses Compos
 _This step is usually unnecessary, as it will be detected automatically in most cases._
 
 1. Let's say your Cloudy-based controller is called _foo.sh_.
-1. Open _foo.sh_ and add the path (relative to _foo.sh_) to the vendor directory as `COMPOSER_VENDOR`. See _script.example.sh_ for code example.
+1. Open _foo.sh_ and add the path (relative to _foo.sh_) to the vendor directory as `CLOUDY_COMPOSER_VENDOR`. See _script.example.sh_ for code example.

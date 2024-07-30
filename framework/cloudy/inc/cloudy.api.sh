@@ -780,7 +780,7 @@ function get_config_keys_as() {
 
 ## Echo eval code for paths of a configuration item.
  #
- # Relative paths are made absolute using $APP_ROOT.
+ # Relative paths are made absolute using $CLOUDY_BASEPATH.
  #
  # @param string The path to the config item, e.g. "files.private"
  # @option -a If you are expecting an array
@@ -801,7 +801,7 @@ function get_config_path() {
 
 # Echo eval code for paths of a configuration item using custom var.
 #
-# Relative paths are made absolute using $APP_ROOT.
+# Relative paths are made absolute using $CLOUDY_BASEPATH.
 #
 # @param string The variable name to assign the value to.
 # @param string The path to the config item, e.g. "files.private"
@@ -1224,10 +1224,10 @@ function handle_init() {
     local token_match
     local uninterpolated_token
 
-    # Token support is detected by checking if APP_ROOT has been set yet or not.
+    # Token support is detected by checking if CLOUDY_BASEPATH has been set yet or not.
     # If this is called too early then the configuration is not loaded and token
     # support will not be supported.
-    [[ "$APP_ROOT" ]] && token_support=true || token_support=false
+    [[ "$CLOUDY_BASEPATH" ]] && token_support=true || token_support=false
 
     # @see changelog for version 2.0.0
     grep \${config_path_base} "$path_to_files_map" > /dev/null
@@ -1238,7 +1238,7 @@ function handle_init() {
     token_match='\{.+\}'
     while read -r from to || [[ -n "$line" ]]; do
       if [[ "$token_support" == true ]]; then
-        to="${to/\{APP_ROOT\}/$APP_ROOT}"
+        to="${to/\{CLOUDY_BASEPATH\}/$CLOUDY_BASEPATH}"
       fi
       if [[ "$from" == "*" ]]; then
           to="${to%\*}"

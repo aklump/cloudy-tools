@@ -60,8 +60,14 @@ class GlobalsTest extends TestCase {
     $expected_cloudy_basepath = realpath(__DIR__ . '/../t/InstallTypeCore/');
     $this->assertSame($expected_cloudy_basepath, $data['CLOUDY_BASEPATH'], 'Assert $CLOUDY_BASEPATH in php_file_runner');
     $this->assertMatchesRegularExpression('#^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$#', $data['CLOUDY_RUNTIME_UUID']);
-
     $this->assertMatchesRegularExpression('#\.sh$#', $data['CLOUDY_RUNTIME_ENV'], 'Assert $CLOUDY_RUNTIME_ENV appears to be a shell filepath.');
+    $this->assertDirectoryExists($data['CLOUDY_COMPOSER_VENDOR'], 'Assert $CLOUDY_COMPOSER_VENDOR points to an existing directory.');
+    $this->assertIsArray($data['CLOUDY_FAILURES'], 'Assert $CLOUDY_FAILURES is set as an array.');
+    $this->assertIsArray($data['CLOUDY_SUCCESSES'], 'Assert $CLOUDY_SUCCESSES is set as an array.');
+    $this->assertIsInt($data['CLOUDY_EXIT_STATUS'], 'Assert $CLOUDY_EXIT_STATUS is set as an integer.');
+    $this->assertMatchesRegularExpression('#\.sh$#', $data['PHP_FILE_RUN_CONTROLLER'], 'Assert $PHP_FILE_RUN_CONTROLLER appears to be a shell filepath.');
+    
+    $this->assertJson($data['CLOUDY_CONFIG_JSON']);
   }
 
   public function testCachedJSONContainsExpectedGlobals() {

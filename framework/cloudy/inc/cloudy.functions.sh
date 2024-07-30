@@ -423,7 +423,7 @@ function _cloudy_get_config() {
         path=$(echo ${path/\~/"$HOME"})
 
         # Replace tokens
-        path=$(echo ${path/\{APP_ROOT\}/"$APP_ROOT"})
+        path=$(echo ${path/\{CLOUDY_BASEPATH\}/"$CLOUDY_BASEPATH"})
 
         # Make relative to $ROOT.
         [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}

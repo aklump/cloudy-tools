@@ -5,9 +5,15 @@ tags: ''
 
 # Passing Variables Between BASH and PHP
 
-_variables.php_
+## Variables
 
-{{ file_variables_php|raw }}
+These are the mirrored variables that are available in Cloudy PHP. Hint: Add this snippet to the top of your PHP included files.
+
+{{ php_file_runner_variables|raw }}
+
+## Functions
+
+{{ php_file_runner_functions|raw }}
 
 ## Accessing Configuration via $CLOUDY_CONFIG_JSON
 

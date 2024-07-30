@@ -26,10 +26,11 @@ $path_to_php_file = $argv[1];
 // controller.
 $read_only_vars = [];
 
-$read_only_vars['COMPOSER_VENDOR'] = getenv('COMPOSER_VENDOR');
+$read_only_vars['CLOUDY_COMPOSER_VENDOR'] = getenv('CLOUDY_COMPOSER_VENDOR');
 $read_only_vars['CLOUDY_CORE_DIR'] = getenv('CLOUDY_CORE_DIR');
 require_once $read_only_vars['CLOUDY_CORE_DIR'] . '/php/bootstrap.php';
 
+$read_only_vars['CLOUDY_CONFIG_JSON'] = getenv('CLOUDY_CONFIG_JSON');
 $read_only_vars['CLOUDY_RUNTIME_ENV'] = getenv('CLOUDY_RUNTIME_ENV');
 $read_only_vars['CLOUDY_CACHE_DIR'] = getenv('CLOUDY_CACHE_DIR');
 $read_only_vars['CLOUDY_PACKAGE_CONTROLLER'] = getenv('CLOUDY_PACKAGE_CONTROLLER');
@@ -44,7 +45,7 @@ $read_only_vars['PHP_FILE_RUN_CONTROLLER'] = getenv('PHP_FILE_RUN_CONTROLLER');
 $read_write_vars = [];
 $read_write_vars['CLOUDY_FAILURES'] = (new DeserializeBashArray())(getenv('CLOUDY_FAILURES__SERIALIZED_ARRAY'));
 $read_write_vars['CLOUDY_SUCCESSES'] = (new DeserializeBashArray())(getenv('CLOUDY_SUCCESSES__SERIALIZED_ARRAY'));
-$read_write_vars['CLOUDY_EXIT_STATUS'] = getenv('CLOUDY_EXIT_STATUS');
+$read_write_vars['CLOUDY_EXIT_STATUS'] = (int) getenv('CLOUDY_EXIT_STATUS');
 
 extract($read_write_vars);
 extract($read_only_vars);

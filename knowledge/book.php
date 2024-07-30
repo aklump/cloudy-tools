@@ -2,8 +2,10 @@
 
 /** @var string $command */
 /** @var string $book_path */
+
 /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
 
+use AKlump\CloudyDocumentation\PHP\GetPhpFunctions;
 use AKlump\CloudyDocumentation\Variables\LoadCodeExampleFileAsVariable;
 use AKlump\Knowledge\Events\AssemblePages;
 use AKlump\Knowledge\Events\AssembleWebpageAssets;
@@ -95,6 +97,15 @@ $dispatcher->addListener(AssemblePages::NAME, function (AssemblePages $event) {
     $page->setBody($page_body, BookPageInterface::MIME_TYPE_HTML);
     $event->addPage($page);
   }
+
+  // php_file_runner_functions
+  $functions = ['api_functions' => (new GetPhpFunctions())()];
+  $vars_key = 'api_functions_php';
+  $page = new Page($vars_key, 'about');
+  $template = $twig->load("page--{$vars_key}.twig");
+  $page_body = $template->render($functions);
+  $page->setBody($page_body, BookPageInterface::MIME_TYPE_HTML);
+  $event->addPage($page);
 });
 
 $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
@@ -104,11 +115,25 @@ $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
   $event->setVariable('function_docblock', $loader("$base/example_function.sh"));
   $event->setVariable('file_docblock', $loader("$base/example_file.sh"));
 
-  $path_to_file_ex = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/InstallTypeCore/tests/variables.php';
-  $event->setVariable('file_variables_php', $loader($path_to_file_ex));
+  //  $path_to_file_ex = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/InstallTypeCore/tests/variables.php';
+  //  $event->setVariable('file_variables_php', $loader($path_to_file_ex));
 
   $base = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/KnowledgeExamples/';
   $event->setVariable('php_usage_controller', $loader("$base/controller_include.sh"));
   $event->setVariable('php_usage_php_file_runner', $loader("$base/json_decode.php"));
+
+  // Run a Cloudy instance to capture runtime variables from the current version.
+  $cloudy_runtime = $event->getPathToSource() . '/cloudy_runtime/cloudy_runtime.sh';
+
+  foreach (['variables'] as $key) {
+    $output = [];
+    $exit_status = NULL;
+    exec("$cloudy_runtime $key", $output, $exit_status);
+    $output = implode(PHP_EOL, $output);
+    if ($exit_status != 0) {
+      throw new RuntimeException($output);
+    }
+    $event->setVariable('php_file_runner_' . $key, $output);
+  }
 });
 

@@ -36,10 +36,10 @@ function _cloudy_realpath($path) {
   }
 
   # Replace tokens
-  if (strstr($path, '{APP_ROOT}')) {
-    $app_root = rtrim(APP_ROOT, '/');
-    // We support both versions: "{APP_ROOT}foo" and "{APP_ROOT}/foo"
-    $path = preg_replace('#{APP_ROOT}/?#', "$app_root/", $path);
+  if (strstr($path, '{CLOUDY_BASEPATH}')) {
+    $app_root = rtrim(CLOUDY_BASEPATH, '/');
+    // We support both versions: "{CLOUDY_BASEPATH}foo" and "{CLOUDY_BASEPATH}/foo"
+    $path = preg_replace('#{CLOUDY_BASEPATH}/?#', "$app_root/", $path);
   }
 
   // If $path is not absolute then we need to make it so.
@@ -47,7 +47,7 @@ function _cloudy_realpath($path) {
   if (!$path_is_absolute) {
     //    $prefix = rtrim(ROOT, '/') . '/';
     $path = implode('/', array_filter([
-      rtrim(APP_ROOT, '/'),
+      rtrim(CLOUDY_BASEPATH, '/'),
       rtrim($_config_path_base, '/'),
       rtrim($path, '/'),
     ]));

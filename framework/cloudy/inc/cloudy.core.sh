@@ -12,11 +12,10 @@
  # @global string $CLOUDY_OPTIONS__*
  # @global string $CLOUDY_PACKAGE_CONFIG
  #
- # @export string $APP_ROOT
  # @export string $CLOUDY_BASEPATH
  # @export string $CLOUDY_CACHE_DIR
  # @export string $CLOUDY_PHP
- # @export string $COMPOSER_VENDOR
+ # @export string $CLOUDY_COMPOSER_VENDOR
  # @export string $CLOUDY_LOG
  ##
 source "$CLOUDY_CORE_DIR/inc/bootstrap/variables.sh"

@@ -1,19 +1,13 @@
 <?php
-/** @var string $CLOUDY_CORE_DIR */
-/** @var string $CLOUDY_CACHE_DIR */
-/** @var string $CLOUDY_PACKAGE_CONTROLLER */
-/** @var string $CLOUDY_PACKAGE_CONFIG */
-/** @var string $CLOUDY_BASEPATH */
-/** @var string $CLOUDY_RUNTIME_UUID */
-/** @var string $CLOUDY_RUNTIME_ENV */
-
-$data = [
-  'CLOUDY_CORE_DIR' => $CLOUDY_CORE_DIR,
-  'CLOUDY_CACHE_DIR' => $CLOUDY_CACHE_DIR,
-  'CLOUDY_PACKAGE_CONTROLLER' => $CLOUDY_PACKAGE_CONTROLLER,
-  'CLOUDY_PACKAGE_CONFIG' => $CLOUDY_PACKAGE_CONFIG,
-  'CLOUDY_BASEPATH' => $CLOUDY_BASEPATH,
-  'CLOUDY_RUNTIME_UUID' => $CLOUDY_RUNTIME_UUID,
-  'CLOUDY_RUNTIME_ENV' => $CLOUDY_RUNTIME_ENV,
-];
+$data = get_defined_vars();
+unset($data['_GET']);
+unset($data['_GET']);
+unset($data['_POST']);
+unset($data['_COOKIE']);
+unset($data['_FILES']);
+unset($data['argv']);
+unset($data['_ENV']);
+unset($data['_REQUEST']);
+unset($data['_SERVER']);
+unset($data['GLOBALS']);
 echo json_encode($data);

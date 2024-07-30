@@ -7,4 +7,4 @@ tags: ''
 
 To fix this for a Cloudy PM app, do the following in it's controller.
 
-1. Change to `COMPOSER_VENDOR="../../cloudy/cloudy/vendor"`
+1. Change to `CLOUDY_COMPOSER_VENDOR="../../cloudy/cloudy/vendor"`

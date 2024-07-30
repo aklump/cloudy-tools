@@ -24,10 +24,10 @@ In the header of your script you will find `$CONFIG`, this is for the base confi
         CLOUDY_PACKAGE_CONFIG=script.example.yml
 
 1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname your_cloudy_script.sh)`
-1. You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the `{APP_ROOT}` token is encouraged over the use of relative paths, as it is less confusing.
+1. You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the `{CLOUDY_BASEPATH}` token is encouraged over the use of relative paths, as it is less confusing.
 
         additional_config:
-          - {APP_ROOT}/.my_app/config.yml
+          - {CLOUDY_BASEPATH}/.my_app/config.yml
           - _install.local.yml
           - ~/.my_project.yml
 

@@ -22,7 +22,6 @@ tags: about
 ### Deprecated
 
 - SCRIPT Use CLOUDY_PACKAGE_CONTROLLER instead.
-- APP_ROOT Use CLOUDY_BASEPATH instead.
 - LOGFILE Use CLOUDY_LOG instead.
 - ROOT Use PACKAGE_BASEPATH instead.
 - CLOUDY_ROOT instead CLOUDY_CORE_DIR
@@ -32,6 +31,7 @@ tags: about
 
 ### Removed
 
+- APP_ROOT Use CLOUDY_BASEPATH instead.
 - The token `${config_path_base}` has been replaced by `{APP_ROOT}` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `{APP_ROOT}` in all cloudy pm packages.
 - `CLOUDY_NAME`; Use this if you need the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
 
@@ -63,7 +63,7 @@ tags: about
 
 ### Added
 
-- COMPOSER_VENDOR can now handle absolute paths.
+- CLOUDY_COMPOSER_VENDOR can now handle absolute paths.
 - PHP functions to match write_log_*().
 - PHP errors are now logged to the Cloudy logfile.
 
@@ -111,14 +111,14 @@ tags: about
 
 ### Fixed
 
-- If you see an error like "line 833: cd: ... cloudy/framework/cloudy: No such file or directory", try adding `COMPOSER_VENDOR=""` to the top of your script file, e.g. _framework/script.sh_.
+- If you see an error like "line 833: cd: ... cloudy/framework/cloudy: No such file or directory", try adding `CLOUDY_COMPOSER_VENDOR=""` to the top of your script file, e.g. _framework/script.sh_.
 
 ## [1.4.0] - 2022-07-19
 
 ### Added
 
 - Added functions `echo_task`, `clear_task`, `echo_task_completed`, `echo_task_failed`, `choose`
-- Configurable Composer vendor direct using `$COMPOSER_VENDOR`
+- Configurable Composer vendor direct using `$CLOUDY_COMPOSER_VENDOR`
 - Added `$CLOUDY_CONFIG_HAS_CHANGED` which will be `true` if the configuration was rebuilt during boot.
 - Other small improvements and bug fixes.
 

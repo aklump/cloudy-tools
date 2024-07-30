@@ -9,44 +9,44 @@
  # @return 4 If PHP cannot be found.
  # @return 5 If $CLOUDY_PHP is not executable.
  # @return 6 If $CLOUDY_PHP path does not appear to be a PHP binary.
- # @return 7 If $COMPOSER_VENDOR path does not point to an existing directory.
+ # @return 7 If $CLOUDY_COMPOSER_VENDOR path does not point to an existing directory.
  ##
 
-if [[ "$COMPOSER_VENDOR" ]]; then
+if [[ "$CLOUDY_COMPOSER_VENDOR" ]]; then
   # This will be used when this directory is defined at the top of the entry
   # script as relative to that script.  We look to see if it needs to be
   # resolved to an absolute path and then exit.
-  if ! path_is_absolute "$COMPOSER_VENDOR"; then
+  if ! path_is_absolute "$CLOUDY_COMPOSER_VENDOR"; then
     # TODO Change this to _resolve()?
-    COMPOSER_VENDOR="$(cd $(dirname "$r/$COMPOSER_VENDOR") && pwd)/$(basename $COMPOSER_VENDOR)"
+    CLOUDY_COMPOSER_VENDOR="$(cd $(dirname "$r/$CLOUDY_COMPOSER_VENDOR") && pwd)/$(basename $CLOUDY_COMPOSER_VENDOR)"
   fi
 else
-  COMPOSER_VENDOR=$(_cloudy_detect_composer_vendor_by_installation "$CLOUDY_INSTALLED_AS")
+  CLOUDY_COMPOSER_VENDOR=$(_cloudy_detect_composer_vendor_by_installation "$CLOUDY_INSTALLED_AS")
   if [ $? -ne 0 ]; then
-    write_log_error "Failed to detect/set \$COMPOSER_VENDOR"
+    write_log_error "Failed to detect/set \$CLOUDY_COMPOSER_VENDOR"
     fail_because "Cannot find Composer dependencies."
     return 2;
   fi
 fi
 
-[[ ! -d "$COMPOSER_VENDOR" ]] && fail_because "\$COMPOSER_VENDOR is not a directory: $COMPOSER_VENDOR" && return 7
-write_log_debug "\$COMPOSER_VENDOR is \"$COMPOSER_VENDOR\""
+[[ ! -d "$CLOUDY_COMPOSER_VENDOR" ]] && fail_because "\$CLOUDY_COMPOSER_VENDOR is not a directory: $CLOUDY_COMPOSER_VENDOR" && return 7
+write_log_debug "\$CLOUDY_COMPOSER_VENDOR is \"$CLOUDY_COMPOSER_VENDOR\""
 
 ! event_dispatch "pre_config" && fail_because "Non-zero returned by on_pre_config()." && return 3;
 
-if [[ ! -f "$COMPOSER_VENDOR/autoload.php" ]]; then
+if [[ ! -f "$CLOUDY_COMPOSER_VENDOR/autoload.php" ]]; then
   # Attempt to install composer.
-  composer_json=$(dirname $COMPOSER_VENDOR)/composer.json
-  composer_lock=$(dirname $COMPOSER_VENDOR)/composer.lock
+  composer_json=$(dirname $CLOUDY_COMPOSER_VENDOR)/composer.json
+  composer_lock=$(dirname $CLOUDY_COMPOSER_VENDOR)/composer.lock
   if [[ -f "$composer_json" && ! -f "$composer_lock" ]]; then
     fail_because "You may need to install Composer dependencies."
     fail_because "e.g., (cd "$(dirname "$composer_json")" && composer install)"
   fi
-  fail_because "Composer autoloader not found in $COMPOSER_VENDOR"
+  fail_because "Composer autoloader not found in $CLOUDY_COMPOSER_VENDOR"
   exit 2
 fi
 
-export COMPOSER_VENDOR="$(cd $COMPOSER_VENDOR && pwd)"
+export CLOUDY_COMPOSER_VENDOR="$(cd $CLOUDY_COMPOSER_VENDOR && pwd)"
 
 if [[ ! "$CLOUDY_PHP" ]]; then
   CLOUDY_PHP="$(command -v php)"

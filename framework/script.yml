@@ -1,7 +1,7 @@
 title: ""
 additional_config:
-#  - '{APP_ROOT}/.script/config.yml'
-#  - '{APP_ROOT}/.script/config.local.yml'
+#  - '{CLOUDY_BASEPATH}/.script/config.yml'
+#  - '{CLOUDY_BASEPATH}/.script/config.local.yml'
 additional_bootstrap:
 default_command: help
 commands:

@@ -24,7 +24,7 @@ trait TestWithCloudyTrait {
    * Load a cloudy config and set the directory for testing.
    *
    * @param string $cloudy_package_config A YAML file which defines the Cloudy app.  It's
-   * parent directory -- APP_ROOT -- will be used to resolve the paths to be
+   * parent directory -- CLOUDY_BASEPATH -- will be used to resolve the paths to be
    * tested, and should therefore contain them.
    * @param string $test_runner
    *

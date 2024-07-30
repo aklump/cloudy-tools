@@ -14,12 +14,12 @@ CLOUDY_PACKAGE_CONFIG="script.example.yml";
 # directory relative to this script.  See documentation on installing Cloudy
 # using composer.  This is a step you will probably take if you are using Cloudy
 # inside of a PHP application that uses other Composer dependencies.
-#COMPOSER_VENDOR=""
+#CLOUDY_COMPOSER_VENDOR=""
 
 # Leave this blank and the app_root will be auto-detected.  If necessary you may
 # set this to a path relative to this script, e.g '../../../'.  Absolute paths
 # are not allowed.
-#APP_ROOT=""
+#CLOUDY_BASEPATH=""
 
 # Uncomment this line to enable file logging.
 #[[ ! "$CLOUDY_LOG" ]] && CLOUDY_LOG="script.example.log"

@@ -3,3 +3,4 @@
 /framework/cloudy/vendor/
 /framework/cloudy/composer.lock
 /cloudy_tools.log
+*.log

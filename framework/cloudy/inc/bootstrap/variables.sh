@@ -32,15 +32,14 @@ if [[ "$CLOUDY_LOG" ]]; then
 fi
 
 # Detect installation type
-declare -rx CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type "$cloudy_package_controller")
+declare -rx CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type "$CLOUDY_PACKAGE_CONTROLLER")
 if [ $? -ne 0 ]; then
   write_log_error "Failed to determine \$CLOUDY_INSTALLED_AS"
 else
   write_log_debug "\$CLOUDY_INSTALLED_AS set to \"$CLOUDY_INSTALLED_AS\""
 fi
 
-declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$cloudy_package_controller")"
-unset cloudy_package_controller
+declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$CLOUDY_PACKAGE_CONTROLLER")"
 
 declare -rx CLOUDY_RUNTIME_UUID=$(create_uuid)
 
