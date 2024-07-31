@@ -5,10 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css">
-      <link rel="stylesheet" href="../../dist/style.css">
+      <link rel="stylesheet" href="../../dist/bootstrap_theme.css">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="../../dist/style.css">
-    <title>Cloudy API: Test Functions | Cloudy BASH Framework</title>
+    <title>Cloudy API: BASH Test Functions | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -33,8 +33,8 @@
 
       </div>
       <div class="header__tags me-3">  </div>
-      <div class="header__page-numbers flex-shrink-1">5
-        / 37</div>
+      <div class="header__page-numbers flex-shrink-1">9
+        / 48</div>
     </div>
   </div>
 </header>
@@ -42,7 +42,7 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Cloudy API: Test Functions</h1>
+      <h1 class="mb-4 text-primary">Cloudy API: BASH Test Functions</h1>
       <div class="function-index">
       <a href="#assert_contains">assert_contains</a>
       <a href="#assert_count">assert_count</a>
@@ -140,13 +140,13 @@
     <p class="summary"></p>
     
                         
-          <pre><code> $1 The expected exit code of the previous command.
- Here are three examples of how to call...
- @code
-   array_sort; assert_exit_status 0
-   $(has_option &#039;name&#039;); assert_exit_status 0
-   has_option &#039;name&#039; &gt; /dev/null; assert_exit_status 0
- @endcode</code></pre>
+          <pre><code>$1 The expected exit code of the previous command. Here are three examples of how to call...
+
+@code
+  array_sort; assert_exit_status 0
+  $(has_option &#039;name&#039;); assert_exit_status 0
+  has_option &#039;name&#039; &gt; /dev/null; assert_exit_status 0
+@endcode</code></pre>
         <hr/>
       <a name="assert_false"></a>
     <h2>assert_false()</h2>
@@ -350,21 +350,14 @@
     <p class="summary">Create a sandbox for testing.</p>
     
                         
-          <pre><code>Some global variables need to be stashed during testing, such as those
-to do with the exit system.
-
-@see delete_test_sandbox
-
-Returns nothing.</code></pre>
+          <pre><code>Some global variables need to be stashed during testing, such as those to do with the exit system.@see delete_test_sandbox Returns nothing.</code></pre>
         <hr/>
       <a name="delete_test_sandbox"></a>
     <h2>delete_test_sandbox()</h2>
     <p class="summary">Remove the sandboxed variables.</p>
     
                         
-          <pre><code>@see create_test_sandbox
-
-Returns nothing.</code></pre>
+          <pre><code>@see create_test_sandbox Returns nothing.</code></pre>
         <hr/>
       <a name="do_tests_in"></a>
     <h2>do_tests_in()</h2>
@@ -379,10 +372,7 @@ Returns nothing.</code></pre>
                   <li><code>--continue</code> Use this for subsequent calls to this function where you</li>
               </ul>
                 
-          <pre><code>want the results to be added together; that is to say, use this so as NOT to
-reset the test count, failure count, etc.
-
-Returns 0 if all tests pass; 1 otherwise.</code></pre>
+          <pre><code>want the results to be added together; that is to say, use this so as NOT to reset the test count, failure count, etc. Returns 0 if all tests pass; 1 otherwise.</code></pre>
         <hr/>
       <a name="exit_with_test_results"></a>
     <h2>exit_with_test_results()</h2>
@@ -415,16 +405,11 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
                   <li><code></code> <em>string</em> A default value if $1 is empty.</li>
               </ul>
                     
-          <pre><code> -gt 2 ]] &amp;&amp; expected=&quot;$(echo_green &quot;$3&quot;)&quot;
- -gt 2 ]] &amp;&amp; because=&quot;$because expected $expected&quot;
- Add a failure message to be shown on exit.
+          <pre><code>-gt 2 ]] &amp;&amp; expected=&quot;$(echo_green &quot;$3&quot;)&quot;-gt 2 ]] &amp;&amp; because=&quot;$because expected $expected&quot; Add a failure message to be shown on exit.
 
-
- @code
-   test_fail_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;
- @endcode
-
- Returns 1 if both $message and $default are empty.</code></pre>
+@code
+  test_fail_because &quot;$reason&quot; &quot;Some default if $reason is empty&quot;
+@endcode Returns 1 if both $message and $default are empty.</code></pre>
         <hr/>
   </div>
     </article>
@@ -434,9 +419,9 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>1.8.1</strong>
+        <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>7/4/2024</strong>
+            Last Update: <strong>7/31/2024</strong>
     </div>
   </footer>
 
@@ -459,8 +444,8 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="../bash/arrays.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> Arrays <i class="bi
+              <a href="api_functions_php.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Cloudy API: PHP Functions <i class="bi
        bi-caret-right-fill"></i></a>
   
     
@@ -495,252 +480,329 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="changelog" value="2">
-      <a class="js-page-link" href="changelog.html">Cloudy Changelog<span
+                                    <li data-page="lexicon" value="2">
+      <a class="js-page-link" href="lexicon.html">Cloudy Lexicon<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="cloudy_core_testing" value="3">
+                                    <li data-page="globals" value="3">
+      <a class="js-page-link" href="globals.html">Global Variables<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="filepaths" value="4">
+      <a class="js-page-link" href="filepaths.html">Filepaths<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="cloudy_core_testing" value="5">
       <a class="js-page-link" href="cloudy_core_testing.html">Cloudy Core Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="api_functions" value="4">
-      <a class="js-page-link" href="api_functions.html">Cloudy API: Functions<span
+                                    <li data-page="changelog" value="6">
+      <a class="js-page-link" href="changelog.html">Cloudy Changelog<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="test_functions" value="5">
-      <a class="js-page-link" href="test_functions.html">Cloudy API: Test Functions<span
+                                    <li data-page="cloudy_basepath" value="7">
+      <a class="js-page-link" href="cloudy_basepath.html">Cloudy Basepath<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="arrays" value="6">
-      <a class="js-page-link" href="../bash/arrays.html">Arrays<span
+                                    <li data-page="api_functions" value="8">
+      <a class="js-page-link" href="api_functions.html">Cloudy API: BASH Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="strings" value="7">
-      <a class="js-page-link" href="../bash/strings.html">String Manipulation<span
+                                    <li data-page="test_functions" value="9">
+      <a class="js-page-link" href="test_functions.html">Cloudy API: BASH Test Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="functions" value="8">
-      <a class="js-page-link" href="../examples/functions.html">Functions<span
+                                    <li data-page="api_functions_php" value="10">
+      <a class="js-page-link" href="api_functions_php.html">Cloudy API: PHP Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="menus_input" value="9">
-      <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus<span
+                                                          <li data-page="php_file_runner" value="11">
+      <a class="js-page-link" href="../php/php_file_runner.html">Writing Cloudy PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="plugins" value="10">
-      <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern<span
+                                    <li data-page="php_envvars" value="12">
+      <a class="js-page-link" href="../php/php_envvars.html">Passing Variables Between BASH and PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="route_access" value="11">
-      <a class="js-page-link" href="../examples/route_access.html">Command Access<span
+                                    <li data-page="php_errors" value="13">
+      <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="app_root" value="12">
-      <a class="js-page-link" href="../usage/app_root.html">Application Root<span
-              class="js-search-score
-              badge
-              bg-info rounded-pill badge-sm"></span></a>
-    </li>
-  
-                                    <li data-page="arguments" value="13">
-      <a class="js-page-link" href="../usage/arguments.html">This script "arguments"<span
-              class="js-search-score
-              badge
-              bg-info rounded-pill badge-sm"></span></a>
-    </li>
-  
-                                    <li data-page="command" value="14">
-      <a class="js-page-link" href="../usage/command.html">The Script "Command"<span
+                                    <li data-page="php_version" value="14">
+      <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="composer" value="15">
-      <a class="js-page-link" href="../usage/composer.html">Building a Cloudy-based App w/ Composer<span
+      <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="configuration" value="16">
+                                                          <li data-page="arrays" value="16">
+      <a class="js-page-link" href="../bash/arrays.html">Arrays<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="strings" value="17">
+      <a class="js-page-link" href="../bash/strings.html">String Manipulation<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="functions" value="18">
+      <a class="js-page-link" href="../examples/functions.html">Functions<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="menus_input" value="19">
+      <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="plugins" value="20">
+      <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="route_access" value="21">
+      <a class="js-page-link" href="../examples/route_access.html">Command Access<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="app_root" value="22">
+      <a class="js-page-link" href="../usage/app_root.html">Application Root<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="arguments" value="23">
+      <a class="js-page-link" href="../usage/arguments.html">This script "arguments"<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="command" value="24">
+      <a class="js-page-link" href="../usage/command.html">The Script "Command"<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="configuration" value="25">
       <a class="js-page-link" href="../usage/configuration.html">Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="conventions" value="17">
+                                    <li data-page="conventions" value="26">
       <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="development" value="18">
+                                    <li data-page="development" value="27">
       <a class="js-page-link" href="../usage/development.html">Development Tools<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="documenting" value="19">
+                                    <li data-page="documenting" value="28">
       <a class="js-page-link" href="../usage/documenting.html">Documenting Code<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="error_handling" value="20">
+                                    <li data-page="error_handling" value="29">
       <a class="js-page-link" href="../usage/error_handling.html">Exit Status<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="events" value="21">
+                                    <li data-page="events" value="30">
       <a class="js-page-link" href="../usage/events.html">Events (Hooks)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="cloudy_php" value="22">
-      <a class="js-page-link" href="../usage/cloudy_php.html">PHP and Cloudy<span
-              class="js-search-score
-              badge
-              bg-info rounded-pill badge-sm"></span></a>
-    </li>
-  
-                                    <li data-page="installer" value="23">
+                                    <li data-page="installer" value="31">
       <a class="js-page-link" href="../usage/installer.html">The Initialize API<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="lists" value="24">
+                                    <li data-page="lists" value="32">
       <a class="js-page-link" href="../usage/lists.html">Lists<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="localize" value="25">
+                                    <li data-page="localize" value="33">
       <a class="js-page-link" href="../usage/localize.html">Localization/Translation<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="logging" value="26">
+                                    <li data-page="logging" value="34">
       <a class="js-page-link" href="../usage/logging.html">Logging to File<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="menus" value="27">
+                                    <li data-page="menus" value="35">
       <a class="js-page-link" href="../usage/menus.html">Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="options" value="28">
+                                    <li data-page="options" value="36">
       <a class="js-page-link" href="../usage/options.html">The Script "Options"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="packages" value="29">
+                                    <li data-page="packages" value="37">
       <a class="js-page-link" href="../usage/packages.html">Cloudy Packages<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="tables" value="30">
+                                    <li data-page="tables" value="38">
       <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="tempdir" value="31">
+                                    <li data-page="tempdir" value="39">
       <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="testing" value="32">
+                                    <li data-page="testing" value="40">
       <a class="js-page-link" href="../usage/testing.html">Unit Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="version" value="33">
+                                    <li data-page="version" value="41">
       <a class="js-page-link" href="../usage/version.html">Script Version<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="yaml" value="34">
+                                    <li data-page="yaml" value="42">
       <a class="js-page-link" href="../usage/yaml.html">YAML in BASH<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="empty_config" value="35">
+                                                          <li data-page="empty_config" value="43">
       <a class="js-page-link" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="autoloader" value="36">
+                                    <li data-page="autoloader" value="44">
       <a class="js-page-link" href="../trouble/autoloader.html">Composer autoloader not found<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="37">
+                                                          <li data-page="upgrade_v2" value="45">
+      <a class="js-page-link" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="variable_scopes" value="46">
+      <a class="js-page-link" href="../developers/variable_scopes.html">Sourcing Scripts<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="dev_configuration" value="47">
+      <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="48">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -757,162 +819,212 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
       <a class="js-page-link" href="readme.html">Cloudy</a>
     </li>
   
-                                <li data-page="changelog" value="2">
-      <a class="js-page-link" href="changelog.html">Cloudy Changelog</a>
+                                <li data-page="lexicon" value="2">
+      <a class="js-page-link" href="lexicon.html">Cloudy Lexicon</a>
     </li>
   
-                                <li data-page="cloudy_core_testing" value="3">
+                                <li data-page="globals" value="3">
+      <a class="js-page-link" href="globals.html">Global Variables</a>
+    </li>
+  
+                                <li data-page="filepaths" value="4">
+      <a class="js-page-link" href="filepaths.html">Filepaths</a>
+    </li>
+  
+                                <li data-page="cloudy_core_testing" value="5">
       <a class="js-page-link" href="cloudy_core_testing.html">Cloudy Core Testing</a>
     </li>
   
-                                <li data-page="api_functions" value="4">
-      <a class="js-page-link" href="api_functions.html">Cloudy API: Functions</a>
+                                <li data-page="changelog" value="6">
+      <a class="js-page-link" href="changelog.html">Cloudy Changelog</a>
     </li>
   
-                                <li data-page="test_functions" value="5">
-      <a class="js-page-link" href="test_functions.html">Cloudy API: Test Functions</a>
+                                <li data-page="cloudy_basepath" value="7">
+      <a class="js-page-link" href="cloudy_basepath.html">Cloudy Basepath</a>
+    </li>
+  
+                                <li data-page="api_functions" value="8">
+      <a class="js-page-link" href="api_functions.html">Cloudy API: BASH Functions</a>
+    </li>
+  
+                                <li data-page="test_functions" value="9">
+      <a class="js-page-link" href="test_functions.html">Cloudy API: BASH Test Functions</a>
+    </li>
+  
+                                <li data-page="api_functions_php" value="10">
+      <a class="js-page-link" href="api_functions_php.html">Cloudy API: PHP Functions</a>
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">PHP in Cloudy</h2>
+        <ol>
+                                <li data-page="php_file_runner" value="11">
+      <a class="js-page-link" href="../php/php_file_runner.html">Writing Cloudy PHP</a>
+    </li>
+  
+                                <li data-page="php_envvars" value="12">
+      <a class="js-page-link" href="../php/php_envvars.html">Passing Variables Between BASH and PHP</a>
+    </li>
+  
+                                <li data-page="php_errors" value="13">
+      <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+    </li>
+  
+                                <li data-page="php_version" value="14">
+      <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
+    </li>
+  
+                                <li data-page="composer" value="15">
+      <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">BASH</h2>
         <ol>
-                                <li data-page="arrays" value="6">
+                                <li data-page="arrays" value="16">
       <a class="js-page-link" href="../bash/arrays.html">Arrays</a>
     </li>
   
-                                <li data-page="strings" value="7">
+                                <li data-page="strings" value="17">
       <a class="js-page-link" href="../bash/strings.html">String Manipulation</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Code Examples</h2>
         <ol>
-                                <li data-page="functions" value="8">
+                                <li data-page="functions" value="18">
       <a class="js-page-link" href="../examples/functions.html">Functions</a>
     </li>
   
-                                <li data-page="menus_input" value="9">
+                                <li data-page="menus_input" value="19">
       <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus</a>
     </li>
   
-                                <li data-page="plugins" value="10">
+                                <li data-page="plugins" value="20">
       <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern</a>
     </li>
   
-                                <li data-page="route_access" value="11">
+                                <li data-page="route_access" value="21">
       <a class="js-page-link" href="../examples/route_access.html">Command Access</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Usage</h2>
         <ol>
-                                <li data-page="app_root" value="12">
+                                <li data-page="app_root" value="22">
       <a class="js-page-link" href="../usage/app_root.html">Application Root</a>
     </li>
   
-                                <li data-page="arguments" value="13">
+                                <li data-page="arguments" value="23">
       <a class="js-page-link" href="../usage/arguments.html">This script "arguments"</a>
     </li>
   
-                                <li data-page="command" value="14">
+                                <li data-page="command" value="24">
       <a class="js-page-link" href="../usage/command.html">The Script "Command"</a>
     </li>
   
-                                <li data-page="composer" value="15">
-      <a class="js-page-link" href="../usage/composer.html">Building a Cloudy-based App w/ Composer</a>
-    </li>
-  
-                                <li data-page="configuration" value="16">
+                                <li data-page="configuration" value="25">
       <a class="js-page-link" href="../usage/configuration.html">Configuration</a>
     </li>
   
-                                <li data-page="conventions" value="17">
+                                <li data-page="conventions" value="26">
       <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions</a>
     </li>
   
-                                <li data-page="development" value="18">
+                                <li data-page="development" value="27">
       <a class="js-page-link" href="../usage/development.html">Development Tools</a>
     </li>
   
-                                <li data-page="documenting" value="19">
+                                <li data-page="documenting" value="28">
       <a class="js-page-link" href="../usage/documenting.html">Documenting Code</a>
     </li>
   
-                                <li data-page="error_handling" value="20">
+                                <li data-page="error_handling" value="29">
       <a class="js-page-link" href="../usage/error_handling.html">Exit Status</a>
     </li>
   
-                                <li data-page="events" value="21">
+                                <li data-page="events" value="30">
       <a class="js-page-link" href="../usage/events.html">Events (Hooks)</a>
     </li>
   
-                                <li data-page="cloudy_php" value="22">
-      <a class="js-page-link" href="../usage/cloudy_php.html">PHP and Cloudy</a>
-    </li>
-  
-                                <li data-page="installer" value="23">
+                                <li data-page="installer" value="31">
       <a class="js-page-link" href="../usage/installer.html">The Initialize API</a>
     </li>
   
-                                <li data-page="lists" value="24">
+                                <li data-page="lists" value="32">
       <a class="js-page-link" href="../usage/lists.html">Lists</a>
     </li>
   
-                                <li data-page="localize" value="25">
+                                <li data-page="localize" value="33">
       <a class="js-page-link" href="../usage/localize.html">Localization/Translation</a>
     </li>
   
-                                <li data-page="logging" value="26">
+                                <li data-page="logging" value="34">
       <a class="js-page-link" href="../usage/logging.html">Logging to File</a>
     </li>
   
-                                <li data-page="menus" value="27">
+                                <li data-page="menus" value="35">
       <a class="js-page-link" href="../usage/menus.html">Menus</a>
     </li>
   
-                                <li data-page="options" value="28">
+                                <li data-page="options" value="36">
       <a class="js-page-link" href="../usage/options.html">The Script "Options"</a>
     </li>
   
-                                <li data-page="packages" value="29">
+                                <li data-page="packages" value="37">
       <a class="js-page-link" href="../usage/packages.html">Cloudy Packages</a>
     </li>
   
-                                <li data-page="tables" value="30">
+                                <li data-page="tables" value="38">
       <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)</a>
     </li>
   
-                                <li data-page="tempdir" value="31">
+                                <li data-page="tempdir" value="39">
       <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory</a>
     </li>
   
-                                <li data-page="testing" value="32">
+                                <li data-page="testing" value="40">
       <a class="js-page-link" href="../usage/testing.html">Unit Testing</a>
     </li>
   
-                                <li data-page="version" value="33">
+                                <li data-page="version" value="41">
       <a class="js-page-link" href="../usage/version.html">Script Version</a>
     </li>
   
-                                <li data-page="yaml" value="34">
+                                <li data-page="yaml" value="42">
       <a class="js-page-link" href="../usage/yaml.html">YAML in BASH</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Troubleshooting</h2>
         <ol>
-                                <li data-page="empty_config" value="35">
+                                <li data-page="empty_config" value="43">
       <a class="js-page-link" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>
     </li>
   
-                                <li data-page="autoloader" value="36">
+                                <li data-page="autoloader" value="44">
       <a class="js-page-link" href="../trouble/autoloader.html">Composer autoloader not found</a>
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Developers</h2>
+        <ol>
+                                <li data-page="upgrade_v2" value="45">
+      <a class="js-page-link" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
+    </li>
+  
+                                <li data-page="variable_scopes" value="46">
+      <a class="js-page-link" href="../developers/variable_scopes.html">Sourcing Scripts</a>
+    </li>
+  
+                                <li data-page="dev_configuration" value="47">
+      <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="37">
+                                <li data-page="writing_scripts" value="48">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -945,13 +1057,33 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
                                     <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;ABOUT&quot;]" href="readme.html">Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;ABOUT&quot;]" href="changelog.html">Cloudy Changelog</a>
+                 data-tags="[]" href="lexicon.html">Cloudy Lexicon</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="globals.html">Global Variables</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="filepaths.html">Filepaths</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="cloudy_core_testing.html">Cloudy Core Testing</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="api_functions.html">Cloudy API: Functions</a>
+                 data-tags="[&quot;ABOUT&quot;]" href="changelog.html">Cloudy Changelog</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="test_functions.html">Cloudy API: Test Functions</a>
+                 data-tags="[]" href="cloudy_basepath.html">Cloudy Basepath</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="api_functions.html">Cloudy API: BASH Functions</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="test_functions.html">Cloudy API: BASH Test Functions</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="api_functions_php.html">Cloudy API: PHP Functions</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../php/php_file_runner.html">Writing Cloudy PHP</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../php/php_envvars.html">Passing Variables Between BASH and PHP</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;BASH&quot;]" href="../bash/arrays.html">Arrays</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -971,8 +1103,6 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/command.html">The Script &quot;Command&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="../usage/composer.html">Building a Cloudy-based App w/ Composer</a>
-                                                <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/configuration.html">Configuration</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/conventions.html">Cloudy Conventions</a>
@@ -984,8 +1114,6 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
                  data-tags="[&quot;USAGE&quot;]" href="../usage/error_handling.html">Exit Status</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/events.html">Events (Hooks)</a>
-                                                <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;PHP&quot;,&quot;USAGE&quot;]" href="../usage/cloudy_php.html">PHP and Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/installer.html">The Initialize API</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -1014,6 +1142,12 @@ Returns 0 if all tests pass; 1 otherwise.</code></pre>
                  data-tags="[]" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../trouble/autoloader.html">Composer autoloader not found</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/variable_scopes.html">Sourcing Scripts</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/dev_configuration.html">Understanding Configuration</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>

@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="../../dist/bootstrap_theme.css">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="../../dist/style.css">
-    <title>Script Version | Cloudy BASH Framework</title>
+    <title>Writing Cloudy PHP | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -27,17 +27,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="app_root.html">Usage</a></li>
+      <a href="php_file_runner.html">PHP in Cloudy</a></li>
   </ol>
 </nav>
 
       </div>
-      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
-          type="button" class="badge
-        rounded-pill
-        bg-primary">USAGE</span>
-  </div>
-      <div class="header__page-numbers flex-shrink-1">41
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">11
         / 48</div>
     </div>
   </div>
@@ -46,24 +42,65 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Script Version</h1>
-      <p>To provide a version for your script other than the default <code>1.0</code>, you have two options.</p>
-<h2>Version Indicated in YAML</h2>
-<p>You may hard-code the version in a YAML config file like this:</p>
-<pre><code>title: Cloudy Installer
-version: 1.5
-...
-
+      <h1 class="mb-4 text-primary">Writing Cloudy PHP</h1>
+      <p>Mixing PHP with BASH using Cloudy is quite simple.</p>
+<h2>On the BASH Side</h2>
+<h3>Basic PHP File Inclusion Syntax</h3>
+<pre><code class="php">. "$PHP_FILE_RUNNER" &lt;php_file&gt; &lt;args...&gt;
 </code></pre>
-<h2>Version Indicated Dynamically</h2>
-<p>If you would rather provide your version dynamically with BASH, you can override the default <code>get_version</code> by adding it to your script file anytime after the bootstrap; this allows you to provide it via PHP, <code>cat</code> or whatever, e.g.,</p>
-<pre><code>...
-done;r="$(cd -P "$(dirname "$s")" &amp;&amp; pwd)";source "$r/framework/cloudy/cloudy.sh"
-# End Cloudy Bootstrap
+<p>The above pattern allows your PHP file to execute within the current cloudy context and configuration. Cloudy also provides functions in PHP you will recognize from Cloudy's BASH API.</p>
+<h3>Capturing php_file's Output</h3>
+<p>This is just like you'd do sourcing a BASH file or function.</p>
+<pre><code class="php">php_file_output=$(. "$PHP_FILE_RUNNER" &lt;php_file&gt; &lt;args...&gt;)
+</code></pre>
+<h3>Get php_file's Exit Status</h3>
+<p>The exit status of <code>$PHP_FILE_RUNNER</code> will reflect if <code>fail_because</code> was used by php_file, indicated by a 1. However, a number &gt; 1 will result if <code>fail_because</code> was passed that number as the explicit exit status. An exit status of 0 represents success, as usual.  <strong> Be careful here, and make sure you read the documentation on how to trigger errors from Cloudy PHP.</strong></p>
+<pre><code class="shell">. "$PHP_FILE_RUNNER" &lt;php_file&gt; &lt;args...&gt;
+exit_status=$?
+if [[ $exit_status -ne 0 ]]; then
+  # Respond to the failure.
+fi 
+</code></pre>
+<p>The following can be used as an alternative to the above pattern, with the subtle difference that it will take into account the failure state, i.e. <code>$CLOUDY_EXIT_STATUS -ne 0</code>, that may have existed before php_file was run. Therefore it does not check ONLY the result of php_file, but the failure state of the entire app at that point.</p>
+<pre><code class="shell">. "$PHP_FILE_RUNNER" &lt;php_file&gt; &lt;args...&gt;
+if has_failed; then
+  # Respond to the failure.
+fi 
+</code></pre>
+<h2>On the PHP Side</h2>
+<ul>
+<li>Use <a href="https://www.php.net/manual/en/function.echo.php">echo</a> as you would in a BASH function or sourced file.</li>
+<li>Return values are always ignored; however <a href="https://www.php.net/manual/en/function.return.php">return</a> may be used for early exit and/or code flow.</li>
+<li>Never use <a href="https://www.php.net/manual/en/function.exit.php">exit</a>.</li>
+<li>To indicate failure use <code>fail_because</code> or <code>exit_with_failure</code>. To set exit status pass the number to one of those functions.</li>
+<li>Any exception will be automatically converted to <code>exit_with_failure</code> and the script will stop immediately.</li>
+<li>The BASH parent script can be known by looking at <code>$PHP_FILE_RUN_CONTROLLER</code></li>
+<li>Never hardcode PHP into your app codebase, e.g. <code>php</code>; instead if you must point to the PHP binary then use the variable <code>"$CLOUDY_PHP"</code></li>
+</ul>
+<h2>Complete Code Example</h2>
+<p>Let's say your Cloudy app defines the command  <code>json-decode</code>. Because PHP has a native function for this we will use PHP to do the work instead of BASH.</p>
+<p>This excerpt, taken from the <em>Cloudy Package Controller</em>, shows how to reference the PHP file that handles the <code>json-decode</code> command provided by the user.</p>
+<pre><code class="shell"># User input
+command='json-decode'
+json_user_input='{"color":"red"}'
 
-function get_version() {
-    local version=$(grep "version = " "$ROOT/web_package.info")
-    echo ${version/version = / }
+# Snippet taken from controller
+case $command in
+    "json-decode")
+      . "$PHP_FILE_RUNNER" "$CLOUDY_BASEPATH/json_decode.php" "$json_user_input"
+      has_failed &amp;&amp; exit_with_failure
+      exit_with_success
+      ;;
+esac
+</code></pre>
+<p>Here are the contents of a PHP file, which will do the work for the command <code>json-decode</code>. Notice the use of the functions that you have been using while writing Cloudy BASH code.</p>
+<pre><code class="php">$result = json_decode($argv[1], JSON_PRETTY_PRINT);
+if (FALSE === $result) {
+  fail_because("Could not parse the provided JSON");
+  fail_because($argv[1]);
+}
+else {
+  echo "The provided color is: " . $result['color'];
 }
 </code></pre>
     </article>
@@ -83,11 +120,11 @@ function get_version() {
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="app_root.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> Application Root</a>
+              <a href="php_file_runner.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Writing Cloudy PHP</a>
   
     
-              <a href="testing.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="../about/api_functions_php.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -98,8 +135,8 @@ function get_version() {
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="yaml.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> YAML in BASH <i class="bi
+              <a href="php_envvars.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Passing Variables Between BASH and PHP <i class="bi
        bi-caret-right-fill"></i></a>
   
     
@@ -198,35 +235,35 @@ function get_version() {
     </li>
   
                                                           <li data-page="php_file_runner" value="11">
-      <a class="js-page-link" href="../php/php_file_runner.html">Writing Cloudy PHP<span
+      <a class="js-page-link" href="php_file_runner.html">Writing Cloudy PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_envvars" value="12">
-      <a class="js-page-link" href="../php/php_envvars.html">Passing Variables Between BASH and PHP<span
+      <a class="js-page-link" href="php_envvars.html">Passing Variables Between BASH and PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_errors" value="13">
-      <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP<span
+      <a class="js-page-link" href="php_errors.html">Error Handling in Cloudy PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_version" value="14">
-      <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy<span
+      <a class="js-page-link" href="php_version.html">Setting the PHP Version Used by Cloudy<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="composer" value="15">
-      <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer<span
+      <a class="js-page-link" href="composer.html">Building a Cloudy-based App w/ Composer<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -275,147 +312,147 @@ function get_version() {
     </li>
   
                                                           <li data-page="app_root" value="22">
-      <a class="js-page-link" href="app_root.html">Application Root<span
+      <a class="js-page-link" href="../usage/app_root.html">Application Root<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="arguments" value="23">
-      <a class="js-page-link" href="arguments.html">This script "arguments"<span
+      <a class="js-page-link" href="../usage/arguments.html">This script "arguments"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="command" value="24">
-      <a class="js-page-link" href="command.html">The Script "Command"<span
+      <a class="js-page-link" href="../usage/command.html">The Script "Command"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="configuration" value="25">
-      <a class="js-page-link" href="configuration.html">Configuration<span
+      <a class="js-page-link" href="../usage/configuration.html">Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="conventions" value="26">
-      <a class="js-page-link" href="conventions.html">Cloudy Conventions<span
+      <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="development" value="27">
-      <a class="js-page-link" href="development.html">Development Tools<span
+      <a class="js-page-link" href="../usage/development.html">Development Tools<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="documenting" value="28">
-      <a class="js-page-link" href="documenting.html">Documenting Code<span
+      <a class="js-page-link" href="../usage/documenting.html">Documenting Code<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="error_handling" value="29">
-      <a class="js-page-link" href="error_handling.html">Exit Status<span
+      <a class="js-page-link" href="../usage/error_handling.html">Exit Status<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="events" value="30">
-      <a class="js-page-link" href="events.html">Events (Hooks)<span
+      <a class="js-page-link" href="../usage/events.html">Events (Hooks)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="installer" value="31">
-      <a class="js-page-link" href="installer.html">The Initialize API<span
+      <a class="js-page-link" href="../usage/installer.html">The Initialize API<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="lists" value="32">
-      <a class="js-page-link" href="lists.html">Lists<span
+      <a class="js-page-link" href="../usage/lists.html">Lists<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="localize" value="33">
-      <a class="js-page-link" href="localize.html">Localization/Translation<span
+      <a class="js-page-link" href="../usage/localize.html">Localization/Translation<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="logging" value="34">
-      <a class="js-page-link" href="logging.html">Logging to File<span
+      <a class="js-page-link" href="../usage/logging.html">Logging to File<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="menus" value="35">
-      <a class="js-page-link" href="menus.html">Menus<span
+      <a class="js-page-link" href="../usage/menus.html">Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="options" value="36">
-      <a class="js-page-link" href="options.html">The Script "Options"<span
+      <a class="js-page-link" href="../usage/options.html">The Script "Options"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="packages" value="37">
-      <a class="js-page-link" href="packages.html">Cloudy Packages<span
+      <a class="js-page-link" href="../usage/packages.html">Cloudy Packages<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="tables" value="38">
-      <a class="js-page-link" href="tables.html">Tables (Tabular Output)<span
+      <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="tempdir" value="39">
-      <a class="js-page-link" href="tempdir.html">Using a Temporary Directory<span
+      <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="testing" value="40">
-      <a class="js-page-link" href="testing.html">Unit Testing<span
+      <a class="js-page-link" href="../usage/testing.html">Unit Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="version" value="41">
-      <a class="js-page-link" href="version.html">Script Version<span
+      <a class="js-page-link" href="../usage/version.html">Script Version<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="yaml" value="42">
-      <a class="js-page-link" href="yaml.html">YAML in BASH<span
+      <a class="js-page-link" href="../usage/yaml.html">YAML in BASH<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -513,23 +550,23 @@ function get_version() {
               <h2 class="h4 mt-4">PHP in Cloudy</h2>
         <ol>
                                 <li data-page="php_file_runner" value="11">
-      <a class="js-page-link" href="../php/php_file_runner.html">Writing Cloudy PHP</a>
+      <a class="js-page-link" href="php_file_runner.html">Writing Cloudy PHP</a>
     </li>
   
                                 <li data-page="php_envvars" value="12">
-      <a class="js-page-link" href="../php/php_envvars.html">Passing Variables Between BASH and PHP</a>
+      <a class="js-page-link" href="php_envvars.html">Passing Variables Between BASH and PHP</a>
     </li>
   
                                 <li data-page="php_errors" value="13">
-      <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+      <a class="js-page-link" href="php_errors.html">Error Handling in Cloudy PHP</a>
     </li>
   
                                 <li data-page="php_version" value="14">
-      <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
+      <a class="js-page-link" href="php_version.html">Setting the PHP Version Used by Cloudy</a>
     </li>
   
                                 <li data-page="composer" value="15">
-      <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
+      <a class="js-page-link" href="composer.html">Building a Cloudy-based App w/ Composer</a>
     </li>
   
                   </ol>
@@ -566,87 +603,87 @@ function get_version() {
               <h2 class="h4 mt-4">Usage</h2>
         <ol>
                                 <li data-page="app_root" value="22">
-      <a class="js-page-link" href="app_root.html">Application Root</a>
+      <a class="js-page-link" href="../usage/app_root.html">Application Root</a>
     </li>
   
                                 <li data-page="arguments" value="23">
-      <a class="js-page-link" href="arguments.html">This script "arguments"</a>
+      <a class="js-page-link" href="../usage/arguments.html">This script "arguments"</a>
     </li>
   
                                 <li data-page="command" value="24">
-      <a class="js-page-link" href="command.html">The Script "Command"</a>
+      <a class="js-page-link" href="../usage/command.html">The Script "Command"</a>
     </li>
   
                                 <li data-page="configuration" value="25">
-      <a class="js-page-link" href="configuration.html">Configuration</a>
+      <a class="js-page-link" href="../usage/configuration.html">Configuration</a>
     </li>
   
                                 <li data-page="conventions" value="26">
-      <a class="js-page-link" href="conventions.html">Cloudy Conventions</a>
+      <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions</a>
     </li>
   
                                 <li data-page="development" value="27">
-      <a class="js-page-link" href="development.html">Development Tools</a>
+      <a class="js-page-link" href="../usage/development.html">Development Tools</a>
     </li>
   
                                 <li data-page="documenting" value="28">
-      <a class="js-page-link" href="documenting.html">Documenting Code</a>
+      <a class="js-page-link" href="../usage/documenting.html">Documenting Code</a>
     </li>
   
                                 <li data-page="error_handling" value="29">
-      <a class="js-page-link" href="error_handling.html">Exit Status</a>
+      <a class="js-page-link" href="../usage/error_handling.html">Exit Status</a>
     </li>
   
                                 <li data-page="events" value="30">
-      <a class="js-page-link" href="events.html">Events (Hooks)</a>
+      <a class="js-page-link" href="../usage/events.html">Events (Hooks)</a>
     </li>
   
                                 <li data-page="installer" value="31">
-      <a class="js-page-link" href="installer.html">The Initialize API</a>
+      <a class="js-page-link" href="../usage/installer.html">The Initialize API</a>
     </li>
   
                                 <li data-page="lists" value="32">
-      <a class="js-page-link" href="lists.html">Lists</a>
+      <a class="js-page-link" href="../usage/lists.html">Lists</a>
     </li>
   
                                 <li data-page="localize" value="33">
-      <a class="js-page-link" href="localize.html">Localization/Translation</a>
+      <a class="js-page-link" href="../usage/localize.html">Localization/Translation</a>
     </li>
   
                                 <li data-page="logging" value="34">
-      <a class="js-page-link" href="logging.html">Logging to File</a>
+      <a class="js-page-link" href="../usage/logging.html">Logging to File</a>
     </li>
   
                                 <li data-page="menus" value="35">
-      <a class="js-page-link" href="menus.html">Menus</a>
+      <a class="js-page-link" href="../usage/menus.html">Menus</a>
     </li>
   
                                 <li data-page="options" value="36">
-      <a class="js-page-link" href="options.html">The Script "Options"</a>
+      <a class="js-page-link" href="../usage/options.html">The Script "Options"</a>
     </li>
   
                                 <li data-page="packages" value="37">
-      <a class="js-page-link" href="packages.html">Cloudy Packages</a>
+      <a class="js-page-link" href="../usage/packages.html">Cloudy Packages</a>
     </li>
   
                                 <li data-page="tables" value="38">
-      <a class="js-page-link" href="tables.html">Tables (Tabular Output)</a>
+      <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)</a>
     </li>
   
                                 <li data-page="tempdir" value="39">
-      <a class="js-page-link" href="tempdir.html">Using a Temporary Directory</a>
+      <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory</a>
     </li>
   
                                 <li data-page="testing" value="40">
-      <a class="js-page-link" href="testing.html">Unit Testing</a>
+      <a class="js-page-link" href="../usage/testing.html">Unit Testing</a>
     </li>
   
                                 <li data-page="version" value="41">
-      <a class="js-page-link" href="version.html">Script Version</a>
+      <a class="js-page-link" href="../usage/version.html">Script Version</a>
     </li>
   
                                 <li data-page="yaml" value="42">
-      <a class="js-page-link" href="yaml.html">YAML in BASH</a>
+      <a class="js-page-link" href="../usage/yaml.html">YAML in BASH</a>
     </li>
   
                   </ol>
@@ -729,15 +766,15 @@ function get_version() {
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/api_functions_php.html">Cloudy API: PHP Functions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_file_runner.html">Writing Cloudy PHP</a>
+                 data-tags="[]" href="php_file_runner.html">Writing Cloudy PHP</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_envvars.html">Passing Variables Between BASH and PHP</a>
+                 data-tags="[]" href="php_envvars.html">Passing Variables Between BASH and PHP</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+                 data-tags="[]" href="php_errors.html">Error Handling in Cloudy PHP</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
+                 data-tags="[]" href="php_version.html">Setting the PHP Version Used by Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
+                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="composer.html">Building a Cloudy-based App w/ Composer</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;BASH&quot;]" href="../bash/arrays.html">Arrays</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -751,47 +788,47 @@ function get_version() {
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;EXAMPLES&quot;]" href="../examples/route_access.html">Command Access</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="app_root.html">Application Root</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/app_root.html">Application Root</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="arguments.html">This script &quot;arguments&quot;</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/arguments.html">This script &quot;arguments&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="command.html">The Script &quot;Command&quot;</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/command.html">The Script &quot;Command&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="configuration.html">Configuration</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/configuration.html">Configuration</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="conventions.html">Cloudy Conventions</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/conventions.html">Cloudy Conventions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="development.html">Development Tools</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/development.html">Development Tools</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="documenting.html">Documenting Code</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/documenting.html">Documenting Code</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="error_handling.html">Exit Status</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/error_handling.html">Exit Status</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="events.html">Events (Hooks)</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/events.html">Events (Hooks)</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="installer.html">The Initialize API</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/installer.html">The Initialize API</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="lists.html">Lists</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/lists.html">Lists</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="localize.html">Localization/Translation</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/localize.html">Localization/Translation</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="logging.html">Logging to File</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/logging.html">Logging to File</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="menus.html">Menus</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/menus.html">Menus</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="options.html">The Script &quot;Options&quot;</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/options.html">The Script &quot;Options&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="packages.html">Cloudy Packages</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/packages.html">Cloudy Packages</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="tables.html">Tables (Tabular Output)</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/tables.html">Tables (Tabular Output)</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="tempdir.html">Using a Temporary Directory</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/tempdir.html">Using a Temporary Directory</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="testing.html">Unit Testing</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/testing.html">Unit Testing</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="version.html">Script Version</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/version.html">Script Version</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="yaml.html">YAML in BASH</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/yaml.html">YAML in BASH</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>
                                                 <a class="list-group-item list-group-item-action"

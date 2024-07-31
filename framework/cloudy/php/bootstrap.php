@@ -23,7 +23,8 @@ define('CLOUDY_BASEPATH', getenv('CLOUDY_BASEPATH'));
 if (empty(CLOUDY_BASEPATH)) {
   throw new RuntimeException('Environment var "CLOUDY_BASEPATH" cannot be empty.');
 }
-$composer_vendor = getenv('COMPOSER_VENDOR');
+
+$composer_vendor = getenv('CLOUDY_COMPOSER_VENDOR');
 if (empty($composer_vendor)) {
   throw new RuntimeException('Environment var "$composer_vendor" cannot be empty.');
 }

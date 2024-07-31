@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="../../dist/bootstrap_theme.css">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="../../dist/style.css">
-    <title>Script Version | Cloudy BASH Framework</title>
+    <title>Understanding Configuration | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -27,17 +27,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="app_root.html">Usage</a></li>
+      <a href="upgrade_v2.html">Developers</a></li>
   </ol>
 </nav>
 
       </div>
-      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
-          type="button" class="badge
-        rounded-pill
-        bg-primary">USAGE</span>
-  </div>
-      <div class="header__page-numbers flex-shrink-1">41
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">47
         / 48</div>
     </div>
   </div>
@@ -46,26 +42,18 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Script Version</h1>
-      <p>To provide a version for your script other than the default <code>1.0</code>, you have two options.</p>
-<h2>Version Indicated in YAML</h2>
-<p>You may hard-code the version in a YAML config file like this:</p>
-<pre><code>title: Cloudy Installer
-version: 1.5
-...
-
-</code></pre>
-<h2>Version Indicated Dynamically</h2>
-<p>If you would rather provide your version dynamically with BASH, you can override the default <code>get_version</code> by adding it to your script file anytime after the bootstrap; this allows you to provide it via PHP, <code>cat</code> or whatever, e.g.,</p>
-<pre><code>...
-done;r="$(cd -P "$(dirname "$s")" &amp;&amp; pwd)";source "$r/framework/cloudy/cloudy.sh"
-# End Cloudy Bootstrap
-
-function get_version() {
-    local version=$(grep "version = " "$ROOT/web_package.info")
-    echo ${version/version = / }
-}
-</code></pre>
+      <h1 class="mb-4 text-primary">Understanding Configuration</h1>
+      <h4>Serialized Configuration Files</h4>
+<ul>
+<li>Serialized (YML, JSON) configuration files get normalized then converted to BASH and cached.</li>
+<li>This process happens early in <em>cloudy.core.sh</em></li>
+<li>Changes in the serialized files trigger an automatic flush and rebuild of the config cache.</li>
+<li>Cached files are stored in <code>$CLOUDY_CACHE_DIR</code></li>
+</ul>
+<h3>Cached Configuration</h3>
+<ul>
+<li>Relative paths are no yet resolved at this point.</li>
+</ul>
     </article>
   </div>
 </main>
@@ -83,11 +71,11 @@ function get_version() {
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="app_root.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> Application Root</a>
+              <a href="upgrade_v2.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Upgrade Path to Cloudy 2.0.0</a>
   
     
-              <a href="testing.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="variable_scopes.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -98,8 +86,8 @@ function get_version() {
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="yaml.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> YAML in BASH <i class="bi
+              <a href="../quick_start/writing_scripts.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Writing Your First Cloudy Script <i class="bi
        bi-caret-right-fill"></i></a>
   
     
@@ -275,147 +263,147 @@ function get_version() {
     </li>
   
                                                           <li data-page="app_root" value="22">
-      <a class="js-page-link" href="app_root.html">Application Root<span
+      <a class="js-page-link" href="../usage/app_root.html">Application Root<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="arguments" value="23">
-      <a class="js-page-link" href="arguments.html">This script "arguments"<span
+      <a class="js-page-link" href="../usage/arguments.html">This script "arguments"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="command" value="24">
-      <a class="js-page-link" href="command.html">The Script "Command"<span
+      <a class="js-page-link" href="../usage/command.html">The Script "Command"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="configuration" value="25">
-      <a class="js-page-link" href="configuration.html">Configuration<span
+      <a class="js-page-link" href="../usage/configuration.html">Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="conventions" value="26">
-      <a class="js-page-link" href="conventions.html">Cloudy Conventions<span
+      <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="development" value="27">
-      <a class="js-page-link" href="development.html">Development Tools<span
+      <a class="js-page-link" href="../usage/development.html">Development Tools<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="documenting" value="28">
-      <a class="js-page-link" href="documenting.html">Documenting Code<span
+      <a class="js-page-link" href="../usage/documenting.html">Documenting Code<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="error_handling" value="29">
-      <a class="js-page-link" href="error_handling.html">Exit Status<span
+      <a class="js-page-link" href="../usage/error_handling.html">Exit Status<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="events" value="30">
-      <a class="js-page-link" href="events.html">Events (Hooks)<span
+      <a class="js-page-link" href="../usage/events.html">Events (Hooks)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="installer" value="31">
-      <a class="js-page-link" href="installer.html">The Initialize API<span
+      <a class="js-page-link" href="../usage/installer.html">The Initialize API<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="lists" value="32">
-      <a class="js-page-link" href="lists.html">Lists<span
+      <a class="js-page-link" href="../usage/lists.html">Lists<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="localize" value="33">
-      <a class="js-page-link" href="localize.html">Localization/Translation<span
+      <a class="js-page-link" href="../usage/localize.html">Localization/Translation<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="logging" value="34">
-      <a class="js-page-link" href="logging.html">Logging to File<span
+      <a class="js-page-link" href="../usage/logging.html">Logging to File<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="menus" value="35">
-      <a class="js-page-link" href="menus.html">Menus<span
+      <a class="js-page-link" href="../usage/menus.html">Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="options" value="36">
-      <a class="js-page-link" href="options.html">The Script "Options"<span
+      <a class="js-page-link" href="../usage/options.html">The Script "Options"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="packages" value="37">
-      <a class="js-page-link" href="packages.html">Cloudy Packages<span
+      <a class="js-page-link" href="../usage/packages.html">Cloudy Packages<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="tables" value="38">
-      <a class="js-page-link" href="tables.html">Tables (Tabular Output)<span
+      <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="tempdir" value="39">
-      <a class="js-page-link" href="tempdir.html">Using a Temporary Directory<span
+      <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="testing" value="40">
-      <a class="js-page-link" href="testing.html">Unit Testing<span
+      <a class="js-page-link" href="../usage/testing.html">Unit Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="version" value="41">
-      <a class="js-page-link" href="version.html">Script Version<span
+      <a class="js-page-link" href="../usage/version.html">Script Version<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="yaml" value="42">
-      <a class="js-page-link" href="yaml.html">YAML in BASH<span
+      <a class="js-page-link" href="../usage/yaml.html">YAML in BASH<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -436,21 +424,21 @@ function get_version() {
     </li>
   
                                                           <li data-page="upgrade_v2" value="45">
-      <a class="js-page-link" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0<span
+      <a class="js-page-link" href="upgrade_v2.html">Upgrade Path to Cloudy 2.0.0<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="variable_scopes" value="46">
-      <a class="js-page-link" href="../developers/variable_scopes.html">Sourcing Scripts<span
+      <a class="js-page-link" href="variable_scopes.html">Sourcing Scripts<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="dev_configuration" value="47">
-      <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration<span
+      <a class="js-page-link" href="dev_configuration.html">Understanding Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -566,87 +554,87 @@ function get_version() {
               <h2 class="h4 mt-4">Usage</h2>
         <ol>
                                 <li data-page="app_root" value="22">
-      <a class="js-page-link" href="app_root.html">Application Root</a>
+      <a class="js-page-link" href="../usage/app_root.html">Application Root</a>
     </li>
   
                                 <li data-page="arguments" value="23">
-      <a class="js-page-link" href="arguments.html">This script "arguments"</a>
+      <a class="js-page-link" href="../usage/arguments.html">This script "arguments"</a>
     </li>
   
                                 <li data-page="command" value="24">
-      <a class="js-page-link" href="command.html">The Script "Command"</a>
+      <a class="js-page-link" href="../usage/command.html">The Script "Command"</a>
     </li>
   
                                 <li data-page="configuration" value="25">
-      <a class="js-page-link" href="configuration.html">Configuration</a>
+      <a class="js-page-link" href="../usage/configuration.html">Configuration</a>
     </li>
   
                                 <li data-page="conventions" value="26">
-      <a class="js-page-link" href="conventions.html">Cloudy Conventions</a>
+      <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions</a>
     </li>
   
                                 <li data-page="development" value="27">
-      <a class="js-page-link" href="development.html">Development Tools</a>
+      <a class="js-page-link" href="../usage/development.html">Development Tools</a>
     </li>
   
                                 <li data-page="documenting" value="28">
-      <a class="js-page-link" href="documenting.html">Documenting Code</a>
+      <a class="js-page-link" href="../usage/documenting.html">Documenting Code</a>
     </li>
   
                                 <li data-page="error_handling" value="29">
-      <a class="js-page-link" href="error_handling.html">Exit Status</a>
+      <a class="js-page-link" href="../usage/error_handling.html">Exit Status</a>
     </li>
   
                                 <li data-page="events" value="30">
-      <a class="js-page-link" href="events.html">Events (Hooks)</a>
+      <a class="js-page-link" href="../usage/events.html">Events (Hooks)</a>
     </li>
   
                                 <li data-page="installer" value="31">
-      <a class="js-page-link" href="installer.html">The Initialize API</a>
+      <a class="js-page-link" href="../usage/installer.html">The Initialize API</a>
     </li>
   
                                 <li data-page="lists" value="32">
-      <a class="js-page-link" href="lists.html">Lists</a>
+      <a class="js-page-link" href="../usage/lists.html">Lists</a>
     </li>
   
                                 <li data-page="localize" value="33">
-      <a class="js-page-link" href="localize.html">Localization/Translation</a>
+      <a class="js-page-link" href="../usage/localize.html">Localization/Translation</a>
     </li>
   
                                 <li data-page="logging" value="34">
-      <a class="js-page-link" href="logging.html">Logging to File</a>
+      <a class="js-page-link" href="../usage/logging.html">Logging to File</a>
     </li>
   
                                 <li data-page="menus" value="35">
-      <a class="js-page-link" href="menus.html">Menus</a>
+      <a class="js-page-link" href="../usage/menus.html">Menus</a>
     </li>
   
                                 <li data-page="options" value="36">
-      <a class="js-page-link" href="options.html">The Script "Options"</a>
+      <a class="js-page-link" href="../usage/options.html">The Script "Options"</a>
     </li>
   
                                 <li data-page="packages" value="37">
-      <a class="js-page-link" href="packages.html">Cloudy Packages</a>
+      <a class="js-page-link" href="../usage/packages.html">Cloudy Packages</a>
     </li>
   
                                 <li data-page="tables" value="38">
-      <a class="js-page-link" href="tables.html">Tables (Tabular Output)</a>
+      <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)</a>
     </li>
   
                                 <li data-page="tempdir" value="39">
-      <a class="js-page-link" href="tempdir.html">Using a Temporary Directory</a>
+      <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory</a>
     </li>
   
                                 <li data-page="testing" value="40">
-      <a class="js-page-link" href="testing.html">Unit Testing</a>
+      <a class="js-page-link" href="../usage/testing.html">Unit Testing</a>
     </li>
   
                                 <li data-page="version" value="41">
-      <a class="js-page-link" href="version.html">Script Version</a>
+      <a class="js-page-link" href="../usage/version.html">Script Version</a>
     </li>
   
                                 <li data-page="yaml" value="42">
-      <a class="js-page-link" href="yaml.html">YAML in BASH</a>
+      <a class="js-page-link" href="../usage/yaml.html">YAML in BASH</a>
     </li>
   
                   </ol>
@@ -664,15 +652,15 @@ function get_version() {
               <h2 class="h4 mt-4">Developers</h2>
         <ol>
                                 <li data-page="upgrade_v2" value="45">
-      <a class="js-page-link" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
+      <a class="js-page-link" href="upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
     </li>
   
                                 <li data-page="variable_scopes" value="46">
-      <a class="js-page-link" href="../developers/variable_scopes.html">Sourcing Scripts</a>
+      <a class="js-page-link" href="variable_scopes.html">Sourcing Scripts</a>
     </li>
   
                                 <li data-page="dev_configuration" value="47">
-      <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
+      <a class="js-page-link" href="dev_configuration.html">Understanding Configuration</a>
     </li>
   
                   </ol>
@@ -751,57 +739,57 @@ function get_version() {
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;EXAMPLES&quot;]" href="../examples/route_access.html">Command Access</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="app_root.html">Application Root</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/app_root.html">Application Root</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="arguments.html">This script &quot;arguments&quot;</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/arguments.html">This script &quot;arguments&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="command.html">The Script &quot;Command&quot;</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/command.html">The Script &quot;Command&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="configuration.html">Configuration</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/configuration.html">Configuration</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="conventions.html">Cloudy Conventions</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/conventions.html">Cloudy Conventions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="development.html">Development Tools</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/development.html">Development Tools</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="documenting.html">Documenting Code</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/documenting.html">Documenting Code</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="error_handling.html">Exit Status</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/error_handling.html">Exit Status</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="events.html">Events (Hooks)</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/events.html">Events (Hooks)</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="installer.html">The Initialize API</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/installer.html">The Initialize API</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="lists.html">Lists</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/lists.html">Lists</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="localize.html">Localization/Translation</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/localize.html">Localization/Translation</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="logging.html">Logging to File</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/logging.html">Logging to File</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="menus.html">Menus</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/menus.html">Menus</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="options.html">The Script &quot;Options&quot;</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/options.html">The Script &quot;Options&quot;</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="packages.html">Cloudy Packages</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/packages.html">Cloudy Packages</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="tables.html">Tables (Tabular Output)</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/tables.html">Tables (Tabular Output)</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="tempdir.html">Using a Temporary Directory</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/tempdir.html">Using a Temporary Directory</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="testing.html">Unit Testing</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/testing.html">Unit Testing</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="version.html">Script Version</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/version.html">Script Version</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;USAGE&quot;]" href="yaml.html">YAML in BASH</a>
+                 data-tags="[&quot;USAGE&quot;]" href="../usage/yaml.html">YAML in BASH</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../trouble/autoloader.html">Composer autoloader not found</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
+                 data-tags="[]" href="upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../developers/variable_scopes.html">Sourcing Scripts</a>
+                 data-tags="[]" href="variable_scopes.html">Sourcing Scripts</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../developers/dev_configuration.html">Understanding Configuration</a>
+                 data-tags="[]" href="dev_configuration.html">Understanding Configuration</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>
