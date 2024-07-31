@@ -50,8 +50,7 @@ class GlobalsTest extends TestCase {
   public function testCloudyPackageController() {
     $result = $this->execCloudy('echo $CLOUDY_PACKAGE_CONTROLLER');
     $result = realpath($result);
-    $expected = dirname($this->getCloudyPackageController());
-    $this->assertSame($expected, $result, 'Assert expected path for $CLOUDY_PACKAGE_CONTROLLER');
+    $this->assertSame($this->getCloudyPackageController(), $result, 'Assert expected path for $CLOUDY_PACKAGE_CONTROLLER');
   }
 
   public function testCloudyRuntimeUuid() {
