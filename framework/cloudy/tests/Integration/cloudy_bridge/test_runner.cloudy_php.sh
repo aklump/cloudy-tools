@@ -12,7 +12,7 @@ shift
 shift
 
 function on_pre_config() {
-  source "$CLOUDY_ROOT/inc/config/early.sh"
+  source "$CLOUDY_CORE_DIR/inc/config/early.sh"
 }
 
 # This has been altered to facilitate testing; it is not standard initial code.

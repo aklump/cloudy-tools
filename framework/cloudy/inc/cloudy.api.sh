@@ -19,7 +19,7 @@ function json_set() {
 
   local clean_json
 
-  clean_json="$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "json_bash_filter" "$incoming_json")"
+  clean_json="$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "json_bash_filter" "$incoming_json")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_set \"$path\" failed to set JSON: $incoming_json"
     write_log_error "$clean_json"
@@ -38,7 +38,7 @@ function json_load_file() {
 
   local loaded_json
 
-  loaded_json="$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "json_load_file" "$path_to_json")"
+  loaded_json="$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "json_load_file" "$path_to_json")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_load_file \"$path\" failed to load $path_to_json"
     write_log_error "$loaded_json"
@@ -75,7 +75,7 @@ function json_get_value() {
 
   local value
 
-  value="$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "json_get_value" "$path" "$json_content")"
+  value="$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "json_get_value" "$path" "$json_content")"
   if [[ $? -ne 0 ]]; then
     write_log_error "json_get_value \"$path\" failed against JSON: $(json_get)"
     write_log_error "$value"
@@ -643,7 +643,7 @@ function array_sort_by_item_length() {
     local php_result
     local result
 
-    php_result=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
+    php_result=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "array_sort_by_item_length" "sorted" "${array_sort_by_item_length__array[@]}")
     result=$?
     if [[ $result -ne 0 ]]; then
       write_log_error "array_sort_by_item_length failed."
@@ -1333,12 +1333,12 @@ function exit_with_init() {
 }
 
 ##
- # Empties caches in $CLOUDY_ROOT (or other directory if provided) and exits.
+ # Empties caches in $CLOUDY_CORE_DIR (or other directory if provided) and exits.
  #
  # @return nothing.
  #
 function exit_with_cache_clear() {
-    local cloudy_dir="${1:-$CLOUDY_ROOT}"
+    local cloudy_dir="${1:-$CLOUDY_CORE_DIR}"
     local clear
     [[ ! "${cloudy_dir}" ]] && exit_with_failure "Invalid cache directory ${cloudy_dir}"
     event_dispatch "clear_cache" "$cloudy_dir" || exit_with_failure "Clearing caches failed"
@@ -2318,7 +2318,7 @@ function yaml_get() {
 function yaml_get_json() {
   local json
 
-  json=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "yaml_to_json" "$yaml_content")
+  json=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "yaml_to_json" "$yaml_content")
   if [[ $? -ne 0 ]]; then
     write_log_error "yaml_get_json \"$yaml\" failed against YAML: $yaml_content"
     write_log_error "$json"

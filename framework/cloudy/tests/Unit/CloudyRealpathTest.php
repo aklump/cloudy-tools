@@ -21,13 +21,13 @@ class CloudyRealpathTest extends TestCase {
     $root = $this->getTestFilesDirectory();
 
     $tests[] = [
-      '{CLOUDY_BASEPATH}foo',
+      '$CLOUDY_BASEPATHfoo',
       [
         $root . 'foo',
       ],
     ];
     $tests[] = [
-      '{CLOUDY_BASEPATH}/foo',
+      '$CLOUDY_BASEPATH/foo',
       [
         $root . 'foo',
       ],

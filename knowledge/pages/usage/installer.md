@@ -47,13 +47,13 @@ ignored_file.txt
 In most cases you should consider using tokens like shown below. If you find your tokens are not get interpolated it's possible `handle_init` is getting called too early. Try moving `handle_init` to the `on_boot` event handler in your controller file to fix this. Early versions of Cloudy recommended calling that from `on_pre_config`, which does not support tokens.
 
 ```text
-* {CLOUDY_BASEPATH}/.live_dev_porter/*
-config.gitignore {CLOUDY_BASEPATH}/.live_dev_porter/.gitignore
+* $CLOUDY_BASEPATH/.live_dev_porter/*
+config.gitignore $CLOUDY_BASEPATH/.live_dev_porter/.gitignore
 ```
 
 #### Supported Tokens
 
-1. `{CLOUDY_BASEPATH}`
+1. `$CLOUDY_BASEPATH`
 
 ## Special Filenames
 

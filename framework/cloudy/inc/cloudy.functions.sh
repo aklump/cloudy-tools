@@ -973,6 +973,6 @@ function _cloudy_validate_input_against_schema() {
 
   local errors
   # TODO Rewrite using $PHP_FILE_RUNNER
-  echo $("$CLOUDY_PHP" $CLOUDY_ROOT/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
+  echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/validate_against_schema.php "$CLOUDY_CONFIG_JSON" "$config_path_to_schema" "$name" "$value")
   return $?
 }

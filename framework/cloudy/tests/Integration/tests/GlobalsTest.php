@@ -18,10 +18,6 @@ class GlobalsTest extends TestCase {
     $tests[] = ['CLOUDY_CORE_DIR', $this->getCloudyCoreDir()];
     $tests[] = ['CLOUDY_CACHE_DIR', $this->getCloudyCacheDir()];
     $tests[] = [
-      'CLOUDY_PACKAGE_CONTROLLER',
-      realpath(__DIR__ . '/../cloudy_bridge/test_runner.sh'),
-    ];
-    $tests[] = [
       'CLOUDY_PACKAGE_CONFIG',
       $integration_tests_dir . '/t/InstallTypeCore/config.yml',
     ];
@@ -42,6 +38,20 @@ class GlobalsTest extends TestCase {
     $result = realpath($result);
     $expected = realpath($expected);
     $this->assertSame($expected, $result, 'Assert expected path for $' . $var_name);
+  }
+
+  public function testRoot() {
+    $result = $this->execCloudy('echo $ROOT');
+    $result = realpath($result);
+    $expected = dirname($this->getCloudyPackageController());
+    $this->assertSame($expected, $result, 'Assert expected path for $ROOT');
+  }
+
+  public function testCloudyPackageController() {
+    $result = $this->execCloudy('echo $CLOUDY_PACKAGE_CONTROLLER');
+    $result = realpath($result);
+    $expected = dirname($this->getCloudyPackageController());
+    $this->assertSame($expected, $result, 'Assert expected path for $CLOUDY_PACKAGE_CONTROLLER');
   }
 
   public function testCloudyRuntimeUuid() {

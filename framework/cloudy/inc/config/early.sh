@@ -6,7 +6,7 @@
 # You must source this inside of on_pre_config in your controller.
 # @code
 # function on_pre_config() {
-#  source "$CLOUDY_ROOT/inc/config/early.sh"
+#  source "$CLOUDY_CORE_DIR/inc/config/early.sh"
 # }
 # @code
 #

@@ -18,7 +18,7 @@ tags: ''
 ? what are the path tokens?
 
 1. `$CLOUDY_BASEPATH`
-1. `$CLOUDY_ROOT`
+1. `$CLOUDY_CORE_DIR`
 
 
 ## What path functions exist?

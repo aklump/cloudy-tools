@@ -86,12 +86,12 @@ function _cloudypm_load_package_info() {
     url=$(url_add_cache_buster "$url")
     curl -o "$path_to_package_yml" --create-dirs "$url" >/dev/null 2>&1 || fail_because "Cannot download $url"
     # TODO Rewrite using $PHP_FILE_RUNNER
-    json=$("$CLOUDY_PHP" "$CLOUDY_ROOT/php/config/normalize.php" "$CLOUDY_ROOT/cloudypm_info.schema.json" "$path_to_package_yml")
+    json=$("$CLOUDY_PHP" "$CLOUDY_CORE_DIR/php/config/normalize.php" "$CLOUDY_CORE_DIR/cloudypm_info.schema.json" "$path_to_package_yml")
     json_result=$?
     write_log_debug "$json"
     rm $path_to_package_yml
     [[ $json_result -gt 0 ]] && fail_because "Cannot convert package info to JSON." && return 1
-    . "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/config/cache.php" "$ROOT" "cloudypm" "$json" >"$cached_info"
+    . "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/config/cache.php" "$ROOT" "cloudypm" "$json" >"$cached_info"
 
     source $cached_info || return 1
     # Normalize our hashed variable names.

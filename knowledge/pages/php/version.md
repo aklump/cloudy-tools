@@ -41,7 +41,7 @@ _Cloudy Package Controller File: foo.sh_
 
 ```bash
 function on_pre_config() {
-  source "$CLOUDY_ROOT/inc/config/early.sh"
+  source "$CLOUDY_CORE_DIR/inc/config/early.sh"
 }
 ```
 

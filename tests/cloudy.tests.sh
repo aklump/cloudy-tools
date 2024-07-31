@@ -642,21 +642,21 @@ function testGetConfigPathUsingGlobWorksAsExpected() {
 }
 
 function testGetConfigPathWorksAsItShould() {
-  assert_not_empty "$CLOUDY_ROOT"
+  assert_not_empty "$CLOUDY_CORE_DIR"
   assert_not_empty "$CLOUDY_BASEPATH"
 
   # This one handles the realpath portion as the subject involves traversal.
   eval $(get_config_path 'tests.filepaths.cloudy')
-  assert_same "$(realpath $CLOUDY_ROOT/..)" $tests_filepaths_cloudy
+  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $tests_filepaths_cloudy
 
   eval $(get_config_path 'tests.filepaths.absolute')
   assert_same "/dev/null" $tests_filepaths_absolute
 
   eval $(get_config_path 'tests.filepaths.install')
-  assert_same "$(realpath $CLOUDY_ROOT/..)" $tests_filepaths_install
+  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $tests_filepaths_install
 
   eval $(get_config_path 'tests.filepaths.cache')
-  assert_same "$CLOUDY_ROOT/cache" $tests_filepaths_cache
+  assert_same "$CLOUDY_CORE_DIR/cache" $tests_filepaths_cache
 
   eval $(get_config_path 'tests.filepaths.token_app_root')
   assert_same "$CLOUDY_BASEPATH/.project/config.yml" $tests_filepaths_token_app_root
@@ -665,16 +665,16 @@ function testGetConfigPathWorksAsItShould() {
 function testGetConfigPathAsWorksAsItShould() {
   # This one handles the realpath portion as the subject involves traversal.
   eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
-  assert_same "$(realpath $CLOUDY_ROOT/..)" $testpath
+  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $testpath
 
   eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
   assert_same "/dev/null" $testpath
 
   eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
-  assert_same "$(realpath $CLOUDY_ROOT/..)" $testpath
+  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $testpath
 
   eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
-  assert_same "$CLOUDY_ROOT/cache" $testpath
+  assert_same "$CLOUDY_CORE_DIR/cache" $testpath
 }
 function testArrayHasValue() {
   array_has_value__array=('foo bar' 'baz')

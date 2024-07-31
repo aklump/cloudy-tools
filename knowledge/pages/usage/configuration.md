@@ -9,7 +9,7 @@ tags: usage
 
 Configuration files are YAML or JSON. They are connected to your script in one, two, or three ways.
 
-1. The main configuration file is required and is hardcoded in your script as `$CONFIG`.
+1. The main configuration file is required and is hardcoded in your script as `$CLOUDY_PACKAGE_CONFIG`.
 1. Within that file, you may indicate additional configuration files using the key `additional_config`, which defines an array. Be aware that these paths are relative to `config_path_base`, see below for more info.
 1. Finally, configuration files may be provided dynamically at run time listening to the event `compile_config`.
 
@@ -19,15 +19,15 @@ If configuration values conflict, those that came later will take prescendence; 
 
 The following examples will be shown with YAML.
 
-In the header of your script you will find `$CONFIG`, this is for the base configuration file, e.g.,
+In the header of your script you will find `$CLOUDY_PACKAGE_CONFIG`, this is for the base configuration file, e.g.,
 
         CLOUDY_PACKAGE_CONFIG=script.example.yml
 
 1. Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., `$(dirname your_cloudy_script.sh)`
-1. You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the `{CLOUDY_BASEPATH}` token is encouraged over the use of relative paths, as it is less confusing.
+1. You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of `~` to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the `$CLOUDY_BASEPATH` token is encouraged over the use of relative paths, as it is less confusing.
 
         additional_config:
-          - {CLOUDY_BASEPATH}/.my_app/config.yml
+          - $CLOUDY_BASEPATH/.my_app/config.yml
           - _install.local.yml
           - ~/.my_project.yml
 

@@ -35,7 +35,7 @@ function on_pre_config() {
 function on_boot() {
   # Run the test command before the bootstrap to avoid conflicts.
   [[ "$(get_command)" == "tests" ]] || return 0
-  source "$CLOUDY_ROOT/inc/cloudy.testing.sh"
+  source "$CLOUDY_CORE_DIR/inc/cloudy.testing.sh"
   do_tests_in "tests/cloudy.tests.sh"
   exit_with_test_results
 }

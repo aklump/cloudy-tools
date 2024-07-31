@@ -34,7 +34,7 @@
       </div>
       <div class="header__tags me-3">  </div>
       <div class="header__page-numbers flex-shrink-1">8
-        / 48</div>
+        / 50</div>
     </div>
   </div>
 </header>
@@ -129,12 +129,14 @@
       <a href="#list_add_item">list_add_item</a>
       <a href="#list_clear">list_clear</a>
       <a href="#list_has_items">list_has_items</a>
+      <a href="#ltrim">ltrim</a>
       <a href="#md5_string">md5_string</a>
       <a href="#parse_args">parse_args</a>
       <a href="#path_extension">path_extension</a>
       <a href="#path_filename">path_filename</a>
       <a href="#path_filesize">path_filesize</a>
       <a href="#path_is_absolute">path_is_absolute</a>
+      <a href="#path_is_yaml">path_is_yaml</a>
       <a href="#path_mtime">path_mtime</a>
       <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
       <a href="#path_relative_to_pwd">path_relative_to_pwd</a>
@@ -142,6 +144,7 @@
       <a href="#path_resolve">path_resolve</a>
       <a href="#path_unresolve">path_unresolve</a>
       <a href="#realpath">realpath</a>
+      <a href="#rtrim">rtrim</a>
       <a href="#string_lower">string_lower</a>
       <a href="#string_repeat">string_repeat</a>
       <a href="#string_split">string_split</a>
@@ -157,6 +160,7 @@
       <a href="#time_local">time_local</a>
       <a href="#timestamp">timestamp</a>
       <a href="#translate">translate</a>
+      <a href="#trim_quotes">trim_quotes</a>
       <a href="#url_add_cache_buster">url_add_cache_buster</a>
       <a href="#url_host">url_host</a>
       <a href="#validate_input">validate_input</a>
@@ -354,14 +358,13 @@
         <hr/>
       <a name="create_uuid"></a>
     <h2>create_uuid()</h2>
-    <p class="summary"></p>
+    <p class="summary">Get a new UUID</p>
     
                       Echos:
       <ul class="function-list__echos">
                   <li>A new UUID</li>
               </ul>
             
-          <pre><code>Get a new UUID</code></pre>
         <hr/>
       <a name="date8601"></a>
     <h2>date8601()</h2>
@@ -376,10 +379,10 @@
         <hr/>
       <a name="debug"></a>
     <h2>debug()</h2>
-    <p class="summary"></p>
+    <p class="summary">Development</p>
     
                         
-          <pre><code>Development Echo the arguments sent to this is an eye-catching manner. Call as in the example below for better tracing.
+          <pre><code>Echo the arguments sent to this is an eye-catching manner. Call as in the example below for better tracing.
 
 @code
   debug &quot;Some message to show|$0|$FUNCNAME|$LINENO&quot;
@@ -541,7 +544,7 @@
         <hr/>
       <a name="echo_list"></a>
     <h2>echo_list()</h2>
-    <p class="summary"></p>
+    <p class="summary">Echo an array as a bulleted list (does not clear list)</p>
     
               Parameters:
       <ul class="function-list__parameters">
@@ -552,7 +555,7 @@
                   <li>The list</li>
               </ul>
             
-          <pre><code>Echo an array as a bulleted list (does not clear list) You must add items to your list first:
+          <pre><code>You must add items to your list first:
 
 @code
   list_add_item &quot;List item&quot;
@@ -786,28 +789,26 @@
         <hr/>
       <a name="event_dispatch"></a>
     <h2>event_dispatch()</h2>
-    <p class="summary"></p>
+    <p class="summary">Dispatch that an event has occurred to all listeners.</p>
     
                         
-          <pre><code>Dispatch that an event has occurred to all listeners. Additional arguments beyond $1 are passed on to the listeners.</code></pre>
+          <pre><code>Additional arguments beyond $1 are passed on to the listeners.</code></pre>
         <hr/>
       <a name="event_listen"></a>
     <h2>event_listen()</h2>
-    <p class="summary"></p>
+    <p class="summary">Register an event listener.</p>
     
                         
-          <pre><code>Register an event listener.</code></pre>
         <hr/>
       <a name="exit_with_cache_clear"></a>
     <h2>exit_with_cache_clear()</h2>
-    <p class="summary"></p>
+    <p class="summary">Empties caches in $CLOUDY_ROOT (or other directory if provided) and exits.</p>
     
                           Returns:
       <ul class="function-list__returns">
                   <li><code>0</code> nothing.</li>
               </ul>
         
-          <pre><code>Empties caches in $CLOUDY_ROOT (or other directory if provided) and exits.</code></pre>
         <hr/>
       <a name="exit_with_failure"></a>
     <h2>exit_with_failure()</h2>
@@ -959,14 +960,14 @@
         <hr/>
       <a name="fail"></a>
     <h2>fail()</h2>
-    <p class="summary"></p>
+    <p class="summary">Set the exit status to fail with no message.  Does not stop execution.</p>
     
                   Options:
       <ul class="function-list__options">
                   <li><code>--status</code> Optional, set the exit status, a number &gt; 0</li>
               </ul>
                 
-          <pre><code>Set the exit status to fail with no message.  Does not stop execution. Try not to use this because it gives no indication as to why@see exit_with_failure</code></pre>
+          <pre><code>Try not to use this because it gives no indication as to why@see exit_with_failure</code></pre>
         <hr/>
       <a name="fail_because"></a>
     <h2>fail_because()</h2>
@@ -1047,10 +1048,10 @@
         <hr/>
       <a name="get_config"></a>
     <h2>get_config()</h2>
-    <p class="summary"></p>
+    <p class="summary">Get a config path assignment.</p>
     
                         
-          <pre><code>Get a config path assignment. You should probably use get_config_as() instead as it&#039;s less brittle.
+          <pre><code>You should probably use get_config_as() instead as it&#039;s less brittle.
 
 @code
   eval $(get_config &#039;path.to.config&#039;)
@@ -1072,12 +1073,10 @@
         <hr/>
       <a name="get_config_as"></a>
     <h2>get_config_as()</h2>
-    <p class="summary"></p>
+    <p class="summary">Get config path but assign it&#039;s value to a custom variable.</p>
     
                         
-          <pre><code>Get config path but assign it&#039;s value to a custom variable.
-
-@code
+          <pre><code>@code
   eval $(get_config_as &#039;title&#039; &#039;path.to.some.title&#039; &#039;default&#039;)
   eval $(get_config_as &#039;title&#039; -a &#039;path.to.some.array&#039; )
 
@@ -1289,10 +1288,10 @@
         <hr/>
       <a name="implement_cloudy_basic"></a>
     <h2>implement_cloudy_basic()</h2>
-    <p class="summary"></p>
+    <p class="summary">SECTION: Ending the script.</p>
     
                         
-          <pre><code>SECTION: Ending the script.@link https://www.tldp.org/LDP/abs/html/exit-status.html Implement cloudy common commands and options. An optional set of commands for all scripts.  This is just the handlers, you must still set up the commands in the config file as usual.</code></pre>
+          <pre><code>@link https://www.tldp.org/LDP/abs/html/exit-status.html Implement cloudy common commands and options. An optional set of commands for all scripts.  This is just the handlers, you must still set up the commands in the config file as usual.</code></pre>
         <hr/>
       <a name="is_installed"></a>
     <h2>is_installed()</h2>
@@ -1408,16 +1407,30 @@
               </ul>
         
         <hr/>
+      <a name="ltrim"></a>
+    <h2>ltrim()</h2>
+    <p class="summary">Remove leading whitespace from string.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> string</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The left trimmed string</li>
+              </ul>
+            
+        <hr/>
       <a name="md5_string"></a>
     <h2>md5_string()</h2>
-    <p class="summary"></p>
+    <p class="summary">Echo the md5 hash of a string.</p>
     
                           Returns:
       <ul class="function-list__returns">
                   <li><code>0</code> if the string was able to be hashed.</li>
               </ul>
         
-          <pre><code>Echo the md5 hash of a string.$1 = string The string to hash</code></pre>
+          <pre><code>$1 = string The string to hash</code></pre>
         <hr/>
       <a name="parse_args"></a>
     <h2>parse_args()</h2>
@@ -1432,17 +1445,15 @@
         <hr/>
       <a name="path_extension"></a>
     <h2>path_extension()</h2>
-    <p class="summary"></p>
+    <p class="summary">Return the extension of a file.</p>
     
                         
-          <pre><code>Return the extension of a file.</code></pre>
         <hr/>
       <a name="path_filename"></a>
     <h2>path_filename()</h2>
-    <p class="summary"></p>
+    <p class="summary">Return the basename less the extension.</p>
     
                         
-          <pre><code>Return the basename less the extension.</code></pre>
         <hr/>
       <a name="path_filesize"></a>
     <h2>path_filesize()</h2>
@@ -1468,6 +1479,21 @@
               </ul>
         
         <hr/>
+      <a name="path_is_yaml"></a>
+    <h2>path_is_yaml()</h2>
+    <p class="summary">Check if a filepath is a YAML file.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> Path to file in question.</li>
+              </ul>
+                      Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> If it is.</li>
+                  <li><code>1</code> If it is not a YAML file.</li>
+              </ul>
+        
+        <hr/>
       <a name="path_mtime"></a>
     <h2>path_mtime()</h2>
     <p class="summary">Echo the last modified time of a file.</p>
@@ -1484,10 +1510,10 @@
         <hr/>
       <a name="path_relative_to_config_base"></a>
     <h2>path_relative_to_config_base()</h2>
-    <p class="summary"></p>
+    <p class="summary">Filepaths</p>
     
                         
-          <pre><code>Filepaths Echo a path relative to config_path_base. If the path begins with / it is unchanged.</code></pre>
+          <pre><code>Echo a path relative to config_path_base. If the path begins with / it is unchanged.</code></pre>
         <hr/>
       <a name="path_relative_to_pwd"></a>
     <h2>path_relative_to_pwd()</h2>
@@ -1501,10 +1527,10 @@
         <hr/>
       <a name="path_relative_to_root"></a>
     <h2>path_relative_to_root()</h2>
-    <p class="summary"></p>
+    <p class="summary">Expand a relative path using $ROOT as base.</p>
     
                         
-          <pre><code>Expand a relative path using $ROOT as base. If the path begins with / it is unchanged.</code></pre>
+          <pre><code>If the path begins with / it is unchanged.</code></pre>
         <hr/>
       <a name="path_resolve"></a>
     <h2>path_resolve()</h2>
@@ -1535,10 +1561,23 @@
         <hr/>
       <a name="realpath"></a>
     <h2>realpath()</h2>
-    <p class="summary"></p>
+    <p class="summary">Define realpath if it&#039;s not defined.</p>
     
                         
-          <pre><code>Define realpath if it&#039;s not defined.</code></pre>
+        <hr/>
+      <a name="rtrim"></a>
+    <h2>rtrim()</h2>
+    <p class="summary">Remove trailing whitespace from string.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> string</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The right trimmed string</li>
+              </ul>
+            
         <hr/>
       <a name="string_lower"></a>
     <h2>string_lower()</h2>
@@ -1645,10 +1684,9 @@
         <hr/>
       <a name="table_add_row"></a>
     <h2>table_add_row()</h2>
-    <p class="summary"></p>
+    <p class="summary">Send any number of arguments, each is a column value for a single row.</p>
     
                         
-          <pre><code>Send any number of arguments, each is a column value for a single row.</code></pre>
         <hr/>
       <a name="table_clear"></a>
     <h2>table_clear()</h2>
@@ -1738,19 +1776,31 @@
               </ul>
         
         <hr/>
+      <a name="trim_quotes"></a>
+    <h2>trim_quotes()</h2>
+    <p class="summary">Echo a string after removing leading and trailing quotes, as per YAML string.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> string</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The string with the first and last single/double quote(s) removed.</li>
+              </ul>
+            
+        <hr/>
       <a name="url_add_cache_buster"></a>
     <h2>url_add_cache_buster()</h2>
-    <p class="summary"></p>
+    <p class="summary">Add a cache-busting timestamp to an URL and echo the new url.</p>
     
                         
-          <pre><code>Add a cache-busting timestamp to an URL and echo the new url.</code></pre>
         <hr/>
       <a name="url_host"></a>
     <h2>url_host()</h2>
-    <p class="summary"></p>
+    <p class="summary">Echo the host portion an URL.</p>
     
                         
-          <pre><code>Echo the host portion an URL.</code></pre>
         <hr/>
       <a name="validate_input"></a>
     <h2>validate_input()</h2>
@@ -1796,10 +1846,9 @@
         <hr/>
       <a name="write_log"></a>
     <h2>write_log()</h2>
-    <p class="summary"></p>
+    <p class="summary">You may include 1 or two arguments; when 2, the first is a log label</p>
     
                         
-          <pre><code>You may include 1 or two arguments; when 2, the first is a log label</code></pre>
         <hr/>
       <a name="write_log_alert"></a>
     <h2>write_log_alert()</h2>
@@ -1842,17 +1891,16 @@
         <hr/>
       <a name="write_log_dev_warning"></a>
     <h2>write_log_dev_warning()</h2>
-    <p class="summary"></p>
+    <p class="summary">Log states that should only be thus during development or debugging.</p>
     
                         
-          <pre><code>Log states that should only be thus during development or debugging. Adds a &quot;... in dev only message to your warning&quot;</code></pre>
+          <pre><code>Adds a &quot;... in dev only message to your warning&quot;</code></pre>
         <hr/>
       <a name="write_log_emergency"></a>
     <h2>write_log_emergency()</h2>
-    <p class="summary"></p>
+    <p class="summary">@link https://www.php-fig.org/psr/psr-3/</p>
     
                         
-          <pre><code>@link https://www.php-fig.org/psr/psr-3/</code></pre>
         <hr/>
       <a name="write_log_error"></a>
     <h2>write_log_error()</h2>
@@ -2101,266 +2149,280 @@
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="php_file_runner" value="11">
-      <a class="js-page-link" href="../php/php_file_runner.html">Writing Cloudy PHP<span
+                                                          <li data-page="php_bash_side" value="11">
+      <a class="js-page-link" href="../php/php_bash_side.html">Writing Cloudy PHP: BASH Perspective<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="php_envvars" value="12">
-      <a class="js-page-link" href="../php/php_envvars.html">Passing Variables Between BASH and PHP<span
+                                    <li data-page="php_php_side" value="12">
+      <a class="js-page-link" href="../php/php_php_side.html">Writing Cloudy PHP: PHP Perspective<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="php_errors" value="13">
+                                    <li data-page="php_envvars" value="13">
+      <a class="js-page-link" href="../php/php_envvars.html">Sharing Data Between BASH and PHP<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="php_errors" value="14">
       <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="php_version" value="14">
+                                    <li data-page="php_example" value="15">
+      <a class="js-page-link" href="../php/php_example.html">Writing Cloudy PHP (Complete Example)<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="php_version" value="16">
       <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="composer" value="15">
+                                    <li data-page="composer" value="17">
       <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="arrays" value="16">
+                                                          <li data-page="arrays" value="18">
       <a class="js-page-link" href="../bash/arrays.html">Arrays<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="strings" value="17">
+                                    <li data-page="strings" value="19">
       <a class="js-page-link" href="../bash/strings.html">String Manipulation<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="functions" value="18">
+                                                          <li data-page="functions" value="20">
       <a class="js-page-link" href="../examples/functions.html">Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="menus_input" value="19">
+                                    <li data-page="menus_input" value="21">
       <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="plugins" value="20">
+                                    <li data-page="plugins" value="22">
       <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="route_access" value="21">
+                                    <li data-page="route_access" value="23">
       <a class="js-page-link" href="../examples/route_access.html">Command Access<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="app_root" value="22">
+                                                          <li data-page="app_root" value="24">
       <a class="js-page-link" href="../usage/app_root.html">Application Root<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="arguments" value="23">
+                                    <li data-page="arguments" value="25">
       <a class="js-page-link" href="../usage/arguments.html">This script "arguments"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="command" value="24">
+                                    <li data-page="command" value="26">
       <a class="js-page-link" href="../usage/command.html">The Script "Command"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="configuration" value="25">
+                                    <li data-page="configuration" value="27">
       <a class="js-page-link" href="../usage/configuration.html">Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="conventions" value="26">
+                                    <li data-page="conventions" value="28">
       <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="development" value="27">
+                                    <li data-page="development" value="29">
       <a class="js-page-link" href="../usage/development.html">Development Tools<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="documenting" value="28">
+                                    <li data-page="documenting" value="30">
       <a class="js-page-link" href="../usage/documenting.html">Documenting Code<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="error_handling" value="29">
+                                    <li data-page="error_handling" value="31">
       <a class="js-page-link" href="../usage/error_handling.html">Exit Status<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="events" value="30">
+                                    <li data-page="events" value="32">
       <a class="js-page-link" href="../usage/events.html">Events (Hooks)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="installer" value="31">
+                                    <li data-page="installer" value="33">
       <a class="js-page-link" href="../usage/installer.html">The Initialize API<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="lists" value="32">
+                                    <li data-page="lists" value="34">
       <a class="js-page-link" href="../usage/lists.html">Lists<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="localize" value="33">
+                                    <li data-page="localize" value="35">
       <a class="js-page-link" href="../usage/localize.html">Localization/Translation<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="logging" value="34">
+                                    <li data-page="logging" value="36">
       <a class="js-page-link" href="../usage/logging.html">Logging to File<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="menus" value="35">
+                                    <li data-page="menus" value="37">
       <a class="js-page-link" href="../usage/menus.html">Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="options" value="36">
+                                    <li data-page="options" value="38">
       <a class="js-page-link" href="../usage/options.html">The Script "Options"<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="packages" value="37">
+                                    <li data-page="packages" value="39">
       <a class="js-page-link" href="../usage/packages.html">Cloudy Packages<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="tables" value="38">
+                                    <li data-page="tables" value="40">
       <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="tempdir" value="39">
+                                    <li data-page="tempdir" value="41">
       <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="testing" value="40">
+                                    <li data-page="testing" value="42">
       <a class="js-page-link" href="../usage/testing.html">Unit Testing<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="version" value="41">
+                                    <li data-page="version" value="43">
       <a class="js-page-link" href="../usage/version.html">Script Version<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="yaml" value="42">
+                                    <li data-page="yaml" value="44">
       <a class="js-page-link" href="../usage/yaml.html">YAML in BASH<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="empty_config" value="43">
+                                                          <li data-page="empty_config" value="45">
       <a class="js-page-link" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="autoloader" value="44">
+                                    <li data-page="autoloader" value="46">
       <a class="js-page-link" href="../trouble/autoloader.html">Composer autoloader not found<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="upgrade_v2" value="45">
+                                                          <li data-page="upgrade_v2" value="47">
       <a class="js-page-link" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="variable_scopes" value="46">
+                                    <li data-page="variable_scopes" value="48">
       <a class="js-page-link" href="../developers/variable_scopes.html">Sourcing Scripts<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="dev_configuration" value="47">
+                                    <li data-page="dev_configuration" value="49">
       <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="48">
+                                                          <li data-page="writing_scripts" value="50">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -2416,173 +2478,181 @@
                   </ol>
               <h2 class="h4 mt-4">PHP in Cloudy</h2>
         <ol>
-                                <li data-page="php_file_runner" value="11">
-      <a class="js-page-link" href="../php/php_file_runner.html">Writing Cloudy PHP</a>
+                                <li data-page="php_bash_side" value="11">
+      <a class="js-page-link" href="../php/php_bash_side.html">Writing Cloudy PHP: BASH Perspective</a>
     </li>
   
-                                <li data-page="php_envvars" value="12">
-      <a class="js-page-link" href="../php/php_envvars.html">Passing Variables Between BASH and PHP</a>
+                                <li data-page="php_php_side" value="12">
+      <a class="js-page-link" href="../php/php_php_side.html">Writing Cloudy PHP: PHP Perspective</a>
     </li>
   
-                                <li data-page="php_errors" value="13">
+                                <li data-page="php_envvars" value="13">
+      <a class="js-page-link" href="../php/php_envvars.html">Sharing Data Between BASH and PHP</a>
+    </li>
+  
+                                <li data-page="php_errors" value="14">
       <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
     </li>
   
-                                <li data-page="php_version" value="14">
+                                <li data-page="php_example" value="15">
+      <a class="js-page-link" href="../php/php_example.html">Writing Cloudy PHP (Complete Example)</a>
+    </li>
+  
+                                <li data-page="php_version" value="16">
       <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
     </li>
   
-                                <li data-page="composer" value="15">
+                                <li data-page="composer" value="17">
       <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">BASH</h2>
         <ol>
-                                <li data-page="arrays" value="16">
+                                <li data-page="arrays" value="18">
       <a class="js-page-link" href="../bash/arrays.html">Arrays</a>
     </li>
   
-                                <li data-page="strings" value="17">
+                                <li data-page="strings" value="19">
       <a class="js-page-link" href="../bash/strings.html">String Manipulation</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Code Examples</h2>
         <ol>
-                                <li data-page="functions" value="18">
+                                <li data-page="functions" value="20">
       <a class="js-page-link" href="../examples/functions.html">Functions</a>
     </li>
   
-                                <li data-page="menus_input" value="19">
+                                <li data-page="menus_input" value="21">
       <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus</a>
     </li>
   
-                                <li data-page="plugins" value="20">
+                                <li data-page="plugins" value="22">
       <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern</a>
     </li>
   
-                                <li data-page="route_access" value="21">
+                                <li data-page="route_access" value="23">
       <a class="js-page-link" href="../examples/route_access.html">Command Access</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Usage</h2>
         <ol>
-                                <li data-page="app_root" value="22">
+                                <li data-page="app_root" value="24">
       <a class="js-page-link" href="../usage/app_root.html">Application Root</a>
     </li>
   
-                                <li data-page="arguments" value="23">
+                                <li data-page="arguments" value="25">
       <a class="js-page-link" href="../usage/arguments.html">This script "arguments"</a>
     </li>
   
-                                <li data-page="command" value="24">
+                                <li data-page="command" value="26">
       <a class="js-page-link" href="../usage/command.html">The Script "Command"</a>
     </li>
   
-                                <li data-page="configuration" value="25">
+                                <li data-page="configuration" value="27">
       <a class="js-page-link" href="../usage/configuration.html">Configuration</a>
     </li>
   
-                                <li data-page="conventions" value="26">
+                                <li data-page="conventions" value="28">
       <a class="js-page-link" href="../usage/conventions.html">Cloudy Conventions</a>
     </li>
   
-                                <li data-page="development" value="27">
+                                <li data-page="development" value="29">
       <a class="js-page-link" href="../usage/development.html">Development Tools</a>
     </li>
   
-                                <li data-page="documenting" value="28">
+                                <li data-page="documenting" value="30">
       <a class="js-page-link" href="../usage/documenting.html">Documenting Code</a>
     </li>
   
-                                <li data-page="error_handling" value="29">
+                                <li data-page="error_handling" value="31">
       <a class="js-page-link" href="../usage/error_handling.html">Exit Status</a>
     </li>
   
-                                <li data-page="events" value="30">
+                                <li data-page="events" value="32">
       <a class="js-page-link" href="../usage/events.html">Events (Hooks)</a>
     </li>
   
-                                <li data-page="installer" value="31">
+                                <li data-page="installer" value="33">
       <a class="js-page-link" href="../usage/installer.html">The Initialize API</a>
     </li>
   
-                                <li data-page="lists" value="32">
+                                <li data-page="lists" value="34">
       <a class="js-page-link" href="../usage/lists.html">Lists</a>
     </li>
   
-                                <li data-page="localize" value="33">
+                                <li data-page="localize" value="35">
       <a class="js-page-link" href="../usage/localize.html">Localization/Translation</a>
     </li>
   
-                                <li data-page="logging" value="34">
+                                <li data-page="logging" value="36">
       <a class="js-page-link" href="../usage/logging.html">Logging to File</a>
     </li>
   
-                                <li data-page="menus" value="35">
+                                <li data-page="menus" value="37">
       <a class="js-page-link" href="../usage/menus.html">Menus</a>
     </li>
   
-                                <li data-page="options" value="36">
+                                <li data-page="options" value="38">
       <a class="js-page-link" href="../usage/options.html">The Script "Options"</a>
     </li>
   
-                                <li data-page="packages" value="37">
+                                <li data-page="packages" value="39">
       <a class="js-page-link" href="../usage/packages.html">Cloudy Packages</a>
     </li>
   
-                                <li data-page="tables" value="38">
+                                <li data-page="tables" value="40">
       <a class="js-page-link" href="../usage/tables.html">Tables (Tabular Output)</a>
     </li>
   
-                                <li data-page="tempdir" value="39">
+                                <li data-page="tempdir" value="41">
       <a class="js-page-link" href="../usage/tempdir.html">Using a Temporary Directory</a>
     </li>
   
-                                <li data-page="testing" value="40">
+                                <li data-page="testing" value="42">
       <a class="js-page-link" href="../usage/testing.html">Unit Testing</a>
     </li>
   
-                                <li data-page="version" value="41">
+                                <li data-page="version" value="43">
       <a class="js-page-link" href="../usage/version.html">Script Version</a>
     </li>
   
-                                <li data-page="yaml" value="42">
+                                <li data-page="yaml" value="44">
       <a class="js-page-link" href="../usage/yaml.html">YAML in BASH</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Troubleshooting</h2>
         <ol>
-                                <li data-page="empty_config" value="43">
+                                <li data-page="empty_config" value="45">
       <a class="js-page-link" href="../trouble/empty_config.html">`$CLOUDY_CONFIG_JSON cannot be empty...`</a>
     </li>
   
-                                <li data-page="autoloader" value="44">
+                                <li data-page="autoloader" value="46">
       <a class="js-page-link" href="../trouble/autoloader.html">Composer autoloader not found</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Developers</h2>
         <ol>
-                                <li data-page="upgrade_v2" value="45">
+                                <li data-page="upgrade_v2" value="47">
       <a class="js-page-link" href="../developers/upgrade_v2.html">Upgrade Path to Cloudy 2.0.0</a>
     </li>
   
-                                <li data-page="variable_scopes" value="46">
+                                <li data-page="variable_scopes" value="48">
       <a class="js-page-link" href="../developers/variable_scopes.html">Sourcing Scripts</a>
     </li>
   
-                                <li data-page="dev_configuration" value="47">
+                                <li data-page="dev_configuration" value="49">
       <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="48">
+                                <li data-page="writing_scripts" value="50">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -2633,11 +2703,15 @@
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="api_functions_php.html">Cloudy API: PHP Functions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_file_runner.html">Writing Cloudy PHP</a>
+                 data-tags="[]" href="../php/php_bash_side.html">Writing Cloudy PHP: BASH Perspective</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_envvars.html">Passing Variables Between BASH and PHP</a>
+                 data-tags="[]" href="../php/php_php_side.html">Writing Cloudy PHP: PHP Perspective</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../php/php_envvars.html">Sharing Data Between BASH and PHP</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../php/php_example.html">Writing Cloudy PHP (Complete Example)</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"

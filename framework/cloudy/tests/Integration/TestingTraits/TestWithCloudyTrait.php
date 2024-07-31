@@ -4,6 +4,7 @@ namespace AKlump\Cloudy\Tests\Integration\TestingTraits;
 
 use InvalidArgumentException;
 use PHPUnit\TextUI\TestFileNotFoundException;
+use RuntimeException;
 
 /**
  * A trait for Integration testing Cloudy.
@@ -81,6 +82,10 @@ trait TestWithCloudyTrait {
   }
 
   protected function getCloudyPackageController(): string {
+    if (empty($this->testRunner)) {
+      throw new RuntimeException('Missing \$this->testRunner');
+    }
+
     return realpath(__DIR__ . '/../cloudy_bridge/' . $this->testRunner);
   }
 

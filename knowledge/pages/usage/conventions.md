@@ -64,7 +64,7 @@ Beware of a scope issue for functions that use `eval` to set or mutate. This fir
 
 ```shell
 function array_sort_by_item_length() {
-    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
 
     # note: [ $eval = 'declare -a array_sort_by_item_length__array=("on" "five" "three" "september")' ]
     # Notice the eval code aims to mutate $array_sort_by_item_length__array
@@ -80,7 +80,7 @@ Here is the fix to make it work:
 ```shell
 declare -a array_sort_by_item_length__array=()
 function array_sort_by_item_length() {
-    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
     
     eval $eval
     

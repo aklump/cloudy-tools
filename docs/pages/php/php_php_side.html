@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="../../dist/bootstrap_theme.css">
       <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
       <link rel="stylesheet" href="../../dist/style.css">
-    <title>Single File Plugins Pattern | Cloudy BASH Framework</title>
+    <title>Writing Cloudy PHP: PHP Perspective | Cloudy BASH Framework</title>
 </head>
 <body class="my-5">
 
@@ -27,17 +27,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="functions.html">Code Examples</a></li>
+      <a href="php_bash_side.html">PHP in Cloudy</a></li>
   </ol>
 </nav>
 
       </div>
-      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
-          type="button" class="badge
-        rounded-pill
-        bg-primary">EXAMPLES</span>
-  </div>
-      <div class="header__page-numbers flex-shrink-1">22
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">12
         / 50</div>
     </div>
   </div>
@@ -46,55 +42,15 @@
 <main class="container-md flex-column">
   <div class="row mb-5 pt-5">
     <article class="col">
-      <h1 class="mb-4 text-primary">Single File Plugins Pattern</h1>
-      <p>Here is a pattern that can be used if you want to allow "plugin" type files, PHP or BASH, to be used by your project:</p>
-<p><em>Implementing controller snippet:</em></p>
-<pre><code class="shell">call_plugin "$CONFIG_DIR/plugins/$plugin" || exit_with_failure
-</code></pre>
-<p>_Function definition for <code>call_plugin()</code>_
-<code>`</code>shell
-function call_plugin() {
-  local plugin_path="$1"</p>
-<p>  if [[ ! -f "$plugin_path" ]]; then</p>
-<pre><code>fail_because "$plugin_path does not exist."
-return 1
-</code></pre>
-<p>  elif [[ "$(path_extension "$plugin_path")" == "php" ]]; then</p>
-<pre><code># TODO It may be more appropriate to be explicite about the arguments.
-plugin_output=$($CLOUDY_PHP  $@)
-</code></pre>
-<p>  else</p>
-<pre><code>plugin_output=$(.  $@)
-</code></pre>
-<p>  fi</p>
-<p>  if [[ $? -ne 0 ]]; then</p>
-<pre><code>[[ "$plugin_output" ]] &amp;&amp; fail_because "$plugin_output"
-fail_because "\"$plugin\" has failed."
-return 1
-</code></pre>
-<p>  fi</p>
-<p>  [[ "$plugin_output" ]] &amp;&amp; succeed_because "$plugin_output"
-  return 0
-}
-<code>`</code></p>
-<p><em>The plugin, PHP version:</em></p>
-<pre><code class="php">&lt;?php
-$filepath = $argv[1];
-
-$contents = file_get_contents($filepath);
-
-if ('' == $contents) {
-  echo "$filepath is an empty file.";
-  exit(1);
-}
-echo "Contents approved in $filepath";
-</code></pre>
-<h2>Notes</h2>
-<ul>
-<li>The echo string should not contain any line breaks.</li>
-<li>The plugin must exit with non-zero if it fails.</li>
-<li>When existing non-zero, a default failure message will always be displayed. If the plugin echos a message, this default will appear after the message.</li>
-<li>If the plugin exists with a zero, there is no default message.</li>
+      <h1 class="mb-4 text-primary">Writing Cloudy PHP: PHP Perspective</h1>
+      <ul>
+<li>Use <a href="https://www.php.net/manual/en/function.echo.php">echo</a> as you would in a BASH function or sourced file.</li>
+<li>Return values are always ignored; however <a href="https://www.php.net/manual/en/function.return.php">return</a> may be used for early exit and/or code flow.</li>
+<li>Never use <a href="https://www.php.net/manual/en/function.exit.php">exit</a>.</li>
+<li>To indicate failure use <code>fail_because</code> or <code>exit_with_failure</code>. To set exit status pass the number to one of those functions.</li>
+<li>Any exception will be automatically converted to <code>exit_with_failure</code> and the script will stop immediately.</li>
+<li>The BASH parent script can be known by looking at <code>$PHP_FILE_RUN_CONTROLLER</code></li>
+<li>Never hardcode PHP into your app codebase, e.g. <code>php</code>; instead if you must point to the PHP binary then use the variable <code>"$CLOUDY_PHP"</code></li>
 </ul>
     </article>
   </div>
@@ -113,11 +69,11 @@ echo "Contents approved in $filepath";
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="functions.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> Functions</a>
+              <a href="php_bash_side.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Writing Cloudy PHP: BASH Perspective</a>
   
     
-              <a href="menus_input.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="php_bash_side.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -128,8 +84,8 @@ echo "Contents approved in $filepath";
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="route_access.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> Command Access <i class="bi
+              <a href="php_envvars.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> Sharing Data Between BASH and PHP <i class="bi
        bi-caret-right-fill"></i></a>
   
     
@@ -228,49 +184,49 @@ echo "Contents approved in $filepath";
     </li>
   
                                                           <li data-page="php_bash_side" value="11">
-      <a class="js-page-link" href="../php/php_bash_side.html">Writing Cloudy PHP: BASH Perspective<span
+      <a class="js-page-link" href="php_bash_side.html">Writing Cloudy PHP: BASH Perspective<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_php_side" value="12">
-      <a class="js-page-link" href="../php/php_php_side.html">Writing Cloudy PHP: PHP Perspective<span
+      <a class="js-page-link" href="php_php_side.html">Writing Cloudy PHP: PHP Perspective<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_envvars" value="13">
-      <a class="js-page-link" href="../php/php_envvars.html">Sharing Data Between BASH and PHP<span
+      <a class="js-page-link" href="php_envvars.html">Sharing Data Between BASH and PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_errors" value="14">
-      <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP<span
+      <a class="js-page-link" href="php_errors.html">Error Handling in Cloudy PHP<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_example" value="15">
-      <a class="js-page-link" href="../php/php_example.html">Writing Cloudy PHP (Complete Example)<span
+      <a class="js-page-link" href="php_example.html">Writing Cloudy PHP (Complete Example)<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="php_version" value="16">
-      <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy<span
+      <a class="js-page-link" href="php_version.html">Setting the PHP Version Used by Cloudy<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="composer" value="17">
-      <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer<span
+      <a class="js-page-link" href="composer.html">Building a Cloudy-based App w/ Composer<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -291,28 +247,28 @@ echo "Contents approved in $filepath";
     </li>
   
                                                           <li data-page="functions" value="20">
-      <a class="js-page-link" href="functions.html">Functions<span
+      <a class="js-page-link" href="../examples/functions.html">Functions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="menus_input" value="21">
-      <a class="js-page-link" href="menus_input.html">User Input and Menus<span
+      <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="plugins" value="22">
-      <a class="js-page-link" href="plugins.html">Single File Plugins Pattern<span
+      <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="route_access" value="23">
-      <a class="js-page-link" href="route_access.html">Command Access<span
+      <a class="js-page-link" href="../examples/route_access.html">Command Access<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -557,31 +513,31 @@ echo "Contents approved in $filepath";
               <h2 class="h4 mt-4">PHP in Cloudy</h2>
         <ol>
                                 <li data-page="php_bash_side" value="11">
-      <a class="js-page-link" href="../php/php_bash_side.html">Writing Cloudy PHP: BASH Perspective</a>
+      <a class="js-page-link" href="php_bash_side.html">Writing Cloudy PHP: BASH Perspective</a>
     </li>
   
                                 <li data-page="php_php_side" value="12">
-      <a class="js-page-link" href="../php/php_php_side.html">Writing Cloudy PHP: PHP Perspective</a>
+      <a class="js-page-link" href="php_php_side.html">Writing Cloudy PHP: PHP Perspective</a>
     </li>
   
                                 <li data-page="php_envvars" value="13">
-      <a class="js-page-link" href="../php/php_envvars.html">Sharing Data Between BASH and PHP</a>
+      <a class="js-page-link" href="php_envvars.html">Sharing Data Between BASH and PHP</a>
     </li>
   
                                 <li data-page="php_errors" value="14">
-      <a class="js-page-link" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+      <a class="js-page-link" href="php_errors.html">Error Handling in Cloudy PHP</a>
     </li>
   
                                 <li data-page="php_example" value="15">
-      <a class="js-page-link" href="../php/php_example.html">Writing Cloudy PHP (Complete Example)</a>
+      <a class="js-page-link" href="php_example.html">Writing Cloudy PHP (Complete Example)</a>
     </li>
   
                                 <li data-page="php_version" value="16">
-      <a class="js-page-link" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
+      <a class="js-page-link" href="php_version.html">Setting the PHP Version Used by Cloudy</a>
     </li>
   
                                 <li data-page="composer" value="17">
-      <a class="js-page-link" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
+      <a class="js-page-link" href="composer.html">Building a Cloudy-based App w/ Composer</a>
     </li>
   
                   </ol>
@@ -599,19 +555,19 @@ echo "Contents approved in $filepath";
               <h2 class="h4 mt-4">Code Examples</h2>
         <ol>
                                 <li data-page="functions" value="20">
-      <a class="js-page-link" href="functions.html">Functions</a>
+      <a class="js-page-link" href="../examples/functions.html">Functions</a>
     </li>
   
                                 <li data-page="menus_input" value="21">
-      <a class="js-page-link" href="menus_input.html">User Input and Menus</a>
+      <a class="js-page-link" href="../examples/menus_input.html">User Input and Menus</a>
     </li>
   
                                 <li data-page="plugins" value="22">
-      <a class="js-page-link" href="plugins.html">Single File Plugins Pattern</a>
+      <a class="js-page-link" href="../examples/plugins.html">Single File Plugins Pattern</a>
     </li>
   
                                 <li data-page="route_access" value="23">
-      <a class="js-page-link" href="route_access.html">Command Access</a>
+      <a class="js-page-link" href="../examples/route_access.html">Command Access</a>
     </li>
   
                   </ol>
@@ -781,31 +737,31 @@ echo "Contents approved in $filepath";
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/api_functions_php.html">Cloudy API: PHP Functions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_bash_side.html">Writing Cloudy PHP: BASH Perspective</a>
+                 data-tags="[]" href="php_bash_side.html">Writing Cloudy PHP: BASH Perspective</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_php_side.html">Writing Cloudy PHP: PHP Perspective</a>
+                 data-tags="[]" href="php_php_side.html">Writing Cloudy PHP: PHP Perspective</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_envvars.html">Sharing Data Between BASH and PHP</a>
+                 data-tags="[]" href="php_envvars.html">Sharing Data Between BASH and PHP</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_errors.html">Error Handling in Cloudy PHP</a>
+                 data-tags="[]" href="php_errors.html">Error Handling in Cloudy PHP</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_example.html">Writing Cloudy PHP (Complete Example)</a>
+                 data-tags="[]" href="php_example.html">Writing Cloudy PHP (Complete Example)</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../php/php_version.html">Setting the PHP Version Used by Cloudy</a>
+                 data-tags="[]" href="php_version.html">Setting the PHP Version Used by Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="../php/composer.html">Building a Cloudy-based App w/ Composer</a>
+                 data-tags="[&quot;COMPOSER&quot;,&quot;DEPENDENCIES&quot;,&quot;PHP&quot;,&quot;USAGE&quot;]" href="composer.html">Building a Cloudy-based App w/ Composer</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;BASH&quot;]" href="../bash/arrays.html">Arrays</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;BASH&quot;]" href="../bash/strings.html">String Manipulation</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="functions.html">Functions</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/functions.html">Functions</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="menus_input.html">User Input and Menus</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/menus_input.html">User Input and Menus</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="plugins.html">Single File Plugins Pattern</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/plugins.html">Single File Plugins Pattern</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[&quot;EXAMPLES&quot;]" href="route_access.html">Command Access</a>
+                 data-tags="[&quot;EXAMPLES&quot;]" href="../examples/route_access.html">Command Access</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;USAGE&quot;]" href="../usage/app_root.html">Application Root</a>
                                                 <a class="list-group-item list-group-item-action"
