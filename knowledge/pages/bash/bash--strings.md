@@ -27,7 +27,16 @@ string=${foo## }
 string=${foo%% }
 # "$string" == "foo"
 ```    
-    
+
+Or use the Cloudy helpers:
+
+```bash
+string="   foo    "
+string="$(ltrim "$string")"
+string="$(rtrim "$string")"
+# "$string" == "foo"
+```
+
 ## Get string length
 
 ```bash

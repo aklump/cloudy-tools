@@ -9,9 +9,11 @@ page_order:
     - changelog
     - cloudy_basepath
   php:
-    - php_file_runner
+    - php_bash_side
+    - php_php_side
     - php_envvars
     - php_errors
+    - php_example
     - php_version
     - composer
   bash:

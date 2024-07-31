@@ -32,5 +32,4 @@ foreach ($docs_vars as $key => $value) {
   $output[] = sprintf('/** @var %s $%s */', gettype($value), $key);
 }
 sort($output);
-$output = implode("\n", $output);
-print "```php\n$output\n```\n";
+print implode(PHP_EOL, $output) . PHP_EOL;

@@ -66,7 +66,7 @@ class GlobalsTest extends TestCase {
     $this->assertIsArray($data['CLOUDY_SUCCESSES'], 'Assert $CLOUDY_SUCCESSES is set as an array.');
     $this->assertIsInt($data['CLOUDY_EXIT_STATUS'], 'Assert $CLOUDY_EXIT_STATUS is set as an integer.');
     $this->assertMatchesRegularExpression('#\.sh$#', $data['PHP_FILE_RUN_CONTROLLER'], 'Assert $PHP_FILE_RUN_CONTROLLER appears to be a shell filepath.');
-    
+
     $this->assertJson($data['CLOUDY_CONFIG_JSON']);
   }
 

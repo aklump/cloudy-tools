@@ -36,7 +36,7 @@ declare -rx CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type "$CLOUDY_PACK
 if [ $? -ne 0 ]; then
   write_log_error "Failed to determine \$CLOUDY_INSTALLED_AS"
 else
-  write_log_debug "\$CLOUDY_INSTALLED_AS set to \"$CLOUDY_INSTALLED_AS\""
+  write_log_debug "\$CLOUDY_INSTALLED_AS autodetected as \"$CLOUDY_INSTALLED_AS\""
 fi
 
 declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$CLOUDY_PACKAGE_CONTROLLER")"

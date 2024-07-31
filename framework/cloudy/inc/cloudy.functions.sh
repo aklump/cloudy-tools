@@ -35,6 +35,21 @@ function _resolve_dir() {
 }
 
 ##
+ # Replace path tokens with runtime values.
+ #
+ # @global $CLOUDY_BASEPATH
+ # @param string The path containing one or more tokens
+ #
+ # @echo The path with values in place of tokens.
+ ##
+function _cloudy_resolve_path_tokens() {
+  local path="$1"
+
+  path="${path/\$CLOUDY_BASEPATH/$CLOUDY_BASEPATH}"
+  echo "$path"
+}
+
+##
  # Detect the type of Cloudy installation for a given directory.
  #
  # @param string $base The base directory to use to detect the installation type.
@@ -267,6 +282,52 @@ function _cloudy_get_file_mtime() {
 }
 
 ##
+ # Parse a base configuration file for all additional_config
+ #
+ # @global array _cloudy_unprocessed_additional_config_paths__array
+ #
+ # @return 1 If the base_config cannot be read.
+ ##
+declare -a _cloudy_unprocessed_additional_config_paths__array=()
+function _cloudy_read_unprocessed_additional_config_paths() {
+    local base_config=$1
+
+    ! path_is_yaml "$base_config" && return 1
+    local start_collecting=false
+    _cloudy_unprocessed_additional_config_paths__array=()
+    while IFS='' read -r line; do
+        if [[ "$line" == "additional_config:"* ]]; then
+            start_collecting=true
+        elif [[ "$start_collecting" = true ]]; then
+            if [[ "$line" =~ ^[[:space:]]*"-".* ]]; then
+                # remove leading whitespace and '-' from the line
+                line="$(_cloudy_ltrim_yaml_array_item "$line")"
+                line="$(trim_quotes "$line")"
+                _cloudy_unprocessed_additional_config_paths__array+=("$line")
+            else
+                break
+            fi
+        fi
+    done < "$base_config"
+    return 0
+}
+
+##
+ # Trim left whitespace and hyphen.
+ #
+ # @param string The line from yaml with left indent and/or hypen.
+ #
+ # @echo The line with leading whitespace and hypen remove.
+ #
+function _cloudy_ltrim_yaml_array_item() {
+    local line="$1"
+
+    line="${line##*[[:space:]]'- '}"
+    line="$(ltrim "$line")"
+    echo "$line"
+}
+
+##
 # Return config eval code for a given config path.
 #
 # @param string
@@ -423,7 +484,7 @@ function _cloudy_get_config() {
         path=$(echo ${path/\~/"$HOME"})
 
         # Replace tokens
-        path=$(echo ${path/\{CLOUDY_BASEPATH\}/"$CLOUDY_BASEPATH"})
+        path=$(_cloudy_resolve_path_tokens "$path")
 
         # Make relative to $ROOT.
         [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}

@@ -34,6 +34,31 @@ final class ParseBashFunctionTest extends TestCase {
     $this->assertSame('Use comma+space and then the word "all" as the final separator as when writing English prose, e.g. "do, re and mi".', $info->getOptions()[0]->description);
   }
 
+  public function testPathIsYaml() {
+    $bash_code = <<<BASH
+    ##
+     # Check if a filepath is a YAML file.
+     #
+     # @param string Path to file in question.
+     #
+     # @return 0 If it is.
+     # @return 1 If it is not a YAML file.
+     ##
+    function path_is_yaml()
+    BASH;
+    $info = (new ParseBashFunction())($bash_code);
+    $this->assertSame('path_is_yaml', $info->getName());
+    $this->assertSame('Check if a filepath is a YAML file.', $info->getSummary());
+    $this->assertEmpty($info->getDescription());
+    $this->assertSame('string', $info->getParameters()[0]->type);
+    $this->assertSame('Path to file in question.', $info->getParameters()[0]->description);
+    $this->assertSame(0, $info->getReturns()[0]->value);
+    $this->assertSame('If it is.', $info->getReturns()[0]->description);
+    $this->assertSame(1, $info->getReturns()[1]->value);
+    $this->assertSame('If it is not a YAML file.', $info->getReturns()[1]->description);
+    $this->assertEmpty($info->getEchos());
+  }
+
   public function testJsonGet() {
     $bash_code = <<<BASH
     # Get the set JSON

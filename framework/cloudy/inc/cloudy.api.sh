@@ -1238,7 +1238,7 @@ function handle_init() {
     token_match='\{.+\}'
     while read -r from to || [[ -n "$line" ]]; do
       if [[ "$token_support" == true ]]; then
-        to="${to/\{CLOUDY_BASEPATH\}/$CLOUDY_BASEPATH}"
+        to="$(_cloudy_resolve_path_tokens "$to")"
       fi
       if [[ "$from" == "*" ]]; then
           to="${to%\*}"
@@ -1884,6 +1884,21 @@ function path_is_absolute() {
     [[ "${path:0:1}" == '/' ]]
 }
 
+##
+ # Check if a filepath is a YAML file.
+ #
+ # @param string Path to file in question.
+ #
+ # @return 0 If it is.
+ # @return 1 If it is not a YAML file.
+ ##
+function path_is_yaml() {
+  local path="$1"
+
+  extension=$(path_extension "$path")
+  [[ "$extension" == 'yml' ]] || [[ "$extension" == 'yaml' ]] || [[ "$extension" == 'YML' ]] || [[ "$extension" == 'YAML' ]]
+}
+
 # Echo the size of a file.
 #
 # @param string The path to the file.
@@ -2319,4 +2334,44 @@ function yaml_get_json() {
  #
 function create_uuid() {
   echo $(uuidgen)
+}
+
+##
+ # Remove leading whitespace from string.
+ #
+ # @param string
+ # @echo The left trimmed string
+ ##
+function ltrim() {
+  local line="$1"
+  echo "${line#"${line%%[![:space:]]*}"}"
+}
+
+##
+ # Remove trailing whitespace from string.
+ #
+ # @param string
+ # @echo The right trimmed string
+ ##
+function rtrim() {
+  local line="$1"
+  echo "${line%"${line##*[![:space:]]}"}"
+}
+
+##
+ # Echo a string after removing leading and trailing quotes, as per YAML string.
+ #
+ # @param string
+ #
+ # @echo The string with the first and last single/double quote(s) removed.
+ ##
+function trim_quotes() {
+    local string=$1
+
+    string=${string#\'}
+    string=${string#\"}
+    string=${string%\'}
+    string=${string%\"}
+
+    echo "$string"
 }

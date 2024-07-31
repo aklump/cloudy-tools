@@ -46,13 +46,4 @@ class PHPTest extends TestCase {
     $this->assertSame($exit_code, $this->getCloudyExitStatus());
   }
 
-  public function testCloudyPhpPointsToAPhpExecutable() {
-    $this->bootCloudy(__DIR__ . '/../t/ConfigTest/base.yml');
-    $result = $this->execCloudy('echo $CLOUDY_PHP');
-    $this->assertNotEmpty($result, 'Assert value for $CLOUDY_PHP');
-    exec("$result -v", $output);
-    $output = implode(PHP_EOL, $output);
-    $this->assertMatchesRegularExpression('#PHP [\d.]+#', $output);
-  }
-
 }

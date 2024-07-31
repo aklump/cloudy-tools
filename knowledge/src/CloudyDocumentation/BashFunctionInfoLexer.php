@@ -90,10 +90,12 @@ class BashFunctionInfoLexer extends AbstractLexer {
     }
 
     if (!$this->hasSummary) {
-      $this->hasSummary = TRUE;
       $value = trim($value, "\n");
+      if (!empty($value)) {
+        $this->hasSummary = TRUE;
 
-      return self::T_SUMMARY;
+        return self::T_SUMMARY;
+      }
     }
 
     // Every other line will be concatenated into the description.

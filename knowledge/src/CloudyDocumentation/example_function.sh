@@ -18,7 +18,7 @@
  #
  # Anything that follows will be called the description, it maay include more
  # info and code snippets as necessary to document the function.
-
+ #
  # @code
  # @endcode
  ##

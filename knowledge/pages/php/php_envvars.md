@@ -3,44 +3,52 @@ id: php_envvars
 tags: ''
 -->
 
-# Passing Variables Between BASH and PHP
+# Sharing Data Between BASH and PHP
 
-## Variables
+## From BASH to PHP
 
-These are the mirrored variables that are available in Cloudy PHP. Hint: Add this snippet to the top of your PHP included files.
+If you want to pass custom variables from BASH to PHP, then you should use the native BASH `export` and the PHP `getenv()`, which is not special to Cloudy.
 
+_In file.sh_
+
+```shell
+export MY_VAR='foo bar'
+. "$PHP_FILE_RUNNER" file.php 
+```
+
+_In file.php_
+
+```php
 {{ php_file_runner_variables|raw }}
 
-## Functions
+$MY_VAR=getenv('MY_VAR');
+```
 
-{{ php_file_runner_functions|raw }}
+When you use `$PHP_FILE_RUNNER` the BASH variables listed above are mirrored in the PHP include file.  _Hint: Add the varable declarations to the top of your included PHP files._
 
-## Accessing Configuration via $CLOUDY_CONFIG_JSON
+## From PHP to BASH
 
-The configuration will be written to an environment variable `$CLOUDY_CONFIG_JSON`, which can be decoded by PHP. You may not need to do this if you are using `$PHP_FILE_RUNNER` as some configuration is already provided as context.
+It is in this direction where Cloudy works behind the scenes to do the unusual, thereby allowing you to send data from PHP back to your BASH script. You must be using `$PHP_FILE_RUNNER` to take advantage of this feature.
+
+_In file.sh_
+
+```shell
+. "$PHP_FILE_RUNNER" file.php
+# See below for how $MY_VAR is set in file.php...
+echo "$MY_VAR" 
+```
+
+_In file.php_
+
+```php
+$MY_VAR='lorem ipsum'
+cloudy_putenv('MY_VAR', $MY_VAR);
+```
+
+## Accessing Configuration in PHP
+
+The complete configuration will be written to an environment variable `$CLOUDY_CONFIG_JSON`, which can be decoded by PHP.
 
 ```php
 $config = json_decode(getenv('CLOUDY_CONFIG_JSON'), TRUE);
-```
-
-## Passing Variables from PHP to BASH
-
-If you want your PHP code to set a BASH variable, do like this:
-
-## Passing Variables between PHP and BASH
-
-To pass variables from BASH to PHP use the native BASH `export` and the PHP `getenv()`
-
-```shell
-export FOO=BAR
-```
-
-```php
-$FOO=getenv('FOO')
-```
-
-The PHP function `cloudy_putenv()` when used with `$PHP_FILE_RUNNER` allows you to pass variables from your PHP scripts to your BASH scripts. There is nothing to do on the BASH side of things, the variable will simply be set (or overridden).
-
-```php
-cloudy_putenv('FOO=BAR');
 ```

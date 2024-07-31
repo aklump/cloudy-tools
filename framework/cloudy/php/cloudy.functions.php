@@ -11,6 +11,18 @@ use Ckr\Util\ArrayMerger;
 use Symfony\Component\Yaml\Yaml;
 
 /**
+ * @param string $path
+ *
+ * @return string
+ * @const string $CLOUDY_BASEPATH
+ */
+function _cloudy_resolve_path_tokens(string $path): string {
+  $CLOUDY_BASEPATH = rtrim(CLOUDY_BASEPATH, '/');
+
+  return preg_replace('#\$CLOUDY_BASEPATH/?#', "$CLOUDY_BASEPATH/", $path);
+}
+
+/**
  * Expand a path based on $config_path_base.
  *
  * This function can handle:
@@ -36,11 +48,7 @@ function _cloudy_realpath($path) {
   }
 
   # Replace tokens
-  if (strstr($path, '{CLOUDY_BASEPATH}')) {
-    $app_root = rtrim(CLOUDY_BASEPATH, '/');
-    // We support both versions: "{CLOUDY_BASEPATH}foo" and "{CLOUDY_BASEPATH}/foo"
-    $path = preg_replace('#{CLOUDY_BASEPATH}/?#', "$app_root/", $path);
-  }
+  $path = _cloudy_resolve_path_tokens($path);
 
   // If $path is not absolute then we need to make it so.
   $path_is_absolute = !(!empty($path) && substr($path, 0, 1) !== '/');

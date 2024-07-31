@@ -642,6 +642,8 @@ function testGetConfigPathUsingGlobWorksAsExpected() {
 }
 
 function testGetConfigPathWorksAsItShould() {
+  assert_not_empty "$CLOUDY_ROOT"
+  assert_not_empty "$CLOUDY_BASEPATH"
 
   # This one handles the realpath portion as the subject involves traversal.
   eval $(get_config_path 'tests.filepaths.cloudy')
@@ -999,4 +1001,32 @@ function testGetConfigAsForScalarReturnsAsExpected() {
 
   # Assert default is returned for non-existent.
   assert_equals "declare -- hero=\"Batman\"" "$(get_config_as 'hero' "my.bogus.superhero" "Batman")"
+}
+
+function testLTrim() {
+  assert_same 'foo ' "$(ltrim '   foo ')"
+  assert_same 'bar' "$(ltrim 'bar')"
+}
+function testRTrim() {
+  assert_same ' alpha' "$(rtrim ' alpha    ')"
+  assert_same 'bravo' "$(rtrim 'bravo')"
+}
+
+function testTrimQuotes() {
+  assert_same 'lorem foo' "$(trim_quotes "'lorem foo'")"
+  assert_same 'ipsum bar' "$(trim_quotes '"ipsum bar"')"
+  assert_same "dolar's amex" "$(trim_quotes "\"dolar's amex\"")"
+}
+
+function testPathIsYaml() {
+  path_is_yaml 'foo.yml'
+  assert_exit_status 0
+  path_is_yaml 'foo.yaml'
+  assert_exit_status 0
+  path_is_yaml 'foo.YML'
+  assert_exit_status 0
+  path_is_yaml 'foo.YAML'
+  assert_exit_status 0
+  path_is_yaml 'foo.json'
+  assert_exit_status 1
 }

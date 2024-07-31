@@ -13,6 +13,7 @@
  ##
 
 if [[ "$CLOUDY_COMPOSER_VENDOR" ]]; then
+  mode='set'
   # This will be used when this directory is defined at the top of the entry
   # script as relative to that script.  We look to see if it needs to be
   # resolved to an absolute path and then exit.
@@ -27,10 +28,11 @@ else
     fail_because "Cannot find Composer dependencies."
     return 2;
   fi
+  mode='autodetected as'
 fi
 
 [[ ! -d "$CLOUDY_COMPOSER_VENDOR" ]] && fail_because "\$CLOUDY_COMPOSER_VENDOR is not a directory: $CLOUDY_COMPOSER_VENDOR" && return 7
-write_log_debug "\$CLOUDY_COMPOSER_VENDOR is \"$CLOUDY_COMPOSER_VENDOR\""
+write_log_debug "\$CLOUDY_COMPOSER_VENDOR $mode \"$CLOUDY_COMPOSER_VENDOR\""
 
 ! event_dispatch "pre_config" && fail_because "Non-zero returned by on_pre_config()." && return 3;
 
@@ -58,6 +60,7 @@ php_version=$("$CLOUDY_PHP" -v | head -1 | grep -E "PHP ([0-9.]+)")
 [[ ! "$php_version" ]] && fail_because "\$CLOUDY_PHP ($CLOUDY_PHP) does not appear to be a PHP binary; $CLOUDY_PHP -v failed to display PHP version" && return 6
 
 has_failed && return 1
+write_log_info "\$CLOUDY_PHP is: $CLOUDY_PHP"
 declare -xr CLOUDY_PHP="$CLOUDY_PHP"
 
 ##
@@ -73,6 +76,6 @@ declare -xr CLOUDY_PHP="$CLOUDY_PHP"
  # @endcode
  ##
 declare -xr PHP_FILE_RUNNER="$CLOUDY_CORE_DIR/inc/cloudy.php_file_runner.sh"
-write_log_debug "\$PHP_FILE_RUNNER set to $PHP_FILE_RUNNER"
+write_log_debug "\$PHP_FILE_RUNNER is $PHP_FILE_RUNNER"
 
 return 0
