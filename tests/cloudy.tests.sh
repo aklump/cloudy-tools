@@ -1033,3 +1033,13 @@ function testPathIsYaml() {
   path_is_yaml 'foo.json'
   assert_exit_status 1
 }
+
+function testCloudyResolvePathTokens() {
+  path='$CLOUDY_BASEPATH/alpha'
+  expected="$CLOUDY_BASEPATH/alpha"
+  assert_same "$expected" "$(_cloudy_resolve_path_tokens "$path")"
+
+  path='$CLOUDY_CORE_DIR/alpha'
+  expected="$CLOUDY_CORE_DIR/alpha"
+  assert_same "$expected" "$(_cloudy_resolve_path_tokens "$path")"
+}
