@@ -26,6 +26,7 @@ $path_to_php_file = $argv[1];
 // controller.
 $read_only_vars = [];
 
+$read_only_vars['CLOUDY_START_DIR'] = getenv('CLOUDY_START_DIR');
 $read_only_vars['CLOUDY_COMPOSER_VENDOR'] = getenv('CLOUDY_COMPOSER_VENDOR');
 $read_only_vars['CLOUDY_CORE_DIR'] = getenv('CLOUDY_CORE_DIR');
 require_once $read_only_vars['CLOUDY_CORE_DIR'] . '/php/bootstrap.php';

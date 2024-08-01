@@ -7,7 +7,7 @@
 
 function _cloudypm_install_package() {
   local package="$1"
-  local cloudy_destination_dir="$WDIR/opt/cloudy/cloudy"
+  local cloudy_destination_dir="$CLOUDY_START_DIR/opt/cloudy/cloudy"
 
   ! [[ "$package" ]] && fail_because "Missing package name, e.g. \"aklump/perms\"." && return 1
 
@@ -27,10 +27,10 @@ function _cloudypm_install_package() {
   _cloudypm_load_and_validate_package $package || return 1
   echo_heading "Package located, installing..."
 
-  local lockfile="$WDIR/cloudypm.lock"
-  local package_destination_dir="$WDIR/opt/$package"
+  local lockfile="$CLOUDY_START_DIR/cloudypm.lock"
+  local package_destination_dir="$CLOUDY_START_DIR/opt/$package"
   local package_basename=$(basename $package_destination_dir)
-  local bin="$WDIR/bin"
+  local bin="$CLOUDY_START_DIR/bin"
 
   [ -d "$package_destination_dir" ] && fail_because "Package already installed." && return 1
 
@@ -52,7 +52,7 @@ function _cloudypm_install_package() {
   ! [ -d "$bin" ] && mkdir "$bin" && echo_green "$LI Created directory \"$(basename bin)\"."
 
   [[ "$cloudypm___symlink" ]] || cloudypm___symlink="$(path_filename $cloudypm___entry_script)"
-  local symlink="$WDIR/bin/$cloudypm___symlink"
+  local symlink="$CLOUDY_START_DIR/bin/$cloudypm___symlink"
   if [ ! -s "$symlink" ]; then
     local target="../opt/$package/$cloudypm___entry_script"
     if [ -f "$bin/$target" ]; then
@@ -63,7 +63,7 @@ function _cloudypm_install_package() {
   fi
 
   if [[ "$cloudypm___on_install" ]]; then
-    cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_install" || fail_because "The command $cloudypm___on_install failed."
+    cd $CLOUDY_START_DIR && "./bin/$cloudypm___symlink" "$cloudypm___on_install" || fail_because "The command $cloudypm___on_install failed."
   fi
 
   _cloudypm_update_lock_file $package
@@ -131,11 +131,11 @@ function _cloudypm_load_and_validate_package() {
 #
 # Returns 0 if successful. 1 if not.
 function _cloudypm_install_cloudy() {
-  local path_to_dir="$WDIR/opt/cloudy/"
+  local path_to_dir="$CLOUDY_START_DIR/opt/cloudy/"
   mkdir -p "$path_to_dir"
 
   # TODO Leverage "cloudy core"
-  !(cd "$path_to_dir" && rsync_framework) && fail_because "Could not copy Cloudy core to $WDIR." && return 1
+  !(cd "$path_to_dir" && rsync_framework) && fail_because "Could not copy Cloudy core to $CLOUDY_START_DIR." && return 1
 
   # TODO Move this to cloudy core?
   framework_handle_composer "$path_to_dir/cloudy" || return 2
@@ -145,7 +145,7 @@ function _cloudypm_install_cloudy() {
 #
 # Returns 0 if successful. 1 if not.
 function _cloudypm_update_cloudy() {
-  local path_to_dir="$WDIR/opt/cloudy/"
+  local path_to_dir="$CLOUDY_START_DIR/opt/cloudy/"
   ! [[ -d "$path_to_dir" ]] && fail_because "Missing Cloudy package, which is expected to be installed in $path_to_dir." && return 1
   result=$(cd $path_to_dir && cloudy update -fy)
   [[ $? -ne 0 ]] && write_log_error "$result" && return 1
@@ -191,13 +191,13 @@ function _cloudypm_update_package() {
   for package in "${packages[@]}"; do
 
     # Proceed with single package.
-    local package_destination_dir="$WDIR/opt/$package"
+    local package_destination_dir="$CLOUDY_START_DIR/opt/$package"
     ! [[ -d "$package_destination_dir" ]] && fail_because "Package is not installed; try pm-install $package" && return 1
 
     ## Now update package.
     _cloudypm_load_and_validate_package $package || return 1
     echo_heading "$(echo_green "Package \"$package\" located.")"
-    local package_destination_dir="$WDIR/opt/$package"
+    local package_destination_dir="$CLOUDY_START_DIR/opt/$package"
     local package_basename=$(basename $package_destination_dir)
     local stash=$(tempdir)
 
@@ -211,8 +211,8 @@ function _cloudypm_update_package() {
 
     if [[ "$cloudypm___on_update" ]]; then
       [[ "$cloudypm___symlink" ]] || cloudypm___symlink="$(path_filename $cloudypm___entry_script)"
-      local symlink="$WDIR/bin/$cloudypm___symlink"
-      cd $WDIR && "./bin/$cloudypm___symlink" "$cloudypm___on_update" || fail_because "The command $cloudypm___on_update failed."
+      local symlink="$CLOUDY_START_DIR/bin/$cloudypm___symlink"
+      cd $CLOUDY_START_DIR && "./bin/$cloudypm___symlink" "$cloudypm___on_update" || fail_because "The command $cloudypm___on_update failed."
     fi
     _cloudypm_update_lock_file $package
     succeed_because "$package is at version $cloudypm___version."
@@ -225,7 +225,7 @@ function _cloudypm_update_package() {
 function _cloudypm_update_lock_file() {
   local package=$1
 
-  local lockfile="$WDIR/cloudypm.lock"
+  local lockfile="$CLOUDY_START_DIR/cloudypm.lock"
   touch $lockfile
   local find=($(grep $package $lockfile))
   [[ ${#find[@]} -gt 1 ]] && write_log_error "Data corruption detected in $lockfile; duplicate entries for \"$package\" found."
@@ -243,9 +243,9 @@ _cloudypm_get_installed_packages__array=()
 #
 # Returns 0 if successful. 1 if not.
 function _cloudypm_get_installed_packages() {
-  local lockfile="$WDIR/cloudypm.lock"
+  local lockfile="$CLOUDY_START_DIR/cloudypm.lock"
 
-  ! [[ -f "$lockfile" ]] && fail_because "Installed packages are detemined by cloudypm.lock; file does not exist in $WDIR" && return 1
+  ! [[ -f "$lockfile" ]] && fail_because "Installed packages are detemined by cloudypm.lock; file does not exist in $CLOUDY_START_DIR" && return 1
 
   declare -a array=('value1' 'value2')
   while read -r string_split__string || [[ -n "$line" ]]; do

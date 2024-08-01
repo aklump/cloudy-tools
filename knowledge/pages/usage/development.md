@@ -31,7 +31,7 @@ Or if called from within a function:
 
 This example shows how to create a label.  By separating your message and label with a single semi-colon, you will get this type of result.  Notice the `$` is escaped as we want a literal dollar-sign in the label.
 
-     debug "$WDIR;\$WDIR"
+     debug "$CLOUDY_START_DIR;\$CLOUDY_START_DIR"
 
 ![Debug example 2](../../images/debug-2.jpg)
 

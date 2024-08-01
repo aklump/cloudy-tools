@@ -14,6 +14,7 @@ tags: about
 - CLOUDY_CORE_DIR To point to the directory where Cloudy core is installed.
 - CLOUDY_PACKAGE_CONTROLLER To point to the directory where Cloudy core is installed.
 - CLOUDY_CACHE_DIR To point to the directory where Cloudy stores it's cache files.
+- CLOUDY_START_DIR used to be WDIR
 
 ### Changed
 

@@ -88,18 +88,18 @@ function echo_path_to_framework_version() {
 }
 
 function write_version_file() {
-  echo "cloudy_update__last_update=$(timestamp)" >$WDIR/cloudy/version.sh
+  echo "cloudy_update__last_update=$(timestamp)" >$CLOUDY_START_DIR/cloudy/version.sh
 
-  echo "cloudy_update__version=\"$(get_version)\"" >>$WDIR/cloudy/version.sh
-  echo "cloudy_update__source=\"https://github.com/aklump/cloudy\"" >>$WDIR/cloudy/version.sh
-  [ $? -eq 0 ] || fail_because "An error occurred writing $WDIR/cloudy/version.sh"
+  echo "cloudy_update__version=\"$(get_version)\"" >>$CLOUDY_START_DIR/cloudy/version.sh
+  echo "cloudy_update__source=\"https://github.com/aklump/cloudy\"" >>$CLOUDY_START_DIR/cloudy/version.sh
+  [ $? -eq 0 ] || fail_because "An error occurred writing $CLOUDY_START_DIR/cloudy/version.sh"
   return $?
 }
 
 function validate_cloudy_instance_or_exit_with_failure() {
   local command="$1"
 
-  [ -d "$WDIR/cloudy" ] && return 0
+  [ -d "$CLOUDY_START_DIR/cloudy" ] && return 0
 
   fail_because "Did you mean cloudy pm-$command?"
   exit_with_failure "No Cloudy framework found in this directory."
@@ -123,7 +123,7 @@ validate_input || exit_with_failure "Input validation failed."
 implement_cloudy_basic
 
 framework=$(realpath $CLOUDY_CORE_DIR/..) || exit_with_failure "Missing Cloudy framework"
-installation_info_filepath="$WDIR/cloudy/version.sh"
+installation_info_filepath="$CLOUDY_START_DIR/cloudy/version.sh"
 
 # Handle other commands.
 command=$(get_command)
@@ -138,10 +138,10 @@ case $command in
   # TODO Add descriptions
   # TODO Columnize
   # TODO Write cloudy version to cloudy.lock
-  ! [ -f "$WDIR/cloudypm.lock" ] && fail_because "Missing file $(path_relative_to_pwd "$WDIR/cloudypm.lock")" && exit_with_failure
-  source "$WDIR/opt/cloudy/cloudy/version.sh"
+  ! [ -f "$CLOUDY_START_DIR/cloudypm.lock" ] && fail_because "Missing file $(path_relative_to_pwd "$CLOUDY_START_DIR/cloudypm.lock")" && exit_with_failure
+  source "$CLOUDY_START_DIR/opt/cloudy/cloudy/version.sh"
   echo "aklump/cloudy:$cloudy_update__version"
-  cat "$WDIR/cloudypm.lock"
+  cat "$CLOUDY_START_DIR/cloudypm.lock"
   exit_with_success
   ;;
 
@@ -176,7 +176,7 @@ case $command in
   source "$ROOT/inc/cloudy.pm.sh"
   echo_title "Package Installer"
   package=$(get_command_arg 0)
-  ! has_option 'yes' && ! confirm --caution "Install $package in $WDIR?" && exit_with_failure "User cancelled."
+  ! has_option 'yes' && ! confirm --caution "Install $package in $CLOUDY_START_DIR?" && exit_with_failure "User cancelled."
   _cloudypm_install_package $package
   has_failed && exit_with_failure "Could not install \"$package\"."
   exit_with_success_elapsed "$package was installed."
@@ -184,7 +184,7 @@ case $command in
 
 "flush")
   validate_cloudy_instance_or_exit_with_failure 'flush'
-  exit_with_cache_clear "$WDIR/cloudy"
+  exit_with_cache_clear "$CLOUDY_START_DIR/cloudy"
   ;;
 
 "install")
@@ -210,7 +210,7 @@ case $command in
   available_version=$(get_version)
 
   # Check current version of instance.
-  echo_key_value "Cloudy Directory" "$WDIR/cloudy"
+  echo_key_value "Cloudy Directory" "$CLOUDY_START_DIR/cloudy"
   echo_key_value "Installed Version" "$cloudy_update__version"
   echo_key_value "Available System Version" "$available_version"
 
@@ -241,13 +241,13 @@ case $command in
 
 "core")
   [ -e ./cloudy ] && exit_with_success "Cloudy is already installed.  Did you mean \"update\"?"
-  rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
+  rsync_framework || fail_because "Could not copy Cloudy core to $CLOUDY_START_DIR."
   framework_handle_composer "$PWD/cloudy" || exit_with_failure
   if ! has_failed; then
     write_version_file
   fi
   has_failed && exit_with_failure "Failed to install core in current directory."
-  write_log_notice "Installed Cloudy core in $WDIR"
+  write_log_notice "Installed Cloudy core in $CLOUDY_START_DIR"
   exit_with_success_elapsed "Core installed."
   ;;
 
@@ -266,7 +266,7 @@ case $command in
   ! has_option 'y' && ! confirm --caution "Create $script_filename in the current directory?" && exit_with_failure "Nothing accomplished."
 
   if ! has_failed; then
-    rsync_framework || fail_because "Could not copy Cloudy core to $WDIR."
+    rsync_framework || fail_because "Could not copy Cloudy core to $CLOUDY_START_DIR."
     framework_handle_composer "$PWD/cloudy" || exit_with_failure
     cp $framework/script.sh ./
     cp $framework/script.yml ./
@@ -293,7 +293,7 @@ case $command in
       [ $? -eq 0 ] && rm script.yml
 
       # TODO Rewrite using $PHP_FILE_RUNNER
-      echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "$WDIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
+      echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "$CLOUDY_START_DIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
       [ $? -eq 0 ] && rm script.example.yml
     else
       mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."
@@ -315,7 +315,7 @@ case $command in
     fi
   fi
   has_failed && exit_with_failure "Failed to install $basename"
-  write_log_notice "Installed new script at $WDIR/$basename"
+  write_log_notice "Installed new script at $CLOUDY_START_DIR/$basename"
   exit_with_success_elapsed "New script $basename created."
   ;;
 

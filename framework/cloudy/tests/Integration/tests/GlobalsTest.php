@@ -15,6 +15,7 @@ class GlobalsTest extends TestCase {
   public function dataFortestGlobalsProvider() {
     $integration_tests_dir = __DIR__ . '/../';
     $tests = [];
+    $tests[] = ['CLOUDY_START_DIR', getcwd()];
     $tests[] = ['CLOUDY_CORE_DIR', $this->getCloudyCoreDir()];
     $tests[] = ['CLOUDY_CACHE_DIR', $this->getCloudyCacheDir()];
     $tests[] = [
@@ -32,7 +33,7 @@ class GlobalsTest extends TestCase {
   /**
    * @dataProvider dataFortestGlobalsProvider
    */
-  public function testGlobals(string $var_name, string $expected) {
+  public function testBashGlobals(string $var_name, string $expected) {
     $result = $this->execCloudy('echo $' . $var_name);
     $this->assertNotEmpty($result, 'Assert value for ' . $var_name);
     $result = realpath($result);
@@ -77,6 +78,7 @@ class GlobalsTest extends TestCase {
     $this->assertMatchesRegularExpression('#\.sh$#', $data['PHP_FILE_RUN_CONTROLLER'], 'Assert $PHP_FILE_RUN_CONTROLLER appears to be a shell filepath.');
 
     $this->assertJson($data['CLOUDY_CONFIG_JSON']);
+    $this->assertSame(getcwd(), $data['CLOUDY_START_DIR']);
   }
 
   public function testCachedJSONContainsExpectedGlobals() {
