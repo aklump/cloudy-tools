@@ -41,6 +41,11 @@ $read_only_vars['CLOUDY_RUNTIME_UUID'] = getenv('CLOUDY_RUNTIME_UUID');
 // The path to the script containing the $PHP_FILE_RUNNER declaration.
 $read_only_vars['PHP_FILE_RUN_CONTROLLER'] = getenv('PHP_FILE_RUN_CONTROLLER');
 
+$log = getenv('CLOUDY_LOG');
+if (!empty($log)) {
+  $read_only_vars['CLOUDY_LOG'] = getenv('CLOUDY_LOG');
+}
+
 // If any of these variables are changed, the changes will be passed up to the
 // controller automatically.
 $read_write_vars = [];

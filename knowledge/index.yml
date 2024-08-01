@@ -53,5 +53,6 @@ page_order:
     - upgrade_v2
     - variable_scopes
     - dev_configuration
+    - relocating_cloudy
   quick_start:
     - writing_scripts

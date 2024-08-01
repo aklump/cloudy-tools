@@ -41,6 +41,12 @@ class GlobalsTest extends TestCase {
     $this->assertSame($expected, $result, 'Assert expected path for $' . $var_name);
   }
 
+  public function testCloudyLog() {
+    $result = $this->execCloudy('echo $CLOUDY_LOG');
+    $result = realpath($result);
+    $expected = $this->getCloudyCoreDir() . '/tests/Integration/tests.log';
+    $this->assertSame($expected, $result, 'Assert expected path for $CLOUDY_LOG');
+  }
   public function testRoot() {
     $result = $this->execCloudy('echo $ROOT');
     $result = realpath($result);
@@ -79,6 +85,8 @@ class GlobalsTest extends TestCase {
 
     $this->assertJson($data['CLOUDY_CONFIG_JSON']);
     $this->assertSame(getcwd(), $data['CLOUDY_START_DIR']);
+
+    $this->assertFileExists($data['CLOUDY_LOG']);
   }
 
   public function testCachedJSONContainsExpectedGlobals() {
