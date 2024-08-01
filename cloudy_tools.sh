@@ -76,7 +76,7 @@ function framework_handle_composer() {
 function echo_path_to_framework_version() {
     local version="$1"
 
-    local local_source_path="${CLOUDY_ROOT}/cache/versions/cloudy-$version"
+    local local_source_path="$CLOUDY_CORE_DIR/cache/versions/cloudy-$version"
     local local_source_dir="$(dirname "$local_source_path")"
     if [ ! -e "$local_source_dir" ]; then
       mkdir -p "$local_source_dir"
@@ -146,8 +146,8 @@ case $command in
   ;;
 
 "pm-clear-cache")
-  cache_dir="${CLOUDY_ROOT}/cache/cpm"
-  [[ ! "${CLOUDY_ROOT}" ]] && exit_with_failure "Invalid cache directory ${cache_dir}"
+  cache_dir="${CLOUDY_CORE_DIR}/cache/cpm"
+  [[ ! "${CLOUDY_CORE_DIR}" ]] && exit_with_failure "Invalid cache directory ${cache_dir}"
   event_dispatch "pm_clear_cache" "$cache_dir" || exit_with_failure "Clearing pm caches failed."
   if dir_has_files "$cache_dir"; then
     clear=$(rm -rv "$cache_dir/"*)

@@ -137,7 +137,8 @@ tests:
     cache: framework/cloudy/cache
     cloudy: framework/cloudy/..
     absolute: /dev/null
-    token_app_root: '$CLOUDY_BASEPATH/.project/config.yml'
+    token_cloudy_basepath: '$CLOUDY_BASEPATH/.project/config.yml'
+    token_cloudy_core_directory: '$CLOUDY_CORE_DIR/framework'
   globtest: 'tests/stubs/*.txt'
   paths_indexed:
     - tests/stubs/alpha.txt

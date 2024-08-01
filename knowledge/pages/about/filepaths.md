@@ -13,14 +13,13 @@ tags: ''
 ? what are the base path constants?
 
 1. `CLOUDY_BASEPATH`
-1. `CLOUDY_ROOT`, e.g. _opt/cloudy/cloudy_
+1. `CLOUDY_CORE_DIR`
 
 ? what are the path tokens?
 
 1. `$CLOUDY_BASEPATH`
 1. `$CLOUDY_CORE_DIR`
 
-
 ## What path functions exist?
 
-_resolve_dir
+1. `_resolve_dir`

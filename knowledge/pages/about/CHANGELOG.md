@@ -24,7 +24,7 @@ tags: about
 - SCRIPT Use CLOUDY_PACKAGE_CONTROLLER instead.
 - LOGFILE Use CLOUDY_LOG instead.
 - ROOT Use PACKAGE_BASEPATH instead.
-- CLOUDY_ROOT instead CLOUDY_CORE_DIR
+- CLOUDY_ROOT instead use CLOUDY_CORE_DIR
 - `get_config()` is too brittle. Use get_config_as instead, e.g. `get_config 'title'` -> `get_config_as 'title' 'title'`
 - `get_config_keys()`
 - `get_config_path()`
