@@ -32,9 +32,17 @@
 </nav>
 
       </div>
-      <div class="header__tags me-3">  </div>
+      <div class="header__tags me-3">      <span data-bs-toggle="modal" data-bs-target="#modal"
+          type="button" class="badge
+        rounded-pill
+        bg-primary">CONFIG</span>
+      <span data-bs-toggle="modal" data-bs-target="#modal"
+          type="button" class="badge
+        rounded-pill
+        bg-primary">INSTALLATION</span>
+  </div>
       <div class="header__page-numbers flex-shrink-1">3
-        / 50</div>
+        / 51</div>
     </div>
   </div>
 </header>
@@ -44,28 +52,41 @@
     <article class="col">
       <h1 class="mb-4 text-primary">Global Variables</h1>
       <p>Beyond the <a href="https://www.tldp.org/LDP/abs/html/internalvariables.html#BASHSUBSHELLREF">internal variables</a> the following variables are available to your Cloudy Package:</p>
-<table class="table">
-<thead>
-<tr><th>varname</th><th>description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>$WDIR</code></td><td>The working directory when script was initiated.</td></tr>
-<tr><td><code>$CLOUDY_LOG</code></td><td>Absolute path to a log file, if enabled.</td></tr>
-</tbody>
-</table>
-<ul>
-<li>Determine your version of BASH with <code>echo $BASH_VERSION</code></li>
-</ul>
-<h2>$CLOUDY_CORE_DIR</h2>
-<p>The absolute path the directory containing Cloudy Core</p>
+<pre><code class="shell"># @var integer $CLOUDY_EXIT_STATUS
+# @var string $CLOUDY_BASEPATH
+# @var string $CLOUDY_CACHE_DIR
+# @var string $CLOUDY_COMPOSER_VENDOR
+# @var string $CLOUDY_CONFIG_JSON
+# @var string $CLOUDY_CORE_DIR
+# @var string $CLOUDY_INSTALLED_AS
+# @var string $CLOUDY_LOG
+# @var string $CLOUDY_PACKAGE_CONFIG
+# @var string $CLOUDY_PACKAGE_CONTROLLER
+# @var string $CLOUDY_PHP
+# @var string $CLOUDY_RUNTIME_ENV
+# @var string $CLOUDY_RUNTIME_UUID
+# @var string $CLOUDY_START_DIR
+</code></pre>
+<h2>$CLOUDY_BASEPATH</h2>
+<p>An absolute path, which is used to resolve relative paths. This can be set automatically or it will be detected automatically <a href="cloudy_basepath.html">see this page</a> for more info.</p>
 <h2>$CLOUDY_CACHE_DIR</h2>
 <p>The absolute path the directory containing Cloudy Core</p>
+<h2>$CLOUDY_START_DIR</h2>
+<p>The working directory when $CLOUDY_PACKAGE_CONTROLLER was called.</p>
+<h2>$CLOUDY_CORE_DIR</h2>
+<p>The absolute path the directory containing Cloudy Core.  Developers can <a href="../developers/relocating_cloudy.html">control where this is located</a>.</p>
 <h2>$CLOUDY_PACKAGE_CONTROLLER</h2>
 <p>The absolute path to the Cloudy Package controller script.</p>
 <h2>$CLOUDY_PACKAGE_CONFIG</h2>
 <p>The absolute path to the main configuration file for your Cloudy package.</p>
-<h2>$CLOUDY_BASEPATH</h2>
-<p>An absolute path, which is used to resolve relative paths.  This can be set automatically or it will be detected automatically <a href="cloudy_basepath.html">see this page</a> for more info.</p>
+<h2>$CLOUDY_LOG</h2>
+<p>Absolute path to a log file, if enabled.</p>
+<h2>$CLOUDY_RUNTIME_UUID</h2>
+<p>This will change every time the controller is executed.</p>
+<hr />
+<ul>
+<li>Determine your version of BASH with <code>echo $BASH_VERSION</code></li>
+</ul>
     </article>
   </div>
 </main>
@@ -75,7 +96,7 @@
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>7/31/2024</strong>
+            Last Update: <strong>8/1/2024</strong>
     </div>
   </footer>
 
@@ -470,7 +491,14 @@
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="50">
+                                    <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -697,10 +725,14 @@
       <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
     </li>
   
+                                <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
+    </li>
+  
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="50">
+                                <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -721,8 +753,10 @@
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="ABOUT" aria-pressed="false">ABOUT</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="BASH" aria-pressed="false">BASH</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="COMPOSER" aria-pressed="false">COMPOSER</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="CONFIG" aria-pressed="false">CONFIG</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="DEPENDENCIES" aria-pressed="false">DEPENDENCIES</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="EXAMPLES" aria-pressed="false">EXAMPLES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="INSTALLATION" aria-pressed="false">INSTALLATION</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="PHP" aria-pressed="false">PHP</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="QUICK_START" aria-pressed="false">QUICK_START</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
@@ -735,7 +769,7 @@
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="lexicon.html">Cloudy Lexicon</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="globals.html">Global Variables</a>
+                 data-tags="[&quot;CONFIG&quot;,&quot;INSTALLATION&quot;]" href="globals.html">Global Variables</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="filepaths.html">Filepaths</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -828,6 +862,8 @@
                  data-tags="[]" href="../developers/variable_scopes.html">Sourcing Scripts</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../developers/dev_configuration.html">Understanding Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>

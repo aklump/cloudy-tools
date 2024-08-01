@@ -14,6 +14,7 @@
 ### Changed
 
 - Absolute paths can now be set on CONFIG; previously only relative paths worked.
+- In the bootstrap portion of the Cloudy Package Controller, replace `source "$r/cloudy/cloudy.sh"` with `CLOUDY_CORE_DIR="$r/cloudy";source "$CLOUDY_CORE_DIR/cloudy.sh"`; the path may be slightly different, e.g. `source "$r/../../cloudy/cloudy/cloudy.sh"` so ensure you maintain the correct path. The point here is to set the variable to the directory and then source _cloudy.sh_ using `$CLOUDY_CORE_DIR`.
 
 ### Deprecated
 
@@ -29,7 +30,7 @@
 
 - APP_ROOT Use CLOUDY_BASEPATH instead.
 - The token `${config_path_base}` has been replaced by `$CLOUDY_BASEPATH` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `$CLOUDY_BASEPATH` in all cloudy pm packages.
-- `CLOUDY_NAME`; Use this if you need the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
+- `CLOUDY_NAME`; Add the following snippet to your package controller if you want to continue using this according to the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
 
 ### Fixed
 

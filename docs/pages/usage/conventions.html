@@ -38,7 +38,7 @@
         bg-primary">USAGE</span>
   </div>
       <div class="header__page-numbers flex-shrink-1">28
-        / 50</div>
+        / 51</div>
     </div>
   </div>
 </header>
@@ -93,7 +93,7 @@ local options="-$(array_join ", -"), --${option}"
 <p>The same naming conventions apply, if the function has to "return" an array, which, in BASH means it <em>sets</em> or <em>mutates</em> a global array.</p>
 <p>Beware of a scope issue for functions that use <code>eval</code> to set or mutate. This first example does not work, because <code>eval</code> doesn't affect the value of a global variable, even if said variable was already defined outside of the function. My understanding is that  <code>eval</code> creates <a href="https://stackoverflow.com/questions/40079054/eval-variable-assignment-in-a-bash-function-causes-variable-to-be-local">local variables by definition</a> when called within a function.</p>
 <pre><code class="shell">function array_sort_by_item_length() {
-    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
 
     # note: [ $eval = 'declare -a array_sort_by_item_length__array=("on" "five" "three" "september")' ]
     # Notice the eval code aims to mutate $array_sort_by_item_length__array
@@ -106,7 +106,7 @@ local options="-$(array_join ", -"), --${option}"
 <p>Here is the fix to make it work:</p>
 <pre><code class="shell">declare -a array_sort_by_item_length__array=()
 function array_sort_by_item_length() {
-    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_ROOT/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
+    local eval=$(. "$PHP_FILE_RUNNER" "$CLOUDY_CORE_DIR/php/functions/invoke.php" "array_sort_by_item_length" "${array_sort_by_item_length__array[@]}")
     
     eval $eval
     
@@ -145,7 +145,7 @@ function array_sort_by_item_length() {
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>7/31/2024</strong>
+            Last Update: <strong>8/1/2024</strong>
     </div>
   </footer>
 
@@ -540,7 +540,14 @@ function array_sort_by_item_length() {
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="50">
+                                    <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -767,10 +774,14 @@ function array_sort_by_item_length() {
       <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
     </li>
   
+                                <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
+    </li>
+  
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="50">
+                                <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -791,8 +802,10 @@ function array_sort_by_item_length() {
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="ABOUT" aria-pressed="false">ABOUT</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="BASH" aria-pressed="false">BASH</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="COMPOSER" aria-pressed="false">COMPOSER</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="CONFIG" aria-pressed="false">CONFIG</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="DEPENDENCIES" aria-pressed="false">DEPENDENCIES</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="EXAMPLES" aria-pressed="false">EXAMPLES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="INSTALLATION" aria-pressed="false">INSTALLATION</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="PHP" aria-pressed="false">PHP</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="QUICK_START" aria-pressed="false">QUICK_START</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
@@ -805,7 +818,7 @@ function array_sort_by_item_length() {
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/lexicon.html">Cloudy Lexicon</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../about/globals.html">Global Variables</a>
+                 data-tags="[&quot;CONFIG&quot;,&quot;INSTALLATION&quot;]" href="../about/globals.html">Global Variables</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/filepaths.html">Filepaths</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -898,6 +911,8 @@ function array_sort_by_item_length() {
                  data-tags="[]" href="../developers/variable_scopes.html">Sourcing Scripts</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../developers/dev_configuration.html">Understanding Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>

@@ -38,7 +38,7 @@
         bg-primary">USAGE</span>
   </div>
       <div class="header__page-numbers flex-shrink-1">27
-        / 50</div>
+        / 51</div>
     </div>
   </div>
 </header>
@@ -50,21 +50,21 @@
       <h2>Overview</h2>
 <p>Configuration files are YAML or JSON. They are connected to your script in one, two, or three ways.</p>
 <ol>
-<li>The main configuration file is required and is hardcoded in your script as <code>$CONFIG</code>.</li>
+<li>The main configuration file is required and is hardcoded in your script as <code>$CLOUDY_PACKAGE_CONFIG</code>.</li>
 <li>Within that file, you may indicate additional configuration files using the key <code>additional_config</code>, which defines an array. Be aware that these paths are relative to <code>config_path_base</code>, see below for more info.</li>
 <li>Finally, configuration files may be provided dynamically at run time listening to the event <code>compile_config</code>.</li>
 </ol>
 <p>If configuration values conflict, those that came later will take prescendence; note: arrays will be merged.</p>
 <h2>In Depth</h2>
 <p>The following examples will be shown with YAML.</p>
-<p>In the header of your script you will find <code>$CONFIG</code>, this is for the base configuration file, e.g.,</p>
+<p>In the header of your script you will find <code>$CLOUDY_PACKAGE_CONFIG</code>, this is for the base configuration file, e.g.,</p>
 <pre><code>    CLOUDY_PACKAGE_CONFIG=script.example.yml
 </code></pre>
 <ol>
 <li>Set it's value to the path of a supported file to use as configuration, absolute paths must begin with a forward slash, otherwise the path will be taken relative to the directory containing the script, i.e., <code>$(dirname your_cloudy_script.sh)</code></li>
-<li><p>You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of <code>~</code> to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the <code>{CLOUDY_BASEPATH}</code> token is encouraged over the use of relative paths, as it is less confusing.</p>
+<li><p>You may add additional configuration files by adding something like following in the YAML of the base configuration file. Notice the use of <code>~</code> to reference the user's home directory; this is a nice way to allow per-user configuration overrides. Additional configuration files are optional and will only be included if they exist. The use of the <code>$CLOUDY_BASEPATH</code> token is encouraged over the use of relative paths, as it is less confusing.</p>
 <pre><code> additional_config:
-   - {CLOUDY_BASEPATH}/.my_app/config.yml
+   - $CLOUDY_BASEPATH/.my_app/config.yml
    - _install.local.yml
    - ~/.my_project.yml
 </code></pre>
@@ -231,7 +231,7 @@ fi
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>7/31/2024</strong>
+            Last Update: <strong>8/1/2024</strong>
     </div>
   </footer>
 
@@ -626,7 +626,14 @@ fi
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="50">
+                                    <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -853,10 +860,14 @@ fi
       <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
     </li>
   
+                                <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
+    </li>
+  
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="50">
+                                <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -877,8 +888,10 @@ fi
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="ABOUT" aria-pressed="false">ABOUT</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="BASH" aria-pressed="false">BASH</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="COMPOSER" aria-pressed="false">COMPOSER</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="CONFIG" aria-pressed="false">CONFIG</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="DEPENDENCIES" aria-pressed="false">DEPENDENCIES</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="EXAMPLES" aria-pressed="false">EXAMPLES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="INSTALLATION" aria-pressed="false">INSTALLATION</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="PHP" aria-pressed="false">PHP</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="QUICK_START" aria-pressed="false">QUICK_START</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
@@ -891,7 +904,7 @@ fi
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/lexicon.html">Cloudy Lexicon</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../about/globals.html">Global Variables</a>
+                 data-tags="[&quot;CONFIG&quot;,&quot;INSTALLATION&quot;]" href="../about/globals.html">Global Variables</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/filepaths.html">Filepaths</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -984,6 +997,8 @@ fi
                  data-tags="[]" href="../developers/variable_scopes.html">Sourcing Scripts</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../developers/dev_configuration.html">Understanding Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>

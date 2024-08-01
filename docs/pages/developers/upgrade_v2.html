@@ -34,7 +34,7 @@
       </div>
       <div class="header__tags me-3">  </div>
       <div class="header__page-numbers flex-shrink-1">47
-        / 50</div>
+        / 51</div>
     </div>
   </div>
 </header>
@@ -43,13 +43,16 @@
   <div class="row mb-5 pt-5">
     <article class="col">
       <h1 class="mb-4 text-primary">Upgrade Path to Cloudy 2.0.0</h1>
-      <ol>
+      <p>Developer's should follow these steps to upgrade Cloudy packages from 1.x to 2.x:</p>
+<ol>
 <li>Replace <code>get_config_*()</code> with <code>get_config_*_as()</code> functions.</li>
 <li>Replace <code>$SCRIPT</code> with <code>$CLOUDY_PACKAGE_CONTROLLER</code></li>
+<li>Replace <code>$APP_ROOT</code> with <code>$CLOUDY_BASEPATH</code></li>
 <li>Replace <code>$ROOT</code> with <code>$PACKAGE_BASEPATH</code></li>
 <li>Replace <code>$CLOUDY_ROOT</code> with <code>$CLOUDY_CORE_DIR</code></li>
 <li>Replace <code>$CONFIG</code> with <code>$CLOUDY_PACKAGE_CONFIG</code></li>
 <li>Replace <code>$LOGFILE</code> with <code>$CLOUDY_LOG</code></li>
+<li>Update the bootstrap in your controllers per changelog</li>
 </ol>
     </article>
   </div>
@@ -60,7 +63,7 @@
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>7/31/2024</strong>
+            Last Update: <strong>8/1/2024</strong>
     </div>
   </footer>
 
@@ -455,7 +458,14 @@
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="50">
+                                    <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="relocating_cloudy.html">Relocating Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -682,10 +692,14 @@
       <a class="js-page-link" href="dev_configuration.html">Understanding Configuration</a>
     </li>
   
+                                <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="relocating_cloudy.html">Relocating Cloudy</a>
+    </li>
+  
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="50">
+                                <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -706,8 +720,10 @@
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="ABOUT" aria-pressed="false">ABOUT</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="BASH" aria-pressed="false">BASH</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="COMPOSER" aria-pressed="false">COMPOSER</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="CONFIG" aria-pressed="false">CONFIG</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="DEPENDENCIES" aria-pressed="false">DEPENDENCIES</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="EXAMPLES" aria-pressed="false">EXAMPLES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="INSTALLATION" aria-pressed="false">INSTALLATION</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="PHP" aria-pressed="false">PHP</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="QUICK_START" aria-pressed="false">QUICK_START</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
@@ -720,7 +736,7 @@
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/lexicon.html">Cloudy Lexicon</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="../about/globals.html">Global Variables</a>
+                 data-tags="[&quot;CONFIG&quot;,&quot;INSTALLATION&quot;]" href="../about/globals.html">Global Variables</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../about/filepaths.html">Filepaths</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -813,6 +829,8 @@
                  data-tags="[]" href="variable_scopes.html">Sourcing Scripts</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="dev_configuration.html">Understanding Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="relocating_cloudy.html">Relocating Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>

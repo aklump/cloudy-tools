@@ -38,7 +38,7 @@
         bg-primary">ABOUT</span>
   </div>
       <div class="header__page-numbers flex-shrink-1">6
-        / 50</div>
+        / 51</div>
     </div>
   </div>
 </header>
@@ -55,17 +55,19 @@
 <li>CLOUDY_CORE_DIR To point to the directory where Cloudy core is installed.</li>
 <li>CLOUDY_PACKAGE_CONTROLLER To point to the directory where Cloudy core is installed.</li>
 <li>CLOUDY_CACHE_DIR To point to the directory where Cloudy stores it's cache files.</li>
+<li>CLOUDY_START_DIR used to be WDIR</li>
 </ul>
 <h3>Changed</h3>
 <ul>
 <li>Absolute paths can now be set on CONFIG; previously only relative paths worked.</li>
+<li>In the bootstrap portion of the Cloudy Package Controller, replace <code>source "$r/cloudy/cloudy.sh"</code> with <code>CLOUDY_CORE_DIR="$r/cloudy";source "$CLOUDY_CORE_DIR/cloudy.sh"</code>; the path may be slightly different, e.g. <code>source "$r/../../cloudy/cloudy/cloudy.sh"</code> so ensure you maintain the correct path. The point here is to set the variable to the directory and then source <em>cloudy.sh</em> using <code>$CLOUDY_CORE_DIR</code>.</li>
 </ul>
 <h3>Deprecated</h3>
 <ul>
 <li>SCRIPT Use CLOUDY_PACKAGE_CONTROLLER instead.</li>
 <li>LOGFILE Use CLOUDY_LOG instead.</li>
 <li>ROOT Use PACKAGE_BASEPATH instead.</li>
-<li>CLOUDY_ROOT instead CLOUDY_CORE_DIR</li>
+<li>CLOUDY_ROOT instead use CLOUDY_CORE_DIR</li>
 <li><code>get_config()</code> is too brittle. Use get_config_as instead, e.g. <code>get_config 'title'</code> -&gt; <code>get_config_as 'title' 'title'</code></li>
 <li><code>get_config_keys()</code></li>
 <li><code>get_config_path()</code></li>
@@ -73,8 +75,8 @@
 <h3>Removed</h3>
 <ul>
 <li>APP_ROOT Use CLOUDY_BASEPATH instead.</li>
-<li>The token <code>${config_path_base}</code> has been replaced by <code>{APP_ROOT}</code> for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with <code>{APP_ROOT}</code> in all cloudy pm packages.</li>
-<li><code>CLOUDY_NAME</code>; Use this if you need the legacy value: <code>export CLOUDY_NAME="$(path_filename $SCRIPT)"</code></li>
+<li>The token <code>${config_path_base}</code> has been replaced by <code>$CLOUDY_BASEPATH</code> for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with <code>$CLOUDY_BASEPATH</code> in all cloudy pm packages.</li>
+<li><code>CLOUDY_NAME</code>; Add the following snippet to your package controller if you want to continue using this according to the legacy value: <code>export CLOUDY_NAME="$(path_filename $SCRIPT)"</code></li>
 </ul>
 <h3>Fixed</h3>
 <ul>
@@ -228,7 +230,7 @@ additional_config:
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>7/31/2024</strong>
+            Last Update: <strong>8/1/2024</strong>
     </div>
   </footer>
 
@@ -623,7 +625,14 @@ additional_config:
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                                          <li data-page="writing_scripts" value="50">
+                                    <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script<span
               class="js-search-score
               badge
@@ -850,10 +859,14 @@ additional_config:
       <a class="js-page-link" href="../developers/dev_configuration.html">Understanding Configuration</a>
     </li>
   
+                                <li data-page="relocating_cloudy" value="50">
+      <a class="js-page-link" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
+    </li>
+  
                   </ol>
               <h2 class="h4 mt-4">Quick Start</h2>
         <ol>
-                                <li data-page="writing_scripts" value="50">
+                                <li data-page="writing_scripts" value="51">
       <a class="js-page-link" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
     </li>
   
@@ -874,8 +887,10 @@ additional_config:
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="ABOUT" aria-pressed="false">ABOUT</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="BASH" aria-pressed="false">BASH</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="COMPOSER" aria-pressed="false">COMPOSER</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="CONFIG" aria-pressed="false">CONFIG</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="DEPENDENCIES" aria-pressed="false">DEPENDENCIES</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="EXAMPLES" aria-pressed="false">EXAMPLES</span>
+                                  <span type="button" class="js-tag-filter badge rounded-pill" data-tag="INSTALLATION" aria-pressed="false">INSTALLATION</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="PHP" aria-pressed="false">PHP</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="QUICK_START" aria-pressed="false">QUICK_START</span>
                                   <span type="button" class="js-tag-filter badge rounded-pill" data-tag="USAGE" aria-pressed="false">USAGE</span>
@@ -888,7 +903,7 @@ additional_config:
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="lexicon.html">Cloudy Lexicon</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="globals.html">Global Variables</a>
+                 data-tags="[&quot;CONFIG&quot;,&quot;INSTALLATION&quot;]" href="globals.html">Global Variables</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="filepaths.html">Filepaths</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -981,6 +996,8 @@ additional_config:
                  data-tags="[]" href="../developers/variable_scopes.html">Sourcing Scripts</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../developers/dev_configuration.html">Understanding Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="../developers/relocating_cloudy.html">Relocating Cloudy</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[&quot;QUICK_START&quot;]" href="../quick_start/writing_scripts.html">Writing Your First Cloudy Script</a>
                               </ul>
