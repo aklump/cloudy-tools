@@ -286,3 +286,7 @@ function fail_because(string $message, string $default = '', int $exit_status = 
 function exit_with_failure(int $status = 1) {
   throw new RuntimeException('', $status);
 }
+
+function path_is_absolute(string $path) {
+  return substr($path, 0, 1) == '/' || substr($path, 0, 1) == '\\';
+}
