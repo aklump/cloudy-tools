@@ -15,10 +15,14 @@ source "$CLOUDY_CORE_DIR/inc/config/cache.sh" || exit_with_failure "Cannot cache
 
 # Now load the normalized, cached config into memory.
 source "$CACHED_CONFIG_FILEPATH" || exit_with_failure "Cannot load cached configuration."
+eval $(get_config_path_as -a '_additional_bootstraps' 'additional_bootstrap')
 
-eval $(get_config_as -a 'additional_bootstrap' 'additional_bootstrap')
-if [[ "$additional_bootstrap" != null ]]; then
-  for include in "${additional_bootstrap[@]}"; do
-    source "$ROOT/$include"
+if [ ${#_additional_bootstraps[@]} -gt 0 ]; then
+  for _additional_bootstrap_file in "${_additional_bootstraps[@]}"; do
+    ! [ -f "$_additional_bootstrap_file" ] && fail_because "Invalid additional_bootstrap: $_additional_bootstrap_file" && exit_with_failure
+    source "$_additional_bootstrap_file"
   done
+  unset _additional_bootstrap
+  unset _additional_bootstrap_file
 fi
+

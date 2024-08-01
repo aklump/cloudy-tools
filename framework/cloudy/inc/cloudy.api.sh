@@ -1210,11 +1210,10 @@ function implement_cloudy_basic() {
 # @return 0 On success.
 # @return 1 if the init fails
 function handle_init() {
-    local path_to_files_map="$ROOT/init/cloudypm.files_map.txt"
-    [ -f "$path_to_files_map" ] || fail_because "Missing required initialization file: $path_to_files_map."
-
-    local init_source_dir="$ROOT/init"
+    local init_source_dir="$(dirname "$CLOUDY_PACKAGE_CONTROLLER")/init"
     [ -d "$init_source_dir" ] || fail_because "Missing initialization source directory: $init_source_dir"
+    local path_to_files_map="$init_source_dir/cloudypm.files_map.txt"
+    [ -f "$path_to_files_map" ] || fail_because "Missing required initialization file: $path_to_files_map."
     local from_map=()
     local to_map=()
     local init_config_dir
@@ -1267,6 +1266,7 @@ function handle_init() {
             destination_path=$(path_relative_to_root "$init_config_dir/$basename")
             if [[ "$basename" == 'gitignore' ]]; then
               # Merge into the cloudy PM git ignore.
+              # TODO Replace $ROOT
               destination_path="$(realpath "$ROOT/../../../opt/.gitignore")"
             fi
 
@@ -1775,6 +1775,9 @@ function event_dispatch() {
 
 ##
  # Register an event listener.
+ #
+ # @param string The event id, e.g. "boot"
+ # @param string The function name to call on the event.
  #
 function event_listen() {
     local event_id="$1"

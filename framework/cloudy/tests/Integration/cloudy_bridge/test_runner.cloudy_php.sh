@@ -7,7 +7,7 @@
 
 # Define the configuration file relative to this script.
 CLOUDY_PACKAGE_CONFIG="$1";
-include="$2"
+test_runner_include_file="$2"
 shift
 shift
 
@@ -19,4 +19,4 @@ function on_pre_config() {
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../../cloudy.sh";[[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
 # End Cloudy Bootstrap
 
-source "$include"
+source "$test_runner_include_file"
