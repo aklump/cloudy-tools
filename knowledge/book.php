@@ -125,7 +125,7 @@ $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
   // Run a Cloudy instance to capture runtime variables from the current version.
   $cloudy_runtime = $event->getPathToSource() . '/cloudy_runtime/cloudy_runtime.sh';
 
-  foreach (['variables'] as $key) {
+  foreach (['php_file_runner_variables', 'bash_variables'] as $key) {
     $output = [];
     $exit_status = NULL;
     exec("$cloudy_runtime $key", $output, $exit_status);
@@ -133,7 +133,7 @@ $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
     if ($exit_status != 0) {
       throw new RuntimeException($output);
     }
-    $event->setVariable('php_file_runner_' . $key, $output);
+    $event->setVariable($key, $output);
   }
 });
 

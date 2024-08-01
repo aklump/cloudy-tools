@@ -9,6 +9,7 @@
 - CLOUDY_CORE_DIR To point to the directory where Cloudy core is installed.
 - CLOUDY_PACKAGE_CONTROLLER To point to the directory where Cloudy core is installed.
 - CLOUDY_CACHE_DIR To point to the directory where Cloudy stores it's cache files.
+- CLOUDY_START_DIR used to be WDIR
 
 ### Changed
 
@@ -19,7 +20,7 @@
 - SCRIPT Use CLOUDY_PACKAGE_CONTROLLER instead.
 - LOGFILE Use CLOUDY_LOG instead.
 - ROOT Use PACKAGE_BASEPATH instead.
-- CLOUDY_ROOT instead CLOUDY_CORE_DIR
+- CLOUDY_ROOT instead use CLOUDY_CORE_DIR
 - `get_config()` is too brittle. Use get_config_as instead, e.g. `get_config 'title'` -> `get_config_as 'title' 'title'`
 - `get_config_keys()`
 - `get_config_path()`
@@ -27,7 +28,7 @@
 ### Removed
 
 - APP_ROOT Use CLOUDY_BASEPATH instead.
-- The token `${config_path_base}` has been replaced by `{APP_ROOT}` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `{APP_ROOT}` in all cloudy pm packages.
+- The token `${config_path_base}` has been replaced by `$CLOUDY_BASEPATH` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `$CLOUDY_BASEPATH` in all cloudy pm packages.
 - `CLOUDY_NAME`; Use this if you need the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
 
 ### Fixed
