@@ -35,7 +35,7 @@ tags: about
 
 - APP_ROOT Use CLOUDY_BASEPATH instead.
 - The token `${config_path_base}` has been replaced by `$CLOUDY_BASEPATH` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `$CLOUDY_BASEPATH` in all cloudy pm packages.
-- `CLOUDY_NAME`; Use this if you need the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
+- `CLOUDY_NAME`; Add the following snippet to your package controller if you want to continue using this according to the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
 
 ### Fixed
 

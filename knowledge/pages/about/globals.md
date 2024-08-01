@@ -1,6 +1,6 @@
 <!--
 id: globals
-tags: ''
+tags: 'config,installation'
 -->
 
 # Global Variables
@@ -25,7 +25,7 @@ The working directory when $CLOUDY_PACKAGE_CONTROLLER was called.
 
 ## $CLOUDY_CORE_DIR
 
-The absolute path the directory containing Cloudy Core
+The absolute path the directory containing Cloudy Core.  Developers can [control where this is located](@relocating_cloudy).
 
 ## $CLOUDY_PACKAGE_CONTROLLER
 
