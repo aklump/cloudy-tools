@@ -47,6 +47,7 @@ function _cloudy_resolve_path_tokens() {
 
   path="${path/\$CLOUDY_BASEPATH/$CLOUDY_BASEPATH}"
   path="${path/\$CLOUDY_CORE_DIR/$CLOUDY_CORE_DIR}"
+  path="${path/#\~\//$HOME/}"
   echo "$path"
 }
 

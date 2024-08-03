@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use AKlump\Cloudy\EnvVars;
 
 /**
- * @covers \AKlump\Cloudy\PutEnv;
+ * @covers \AKlump\Cloudy\EnvVars
  */
 class EnvVarsTest extends TestCase {
 

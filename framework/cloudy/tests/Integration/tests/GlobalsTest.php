@@ -47,6 +47,7 @@ class GlobalsTest extends TestCase {
     $expected = $this->getCloudyCoreDir() . '/tests/Integration/tests.log';
     $this->assertSame($expected, $result, 'Assert expected path for $CLOUDY_LOG');
   }
+
   public function testRoot() {
     $result = $this->execCloudy('echo $ROOT');
     $result = realpath($result);

@@ -11,6 +11,7 @@ require_once __DIR__ . '/../../php/cloudy.functions.php';
 
 /**
  * @covers _cloudy_realpath()
+ * @covers _cloudy_resolve_path_tokens
  */
 class CloudyRealpathTest extends TestCase {
 
@@ -27,9 +28,27 @@ class CloudyRealpathTest extends TestCase {
       ],
     ];
     $tests[] = [
-      '$CLOUDY_BASEPATH/foo',
+      '$CLOUDY_BASEPATHfoo',
       [
         $root . 'foo',
+      ],
+    ];
+    $tests[] = [
+      '$CLOUDY_BASEPATH/alpha',
+      [
+        $root . 'alpha',
+      ],
+    ];
+    $tests[] = [
+      '$CLOUDY_CORE_DIR/alpha',
+      [
+        $root . 'framework/cloudy/alpha',
+      ],
+    ];
+    $tests[] = [
+      '~/alpha',
+      [
+        rtrim($_SERVER['HOME'], '/') . '/alpha',
       ],
     ];
     $tests[] = [
@@ -82,6 +101,7 @@ class CloudyRealpathTest extends TestCase {
       $_config_path_base = '';
       define('ROOT', $this->getTestFileFilepath('', TRUE));
       define('CLOUDY_BASEPATH', $this->getTestFileFilepath(''));
+      define('CLOUDY_CORE_DIR', $this->getTestFileFilepath('/framework/cloudy/', TRUE));
     }
   }
 

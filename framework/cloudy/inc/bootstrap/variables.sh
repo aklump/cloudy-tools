@@ -22,7 +22,7 @@ fi
 declare -rx CLOUDY_PACKAGE_CONFIG="$CLOUDY_PACKAGE_CONFIG"
 
 if [[ "$CLOUDY_LOG" ]]; then
-  CLOUDY_LOG="$(path_resolve "$r" "$CLOUDY_LOG")"
+  p="$(path_make_absolute "$CLOUDY_LOG" "$r")" && CLOUDY_LOG="$p"
   log_dir="$(dirname "$CLOUDY_LOG")"
   if ! mkdir -p "$log_dir"; then
     fail_because "Please manually create \"$log_dir\" and ensure it is writeable."

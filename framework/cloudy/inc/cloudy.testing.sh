@@ -24,7 +24,12 @@ function do_tests_in() {
     local testfile=$1
 
     parse_args $@
-    local CLOUDY_ACTIVE_TESTFILE=$(path_relative_to_root "${parse_args__args[0]}")
+
+    local CLOUDY_ACTIVE_TESTFILE="${parse_args__args[0]}"
+    if ! path_is_absolute "$CLOUDY_ACTIVE_TESTFILE"; then
+      CLOUDY_ACTIVE_TESTFILE="$(path_make_absolute "${parse_args__args[0]}" "$ROOT")"
+    fi
+
     if [[ "$parse_args__options__continue" != true ]]; then
       CLOUDY_ASSERTION_COUNT=0
       CLOUDY_TEST_COUNT=0

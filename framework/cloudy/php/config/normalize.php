@@ -35,16 +35,6 @@ $config = [
     'CLOUDY_NAME' => getenv('CLOUDY_NAME'),
     'WDIR' => getenv('WDIR'),
     'CLOUDY_LOG' => getenv('CLOUDY_LOG'),
-    //      'PACKAGE_BASEPATH' => ROOT,
-
-    // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
-    //      'CONFIG' => $CLOUDY_PACKAGE_CONFIG,
-    // @deprecated Since version 2.0, Use CLOUDY_BASEPATH instead.
-    //      'APP_ROOT' => CLOUDY_BASEPATH,
-    // @deprecated Since version 2.0, Use PACKAGE_BASEPATH instead.
-    //      'ROOT' => ROOT,
-    // @deprecated Since version 2.0, Use CLOUDY_PACKAGE_CONTROLLER instead.
-    //      'SCRIPT' => getenv('SCRIPT'),
   ],
 ];
 $config = _cloudy_merge_config($config, _cloudy_load_configuration_data($CLOUDY_PACKAGE_CONFIG));
@@ -53,8 +43,9 @@ if (empty($config['config_path_base'])) {
   $config['config_path_base'] = CLOUDY_BASEPATH;
 }
 else {
-  $path = path_resolve($config['config_path_base'], dirname($CLOUDY_PACKAGE_CONFIG));
-  $config['config_path_base'] = $path;
+  // Assume config_path_base, a relative path, was defined in the master config
+  // file and make it absolute relative to that file.
+  $config['config_path_base'] = path_make_absolute($config['config_path_base'], dirname($CLOUDY_PACKAGE_CONFIG));
 }
 
 $extra_config_paths = array_filter(array_merge($config['additional_config'] ?? [], $additional_config_paths ?? []));

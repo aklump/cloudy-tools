@@ -6,7 +6,7 @@ use AKlump\Cloudy\DeserializeBashArray;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \AKlump\Cloudy\PutEnv;
+ * @covers \AKlump\Cloudy\DeserializeBashArray
  */
 class DeserializeBashArrayTest extends TestCase {
 

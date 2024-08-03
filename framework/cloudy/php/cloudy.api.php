@@ -143,7 +143,7 @@ function write_log_error() {
   call_user_func_array('_cloudy_write_log', $args);
 }
 
-function write_log_exception(\Exception $e, string $level = 'error') {
+function write_log_exception(Throwable $e, string $level = 'error') {
   $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
   write_log($level, sprintf('%s: %s', $message, $e->getFile()));
 }
@@ -289,4 +289,80 @@ function exit_with_failure(int $status = 1) {
 
 function path_is_absolute(string $path) {
   return substr($path, 0, 1) == '/' || substr($path, 0, 1) == '\\';
+}
+
+function path_extension(string $path): string {
+  return pathinfo($path, PATHINFO_EXTENSION);
+}
+
+function path_filename(string $path): string {
+  return pathinfo($path, PATHINFO_FILENAME);
+}
+
+function path_filesize(string $path): int {
+  return filesize($path);
+}
+
+function path_is_yaml(string $path): bool {
+  return (bool) preg_match('#\.ya?ml$#i', $path);
+}
+
+function path_make_absolute($path, $parent, &$exit_status = NULL) {
+  // Check if path is absolute
+  if ($path[0] == '/') {
+    $exit_status = 1;
+
+    return '';
+  }
+
+  // Check if parent is not absolute
+  if ($parent[0] != '/') {
+    $exit_status = 2;
+
+    return '';
+  }
+
+  $exit_status = 0;
+  $path = rtrim($parent, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . trim($path, DIRECTORY_SEPARATOR);
+  if (file_exists($path)) {
+    return (string) realpath($path);
+  }
+  else {
+    return (string) $path;
+  }
+}
+
+function path_make_relative(string $path, string $parent, &$exit_status = NULL): string {
+  $path = rtrim($path, DIRECTORY_SEPARATOR);
+  $parent = rtrim($parent, DIRECTORY_SEPARATOR);
+
+  if ($path === $parent) {
+    $exit_status = 0;
+
+    return '.';
+  }
+
+  $parent .= DIRECTORY_SEPARATOR;
+  if (strpos($path, $parent) === FALSE) {
+    $exit_status = 1;
+
+    return '';
+  }
+  $exit_status = 0;
+  $path = substr($path, strlen($parent));
+  if (file_exists("$parent/$path")) {
+    $path = realpath("$parent/$path");
+    $path = substr($path, strlen($parent));
+  }
+
+  return rtrim($path, DIRECTORY_SEPARATOR);
+}
+
+function path_make_pretty(string $path): string {
+  $p = path_make_relative($path, getcwd());
+  if ($p) {
+    return "./$p";
+  }
+
+  return $path;
 }

@@ -17,9 +17,18 @@ use Symfony\Component\Yaml\Yaml;
  * @const string $CLOUDY_BASEPATH
  */
 function _cloudy_resolve_path_tokens(string $path): string {
-  $CLOUDY_BASEPATH = rtrim(CLOUDY_BASEPATH, '/');
+  $path_prefix_tokens = [
+    '~' => $_SERVER['HOME'] ?? NULL,
+    '$CLOUDY_CORE_DIR' => CLOUDY_CORE_DIR,
+    '$CLOUDY_BASEPATH' => CLOUDY_BASEPATH,
+  ];
+  $path_prefix_tokens = array_filter($path_prefix_tokens);
+  foreach ($path_prefix_tokens as $token => $replacement) {
+    $replacement = rtrim($replacement, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    $path = preg_replace('#^' . preg_quote($token, '#') . '/?#', $replacement, $path, 1);
+  }
 
-  return preg_replace('#\$CLOUDY_BASEPATH/?#', "$CLOUDY_BASEPATH/", $path);
+  return $path;
 }
 
 /**
@@ -53,7 +62,6 @@ function _cloudy_realpath($path) {
   // If $path is not absolute then we need to make it so.
   $path_is_absolute = !(!empty($path) && substr($path, 0, 1) !== '/');
   if (!$path_is_absolute) {
-    //    $prefix = rtrim(ROOT, '/') . '/';
     $path = implode('/', array_filter([
       rtrim(CLOUDY_BASEPATH, '/'),
       rtrim($_config_path_base, '/'),
@@ -140,38 +148,38 @@ function _cloudy_load_configuration_data($filepath, $exception_if_not_exists = T
 
     return $data;
   }
-  if (!($contents = file_get_contents($filepath))) {
-    // TODO Need a php method to write a log file, and then log this.
-    //    throw new \RuntimeException("Empty configuration file: " . realpath($filepath));
+  $contents = file_get_contents($filepath);
+  if (empty($contents)) {
+    throw new RuntimeException(sprintf('Empty configuration file: %s', realpath($filepath)));
   }
-  if ($contents) {
-    switch (($extension = pathinfo($filepath, PATHINFO_EXTENSION))) {
-      case 'yml':
-      case 'yaml':
-        try {
-          if ($yaml = Yaml::parse($contents)) {
-            $data += $yaml;
-          }
-        }
-        catch (\Exception $exception) {
-          write_log_exception($exception);
-          $message = sprintf("Syntax error in configuration file: %s: %s", $filepath, $exception->getMessage());
-          write_log_error($message);
-          $class = get_class($exception);
-          throw new $class($message, $exception->getCode());
-        }
-        break;
 
-      case 'json':
-        if ($json = json_decode($contents, TRUE)) {
-          $data += $json;
+  $extension = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
+  switch ($extension) {
+    case 'yml':
+    case 'yaml':
+      try {
+        if ($yaml = Yaml::parse($contents)) {
+          $data += $yaml;
         }
-        break;
+      }
+      catch (\Exception $exception) {
+        write_log_exception($exception);
+        $message = sprintf("Syntax error in configuration file: %s: %s", $filepath, $exception->getMessage());
+        write_log_error($message);
+        $class = get_class($exception);
+        throw new $class($message, $exception->getCode());
+      }
+      break;
 
-      default:
-        throw new RuntimeException("Configuration files of type \"$extension\" are not supported.");
+    case 'json':
+      if ($json = json_decode($contents, TRUE)) {
+        $data += $json;
+      }
+      break;
 
-    }
+    default:
+      throw new RuntimeException("Configuration files of type \"$extension\" are not supported.");
+
   }
 
   return $data;

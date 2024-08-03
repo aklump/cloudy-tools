@@ -337,51 +337,167 @@ function testPathIsAbsolute() {
   assert_exit_status 1
 }
 
-function testPathUnresolve() {
-  assert_same "/do/re" $(path_unresolve "/foo/bar/" "/do/re")
-  assert_same "/do/re" $(path_unresolve "/foo/bar/" "/do/re/")
-  assert_same "." $(path_unresolve "/path_to_app/" "/path_to_app/")
-  assert_same "files" $(path_unresolve "/path_to_app/" "/path_to_app/files")
-  assert_same "files" $(path_unresolve "/path_to_app" "/path_to_app/files")
-  assert_same "files" $(path_unresolve "/path_to_app" "/path_to_app/files/")
-  assert_same "baz/zulu/alpha/tree.txt" $(path_unresolve "/foo/bar/" "/foo/bar/baz/zulu/alpha/tree.txt")
+function testPathMakeRelativeEchosNothingSends1WhenCannotMakeRelative() {
+  local _result
+
+  _result="$(path_make_relative "/foo" "/bar")"
+  assert_exit_status 1
+  assert_empty "$_result"
 }
 
-function testPathResolveEchosRealpath() {
-  assert_same "$ROOT/tests" $(path_resolve "$ROOT" "tests/stubs/../../tests")
-  assert_same "$ROOT/bogus/stubs/../../tests" $(path_resolve "$ROOT" "bogus/stubs/../../tests")
+function testPathMakeRelativeRemovesTrailingSlash() {
+    assert_same "foo" "$(path_make_relative "/bar/baz/foo/" "/bar/baz")"
 }
 
-function testPathResolve() {
-  local dir="/some/great/path/"
-  local path="tree.md"
-  assert_same "/some/great/path/tree.md" $(path_resolve $dir $path)
+function testPathMakeRelativeEchosRelativeSends0AsExpected() {
+  local _result
 
-  path="/$path"
-  assert_same "$path" $(path_resolve $dir $path)
+  _result="$(path_make_relative '/some/great/path/tree.md' '/some/great')"
+  assert_exit_status 0
+  assert_same "path/tree.md" "$_result"
+
+  _result="$(path_make_relative '/some/great/path/tree.md' '/some/great/')"
+  assert_exit_status 0
+  assert_same "path/tree.md" "$_result"
 }
 
-function testPathRelativeToPwd() {
-  assert_same "./foo/bar" $(path_relative_to_pwd "$PWD/foo/bar")
-  assert_same "." $(path_relative_to_pwd "$PWD")
+function testPathMakeRelativeEchosDotWhenBothArgsAreTheSame() {
+    local _result
+
+    _result="$(path_make_relative '/foo/bar' '/foo/bar')"
+    assert_exit_status 0
+    assert_same "." "$_result"
+
+    _result="$(path_make_relative '/foo/bar/' '/foo/bar')"
+    assert_exit_status 0
+    assert_same "." "$_result"
 }
 
-function testPathRelatiaveToConfigBase() {
+function testPathUnresolveUpgradeToPathMakeRelativeUpgradePath() {
+  local _path
+  local _p
 
-  local path="some/tree.md"
-  assert_same "$ROOT/$path" $(path_relative_to_config_base $path)
+  _path='/do/re'
+  _p=$(path_make_relative "$_path" "/foo/bar") && _path="$_p"
+  assert_same "/do/re" "$_path"
 
-  path="/$path"
-  assert_same "$path" $(path_relative_to_config_base $path)
+  _path='/path_to_app/files'
+  _p=$(path_make_relative "$_path" "/path_to_app/") && _path="$_p"
+  assert_same "files" "$_path"
+  _p=$(path_make_relative "$_path" "/path_to_app") && _path="$_p"
+  assert_same "files" "$_path"
+
+  _path='/foo/bar/baz/zulu/alpha/tree.txt'
+  _p=$(path_make_relative "$_path" "/foo/bar/") && _path="$_p"
+  assert_same "baz/zulu/alpha/tree.txt" "$_path"
+}
+function testPathMakeAbsoluteEchosNothingSends1WhenFirstIsNotRelative() {
+  local _result
+
+  _result="$(path_make_absolute "/foo" "/bar")"
+  assert_exit_status 1
+  assert_empty "$_result"
 }
 
-function testPathRelativeToRoot() {
-  local path="some/tree.md"
-  assert_same "$ROOT/$path" $(path_relative_to_root $path)
+function testPathMakeAbsoluteEchosNothingSends2WhenSecondIsNotAbsolute() {
+  local _result
 
-  path="/$path"
-  assert_same "$path" $(path_relative_to_root $path)
+  _result="$(path_make_absolute "foo" "bar")"
+  assert_exit_status 2
+  assert_empty "$_result"
 }
+
+function testPathMakeAbsoluteEchosAbsoluteSends0AsExpected() {
+  local _result
+
+  _result="$(path_make_absolute "foo" "/bar/baz")"
+  assert_exit_status 0
+  assert_same "/bar/baz/foo" "$_result"
+
+  _result="$(path_make_absolute "foo" "/bar/baz/")"
+  assert_exit_status 0
+  assert_same "/bar/baz/foo" "$_result"
+}
+
+function testPathMakeAbsoluteRemovesTrailingSlash() {
+    assert_same "/bar/baz/foo" "$(path_make_absolute "foo/" "/bar/baz")"
+}
+
+function testPathMakeAbsoluteEchosRealpath() {
+  assert_same "$ROOT/tests" $(path_make_absolute "tests/stubs/../../tests" "$ROOT")
+  assert_same "$ROOT/bogus/stubs/../../tests" $(path_make_absolute "bogus/stubs/../../tests" "$ROOT")
+}
+function testPathMakeRelativeEchosRealpath() {
+  assert_same "tests" $(path_make_relative "$ROOT/tests/stubs/../../tests" "$ROOT")
+  assert_same "bogus/stubs/../../tests" $(path_make_relative "$ROOT/bogus/stubs/../../tests" "$ROOT")
+}
+
+function testPathResolveUpgradePathUsingPathMakeAbsolute() {
+  local _path
+
+  _path='lorem.md'
+  p=$(path_make_absolute "$_path" "/foo") && _path="$p"
+  assert_same "/foo/lorem.md" "$_path"
+
+  _path='/lorem.md'
+  p=$(path_make_absolute "$_path" "/foo") && _path="$p"
+  assert_same "/lorem.md" "$_path"
+
+  _path='lorem.md'
+  p=$(path_make_absolute "$_path" "foo") && _path="$p"
+  assert_same "lorem.md" "$_path"
+}
+
+function testPathMakeAbsoluteCommonPattern() {
+  local p
+  local some_path
+
+  # This is the suggested syntax for this method.
+  my_path="path/tree.md"
+  p="$(path_make_absolute "$my_path" '/some/great/')" && my_path="$p"
+  assert_same "/some/great/path/tree.md" "$my_path"
+
+  # This is the suggested syntax for this method.
+  my_path="path/tree.md"
+  p="$(path_make_absolute "$my_path" 'some/great/')" && my_path="$p"
+
+  # Assert we get the original path as a pass-thru
+  assert_same "path/tree.md" "$my_path"
+}
+
+function testPathMakeAbsolute() {
+  result="$(path_make_absolute 'path/tree.md' '/some/great')"
+  [ $? -eq 0 ] && made_absolute=true || made_absolute=false
+  assert_same true $made_absolute
+  assert_same "/some/great/path/tree.md" "$result"
+
+  result="$(path_make_absolute 'path/bush.md' '/some/great')"
+  [ $? -eq 0 ] && made_absolute=true || made_absolute=false
+  assert_same true $made_absolute
+  assert_same "/some/great/path/bush.md" "$result"
+
+  result="$(path_make_absolute '/foo/bar/baz' '/some/great')"
+  [ $? -eq 0 ] && made_absolute=true || made_absolute=false
+  assert_same false $made_absolute
+  assert_same "" "$result"
+
+  assert_same "/some/great/path/tree.md" "$(path_make_absolute 'tree.md' '/some/great/path/')"
+  assert_exit_status 0
+
+  result="$(path_make_absolute '/tree.md' '/some/great/path/')"
+  exit_status=$?
+  assert_same 1 $exit_status
+  assert_same "" "$result"
+
+  p="$(path_make_absolute 'tree.md' 'som/great/path/')" && result="$p"
+
+  result="$(path_make_absolute 'tree.md' 'some/great/path/')"
+  exit_status=$?
+  assert_same 2 $exit_status
+  assert_same "" "$result"
+}
+
+
 
 function testExitWithFailureCodeWithStatusOnlyEchosNothingReturnsStatus() {
   $(exit_with_failure_code_only --status=2)
@@ -879,6 +995,11 @@ function testPathFilename() {
   assert_same 'config' $(path_filename 'do/re/mi/config.json')
 }
 
+function testPathFilesize() {
+  cat  "$ROOT/tests/stubs/charlie.md"
+  assert_same 446 $(path_filesize "$ROOT/tests/stubs/charlie.md")
+}
+
 function testHasCommandWorks() {
   declare -a CLOUDY_ARGS=()
   has_command
@@ -1042,4 +1163,15 @@ function testCloudyResolvePathTokens() {
   path='$CLOUDY_CORE_DIR/alpha'
   expected="$CLOUDY_CORE_DIR/alpha"
   assert_same "$expected" "$(_cloudy_resolve_path_tokens "$path")"
+
+  path='~/alpha'
+  expected="$HOME/alpha"
+  assert_same "$expected" "$(_cloudy_resolve_path_tokens "$path")"
+}
+
+function testPathMakePretty() {
+  path='/foo/bar/file.md'
+  assert_same "$path" "$(path_make_pretty "$path")"
+  path="$PWD/file.md"
+  assert_same "./file.md" "$(path_make_pretty "$path")"
 }

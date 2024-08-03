@@ -138,7 +138,7 @@ case $command in
   # TODO Add descriptions
   # TODO Columnize
   # TODO Write cloudy version to cloudy.lock
-  ! [ -f "$CLOUDY_START_DIR/cloudypm.lock" ] && fail_because "Missing file $(path_relative_to_pwd "$CLOUDY_START_DIR/cloudypm.lock")" && exit_with_failure
+  ! [ -f "$CLOUDY_START_DIR/cloudypm.lock" ] && fail_because "Missing file $(path_make_pretty "$CLOUDY_START_DIR/cloudypm.lock")" && exit_with_failure
   source "$CLOUDY_START_DIR/opt/cloudy/cloudy/version.sh"
   echo "aklump/cloudy:$cloudy_update__version"
   cat "$CLOUDY_START_DIR/cloudypm.lock"

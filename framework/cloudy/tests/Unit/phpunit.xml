@@ -18,6 +18,7 @@
 
     <coverage processUncoveredFiles="true">
         <include>
+            <file>../../php/cloudy.api.php</file>
             <file>../../php/cloudy.functions.php</file>
         </include>
     </coverage>

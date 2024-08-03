@@ -15,19 +15,18 @@ require_once __DIR__ . '/cloudy.functions.php';
 /**
  * Root directory of the Cloudy instance script.
  */
-define('ROOT', getenv('ROOT'));
-if (empty(ROOT)) {
-  throw new RuntimeException('Environment var "ROOT" cannot be empty.');
-}
-define('CLOUDY_BASEPATH', getenv('CLOUDY_BASEPATH'));
-if (empty(CLOUDY_BASEPATH)) {
-  throw new RuntimeException('Environment var "CLOUDY_BASEPATH" cannot be empty.');
-}
-
-$composer_vendor = getenv('CLOUDY_COMPOSER_VENDOR');
-if (empty($composer_vendor)) {
-  throw new RuntimeException('Environment var "$composer_vendor" cannot be empty.');
+$_constants = [
+  'ROOT',
+  'CLOUDY_CORE_DIR',
+  'CLOUDY_BASEPATH',
+  'CLOUDY_COMPOSER_VENDOR',
+];
+foreach ($_constants as $_constant) {
+  define($_constant, getenv($_constant));
+  if (empty($_constant)) {
+    throw new RuntimeException(sprintf('Environment var "%s" cannot be empty.'), $_constant);
+  }
 }
 
 /** @var \Composer\Autoload\ClassLoader $class_loader */
-$class_loader = require_once $composer_vendor . '/autoload.php';
+$class_loader = require_once CLOUDY_COMPOSER_VENDOR . '/autoload.php';

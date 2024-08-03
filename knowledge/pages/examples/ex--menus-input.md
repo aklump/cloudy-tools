@@ -29,7 +29,7 @@ for i in *$search*.sql*; do
   [[ -f "$i" ]] && choose__array=("${choose__array[@]}" "$i")
 done
 for i in "${export_dir%/}"/*$search*.sql*; do
-  [[ -f "$i" ]] && choose__array=("${choose__array[@]}" "$(path_unresolve "$PWD" "$i")")
+  [[ -f "$i" ]] && choose__array=("${choose__array[@]}" "$(path_make_relative "$i" "$PWD")")
 done
 ! shortpath=$(choose "Choose a database export by number") && fail_because "Cancelled." && exit_with_failure
 filepath=${PWD%/}/${shortpath#/}

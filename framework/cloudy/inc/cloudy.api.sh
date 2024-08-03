@@ -1263,17 +1263,18 @@ function handle_init() {
         for basename in $(ls $init_source_dir); do
             [[ "$basename" == cloudypm* ]] && continue
             source_path="$init_source_dir/$basename"
-            destination_path=$(path_relative_to_root "$init_config_dir/$basename")
+            destination_path="$init_config_dir/$basename"
+            p="$(path_make_absolute "$destination_path" "$ROOT")" && destination_path="$p"
             if [[ "$basename" == 'gitignore' ]]; then
               # Merge into the cloudy PM git ignore.
-              # TODO Replace $ROOT
               destination_path="$(realpath "$ROOT/../../../opt/.gitignore")"
             fi
 
             local i=0
             for special_file in "${from_map[@]}"; do
                if [[ "$special_file" == "$basename" ]];then
-                 destination_path="$(path_relative_to_root ${to_map[$i]})"
+                 destination_path="${to_map[$i]}"
+                 p="$(path_make_absolute "$destination_path" "$ROOT")" && destination_path="$p"
                fi
                let i++
             done
@@ -1516,8 +1517,6 @@ function exit_with_failure_if_config_is_not_path() {
     fi
 
     exit_with_failure_if_empty_config $@
-
-    value=$(path_relative_to_config_base $value)
 
     # Make sure it's a path.
     [ ! -e "$value" ] && exit_with_failure "Failed because the path \"$value\" , does not exist; defined in configuration as $config_path."
@@ -1798,84 +1797,6 @@ function event_listen() {
 # Filepaths
 #
 
-##
- # Echo a path relative to config_path_base.
- #
- # If the path begins with / it is unchanged.
- #
-function path_relative_to_config_base() {
-    local path="$1"
-
-    local config_path_base=${cloudy_config_22b41169ff3731365de5e8293e01c831}
-    [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
-    config_path_base=${config_path_base%/}
-    path_resolve "$config_path_base" "$path"
-}
-
-##
- # Expand a relative path using $ROOT as base.
- #
- # If the path begins with / it is unchanged.
- #
-function path_relative_to_root() {
-    local path="$1"
-
-    path_resolve "$ROOT" "$path"
-}
-
-# Make $1 relative if it's inside $PWD.
-#
-# @param string An absolute filepath.  $PWD will be replaced by ./ if possible.
-#
-function path_relative_to_pwd() {
-  local path="$1"
-
-  relative=$(path_unresolve "$PWD" "$path")
-  if [[ "$relative" != "$path" ]]; then
-    if [[ "$relative" != '.' ]]; then
-      relative="./$relative"
-    fi
-  fi
-  echo "$relative"
-}
-
-# Resolve a path to an absolute link; if already absolute, do nothing.
-#
-# @param string The dirname to use if $2 is not absolute
-# @param string The path to make absolute if not starting with /
-#
-# @return nothing
-function path_resolve() {
-    local dirname="${1%/}"
-    local path="$2"
-
-    [[ "${path:0:1}" != '/' ]] && path="$dirname/$path"
-    [ ! -e $path ] && echo $path && return
-
-    # If it exists, we will echo the real path.
-    echo "$(cd $(dirname $path) && pwd)/$(basename $path)"
-}
-
-# Echo a relative path by removing a leading directory(ies).
-#
-# The trailing slash will always be removed.  The relative path is returned
-# without a leading slash.  If it cannot be unresolved, any leading slash will
-# remain.  If the two arguments are the same, '.' will be returned.
-#
-# @param string The dirname to remove from the left of $2
-# @param string The path to make relative by removing $1, if possible.
-#
-function path_unresolve() {
-  local dirname="${1%/}"
-  local path="${2%/}"
-
-  local relative=${path#"$dirname"}
-  [[ "$relative" == "$path" ]] && echo "$path" && return 0
-  relative=${relative#/}
-  [[ "$relative" ]] && echo "$relative" && return 0
-  echo '.'
-}
-
 # Determine if a path is absolute (begins with /) or not.
 #
 # @param string The filepath to check
@@ -1908,7 +1829,7 @@ function path_is_yaml() {
 function path_filesize() {
   local path="$1"
 
-  echo $(du -hs "$path" | cut -f1)
+  stat -f%z "$path"
 }
 
 # Echo the last modified time of a file.
@@ -2377,4 +2298,81 @@ function trim_quotes() {
     string=${string%\"}
 
     echo "$string"
+}
+
+##
+ # Take an absolute path and make it relative to a parent path if possible.
+ #
+ # @param string The absolute path.
+ # @param string The absolute PARENT path.
+ #
+ # @echo The relative path if it worked; the original relative path if it didn't.
+ # @return 0 If the path could be make relative.
+ # @return 1 If there was a problem creating a relative path.
+
+ # @code
+ # result="$(path_make_relative '/some/great/path/bush.md' '/some/great')"
+ # [ $? -eq 0 ] && made_relative=true || made_relative=false
+ # @endcode
+ ##
+function path_make_relative() {
+  local path="${1%%/}"
+  local parent="${2%%/}"
+
+  [[ "$path" == "$parent" ]] && echo '.' && return 0
+
+  parent="$parent/"
+  [[ "$path" != "$parent"* ]] && return 1
+  path="${path#$parent}"
+  if [ -e "$parent/$path" ]; then
+    path="$(realpath "$parent/$path")"
+    path="${path#$parent}"
+  fi
+  echo "${path%%/}"
+  return 0
+}
+
+##
+ # Take an relative path and make it absolute to a parent.
+ #
+ # @param string The relative path.
+ # @param string The absolute PARENT path.
+ #
+ # @echo The absolute path if it worked, otherwise nothing.
+ # @return 0 If the path could be make absolute.
+ # @return 1 If $1 is not relative.
+ # @return 2 If $2 is not absolute.
+ #
+ # @code
+ # # Use this pattern to only change path if it was able to be made absolute.
+ # a=$(path_make_absolute "$path" "$absolute_prefix") && path="$a"
+ # @endcode
+ ##
+function path_make_absolute() {
+  local path="$1"
+  local parent="$2"
+
+  path_is_absolute "$path" && return 1
+  ! path_is_absolute "$parent" && return 2
+  path="${parent%%/}/${path%%/}"
+  [ -e "$path" ] && echo "$(realpath "$path")" || echo "$path"
+  return 0
+}
+
+##
+ # Make a path output without leading $PWD if possible.
+ #
+ # Use this function when printing paths to the user as it will make paths
+ # relative to the current working directory, shortening them, making them
+ # "pretty".
+ # @param string The path to possible shorten.
+ #
+ # @echo The original path or the relative to $PWD if possible
+ # @return 0
+ ##
+function path_make_pretty() {
+  local path="$1"
+  p="./$(path_make_relative "$path" "$PWD")" && echo $p && return 0
+  echo $path
+  return 0
 }
