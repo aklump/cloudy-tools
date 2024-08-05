@@ -7,33 +7,6 @@
  # at any time.
  ##
 
-# TODO rename this as appropriate or find a similar function and merge them.
-function _resolve_file() {
-  local path="$1"
-
-  local directory
-  local basename
-
-  directory=${path%/*}
-  basename=${path##*/}
-
-  if [ -d "$directory" ]; then
-    directory="$(cd "$directory"; pwd -P)"
-  fi
-
-  echo "$directory/$basename"
-}
-# TODO rename this as appropriate or find a similar function and merge them.
-function _resolve_dir() {
-  local directory="$1"
-
-  if [ -d "$directory" ]; then
-    directory="$(cd "$directory"; pwd -P)"
-  fi
-
-  echo "$directory"
-}
-
 ##
  # Replace path tokens with runtime values.
  #
@@ -64,23 +37,23 @@ function _cloudy_detect_installation_type() {
   local check_cloudy
   base=$(dirname "$base")
 
-  check_composer="$(_resolve_file "$base/../../../composer.json")"
-  [ -f "$(_resolve_file "$check_composer")" ] && echo $CLOUDY_INSTALL_TYPE_COMPOSER && return 0
+  check_composer="$(path_make_canonical "$base/../../../composer.json")"
+  [ -f "$(path_make_canonical "$check_composer")" ] && echo $CLOUDY_INSTALL_TYPE_COMPOSER && return 0
 
-  check_composer="$(_resolve_file "$base/composer.json")"
-  check_cloudy="$(_resolve_file "$base/cloudy/cloudy.sh")"
+  check_composer="$(path_make_canonical "$base/composer.json")"
+  check_cloudy="$(path_make_canonical "$base/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_CORE && return 0
 
-  check_composer="$(_resolve_file "$base/cloudy/composer.json")"
-  check_cloudy="$(_resolve_file "$base/cloudy/cloudy.sh")"
+  check_composer="$(path_make_canonical "$base/cloudy/composer.json")"
+  check_cloudy="$(path_make_canonical "$base/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SCRIPT && return 0
 
-  check_composer="$(_resolve_file "$base/framework/cloudy/composer.json")"
-  check_cloudy="$(_resolve_file "$base/framework/cloudy/cloudy.sh")"
+  check_composer="$(path_make_canonical "$base/framework/cloudy/composer.json")"
+  check_cloudy="$(path_make_canonical "$base/framework/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SELF && return 0
 
-  check_composer="$(_resolve_file "$base/../../cloudy/cloudy/composer.json")"
-  check_cloudy="$(_resolve_file "$base/../../../cloudypm.lock")"
+  check_composer="$(path_make_canonical "$base/../../cloudy/cloudy/composer.json")"
+  check_cloudy="$(path_make_canonical "$base/../../../cloudypm.lock")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ] && echo $CLOUDY_INSTALL_TYPE_PM && return 0
 
   return 1
@@ -133,7 +106,7 @@ function _cloudy_detect_app_root_by_installation() {
   *)
     return 1
   esac
-  echo "$(_resolve_file "$app_root")"
+  echo "$(path_make_canonical "$app_root")"
   return 0
 }
 
@@ -165,7 +138,7 @@ function _cloudy_detect_composer_vendor_by_installation() {
     *)
       return 1
     esac
-    echo "$(_resolve_file "$vendor")"
+    echo "$(path_make_canonical "$vendor")"
     return 0
 }
 
@@ -346,24 +319,22 @@ function _cloudy_get_config() {
   local config_path="$1"
   local default_value="$2"
 
+  local array_keys
+  local cached_var_name
+  local cached_var_name_keys
+  local code
+  local config_path_base
   local default_type
+  local dev_null
+  local eval_code
+  local mutator
+  local paths
+  local var_code
   local var_name
   local var_type
   local var_value
-  local var_code
-  local array_keys
-  local mutator
-  local eval_code
-  local dev_null
-  local code
-  local cached_var_name
-  local cached_var_name_keys
-  local file_list
-  local config_path_base=${cloudy_config_22b41169ff3731365de5e8293e01c831}
 
-  # Determine if we have an absolute relative path base or, if not prepend $ROOT.
-  [[ "${config_path_base:0:1}" != '/' ]] && config_path_base="${ROOT}/$config_path_base"
-
+  config_path_base=${cloudy_config_22b41169ff3731365de5e8293e01c831}
   # Remove trailing / for proper path construction.
   config_path_base=${config_path_base%/}
 
@@ -430,45 +401,11 @@ function _cloudy_get_config() {
   elif [[ "$var_type" == "associative_array" ]]; then
     code=''
     for key in "${var_keys[@]}"; do
-
       cached_var_name=cloudy_config_$(md5_string ${config_path}.${key})
 
       if [[ "$mutator" == "_cloudy_realpath" ]]; then
-        local path=$(eval "echo \$$cached_var_name")
-
-        # Replace ~ with the actual home page
-        path=$(echo ${path/\~/"$HOME"})
-
-        # On first pass we will try to expand globbed filenames, which will
-        # cause file_list to be longer than var_value.
-        file_list=()
-
-        # Make relative to $ROOT.
-        [[ "$path" ]] && [[ "$path" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}
-
-        # This will expand a glob finder.
-        if [ -d "$path" ]; then
-          file_list=("${file_list[@]}" $path)
-        elif [ -f "$path" ]; then
-          file_list=("${file_list[@]}" $(ls $path))
-        elif [[ "$path" != null ]]; then
-          file_list=("${file_list[@]}" $path)
-        fi
-
-        # Glob may have increased our file_list so we apply realpath to all
-        # of them here.
-        local i=0
-        for path in "${file_list[@]}"; do
-          if [ -e "$path" ]; then
-            file_list[$i]=$(realpath "$path")
-          fi
-          let i++
-        done
-        if [[ ${#file_list[@]} -eq 1 ]]; then
-          eval "$cached_var_name="${file_list[0]}""
-        else
-          eval "$cached_var_name=("${file_list[@]}")"
-        fi
+        paths=($(eval "echo \$$cached_var_name"))
+        source "$CLOUDY_CORE_DIR/inc/snippets/_cloudy_get_config.file_list.sh"
       fi
 
       var_code=$(declare -p $cached_var_name)
@@ -476,42 +413,10 @@ function _cloudy_get_config() {
     done
   else
     if [[ "$mutator" == "_cloudy_realpath" ]]; then
-
-      # On first pass we will try to expand globbed filenames, which will
-      # cause file_list to be longer than var_value.
-      file_list=()
-      for path in "${var_value[@]}"; do
-
-        # Replace ~ with the actual home page
-        path=$(echo ${path/\~/"$HOME"})
-
-        # Replace tokens
-        path=$(_cloudy_resolve_path_tokens "$path")
-
-        # Make relative to $ROOT.
-        [[ "$var_value" ]] && [[ "$var_value" != null ]] && [[ "${path:0:1}" != "/" ]] && path=${config_path_base}/${path}
-
-        # This will expand a glob finder.
-        if [ -d "$path" ]; then
-          file_list=("${file_list[@]}" $path)
-        elif [ -f "$path" ]; then
-          file_list=("${file_list[@]}" $(ls $path))
-        elif [[ "$path" != null ]]; then
-          file_list=("${file_list[@]}" $path)
-        fi
-      done
-
-      # Glob may have increased our file_list so we apply realpath to all
-      # of them here.
-      local i=0
-      for path in "${file_list[@]}"; do
-        if [ -e "$path" ]; then
-          file_list[$i]=$(realpath "$path")
-        fi
-        let i++
-      done
-      eval "$cached_var_name=("${file_list[@]}")"
+      paths=("${var_value[@]}")
+      source "$CLOUDY_CORE_DIR/inc/snippets/_cloudy_get_config.file_list.sh"
     fi
+
     code=$(declare -p $cached_var_name)
     code="${code//$cached_var_name=/$var_name=}"
   fi

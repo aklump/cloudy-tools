@@ -19,7 +19,3 @@ tags: ''
 
 1. `$CLOUDY_BASEPATH`
 1. `$CLOUDY_CORE_DIR`
-
-## What path functions exist?
-
-1. `_resolve_dir`

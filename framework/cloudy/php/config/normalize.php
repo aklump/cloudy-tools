@@ -48,16 +48,27 @@ else {
   $config['config_path_base'] = path_make_absolute($config['config_path_base'], dirname($CLOUDY_PACKAGE_CONFIG));
 }
 
-$extra_config_paths = array_filter(array_merge($config['additional_config'] ?? [], $additional_config_paths ?? []));
-foreach ($extra_config_paths as $path_or_glob) {
-  $paths = _cloudy_realpath($path_or_glob);
-  foreach ($paths as $path) {
-    $new_data = _cloudy_load_configuration_data($path, FALSE);
-    if ($new_data) {
-      $config = _cloudy_merge_config($config, $new_data);
-    }
+$_additional_config = [];
+foreach ($config['additional_config'] as &$path_or_glob) {
+  $path_or_glob = _cloudy_resolve_path_tokens($path_or_glob);
+  if (!path_is_absolute($path_or_glob)) {
+    $path_or_glob = path_make_absolute($path_or_glob, $config['config_path_base']);
+  }
+  $paths = _cloudy_resolve_path_globs($path_or_glob);
+  $_additional_config = array_merge($_additional_config, $paths);
+}
+unset($path_or_glob);
+$config['additional_config'] = array_values(array_unique(array_filter($_additional_config)));
+unset($_additional_config);
+$additional_config_paths = array_merge($config['additional_config'], $additional_config_paths);
+
+foreach ($additional_config_paths as $_path) {
+  $new_data = _cloudy_load_configuration_data($_path, FALSE);
+  if ($new_data) {
+    $config = _cloudy_merge_config($config, $new_data);
   }
 }
+unset($_path);
 
 // Validate against cloudy_config.schema.json.
 $validator = new Validator();

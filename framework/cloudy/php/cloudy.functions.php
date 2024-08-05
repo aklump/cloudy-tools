@@ -7,6 +7,7 @@
 # at any time.
 ##
 
+use AKlump\Glob\Glob;
 use Ckr\Util\ArrayMerger;
 use Symfony\Component\Yaml\Yaml;
 
@@ -32,55 +33,22 @@ function _cloudy_resolve_path_tokens(string $path): string {
 }
 
 /**
- * Expand a path based on $config_path_base.
+ * Resolve globs in absolute or relative paths.
  *
- * This function can handle:
- * - paths that begin with ~/
- * - paths that contain the glob character '*'
- * - absolute paths
- * - relative paths to `config_path_base`
+ * @param string $path_or_glob
  *
- * @param string $path
- *   The path to expand.
+ * @return string[]
  *
- * @return array
- *   The expanded paths.  This will have multiple items when using globbing.
- *
- * @see _cloudy_get_config in cloudy.functions.sh
+ * @see _cloudy_resolve_path_tokens
  */
-function _cloudy_realpath($path) {
-  global $_config_path_base;
-
-  # Replace ~ with the actual home page
-  if (!empty($_SERVER['HOME'])) {
-    $path = preg_replace('/^~\//', rtrim($_SERVER['HOME'], '/') . '/', $path);
+function _cloudy_resolve_path_globs(string $path_or_glob): array {
+  $paths = [$path_or_glob];
+  if (strpos($path_or_glob, '*') !== FALSE) {
+    $paths = Glob::glob($path_or_glob);
   }
-
-  # Replace tokens
-  $path = _cloudy_resolve_path_tokens($path);
-
-  // If $path is not absolute then we need to make it so.
-  $path_is_absolute = !(!empty($path) && substr($path, 0, 1) !== '/');
-  if (!$path_is_absolute) {
-    $path = implode('/', array_filter([
-      rtrim(CLOUDY_BASEPATH, '/'),
-      rtrim($_config_path_base, '/'),
-      rtrim($path, '/'),
-    ]));
-  }
-  if (strstr($path, '*')) {
-    $paths = glob($path);
-  }
-  else {
-    $paths = [$path];
-  }
-  $paths = array_map(function ($item) {
-    return is_file($item) ? realpath($item) : $item;
-  }, $paths);
 
   return $paths;
 }
-
 
 /**
  * Create a log entry if logging is enabled.

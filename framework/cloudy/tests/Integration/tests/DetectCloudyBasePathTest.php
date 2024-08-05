@@ -15,8 +15,8 @@ class DetectCloudyBasePathTest extends TestCase {
   public function dataFortestAssertInstallationTypeDetectedCorrectlyProvider() {
     $tests = [];
     $tests[] = ['InstallTypePM', 'InstallTypePM/opt/aklump/package/config.yml'];
-//    $tests[] = ['InstallTypeCore', 'InstallTypeCore/config.yml'];
-//    $tests[] = ['InstallTypeComposer', 'InstallTypeComposer/vendor/aklump/package/config.yml'];
+    $tests[] = ['InstallTypeCore', 'InstallTypeCore/config.yml'];
+    $tests[] = ['InstallTypeComposer', 'InstallTypeComposer/vendor/aklump/package/config.yml'];
 
     return $tests;
   }

@@ -1231,7 +1231,7 @@ function handle_init() {
     # @see changelog for version 2.0.0
     grep \${config_path_base} "$path_to_files_map" > /dev/null
     if [[ $? -eq 0 ]]; then
-      fail_because "The token \"{APP_ROOT}\" must be used; \"\${config_path_base}\" is no longer suppored; in $path_to_files_map"
+      fail_because "The token \"{APP_ROOT}\" must be used; \"\${config_path_base}\" is no longer supported; in $path_to_files_map"
     fi
 
     token_match='\{.+\}'
@@ -2342,6 +2342,7 @@ function path_make_relative() {
  # @return 0 If the path could be make absolute.
  # @return 1 If $1 is not relative.
  # @return 2 If $2 is not absolute.
+ # @return 3 If $1 is empty
  #
  # @code
  # # Use this pattern to only change path if it was able to be made absolute.
@@ -2352,6 +2353,7 @@ function path_make_absolute() {
   local path="$1"
   local parent="$2"
 
+  [[ ! "$path" ]] && return 3
   path_is_absolute "$path" && return 1
   ! path_is_absolute "$parent" && return 2
   path="${parent%%/}/${path%%/}"
@@ -2375,4 +2377,32 @@ function path_make_pretty() {
   p="./$(path_make_relative "$path" "$PWD")" && echo $p && return 0
   echo $path
   return 0
+}
+
+##
+ # Remove all symbolic links from an absolute existing path.
+ #
+ # @param string The absolute path to make canonical.
+ #
+ # @echo The canonical path with symbolic links removed.
+ # @return 0 If all is well
+ # @return 1 If $1 does not exist.
+ # @return 2 If $1 is empty.
+ # @return 3 If $1 is not absolute.
+ ##
+function path_make_canonical() {
+  local path="$1"
+
+  [[ ! "$path" ]] && return 2
+  ! path_is_absolute "$path" && return 3
+  [[ ! -e "$path" ]] && return 1
+
+  local _basename
+  if [[ ! -d "$path" ]]; then
+    _basename="$(basename "$path")"
+    path="$(dirname "$path")"
+  fi
+  path="$(cd "$path"; pwd -P)"
+  [[ "$_basename" ]] &&   path="${path%%/}/$_basename" ||   path="${path%%/}"
+  echo "$path"
 }

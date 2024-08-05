@@ -61,6 +61,9 @@ trait TestWithCloudyTrait {
       return FALSE;
     }
     $data = json_decode(file_get_contents($this->getCloudyCacheDir() . '/_cached.test_runner.config.json'), TRUE);
+    if (empty($data)) {
+      return TRUE;
+    }
 
     return $cloudy_package_config !== $data['__cloudy']['CLOUDY_PACKAGE_CONFIG'];
   }

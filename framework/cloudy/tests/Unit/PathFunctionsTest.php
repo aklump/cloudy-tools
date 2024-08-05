@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 // Do not add this to the composer autoloader as it creates strange recursions.
 // Even when adding to autoload-dev.  Better to only put it here.
 require_once __DIR__ . '/../../php/cloudy.api.php';
+require_once __DIR__ . '/../../php/cloudy.functions.php';
 
 /**
  * @covers path_is_yaml
@@ -22,6 +23,20 @@ require_once __DIR__ . '/../../php/cloudy.api.php';
 class PathFunctionsTest extends TestCase {
 
   use TestWithFilesTrait;
+
+  public function testResolvePathGlobsDoubleGlob() {
+    $expected = $this->getTestFileFilepath('/lorem/ipsum/dolar.csv', TRUE);
+    $result = _cloudy_resolve_path_globs($this->getTestFileFilepath('**.csv'));
+    $this->assertSame($expected, $result[0]);
+    $this->deleteAllTestFiles();
+  }
+
+  public function testResolvePathGlobsSingleGlob() {
+    $expected = $this->getTestFileFilepath('lorem.md', TRUE);
+    $result = _cloudy_resolve_path_globs($this->getTestFileFilepath('*.md'));
+    $this->assertSame($expected, $result[0]);
+    $this->deleteAllTestFiles();
+  }
 
   public function testPathExtension() {
     $this->assertSame('json', path_extension('config.json'));

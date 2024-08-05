@@ -31,6 +31,8 @@ if [[ "$CLOUDY_LOG" ]]; then
   declare -rx CLOUDY_LOG="$(cd "$log_dir" && pwd)/$(basename $CLOUDY_LOG)"
 fi
 
+declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$CLOUDY_PACKAGE_CONTROLLER")"
+
 # Detect installation type
 declare -rx CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type "$CLOUDY_PACKAGE_CONTROLLER")
 if [ $? -ne 0 ]; then
@@ -39,7 +41,6 @@ else
   write_log_debug "\$CLOUDY_INSTALLED_AS autodetected as \"$CLOUDY_INSTALLED_AS\""
 fi
 
-declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$CLOUDY_PACKAGE_CONTROLLER")"
 
 declare -rx CLOUDY_RUNTIME_UUID=$(create_uuid)
 

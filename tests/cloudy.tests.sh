@@ -391,6 +391,35 @@ function testPathUnresolveUpgradeToPathMakeRelativeUpgradePath() {
   _p=$(path_make_relative "$_path" "/foo/bar/") && _path="$_p"
   assert_same "baz/zulu/alpha/tree.txt" "$_path"
 }
+
+function testPathMakeCanonicalReturns1EchosNothingIfPathDoesNotExist() {
+  _result="$(path_make_canonical "/foo/lorem/bogus.md")"
+  assert_exit_status 1
+  assert_empty "$_result"
+}
+
+function testPathMakeCanonicalReturns2EchosNothingIfPathIsEmpty() {
+  _result="$(path_make_canonical "")"
+  assert_exit_status 2
+  assert_empty "$_result"
+}
+
+function testPathMakeCanonicalReturns3EchosNothingIfPathIsNotAbsolute() {
+  _result="$(path_make_canonical "foo/bar.md")"
+  assert_exit_status 3
+  assert_empty "$_result"
+}
+
+function testPathMakeCanonicalReturns0EchosAsExpected() {
+  _result="$(path_make_canonical "$ROOT/tests/stubs/../..")"
+  assert_exit_status 0
+  assert_same "$ROOT" "$_result"
+
+  _result="$(path_make_canonical "$ROOT/tests/stubs/../stubs/alpha.txt")"
+  assert_exit_status 0
+  assert_same "$ROOT/tests/stubs/alpha.txt" "$_result"
+}
+
 function testPathMakeAbsoluteEchosNothingSends1WhenFirstIsNotRelative() {
   local _result
 
@@ -404,6 +433,14 @@ function testPathMakeAbsoluteEchosNothingSends2WhenSecondIsNotAbsolute() {
 
   _result="$(path_make_absolute "foo" "bar")"
   assert_exit_status 2
+  assert_empty "$_result"
+}
+
+function testPathMakeAbsoluteEchosNothingSends3WhenFirstArgumentIsEmpty() {
+  local _result
+
+  _result="$(path_make_absolute "" "/bar")"
+  assert_exit_status 3
   assert_empty "$_result"
 }
 
@@ -996,7 +1033,6 @@ function testPathFilename() {
 }
 
 function testPathFilesize() {
-  cat  "$ROOT/tests/stubs/charlie.md"
   assert_same 446 $(path_filesize "$ROOT/tests/stubs/charlie.md")
 }
 
