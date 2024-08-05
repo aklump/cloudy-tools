@@ -137,12 +137,11 @@
       <a href="#path_filesize">path_filesize</a>
       <a href="#path_is_absolute">path_is_absolute</a>
       <a href="#path_is_yaml">path_is_yaml</a>
+      <a href="#path_make_absolute">path_make_absolute</a>
+      <a href="#path_make_canonical">path_make_canonical</a>
+      <a href="#path_make_pretty">path_make_pretty</a>
+      <a href="#path_make_relative">path_make_relative</a>
       <a href="#path_mtime">path_mtime</a>
-      <a href="#path_relative_to_config_base">path_relative_to_config_base</a>
-      <a href="#path_relative_to_pwd">path_relative_to_pwd</a>
-      <a href="#path_relative_to_root">path_relative_to_root</a>
-      <a href="#path_resolve">path_resolve</a>
-      <a href="#path_unresolve">path_unresolve</a>
       <a href="#realpath">realpath</a>
       <a href="#rtrim">rtrim</a>
       <a href="#string_lower">string_lower</a>
@@ -1472,7 +1471,7 @@
         <hr/>
       <a name="path_is_absolute"></a>
     <h2>path_is_absolute()</h2>
-    <p class="summary">Determine if a path is absolute (begins with /) or not.</p>
+    <p class="summary">Filepaths</p>
     
               Parameters:
       <ul class="function-list__parameters">
@@ -1483,6 +1482,7 @@
                   <li><code>0</code> if absolute; 1 otherwise.</li>
               </ul>
         
+          <pre><code>Determine if a path is absolute (begins with /) or not.</code></pre>
         <hr/>
       <a name="path_is_yaml"></a>
     <h2>path_is_yaml()</h2>
@@ -1499,6 +1499,96 @@
               </ul>
         
         <hr/>
+      <a name="path_make_absolute"></a>
+    <h2>path_make_absolute()</h2>
+    <p class="summary">Take an relative path and make it absolute to a parent.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The relative path.</li>
+                  <li><code></code> <em>string</em> The absolute PARENT path.</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The absolute path if it worked, otherwise nothing.</li>
+              </ul>
+              Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> If the path could be make absolute.</li>
+                  <li><code>1</code> If $1 is not relative.</li>
+                  <li><code>2</code> If $2 is not absolute.</li>
+                  <li><code>3</code> If $1 is empty</li>
+              </ul>
+        
+          <pre><code>@code
+# Use this pattern to only change path if it was able to be made absolute.
+ a=$(path_make_absolute &quot;$path&quot; &quot;$absolute_prefix&quot;) &amp;&amp; path=&quot;$a&quot;
+@endcode</code></pre>
+        <hr/>
+      <a name="path_make_canonical"></a>
+    <h2>path_make_canonical()</h2>
+    <p class="summary">Remove all symbolic links from an absolute existing path.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The absolute path to make canonical.</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The canonical path with symbolic links removed.</li>
+              </ul>
+              Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> If all is well</li>
+                  <li><code>1</code> If $1 does not exist.</li>
+                  <li><code>2</code> If $1 is empty.</li>
+                  <li><code>3</code> If $1 is not absolute.</li>
+              </ul>
+        
+        <hr/>
+      <a name="path_make_pretty"></a>
+    <h2>path_make_pretty()</h2>
+    <p class="summary">Make a path output without leading $PWD if possible.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The path to possible shorten.</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The original path or the relative to $PWD if possible</li>
+              </ul>
+              Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> 0</li>
+              </ul>
+        
+          <pre><code>relative to the current working directory, shortening them, making them&quot;pretty&quot;.</code></pre>
+        <hr/>
+      <a name="path_make_relative"></a>
+    <h2>path_make_relative()</h2>
+    <p class="summary">Take an absolute path and make it relative to a parent path if possible.</p>
+    
+              Parameters:
+      <ul class="function-list__parameters">
+                  <li><code></code> <em>string</em> The absolute path.</li>
+                  <li><code></code> <em>string</em> The absolute PARENT path.</li>
+              </ul>
+                  Echos:
+      <ul class="function-list__echos">
+                  <li>The relative path if it worked; the original relative path if it didn&#039;t.</li>
+              </ul>
+              Returns:
+      <ul class="function-list__returns">
+                  <li><code>0</code> If the path could be make relative.</li>
+                  <li><code>1</code> If there was a problem creating a relative path.</li>
+              </ul>
+        
+          <pre><code>@code
+ result=&quot;$(path_make_relative &#039;/some/great/path/bush.md&#039; &#039;/some/great&#039;)&quot;
+[ $? -eq 0 ] &amp;&amp; made_relative=true || made_relative=false
+@endcode</code></pre>
+        <hr/>
       <a name="path_mtime"></a>
     <h2>path_mtime()</h2>
     <p class="summary">Echo the last modified time of a file.</p>
@@ -1512,57 +1602,6 @@
                   <li><code>1</code> if the time cannot be determined.</li>
               </ul>
         
-        <hr/>
-      <a name="path_relative_to_config_base"></a>
-    <h2>path_relative_to_config_base()</h2>
-    <p class="summary">Filepaths</p>
-    
-                        
-          <pre><code>Echo a path relative to config_path_base. If the path begins with / it is unchanged.</code></pre>
-        <hr/>
-      <a name="path_relative_to_pwd"></a>
-    <h2>path_relative_to_pwd()</h2>
-    <p class="summary">Make $1 relative if it&#039;s inside $PWD.</p>
-    
-              Parameters:
-      <ul class="function-list__parameters">
-                  <li><code></code> <em>string</em> An absolute filepath.  $PWD will be replaced by ./ if possible.</li>
-              </ul>
-                    
-        <hr/>
-      <a name="path_relative_to_root"></a>
-    <h2>path_relative_to_root()</h2>
-    <p class="summary">Expand a relative path using $ROOT as base.</p>
-    
-                        
-          <pre><code>If the path begins with / it is unchanged.</code></pre>
-        <hr/>
-      <a name="path_resolve"></a>
-    <h2>path_resolve()</h2>
-    <p class="summary">Resolve a path to an absolute link; if already absolute, do nothing.</p>
-    
-              Parameters:
-      <ul class="function-list__parameters">
-                  <li><code></code> <em>string</em> The dirname to use if $2 is not absolute</li>
-                  <li><code></code> <em>string</em> The path to make absolute if not starting with /</li>
-              </ul>
-                      Returns:
-      <ul class="function-list__returns">
-                  <li><code>0</code> nothing</li>
-              </ul>
-        
-        <hr/>
-      <a name="path_unresolve"></a>
-    <h2>path_unresolve()</h2>
-    <p class="summary">Echo a relative path by removing a leading directory(ies).</p>
-    
-              Parameters:
-      <ul class="function-list__parameters">
-                  <li><code></code> <em>string</em> The dirname to remove from the left of $2</li>
-                  <li><code></code> <em>string</em> The path to make relative by removing $1, if possible.</li>
-              </ul>
-                    
-          <pre><code>The trailing slash will always be removed.  The relative path is returned without a leading slash.  If it cannot be unresolved, any leading slash will remain.  If the two arguments are the same, &#039;.&#039; will be returned.</code></pre>
         <hr/>
       <a name="realpath"></a>
     <h2>realpath()</h2>
@@ -2032,7 +2071,7 @@
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>8/1/2024</strong>
+            Last Update: <strong>8/5/2024</strong>
     </div>
   </footer>
 

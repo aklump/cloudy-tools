@@ -61,6 +61,29 @@
 <ul>
 <li>Absolute paths can now be set on CONFIG; previously only relative paths worked.</li>
 <li>In the bootstrap portion of the Cloudy Package Controller, replace <code>source "$r/cloudy/cloudy.sh"</code> with <code>CLOUDY_CORE_DIR="$r/cloudy";source "$CLOUDY_CORE_DIR/cloudy.sh"</code>; the path may be slightly different, e.g. <code>source "$r/../../cloudy/cloudy/cloudy.sh"</code> so ensure you maintain the correct path. The point here is to set the variable to the directory and then source <em>cloudy.sh</em> using <code>$CLOUDY_CORE_DIR</code>.</li>
+<li><p>Replace <code>path_relative_to_root</code> with <code>path_make_absolute</code></p>
+<pre><code class="shell">## Cloudy 1.x
+relative_path=$(path_relative_to_root "$relative_path")
+  
+## Cloudy 2.x
+! path_is_absolute "$relative_path" &amp;&amp; relative_path=$(path_make_absolute "$relative_path" "$ROOT")
+</code></pre>
+</li>
+<li><p>Replace <code>path_relative_to_pwd</code> with <code>path_make_relative</code>.</p>
+<pre><code class="shell">path_relative_to_pwd "$absolute"
+path_make_relative "$absolute" "$PWD"
+</code></pre>
+</li>
+<li><p>Replace <code>path_resolve</code> with <code>path_make_absolute</code> using the following pattern:</p>
+<pre><code class="shell">path_resolve "$absolute_prefix" "$path"
+a=$(path_make_absolute "$path" "$absolute_prefix") &amp;&amp; path="$a"
+</code></pre>
+</li>
+<li><p>Replace <code>path_unresolve</code> with <code>path_make_relative</code> using the following pattern:</p>
+<pre><code class="shell">path_unresolve "$absolute_prefix" "$path"
+a=$(path_make_relative "$path" "$absolute_prefix") &amp;&amp; path="$a"
+</code></pre>
+</li>
 </ul>
 <h3>Deprecated</h3>
 <ul>
@@ -77,6 +100,7 @@
 <li>APP_ROOT Use CLOUDY_BASEPATH instead.</li>
 <li>The token <code>${config_path_base}</code> has been replaced by <code>$CLOUDY_BASEPATH</code> for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with <code>$CLOUDY_BASEPATH</code> in all cloudy pm packages.</li>
 <li><code>CLOUDY_NAME</code>; Add the following snippet to your package controller if you want to continue using this according to the legacy value: <code>export CLOUDY_NAME="$(path_filename $SCRIPT)"</code></li>
+<li><code>path_relative_to_config_base</code></li>
 </ul>
 <h3>Fixed</h3>
 <ul>
@@ -230,7 +254,7 @@ additional_config:
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>8/1/2024</strong>
+            Last Update: <strong>8/5/2024</strong>
     </div>
   </footer>
 

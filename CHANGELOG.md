@@ -15,6 +15,34 @@
 
 - Absolute paths can now be set on CONFIG; previously only relative paths worked.
 - In the bootstrap portion of the Cloudy Package Controller, replace `source "$r/cloudy/cloudy.sh"` with `CLOUDY_CORE_DIR="$r/cloudy";source "$CLOUDY_CORE_DIR/cloudy.sh"`; the path may be slightly different, e.g. `source "$r/../../cloudy/cloudy/cloudy.sh"` so ensure you maintain the correct path. The point here is to set the variable to the directory and then source _cloudy.sh_ using `$CLOUDY_CORE_DIR`.
+- Replace `path_relative_to_root` with `path_make_absolute`
+  
+  ```shell
+  ## Cloudy 1.x
+  relative_path=$(path_relative_to_root "$relative_path")
+  
+  ## Cloudy 2.x
+  ! path_is_absolute "$relative_path" && relative_path=$(path_make_absolute "$relative_path" "$ROOT")
+  ```
+- Replace `path_relative_to_pwd` with `path_make_relative`.
+
+  ```shell
+  path_relative_to_pwd "$absolute"
+  path_make_relative "$absolute" "$PWD"
+  ```
+  
+- Replace `path_resolve` with `path_make_absolute` using the following pattern:
+  
+  ```shell
+  path_resolve "$absolute_prefix" "$path"
+  a=$(path_make_absolute "$path" "$absolute_prefix") && path="$a"
+  ``` 
+- Replace `path_unresolve` with `path_make_relative` using the following pattern:
+  
+  ```shell
+  path_unresolve "$absolute_prefix" "$path"
+  a=$(path_make_relative "$path" "$absolute_prefix") && path="$a"
+  ```
 
 ### Deprecated
 
@@ -31,6 +59,7 @@
 - APP_ROOT Use CLOUDY_BASEPATH instead.
 - The token `${config_path_base}` has been replaced by `$CLOUDY_BASEPATH` for consistency. It can no longer be used in cloudypm.files_map.txt. Replace with `$CLOUDY_BASEPATH` in all cloudy pm packages.
 - `CLOUDY_NAME`; Add the following snippet to your package controller if you want to continue using this according to the legacy value: `export CLOUDY_NAME="$(path_filename $SCRIPT)"`
+- `path_relative_to_config_base`
 
 ### Fixed
 

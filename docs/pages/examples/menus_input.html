@@ -64,7 +64,7 @@ for i in *$search*.sql*; do
   [[ -f "$i" ]] &amp;&amp; choose__array=("${choose__array[@]}" "$i")
 done
 for i in "${export_dir%/}"/*$search*.sql*; do
-  [[ -f "$i" ]] &amp;&amp; choose__array=("${choose__array[@]}" "$(path_unresolve "$PWD" "$i")")
+  [[ -f "$i" ]] &amp;&amp; choose__array=("${choose__array[@]}" "$(path_make_relative "$i" "$PWD")")
 done
 ! shortpath=$(choose "Choose a database export by number") &amp;&amp; fail_because "Cancelled." &amp;&amp; exit_with_failure
 filepath=${PWD%/}/${shortpath#/}
@@ -80,7 +80,7 @@ echo "Your choice was: $filepath"
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>8/1/2024</strong>
+            Last Update: <strong>8/5/2024</strong>
     </div>
   </footer>
 
