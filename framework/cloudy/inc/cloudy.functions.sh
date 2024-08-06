@@ -29,6 +29,8 @@ function _cloudy_resolve_path_tokens() {
  #
  # @param string $base The base directory to use to detect the installation type.
  #
+ # @echo string The detected type.
+ # @return 0 In all scenarios.
  ##
 function _cloudy_detect_installation_type() {
   local base="$1"
@@ -56,7 +58,8 @@ function _cloudy_detect_installation_type() {
   check_cloudy="$(path_make_canonical "$base/../../../cloudypm.lock")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ] && echo $CLOUDY_INSTALL_TYPE_PM && return 0
 
-  return 1
+  # This is a fallback and means we can't figure it out.
+  echo $CLOUDY_INSTALL_TYPE_CUSTOM && return 0
 }
 
 function _cloudy_detect_basepath() {
@@ -78,43 +81,15 @@ function _cloudy_detect_basepath() {
   return 0;
 }
 
-# Echo the detected app root by installation type.
-#
-# Returns 1 if detection failed.
-function _cloudy_detect_app_root_by_installation() {
-  local installation_type="$1"
-
-  local base
-  local app_root
-  base="$(dirname "$CLOUDY_PACKAGE_CONTROLLER")"
-  case "$installation_type" in
-  "$CLOUDY_INSTALL_TYPE_SELF")
-    app_root="$base"
-    ;;
-  "$CLOUDY_INSTALL_TYPE_SCRIPT")
-    app_root="$base"
-    ;;
-  "$CLOUDY_INSTALL_TYPE_COMPOSER")
-    app_root="$base/../../../"
-    ;;
-  "$CLOUDY_INSTALL_TYPE_CORE")
-    app_root="$base"
-    ;;
-  "$CLOUDY_INSTALL_TYPE_PM")
-    app_root="$base/../../../"
-    ;;
-  *)
-    return 1
-  esac
-  echo "$(path_make_canonical "$app_root")"
-  return 0
-}
-
 function _cloudy_detect_composer_vendor_by_installation() {
     local installation_type="$1"
 
     local base
     local vendor
+    local check_composer
+    local check_composer_lock
+    local check_vendor
+
     base="$(dirname "$CLOUDY_PACKAGE_CONTROLLER")"
     case "$installation_type" in
     "$CLOUDY_INSTALL_TYPE_SELF")
@@ -136,8 +111,18 @@ function _cloudy_detect_composer_vendor_by_installation() {
       vendor="$base/../../cloudy/cloudy/vendor"
       ;;
     *)
-      return 1
+      # Maybe cloudy framework is providing the vendor directory, we can be
+      # relatively safe if composer.lock and vendor exist, since they are not in
+      # the Cloudy framework repo.
+      check_composer="$CLOUDY_CORE_DIR/composer.json"
+      check_composer_lock="$CLOUDY_CORE_DIR/composer.lock"
+      check_vendor="$CLOUDY_CORE_DIR/vendor/"
+      if [ -f "$check_composer" ] && [ -f "$check_composer_lock" ] && [ -d "$check_vendor" ]; then
+        vendor="$CLOUDY_CORE_DIR/vendor/"
+      fi
     esac
+
+    ! [[ -d "$vendor" ]] && return 1
     echo "$(path_make_canonical "$vendor")"
     return 0
 }

@@ -24,7 +24,7 @@ if [[ "$CLOUDY_COMPOSER_VENDOR" ]]; then
 else
   CLOUDY_COMPOSER_VENDOR=$(_cloudy_detect_composer_vendor_by_installation "$CLOUDY_INSTALLED_AS")
   if [ $? -ne 0 ]; then
-    write_log_error "Failed to detect/set \$CLOUDY_COMPOSER_VENDOR"
+    write_log_error "Not provided; failed to autodetect \$CLOUDY_COMPOSER_VENDOR"
     fail_because "Cannot find Composer dependencies."
     return 2;
   fi

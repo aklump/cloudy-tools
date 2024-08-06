@@ -77,11 +77,11 @@ trait TestWithCloudyTrait {
   }
 
   protected function getCloudyCoreDir(): string {
-    return realpath(__DIR__ . '/../../../');
+    return CLOUDY_CORE_DIR;
   }
 
   protected function getCloudyCacheDir(): string {
-    return realpath(__DIR__ . '/../../../cache/');
+    return $this->getCloudyCoreDir() . '/cache';
   }
 
   protected function getCloudyPackageController(): string {

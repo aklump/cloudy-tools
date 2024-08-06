@@ -114,10 +114,10 @@ $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
   $event->setVariable('function_docblock', $loader("$base/example_function.sh"));
   $event->setVariable('file_docblock', $loader("$base/example_file.sh"));
 
-  //  $path_to_file_ex = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/InstallTypeCore/tests/variables.php';
+  //  $path_to_file_ex = $event->getPathToSource() . '/../framework/tests/Integration/t/InstallTypeCore/tests/variables.php';
   //  $event->setVariable('file_variables_php', $loader($path_to_file_ex));
 
-  $base = $event->getPathToSource() . '/../framework/cloudy/tests/Integration/t/KnowledgeExamples/';
+  $base = $event->getPathToSource() . '/../framework/tests/Integration/t/KnowledgeExamples/';
   $event->setVariable('php_usage_controller', $loader("$base/controller_include.sh"));
   $event->setVariable('php_usage_php_file_runner', $loader("$base/json_decode.php"));
 

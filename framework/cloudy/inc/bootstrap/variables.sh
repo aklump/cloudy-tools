@@ -35,12 +35,7 @@ declare -rx CLOUDY_PACKAGE_CONTROLLER="$(realpath "$CLOUDY_PACKAGE_CONTROLLER")"
 
 # Detect installation type
 declare -rx CLOUDY_INSTALLED_AS=$(_cloudy_detect_installation_type "$CLOUDY_PACKAGE_CONTROLLER")
-if [ $? -ne 0 ]; then
-  write_log_error "Failed to determine \$CLOUDY_INSTALLED_AS"
-else
-  write_log_debug "\$CLOUDY_INSTALLED_AS autodetected as \"$CLOUDY_INSTALLED_AS\""
-fi
-
+write_log_debug "\$CLOUDY_INSTALLED_AS autodetected as \"$CLOUDY_INSTALLED_AS\""
 
 declare -rx CLOUDY_RUNTIME_UUID=$(create_uuid)
 

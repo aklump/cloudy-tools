@@ -33,7 +33,7 @@ done
 
 source "$CLOUDY_CORE_DIR/inc/bootstrap/caching.sh"
 source "$CLOUDY_CORE_DIR/inc/bootstrap/php.sh"
-has_failed && exit_with_failure "Failed to bootstrap Cloudy PHP."
+has_failed && exit_with_failure "Failed to bootstrap Cloudy PHP in bootstrap/php.sh."
 source "$CLOUDY_CORE_DIR/inc/bootstrap/config.sh"
 has_failed && exit_with_failure "Failed to bootstrap Cloudy core."
 
