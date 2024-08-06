@@ -5,10 +5,10 @@ namespace AKlump\Cloudy\Tests\Unit;
 use AKlump\Cloudy\Tests\Unit\TestingTraits\TestWithFilesTrait;
 use PHPUnit\Framework\TestCase;
 
-// Do not add this to the composer autoloader as it creates strange recursions.
-// Even when adding to autoload-dev.  Better to only put it here.
-require_once __DIR__ . '/../../php/cloudy.api.php';
-require_once __DIR__ . '/../../php/cloudy.functions.php';
+/** @var string $CLOUDY_CORE_DIR */
+
+require_once CLOUDY_CORE_DIR . '/php/cloudy.api.php';
+require_once CLOUDY_CORE_DIR . '/php/cloudy.functions.php';
 
 /**
  * @covers path_is_yaml

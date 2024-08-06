@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
  */
 class DeserializeBashArrayTest extends TestCase {
 
-
   public function dataFortestInvokeProvider() {
     $tests = [];
     $tests[] = [
@@ -41,4 +40,5 @@ class DeserializeBashArrayTest extends TestCase {
     $result = (new DeserializeBashArray())($serialized_array);
     $this->assertSame($expected, $result);
   }
+
 }
