@@ -11,7 +11,7 @@ use RuntimeException;
 
 /** @var $filepaths Filepaths of the BASH files to stamp. */
 $filepaths = [
-  './framework/cloudy/cloudy.sh',
+  './cloudy/dist/cloudy.sh',
 ];
 
 $new_version = $argv[2];

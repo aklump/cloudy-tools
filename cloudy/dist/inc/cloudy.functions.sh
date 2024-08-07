@@ -50,8 +50,8 @@ function _cloudy_detect_installation_type() {
   check_cloudy="$(path_make_canonical "$base/cloudy/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SCRIPT && return 0
 
-  check_composer="$(path_make_canonical "$base/framework/cloudy/composer.json")"
-  check_cloudy="$(path_make_canonical "$base/framework/cloudy/cloudy.sh")"
+  check_composer="$(path_make_canonical "$base/cloudy/dist/composer.json")"
+  check_cloudy="$(path_make_canonical "$base/cloudy/dist/cloudy.sh")"
   [ -f "$check_composer" ] && [ -f "$check_cloudy" ]  && echo $CLOUDY_INSTALL_TYPE_SELF && return 0
 
   check_composer="$(path_make_canonical "$base/../../cloudy/cloudy/composer.json")"
@@ -93,7 +93,7 @@ function _cloudy_detect_composer_vendor_by_installation() {
     base="$(dirname "$CLOUDY_PACKAGE_CONTROLLER")"
     case "$installation_type" in
     "$CLOUDY_INSTALL_TYPE_SELF")
-      vendor="$base/framework/cloudy/vendor"
+      vendor="$base/cloudy/dist/vendor"
       ;;
     "$CLOUDY_INSTALL_TYPE_SCRIPT")
       vendor="$base/cloudy/vendor"

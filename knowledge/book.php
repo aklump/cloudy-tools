@@ -19,6 +19,7 @@ use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
+const CLOUDY_CORE_DIR = __DIR__ . '/../cloudy/dist';
 
 /**
  * Create the API page by parsing the Cloudy source code.
@@ -33,13 +34,13 @@ $dispatcher->addListener(AssemblePages::NAME, function (AssemblePages $event) {
   //
   // Process the Public API Functions.
   //
-  $path_to_public_functions = __DIR__ . '/../framework/cloudy/inc/cloudy.api.sh';
+  $path_to_public_functions = CLOUDY_CORE_DIR . '/inc/cloudy.api.sh';
   if (!file_exists($path_to_public_functions)) {
     $path_to_public_functions = Path::canonicalize($path_to_public_functions);
 
     return new ProblemSolution("Cannot locate cloudy.sh for parsing.", "Make sure this path exists: %s", $path_to_public_functions);
   }
-  $path_to_cloudy_testing_script = __DIR__ . '/../framework/cloudy/inc/cloudy.testing.sh';
+  $path_to_cloudy_testing_script = CLOUDY_CORE_DIR . '/inc/cloudy.testing.sh';
   if (!file_exists($path_to_cloudy_testing_script)) {
     $path_to_cloudy_testing_script = Path::canonicalize($path_to_cloudy_testing_script);
 
@@ -51,7 +52,6 @@ $dispatcher->addListener(AssemblePages::NAME, function (AssemblePages $event) {
   $function_groups = [];
   $function_groups['api_functions'] = $path_to_public_functions;
   $function_groups['test_functions'] = $path_to_cloudy_testing_script;
-
 
   //
   // Generate the HTML.
@@ -114,10 +114,7 @@ $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
   $event->setVariable('function_docblock', $loader("$base/example_function.sh"));
   $event->setVariable('file_docblock', $loader("$base/example_file.sh"));
 
-  //  $path_to_file_ex = $event->getPathToSource() . '/../framework/tests/Integration/t/InstallTypeCore/tests/variables.php';
-  //  $event->setVariable('file_variables_php', $loader($path_to_file_ex));
-
-  $base = $event->getPathToSource() . '/../framework/tests/Integration/t/KnowledgeExamples/';
+  $base = $event->getPathToSource() . '/../cloudy/tests/Integration/t/KnowledgeExamples/';
   $event->setVariable('php_usage_controller', $loader("$base/controller_include.sh"));
   $event->setVariable('php_usage_php_file_runner', $loader("$base/json_decode.php"));
 

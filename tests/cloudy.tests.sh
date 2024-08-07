@@ -815,7 +815,7 @@ function testGetConfigPathWorksAsItShould() {
   assert_same "$CLOUDY_BASEPATH/.project/config.yml" $tests_filepaths_token_cloudy_basepath
 
   eval $(get_config_path 'tests.filepaths.token_cloudy_core_directory')
-  assert_same "$CLOUDY_CORE_DIR/framework" $tests_filepaths_token_cloudy_core_directory
+  assert_same "$CLOUDY_CORE_DIR/cloudy" $tests_filepaths_token_cloudy_core_directory
 }
 
 function testGetConfigPathAsWorksAsItShould() {

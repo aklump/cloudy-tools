@@ -9,7 +9,7 @@ Cloudy offers a simple unit testing framework based on PhpUnit.  To see how you 
 
 * _cloudy_tools.sh_ and find how the command `tests` is handled in `on_boot`.
 * _tests/cloudy.tests.sh_ to see how the tests themselves are written.
-* _framework/cloudy/inc/cloudy.testing.sh_ for a list of assertions.
+* _cloudy/dist/inc/cloudy.testing.sh_ for a list of assertions.
 * It is optional to add the command to your _config.yml_ file.  It's not functionally necessary, but you might do it for documentation purposes.
 * To check if code is being run from inside a test you can use `is_being_tested`, e.g.:
     

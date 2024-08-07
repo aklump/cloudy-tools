@@ -168,7 +168,7 @@ a=$(path_make_relative "$path" "$absolute_prefix") &amp;&amp; path="$a"
 <h2>[1.4.9] - 2022-12-07</h2>
 <h3>Fixed</h3>
 <ul>
-<li>If you see an error like "line 833: cd: ... cloudy/framework/cloudy: No such file or directory", try adding <code>CLOUDY_COMPOSER_VENDOR=""</code> to the top of your script file, e.g. <em>framework/script.sh</em>.</li>
+<li>If you see an error like "line 833: cd: ... cloudy/cloudy/dist: No such file or directory", try adding <code>CLOUDY_COMPOSER_VENDOR=""</code> to the top of your script file, e.g. <em>framework/script.sh</em>.</li>
 </ul>
 <h2>[1.4.0] - 2022-07-19</h2>
 <h3>Added</h3>
@@ -180,7 +180,7 @@ a=$(path_make_relative "$path" "$absolute_prefix") &amp;&amp; path="$a"
 </ul>
 <h3>Changed</h3>
 <ul>
-<li>Moved Composer vendor directory from <em>framework/cloudy/php/vendor</em> to <em>framework/cloudy/vendor</em>.</li>
+<li>Moved Composer vendor directory from <em>cloudy/dist/php/vendor</em> to <em>cloudy/dist/vendor</em>.</li>
 </ul>
 <h2>[1.3.7] - 2022-05-02</h2>
 <h3>Added</h3>
@@ -254,7 +254,7 @@ additional_config:
               Version:
         <strong>1.7.12</strong>
         &bull;
-            Last Update: <strong>8/6/2024</strong>
+            Last Update: <strong>8/7/2024</strong>
     </div>
   </footer>
 

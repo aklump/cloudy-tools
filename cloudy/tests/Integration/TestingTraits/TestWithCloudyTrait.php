@@ -31,7 +31,7 @@ trait TestWithCloudyTrait {
    *
    * @return void
    */
-  protected function bootCloudy(string $cloudy_package_config, string $test_runner = 'test_runner.sh'): void {
+  public function bootCloudy(string $cloudy_package_config, string $test_runner = 'test_runner.sh'): void {
     if (!is_file($cloudy_package_config)) {
       throw new TestFileNotFoundException($cloudy_package_config);
     }
@@ -112,7 +112,7 @@ trait TestWithCloudyTrait {
    * @return string
    *   The output from the execution.
    */
-  protected function execCloudy(string $test_script): string {
+  public function execCloudy(string $test_script): string {
     $this->cloudyOutput = [];
     $this->cloudyResultCode = NULL;
 
@@ -133,6 +133,7 @@ trait TestWithCloudyTrait {
     $exports = '';
 
     // Enable logging for all test runners.
+    $exports .= sprintf('export CLOUDY_CORE_DIR="%s"', CLOUDY_CORE_DIR);
     $exports .= sprintf('export CLOUDY_LOG="%s"', $this->getCloudyLog());
     $command = sprintf($exports . ';' . __DIR__ . '/../cloudy_bridge/%s "%s" "%s"', $this->testRunner, $this->cloudyPackageConfig, $test_script);
     exec($command, $this->cloudyOutput, $this->cloudyResultCode);

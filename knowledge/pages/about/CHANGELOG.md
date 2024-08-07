@@ -142,7 +142,7 @@ tags: about
 
 ### Fixed
 
-- If you see an error like "line 833: cd: ... cloudy/framework/cloudy: No such file or directory", try adding `CLOUDY_COMPOSER_VENDOR=""` to the top of your script file, e.g. _framework/script.sh_.
+- If you see an error like "line 833: cd: ... cloudy/cloudy/dist: No such file or directory", try adding `CLOUDY_COMPOSER_VENDOR=""` to the top of your script file, e.g. _framework/script.sh_.
 
 ## [1.4.0] - 2022-07-19
 
@@ -155,7 +155,7 @@ tags: about
 
 ### Changed
 
-- Moved Composer vendor directory from _framework/cloudy/php/vendor_ to _framework/cloudy/vendor_.
+- Moved Composer vendor directory from _cloudy/dist/php/vendor_ to _cloudy/dist/vendor_.
 
 ## [1.3.7] - 2022-05-02
 

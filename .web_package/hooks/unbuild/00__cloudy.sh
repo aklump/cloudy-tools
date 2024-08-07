@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-rm -r framework/cloudy/vendor
-rm -r framework/cloudy/composer.lock
-rm -r framework/cloudy/cache/*
+rm -r cloudy/dist/vendor
+rm -r cloudy/dist/composer.lock
+rm -r cloudy/dist/cache/*

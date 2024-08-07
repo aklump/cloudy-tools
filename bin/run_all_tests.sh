@@ -9,5 +9,5 @@ if [[ " $* " != *" --filter "* ]]; then
   ./cloudy_tools.sh tests || exit 1
 fi
 
-./framework/bin/run_unit_tests.sh $@ || exit 1
-./framework/bin/run_integration_tests.sh $@ || exit 1
+./cloudy/bin/run_unit_tests.sh $@ || exit 1
+./cloudy/bin/run_integration_tests.sh $@ || exit 1

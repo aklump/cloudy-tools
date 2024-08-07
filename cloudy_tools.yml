@@ -133,12 +133,12 @@ tests:
     re: bravo
     mi: charlie
   filepaths:
-    install: framework
-    cache: framework/cloudy/cache
-    cloudy: framework/cloudy/..
+    install: cloudy
+    cache: cloudy/dist/cache
+    cloudy: cloudy/dist/..
     absolute: /dev/null
     token_cloudy_basepath: '$CLOUDY_BASEPATH/.project/config.yml'
-    token_cloudy_core_directory: '$CLOUDY_CORE_DIR/framework'
+    token_cloudy_core_directory: '$CLOUDY_CORE_DIR/cloudy'
   globtest: 'tests/stubs/*.txt'
   paths_indexed:
     - tests/stubs/alpha.txt
