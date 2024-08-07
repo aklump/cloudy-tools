@@ -256,7 +256,6 @@ case $command in
   script_filename=$(path_filename "$basename")
   has_option 'config' && script_filename=$(path_filename $(get_option "config"))
   config_file="$script_filename.yml"
-  has_option "json" && config_file="$script_filename.json"
 
   example_script="script.example.sh"
 
@@ -280,24 +279,9 @@ case $command in
     if has_option "examples"; then
       cp "$framework/script.example.sh" . || fail_because "Could not copy script.example.sh"
       cp "$framework/script.example.yml" . || fail_because "Could not copy script.example.yml"
-
-      if has_option "json"; then
-        sed -i '' "s/script.example.yml/script.example.json/g" script.example.sh || fail_because "Could not update config filepath in script.example.sh."
-      fi
     fi
 
-    # Convert YAML config files to JSON, if necessary.
-    if has_option "json"; then
-      # TODO Rewrite using $PHP_FILE_RUNNER
-      echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "script.yml") >${config_file} || fail_because "Could not convert $(path_filename $config_file) to JSON"
-      [ $? -eq 0 ] && rm script.yml
-
-      # TODO Rewrite using $PHP_FILE_RUNNER
-      echo $("$CLOUDY_PHP" $CLOUDY_CORE_DIR/php/config/normalize.php "$CLOUDY_CORE_DIR/cloudy_config.schema.json" "$CLOUDY_START_DIR/script.example.yml") >script.example.config.json || fail_because "Could not convert script.example.yml to JSON"
-      [ $? -eq 0 ] && rm script.example.yml
-    else
-      mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."
-    fi
+    mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."
 
     # Create a version stamp
     if ! has_failed; then
@@ -308,7 +292,6 @@ case $command in
     if has_failed; then
       [ -e "script.example.sh" ] && rm "script.example.sh"
       [ -e "script.example.yml" ] && rm "script.example.yml"
-      [ -e "script.example.json" ] && rm "script.example.json"
       [ -e $basename ] && rm $basename
       [ -e $config_file ] && rm $config_file
       [ -e cloudy ] && rm -r cloudy

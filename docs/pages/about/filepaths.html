@@ -43,12 +43,28 @@
   <div class="row mb-5 pt-5">
     <article class="col">
       <h1 class="mb-4 text-primary">Filepaths</h1>
-      <p>? how do relative paths resolve?</p>
+      <h2><code>realpath</code> vs. <code>pwd</code></h2>
+<p>The difference between these two is made apparent when you deal with a symlink. Using <code>realpath</code> will resolve the symlink to the actual path. Whereas, <code>pwd</code> is going to give you the apparent filepath, that is an unresolved symlink.</p>
+<pre><code class="text">.
+├── bar
+│   └── foo -&gt; ../foo
+└── foo
+
+3 directories, 0 files
+☁  $  echo $(realpath "bar/foo")
+/Users/aklump/foo
+☁  $  echo $(cd "bar/foo" &amp;&amp; pwd)
+/Users/aklump/bar/foo
+</code></pre>
+<h2>How do relative paths resolve?</h2>
 <ul>
-<li>All relative paths in configuration will resolve to CLOUDY_BASEPATH by default.</li>
+<li>Use <code>path_make_absolute</code>.</li>
+<li>Use a path token (see below).</li>
+<li><s>All relative paths in configuration will resolve to CLOUDY_BASEPATH by default.</s></li>
 <li>For greater clarity, you may use path tokens instead of relative paths in your configuration.</li>
 </ul>
-<p>? what are the base path constants?</p>
+<h2>Path Tokens</h2>
+<p>@todo Auto generate this in book.php</p>
 <ol>
 <li><code>CLOUDY_BASEPATH</code></li>
 <li><code>CLOUDY_CORE_DIR</code></li>

@@ -1,6 +1,3 @@
-/.idea
-/.web_package/tmp/
-/cloudy/dist/vendor/
-/cloudy/dist/composer.lock
-/cloudy_tools.log
+/.idea/
 *.log
+/cloudy/

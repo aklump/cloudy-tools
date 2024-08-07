@@ -93,12 +93,6 @@ commands:
         type: boolean
         aliases:
           - 'y'
-      json:
-        type: boolean
-        help: 'Use JSON configuration.'
-      yaml:
-        type: boolean
-        help: 'Use YAML configuration. This is the default.'
       force:
         type: boolean
         aliases:

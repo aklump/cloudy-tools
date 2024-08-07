@@ -794,9 +794,14 @@ function testGetConfigPathUsingGlobWorksAsExpected() {
   assert_same 2 ${#tests_globtest[@]}
 }
 
-function testGetConfigPathWorksAsItShould() {
+function testCloudyCoreDirIsNotEmpty() {
   assert_not_empty "$CLOUDY_CORE_DIR"
+}
+function testCloudyBasepathIsNotEmpty() {
   assert_not_empty "$CLOUDY_BASEPATH"
+}
+
+function testGetConfigPathWorksAsItShould() {
 
   # This one handles the realpath portion as the subject involves traversal.
   eval $(get_config_path 'tests.filepaths.cloudy')
@@ -808,9 +813,6 @@ function testGetConfigPathWorksAsItShould() {
   eval $(get_config_path 'tests.filepaths.install')
   assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $tests_filepaths_install
 
-  eval $(get_config_path 'tests.filepaths.cache')
-  assert_same "$CLOUDY_CORE_DIR/cache" $tests_filepaths_cache
-
   eval $(get_config_path 'tests.filepaths.token_cloudy_basepath')
   assert_same "$CLOUDY_BASEPATH/.project/config.yml" $tests_filepaths_token_cloudy_basepath
 
@@ -821,17 +823,39 @@ function testGetConfigPathWorksAsItShould() {
 function testGetConfigPathAsWorksAsItShould() {
   # This one handles the realpath portion as the subject involves traversal.
   eval $(get_config_path_as 'testpath' 'tests.filepaths.cloudy')
-  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $testpath
+  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" "$testpath"
 
   eval $(get_config_path_as 'testpath' 'tests.filepaths.absolute')
-  assert_same "/dev/null" $testpath
+  assert_same "/dev/null" "$testpath"
 
   eval $(get_config_path_as 'testpath' 'tests.filepaths.install')
-  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" $testpath
+  assert_same "$(realpath $CLOUDY_CORE_DIR/..)" "$testpath"
 
-  eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
-  assert_same "$CLOUDY_CORE_DIR/cache" $testpath
+  eval $(get_config_path_as 'testpath' 'tests.filepaths.token_cloudy_basepath')
+  assert_same "$CLOUDY_BASEPATH/.project/config.yml" "$testpath"
+
+  eval $(get_config_path_as 'testpath' 'tests.filepaths.token_cloudy_core_directory')
+  assert_same "$CLOUDY_CORE_DIR/cloudy" "$testpath"
 }
+
+function testGetConfigPathWorksAsItShouldForCache() {
+  local expected
+  local actual
+  expected="$(realpath "$CLOUDY_CORE_DIR/cache")"
+  eval $(get_config_path 'tests.filepaths.cache')
+  actual="$(realpath "$tests_filepaths_cache")"
+  assert_same "$expected" "$actual"
+}
+
+function testGetConfigPathAsWorksAsItShouldForCache() {
+  local expected
+  local actual
+  expected="$(realpath "$CLOUDY_CORE_DIR/cache")"
+  eval $(get_config_path_as 'testpath' 'tests.filepaths.cache')
+  actual="$(realpath "$testpath")"
+  assert_same "$expected" "$actual"
+}
+
 function testArrayHasValue() {
   array_has_value__array=('foo bar' 'baz')
   array_has_value 'foo bar'
