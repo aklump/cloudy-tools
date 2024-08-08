@@ -267,8 +267,8 @@ case $command in
   if ! has_failed; then
     rsync_framework || fail_because "Could not copy Cloudy core to $CLOUDY_START_DIR."
     framework_handle_composer "$PWD/cloudy" || exit_with_failure
-    cp $framework/script.sh ./
-    cp $framework/script.yml ./
+    cp $framework/examples/script.sh ./
+    cp $framework/examples/script.yml ./
 
     # The stub file script.sh
     mv script.sh $basename || fail_because "Could not rename script.sh to $basename."
@@ -277,8 +277,8 @@ case $command in
 
     # Copy over examples.
     if has_option "examples"; then
-      cp "$framework/script.example.sh" . || fail_because "Could not copy script.example.sh"
-      cp "$framework/script.example.yml" . || fail_because "Could not copy script.example.yml"
+      cp "$framework/examples/script.example.sh" . || fail_because "Could not copy script.example.sh"
+      cp "$framework/examples/script.example.yml" . || fail_because "Could not copy script.example.yml"
     fi
 
     mv script.yml $config_file || fail_because "Could not rename script.yml to $config_file."

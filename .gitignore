@@ -1,14 +1,2 @@
 /.idea/
 *.log
-
-# These non-dist files are unnecessary to include.
-cloudy/.web_package/
-cloudy/bin/
-cloudy/docs/
-cloudy/knowledge/
-cloudy/tests/
-cloudy/vendor/
-cloudy/CHANGELOG.md
-cloudy/cloudy.events.sh
-cloudy/script.*
-cloudy/todo.md

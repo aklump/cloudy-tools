@@ -1,3 +1,17 @@
+# These are non-dist files that can be excluded when Cloudy is installed using
+# composer create-project.
+
 /.idea/
+/.web_package/
+/CHANGELOG.md
+/README.md
+/bin/
+/composer.lock
+/docs/
+/examples/
+/images/
+/install/
+/knowledge/
+/tests/
+/todo.md
 /vendor/
-composer.lock
