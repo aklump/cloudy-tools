@@ -11,8 +11,9 @@ Installation means downloading this repository to your system. It contains _clou
 Here is a snippet to:
 
 1. Clone this repo to a directory on your system _$HOME/opt/cloudy_
-1. Create a symlink in _$HOME/bin/cloudy_. This assumes _~/bin_ is in your `$PATH` variable.
+1. Create a symlink in _$HOME/bin/cloudy_.
+1. Ensure that _$HOME/bin_ is in your `$PATH` variable.
 
 ```shell
-(cd $HOME && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy || git clone https://github.com/aklump/cloudy.git) && (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) && cloudy
+(cd "$HOME" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy_tools || git clone https://github.com/aklump/cloudy-tools ) && (test -s "$HOME/bin/cloudy_tools" || ln -s "$HOME/opt/cloudy_tools/cloudy_installer.sh" "$HOME/bin/cloudy")) && cloudy
 ```
