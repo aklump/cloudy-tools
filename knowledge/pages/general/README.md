@@ -20,6 +20,6 @@ Here is a snippet to:
 1. Ensure that _$HOME/bin_ is in your `$PATH` variable.
 
 ```shell
-(cd "$HOME" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy_tools || git clone {{ github_url }} ) && (test -s "$HOME/bin/cloudy" || ln -s "$HOME/opt/cloudy_tools/cloudy_installer.sh" "$HOME/bin/cloudy")) && cloudy
+(cd "$HOME" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy_tools || git clone {{ github_url }} ) && (test -s "$HOME/bin/cloudy" || ln -s "$HOME/opt/cloudy-tools/cloudy_tools.sh" "$HOME/bin/cloudy")) && cloudy
 ```
 
