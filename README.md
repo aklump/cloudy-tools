@@ -1,5 +1,7 @@
 # Cloudy Tools
 
+![Cloudy tools](images/cloudy_tools.jpg)
+
 Used to manage a local version of [Cloudy](https://github.com/aklump/cloudy) providing a set of commands for installing and building Cloudy packages.
 
 ## Installation
