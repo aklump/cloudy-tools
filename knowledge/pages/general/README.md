@@ -1,3 +1,8 @@
+<!--
+id: readme
+tags: ''
+-->
+
 # Cloudy Tools
 
 Used to manage a local version of [Cloudy](https://github.com/aklump/cloudy) providing a set of commands for installing and building Cloudy packages.
@@ -14,3 +19,4 @@ Here is a snippet to:
 ```shell
 (cd $HOME && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && (test -d cloudy || git clone https://github.com/aklump/cloudy.git) && (test -s $HOME/bin/cloudy || ln -s $HOME/opt/cloudy/cloudy_installer.sh $HOME/bin/cloudy)) && cloudy
 ```
+

@@ -1,3 +1,8 @@
+<!--
+id: changelog
+tags: ''
+-->
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -14,3 +19,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Cloudy framework to it's own repo at https://github.com/aklump/cloudy
+  
