@@ -1,5 +1,5 @@
 title: 'Cloudy Tools'
-version: 1.7.12
+version: 2.0.0
 additional_config:
   - cloudy_tools.additional.yml
 default_command: help
