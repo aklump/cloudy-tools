@@ -1,4 +1,0 @@
-#mermaid:
-#  width: 1000
-composer:
-  config_path: ../composer.json

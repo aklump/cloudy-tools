@@ -1,5 +1,0 @@
-title: Foo
-default_command: foo
-commands:
-  foo:
-    help: Lorem ipsum dolar.
